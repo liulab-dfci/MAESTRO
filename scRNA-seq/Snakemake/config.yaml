@@ -1,0 +1,51 @@
+# Directory where fastq files are stored
+fastqdir: /mnt/Storage/home/sundongqing/Project/Single_cell/Analysis/10xPBMC_1k/pbmc_1k_v2_fastqs
+# Sample name of fastq file (only for platform of "10xGenomics", for example, 
+# if there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the sample name is "pbmc_1k_v2". )
+fastqprefix: pbmc_1k_v2
+# Species to use [GRCh38, mmu] (GRCh38 for human and mmu for mouse)
+species: GRCh38
+# Method to use [Seurat, Pagoda, scMCA, RCA, SSCC]
+method: Seurat
+# Platform of single cell RNA-seq [Smartseq2, 10xGenomics, Dropseq]
+platform: 10xGenomics
+# Does the pipeline start from count ? [TRUE, FALSE]
+startfromcount: TRUE
+# The type of gene ID
+# If you start from count table, you must specify it [ENSEMBL, SYMBOL].
+geneidtype: ENSEMBL
+# The prefix of output files
+outprefix: pbmc_1k_v2
+# Number of cores to use
+cores: 8
+
+# Reference genome 
+genome:
+  # Genome index directory for STAR
+  mapindex: /mnt/Storage/home/sundongqing/RefGenome/hg38/STAR_index
+  # .gtf format genome annotation file
+  gtf: /mnt/Storage/home/sundongqing/RefGenome/hg38/Homo_sapiens.GRCh38.92.gtf
+  # .bed format genome annotation file 
+  bed: /mnt/Storage/home/sundongqing/RefGenome/hg38/hg38_gencode.v28.bed
+  # .txt format genome annotation file (only for platform of "Dropseq")
+  anno: /mnt/Storage/home/sundongqing/RefGenome/hg38/hg38_gencode_annotation.V28.txt
+  # genome annotation file from 10xGenomics required for Cell Ranger
+  cellranger: /mnt/Storage/home/sundongqing/RefGenome/hg38/refdata-cellranger-GRCh38-3.0.0
+
+# Information about barcode (only for platform of "Dropseq")
+barcode:
+  # The start site of each barcode (deinterleave linkers and connect barcodes and UMI)
+  start: "0,48,86"
+  # The end  site of each barcode (deinterleave linkers and connect barcodes and UMI)
+  end: "18,56,150"
+  # The range of umi (after linker removal)
+  umirange: 1:10
+  # The range of cell barcode (after linker removal)
+  barcoderange: 11:34
+
+# Specify the barcode fastq file and reads fastq file (only for platform of "Dropseq")
+fastq:
+  # barcode fastq file
+  barcode: test_2
+  # transcript fastq file
+  transcript: test_1

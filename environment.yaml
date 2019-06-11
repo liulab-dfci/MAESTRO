@@ -1,0 +1,16 @@
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - star
+  - bwa
+  - samtools
+  - bedtools
+  - stringtie
+  - picard
+  - macs2
+  - cistrome_beta
+  - python=3.7
+  - r-Seurat=2.3.4
+  - bioconductor-biomaRt
+  - bioconductor-MAST
