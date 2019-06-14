@@ -6,21 +6,28 @@ Created on Tue Jun  4 13:10:51 2019
 @author: Chenfei Wang, Dongqing Sun
 """
 
-import sys
+import sys,os
 
 try:
     from setuptools import setup, find_packages
 except ImportError:
     print("Could not load setuptools. Please install the setuptools package.")
 
+def install_drseq():
+    curdir = os.getcwd()
+    os.chdir("pkg/Dr.seq.1.2.0")
+    os.system("python setup.py install")
+    os.chdir(curdir)
 
 def main():
-    
+    install_drseq()
     setup(
         name = "strap",
         version = "0.0.1",
-        packages = find_packages(),
-        
+        package_dir = {'strap':'strap'},
+        packages = ['strap'],
+        package_data={'strap':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'R/*', 'env/*', 'annotations/*']},
+        scripts = ['strap/strap'],
         include_package_data = True,
         
         author = "Chenfei Wang, Dongqing Sun",
@@ -32,7 +39,7 @@ def main():
         
         zip_safe = False,
         install_requires=["h5py", "scipy"],
-        entry_points = {"console_scripts": ["strap = strap:main"]},
+        # entry_points = {"console_scripts": ["strap = strap:main"]},
         classifiers = [
             "Development Status :: 4 - Beta",
             #"Development Status :: 5 - Production/Stable",

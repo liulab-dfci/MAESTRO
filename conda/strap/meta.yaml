@@ -1,6 +1,8 @@
 package:
   name: strap
   version: "0.0.1"
+# source:
+#   git_url: https://github.com/chenfeiwang/STRAP.git
 source:
   path: ../../
 build:
@@ -9,9 +11,12 @@ build:
 requirements:
   build:
     - python =3.6
+    - numpy =1.16.4
+    - scipy =1.3.0
     - setuptools
     - snakemake =5.4.5
-    - star =2.7.1a
+    - rseqc =3.0.0
+    - star =2.5.1b
     - bwa =0.7.17
     - samtools =1.9
     - bedtools =2.28.0
@@ -22,9 +27,12 @@ requirements:
     - bioconductor-MAST
   run:
     - python =3.6
+    - numpy =1.16.4
+    - scipy =1.3.0
     - setuptools
     - snakemake =5.4.5
-    - star =2.7.1a
+    - rseqc =3.0.0
+    - star =2.5.1b
     - bwa =0.7.17
     - samtools =1.9
     - bedtools =2.28.0
@@ -34,6 +42,6 @@ requirements:
     - bioconductor-biomaRt
     - bioconductor-MAST
 about:
-  home: https://bitbucket.org/chenfeiwang/strap
-  license: MIT License
+  home: https://github.com/chenfeiwang/STRAP
+  license: GPL-3.0
   summary: STRAP is a comprehensive quality control, analysis and visualization pipeline for scATAC-seq and scRNA-seq.
