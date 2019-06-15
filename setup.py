@@ -38,7 +38,7 @@ def main():
         url = "https://bitbucket.org/chenfeiwang/strap",
         
         zip_safe = False,
-        install_requires=["h5py", "scipy"],
+        install_requires=[],
         # entry_points = {"console_scripts": ["strap = strap:main"]},
         classifiers = [
             "Development Status :: 4 - Beta",
