@@ -112,8 +112,43 @@ PipelineSeurat = function(countMat, proj, min.c = 10, min.p = 200, max.p = 10000
   cluster.specific.peaks = FindAllMarkers(object = SeuratObj, only.pos = TRUE, min.pct = 0.01, logfc.threshold = 0.1)
   cluster.specific.peaks = cluster.specific.peaks[cluster.specific.peaks$p_val_adj<diff.co, ]
   saveRDS(cluster.specific.peaks, file.path(paste0(proj, "_ClusterSpecificPeaks.rds")))}
+  write.table(cluster.specific.peaks, file.path(paste0(proj, "_ClusterSpecificPeaks.txt")), col.names = TRUE, row.names = TRUE, sep = "\t", quote = FALSE)
   
   saveRDS(SeuratObj, file.path(paste0(proj, "_SeuratObj.rds")))
   end_time <- Sys.time()
   end_time - start_time  
+}
+
+Incorparate <- function(Seurat1, Seurat2, proj, type1 = "ATAC", type2 = "RNA", gene.co = 2000, pcs.use = 15, dims.use = 1:15)
+{
+  SeuratObj1 <- readRDS(Seurat1)
+  SeuratObj2 <- readRDS(Seurat2)
+  SeuratObj1@meta.data$batch <- type1
+  SeuratObj2@meta.data$batch <- type2
+  
+  g.1 <- head(rownames(SeuratObj1@hvg.info), gene.co)
+  g.2 <- head(rownames(SeuratObj2@hvg.info), gene.co)
+  genes.use <- unique(c(g.1, g.2))
+  genes.use <- intersect(genes.use, rownames(SeuratObj1@scale.data))
+  genes.use <- intersect(genes.use, rownames(SeuratObj2@scale.data))
+  Seurat.combined <- RunCCA(SeuratObj1, SeuratObj2, genes.use = genes.use, num.cc = pcs.use)
+  Seurat.combined <- AlignSubspace(Seurat.combined, reduction.type = "cca", grouping.var = "batch", dims.align = dims.use) 
+  Seurat.combined <- RunTSNE(Seurat.combined, reduction.use = "cca.aligned", dims.use = dims.use, do.fast = T, check_duplicates = FALSE)
+  Seurat.combined <- FindClusters(Seurat.combined, reduction.type = "cca.aligned", resolution = 0.6, dims.use = dims.use)
+  
+  pdf(file.path(paste0(proj,"_source.pdf")), width=6, height=5)
+  TSNEPlot(object = Seurat.combined, do.label = TRUE, pt.size = 0.5, group.by = "batch")
+  dev.off() 
+  pdf(file.path(paste0(proj, "_all.pdf")), width=6, height=5)
+  TSNEPlot(object = Seurat.combined, do.label = TRUE, pt.size = 0.5, group.by = "res.0.6")
+  dev.off()      
+  pdf(file.path(paste0(proj, "_RNA_only.pdf")), width=6, height=5)
+  TSNEPlot(object = Seurat.combined, do.label = TRUE, pt.size = 0.5, cells.use = colnames(SeuratObj2@scale.data), group.by = "assign.ident")
+  dev.off()    
+  pdf(file.path(paste0(proj, "_ATAC_only.pdf")), width=6, height=5)
+  TSNEPlot(object = Seurat.combined, do.label = TRUE, pt.size = 0.5, cells.use = colnames(SeuratObj1@scale.data), group.by = "res.0.6")
+  dev.off()
+
+  saveRDS(Seurat.combined, file.path(paste0(proj, "_SeuratObj.rds")))
+  return(Seurat.combined)
 }

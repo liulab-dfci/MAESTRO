@@ -20,6 +20,7 @@ rule all:
         seuratobj = "Result/Analysis/" + outprefix + "_SeuratObj.rds",
         count = "Result/Analysis/" + outprefix + "_binary.txt",
         genescore = "Result/Analysis/" + outprefix + "_genescore.txt",
+        specifictf = "giggleTF.txt"
         # tfscore = "Result/Analysis/" + outprefix + "_tfscore.txt"
 
 if config["platform"] == "microfluidic":
@@ -185,7 +186,8 @@ if config["platform"] == "microfluidic":
         input:
             count = "Result/Analysis/" + outprefix + "_binary.txt"
         output:
-            seuratobj = "Result/Analysis/" + outprefix + "_SeuratObj.rds"
+            seuratobj = "Result/Analysis/" + outprefix + "_SeuratObj.rds",
+            specificpeak = "Result/Analysis/" + outprefix + "_ClusterSpecificPeaks.txt"
         params:
             outdir = "Result/Analysis",
             outpre = outprefix,
@@ -221,6 +223,19 @@ if config["platform"] == "microfluidic":
             config["cores"]
         shell:
             "python " + SCRIPT_PATH + "/scATAC_TFscore.py {input.count} {output.tfscore} {params.gcbed} {params.tfindex} {params.tfpercent} {threads}"
+
+    rule scatac_giggleTF:
+        input:
+            specificpeak = "Result/Analysis/" + outprefix + "_ClusterSpecificPeaks.txt"
+        output:
+            specifictf = "giggleTF.txt"
+        params:
+            species = config["species"],
+            outdir = "Result/Analysis"
+        threads:
+            config["cores"]
+        shell:
+            "python " + SCRIPT_PATH + "/scATAC_specificTF.py -a {params.species} -p {input.specificpeaks} -o {params.outdir} -s _"
 
 else:
     if config["platform"] == "sci-ATAC-seq":
@@ -404,3 +419,15 @@ else:
         shell:
             "python " + SCRIPT_PATH + "/scATAC_TFscore.py {input.count} {output.tfscore} {params.gcbed} {params.tfindex} {params.tfpercent} {threads}"
 
+    rule scatac_giggleTF:
+        input:
+            specificpeak = "Result/Analysis/" + outprefix + "_ClusterSpecificPeaks.txt"
+        output:
+            specifictf = "giggleTF.txt"
+        params:
+            species = config["species"],
+            outdir = "Result/Analysis"
+        threads:
+            config["cores"]
+        shell:
+            "python " + SCRIPT_PATH + "/scATAC_specificTF.py -a {params.species} -p {input.specificpeaks} -o {params.outdir} -s _"

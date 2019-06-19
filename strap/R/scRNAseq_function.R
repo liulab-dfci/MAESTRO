@@ -23,7 +23,7 @@ library(dplyr)
 library(biomaRt)
 library(MAST)
 
-srcdir = "../src/"
+srcdir = "../"
 Rdir = "./"
 
 
@@ -247,9 +247,9 @@ PipelinePagoda <- function(tpmMat, proj, min.c = 3, min.g = 200, nPCs = 100, nKs
 }
 
 source(paste0(Rdir,"scRNAseq_annotation.R"))
-AssignCellTypeSeurat <- function(cluster.markers, marker.use = "markers.CIBERSORT", organism="GRCh38"){
-# celltype.markers include markers.TCIA, markers.pubmed, "markers.CIBERSORT", markers.mousebrain (from split-seq), markers.brain.adult(from science)
-  if(marker.use == "markers.CIBERSORT" | marker.use == "markers.TCIA" | marker.use == "markers.immune.simple"){
+AssignCellTypeSeurat <- function(cluster.markers, marker.use = "human_immune_CIBERSORT", organism="GRCh38"){
+# celltype.markers include human_immune_TCIA, markers.pubmed, "human_immune_CIBERSORT", mouse_brain (from split-seq), markers.brain.adult(from science)
+  if(marker.use == "human_immune_CIBERSORT" | marker.use == "human_immune_TCIA" | marker.use == "human_immune_simple"){
     if(organism != "GRCh38"){
       marker_mouse = cluster.markers$gene
       ensembl = useMart("ensembl")
@@ -292,7 +292,7 @@ AssignCellTypeSeurat <- function(cluster.markers, marker.use = "markers.CIBERSOR
   return(CT)
 }
 
-AssignCellTypePagoda <- function(cluster.markers, marker.use = "markers.CIBERSORT"){
+AssignCellTypePagoda <- function(cluster.markers, marker.use = "human_immune_CIBERSORT"){
     marker.use = get(marker.use)
     CT = NULL
     for (i in cluster.markers){
@@ -307,7 +307,7 @@ AssignCellTypePagoda <- function(cluster.markers, marker.use = "markers.CIBERSOR
   return(CT)
 }
 
-AssignCellTypeMannually <- function(pbmc.markers, ident = 1, celltype.markers = "markers.CIBERSORT"){
+AssignCellTypeMannually <- function(pbmc.markers, ident = 1, celltype.markers = "human_immune_CIBERSORT"){
     celltype.markers = get(celltype.markers)
     dx = pbmc.markers$cluster==ident
     tmpFC = pbmc.markers$avg_logFC[idx]

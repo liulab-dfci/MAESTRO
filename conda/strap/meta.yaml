@@ -5,9 +5,9 @@ package:
 #   git_url: https://github.com/chenfeiwang/STRAP.git
 source:
   path: ../../
-build:
-  entry_points:
-    - strap = strap:main
+# build:
+#   entry_points:
+#     - strap = strap:main
 requirements:
   build:
     - python =3.6
