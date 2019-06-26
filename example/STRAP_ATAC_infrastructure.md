@@ -10,7 +10,7 @@ In this example, we will be analyzing a dataset of 1K Peripheral blood mononucle
 [Step 1. Prepare your working directory](#annotation)        
 [Step 2: Configure the workflow](#)      
 [Step 3. Running STRAP](#SettingUpForProject)     
-[Step 4. Output Files](#Output Files)
+[Step 4. Output Files] (#Output Files)
 
 
 
@@ -87,12 +87,12 @@ genome:
   cellranger: /root/strap/RefGenome/hg38/refdata-cellranger-GRCh38-3.0.0
 ```
 
-Now that we have setup our PROJECT directory (downloading the 'strap' code directory, creating our 'data' directory, and configuring our 'config.yaml'). Finally we are ready to run STRAP.       
+Now that we have set up our PROJECT directory (downloading the 'strap' code directory, creating our 'data' directory, and configuring our 'config.yaml'). Finally, we are ready to run STRAP.       
 **Step 3. Running STRAP**
 
-To start, we must activate the STRAP CONDA ENVIRONMENT.If successful, you will see "(strap)" prepended to your command prompt.
+To start, we must activate the STRAP CONDA ENVIRONMENT. If successful, you will see "(strap)" prepended to your command prompt.
 
-Next we will perform a DRY-RUN to make sure that we setup the STRAP PROJECT directory correctly. In your PROJECT folder run the following command:
+Next, we will perform a DRY-RUN to make sure that we set up the STRAP PROJECT directory correctly. In your PROJECT folder run the following command:
 ```
 nohup ssnakemake --cores 8 --use-conda >10x.pbmc.1k.out &
 ```
