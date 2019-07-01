@@ -16,7 +16,7 @@ Rdir = "./"
 #' Quality Control Function 
 FragPlot <- function(matrix,prefix)
 {
-  pdf(paste0(prefix,"_frag.pdf"),width=6,height=6)
+  png(paste0(prefix,"_frag.png"),width=6,height=6, res = 300, units = "in")
   D <- density(abs(matrix[abs(matrix)<=1000&abs(matrix)>0]))
   plot(D$x,D$y*D$n/1000,col="blue",lwd=2,type="l",main=prefix,xlab="Fragment size",ylab="Fragment count (K)")
   dev.off()
@@ -24,7 +24,7 @@ FragPlot <- function(matrix,prefix)
 
 MapPlot_micro <- function(matrix, prefix)
 {
-  pdf(paste0(prefix,"_map.pdf"),width=6,height=6)
+  png(paste0(prefix,"_map.png"),width=6,height=6, res = 300, units = "in")
   par(mfrow=c(2,2))
   hist(log10(matrix[which(matrix[,1]>1000),2]), border=NA, col="blue",main="Total Fragments",xlim=c(3,5.5),xlab="log10(Total Fragments)",ylab="Frequency")
   hist(matrix[,2]/matrix[,1], border=NA, col="blue",main="Mapped Ratio",xlim=c(0,1),xlab="Mapped Ratio",ylab="Frequency")
@@ -34,7 +34,7 @@ MapPlot_micro <- function(matrix, prefix)
 }
 FripPlot_micro <- function(matrix, prefix, reads_cutoff = 1000, frip_cutoff = 0.05)
 {
-  pdf(paste0(prefix,"_frip.pdf"),width=6,height=6)
+  png(paste0(prefix,"_frip.png"),width=6,height=6, res = 300, units = "in")
   plot(log10(matrix[which(matrix[,5]<reads_cutoff|(matrix[,6]/matrix[,5])<frip_cutoff),5]+1),matrix[which(matrix[,5]<reads_cutoff|(matrix[,6]/matrix[,5])<frip_cutoff),6]/matrix[which(matrix[,5]<reads_cutoff|(matrix[,6]/matrix[,5])<frip_cutoff),5],
        xlim=c(0,5),ylim=c(0,1),pch='.',col='blue',ylab='Fraction of promoter reads',xlab='Reads passed filters (log10)',main=prefix)
        points(log10(matrix[which(matrix[,5]>=reads_cutoff&(matrix[,6]/matrix[,5])>=frip_cutoff),5]+1),matrix[which(matrix[,5]>=reads_cutoff&(matrix[,6]/matrix[,5])>=frip_cutoff),6]/matrix[which(matrix[,5]>=reads_cutoff&(matrix[,6]/matrix[,5])>=frip_cutoff),5],
@@ -45,7 +45,7 @@ FripPlot_micro <- function(matrix, prefix, reads_cutoff = 1000, frip_cutoff = 0.
 }
 MapPlot_10x <- function(matrix, prefix)
 {
-  pdf(paste0(prefix,"_map.pdf"),width=6,height=6)
+  png(paste0(prefix,"_map.png"),width=6,height=6, res = 300, units = "in")
   par(mfrow=c(2,2))
   hist(log10(matrix[which(matrix[,2]>1000),2]), border=NA, col="blue",main="Total Fragments",xlim=c(3,5.5),xlab="log10(Total Fragments)",ylab="Frequency")
   hist(1-matrix[2:nrow(matrix),5]/matrix[2:nrow(matrix),2], border=NA, col="blue",main="Mapped Ratio",xlim=c(0,1),xlab="Mapped Ratio",ylab="Frequency")
@@ -56,7 +56,7 @@ MapPlot_10x <- function(matrix, prefix)
 
 FripPlot_10x <- function(matrix, prefix, reads_cutoff = 1000, frip_cutoff = 0.05)
 {
-  pdf(paste0(prefix,"_frip.pdf"),width=6,height=6)
+  png(paste0(prefix,"_frip.png"),width=6,height=6, res = 300, units = "in")
   plot(log10(matrix[which(matrix[,8]<reads_cutoff|(matrix[,14]/matrix[,8])<frip_cutoff),8]+1),matrix[which(matrix[,8]<reads_cutoff|(matrix[,14]/matrix[,8])<frip_cutoff),14]/matrix[which(matrix[,8]<reads_cutoff|(matrix[,14]/matrix[,8])<frip_cutoff),8],
        xlim=c(0,5),ylim=c(0,1),pch='.',col='blue',ylab='Fraction of promoter reads',xlab='Reads passed filters (log10)',main=prefix)
        points(log10(matrix[which(matrix[,8]>=reads_cutoff&(matrix[,14]/matrix[,8])>=frip_cutoff),8]+1),matrix[which(matrix[,8]>=reads_cutoff&(matrix[,14]/matrix[,8])>=frip_cutoff),14]/matrix[which(matrix[,8]>=reads_cutoff&(matrix[,14]/matrix[,8])>=frip_cutoff),8],

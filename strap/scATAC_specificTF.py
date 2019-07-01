@@ -1,24 +1,34 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jun 1 10:24:36 2019
+
+@author: Changxin Wan
+"""
+
 import os
 import sys
+import json
 import argparse
-import pandas as pd 
+import pandas as pd
 
+SCRIPT_PATH = os.path.dirname(__file__)
+giggle_annotation_path = os.path.join(SCRIPT_PATH, "annotations", "giggle")
 
 def giggleSearchBed(bed_path, output, assembly):
     # if not os.path.exists(output):
     #     os.makedirs(output)
     prefix = "%s/%s" % (output, bed_path.split("/")[-1])
 
-    ### NOTE: This table should be replaced after we change the way of fetching 5foldReakRP
-    ant = pd.read_csv("/project/dev/changxin/strap/gindex_201905/DC_haveProcessed_20190506_filepath.xls", header=0, index_col=False, sep="\t", engine="c")
-    ant.index = list(map(str, ant.loc[:, "DCid"].tolist()))
-    ant = ant.loc[:, ["factor", "cellLine", "CellType", "Tissue", "5foldPeakRP"]]
+    ### NOTE: Change the path of this table to source files
+    ant = pd.read_csv(os.path.join(giggle_annotation_path, "CistromeDB_sample_annotation.txt"), header=0, index_col=0, sep="\t", engine="c")
+    ant.index = list(map(str, ant.index))
 
     cmd = "sort --buffer-size 2G -k1,1 -k2,2n -k3,3n %s | bgzip -c > %s.gz"%(bed_path, prefix)
     os.system(cmd)
 
     ### NOTE: Change the path of giggle and giggle index
-    os.system("/project/dev/changxin/Software/Giggle/giggle/bin/giggle search -i /project/dev/changxin/project_01/changxin/gindex/%stf_gindex_1k -q %s.gz -s > %s.result.xls"%(assembly, prefix, prefix))
+    os.system("/home1/wangchenfei/Tool/giggle/bin/giggle search -i %s/strap_giggle_index_%s -q %s.gz -s > %s.result.xls"%(giggle_annotation_path, assembly, prefix, prefix))
     result_df = pd.read_csv("%s.result.xls"%prefix, sep="\t", index_col=False)
     result_df.index = [i.replace("_5foldPeak.bed.gz", "").split("/")[-1] for i in result_df["#file"]]
     result_df = result_df.loc[:, ["file_size", "overlaps", "combo_score"]]
@@ -26,21 +36,25 @@ def giggleSearchBed(bed_path, output, assembly):
     os.system("rm %s.gz"%prefix)
     os.system("rm %s.result.xls"%prefix)
     res_df = pd.concat([result_df, ant], axis=1, join="inner").sort_values(by="combo_score", ascending=False)
-    res_df.columns = ["sample_peak_number", "overlap_peak_number", "giggle_score", "factor", "cell_line", "cell_type", "tissue", "5foldPeakRP"]
+    res_df.columns = ["sample_peak_number", "overlap_peak_number", "giggle_score", "species", "factor", "cell_line", "cell_type", "tissue", "disease"]
     res_df = res_df.loc[res_df["overlap_peak_number"]>0, :]
-    res_df["biological_resource"] = list(map(lambda x: "%s;%s;%s"%(res_df["cell_line"][x], res_df["cell_type"][x], res_df["tissue"][x]), range(res_df.shape[0])))
+    res_df["biological_resource"] = list(map(lambda x: "%s;%s;%s;%s"%(res_df["cell_line"][x], res_df["cell_type"][x], res_df["tissue"][x], res_df["disease"][x]), range(res_df.shape[0])))
     res_df["sample_id"] = res_df.index.tolist()
-    res_df["species"] = assembly
-    res_df = res_df.loc[:, ["sample_id", "factor", "species", "biological_resource", "giggle_score", "sample_peak_number", "overlap_peak_number", "5foldPeakRP"]]
+    # res_df["species"] = assembly
+    res_df = res_df.loc[:, ["sample_id", "species", "factor", "biological_resource", "giggle_score", "sample_peak_number", "overlap_peak_number"]]
     res_df = res_df.drop_duplicates(subset="factor").iloc[:10, :]
     res_df.index = range(res_df.shape[0])
-    res_df.to_csv("%s/giggleTF.txt"%output, sep="\t", header=True, index=False)
+    res_df.to_csv("%s/giggle_res_tfs.txt"%output, sep="\t", header=True, index=False)
+
+    genes_score_5fold_index = json.load(open(os.path.join(giggle_annotation_path, "%s_genescore_5fold_top500_index.json"%assembly)))["indices"]
+    genes_score_5fold_genes = json.load(open(os.path.join(giggle_annotation_path, "%s_genescore_5fold_top500_index.json"%assembly)))["genes"]
     for i in res_df.index:
-        df_5fold = pd.read_csv(res_df.loc[i, "5foldPeakRP"], comment="#", sep="\t", header=None, index_col=False)
-        df_5fold.columns = ["chrom", "txStart", "txEnd", "refseq", "score","strand","symbol"]
-        df_5fold = df_5fold.loc[df_5fold["score"]>0, :]
-        df_5fold = df_5fold.sort_values(by="score", ascending=False)
-        target_genes = df_5fold.drop_duplicates(subset="symbol").iloc[:500, 6].tolist()
+        target_genes = [genes_score_5fold_genes[j] for j in genes_score_5fold_index[res_df.loc[i, "sample_id"]]]
+        # df_5fold = pd.read_csv(res_df.loc[i, "5foldPeakRP"], comment="#", sep="\t", header=None, index_col=False)
+        # df_5fold.columns = ["chrom", "txStart", "txEnd", "refseq", "score","strand","symbol"]
+        # df_5fold = df_5fold.loc[df_5fold["score"]>0, :]
+        # df_5fold = df_5fold.sort_values(by="score", ascending=False)
+        # target_genes = df_5fold.drop_duplicates(subset="symbol").iloc[:500, 6].tolist()
         f = open("%s/%s_%s_target_genes_top500.txt" % (output, res_df.loc[i, "factor"], res_df.loc[i, "sample_id"]), "w")
         f.write("\n".join(target_genes))
         f.close()
@@ -68,8 +82,8 @@ def main():
 ### NOTE: Add some print out information for the script
     try:
         parser = argparse.ArgumentParser(description="""Search cluster specific TFs according to scATAC-seq data""")
-        parser.add_argument( '-a', '--assembly', dest='assembly', type=str, required=True, choices=['hg38', 'mm10'], help='select either hg38 or mm10 for genome assembly')
-        parser.add_argument( '-p', '--peaks', dest='peaks', type=str, required=True, help='cluster specific peaks output from Seurate2 or Seurate3 delimitated by tab')
+        parser.add_argument( '-a', '--assembly', dest='assembly', type=str, required=True, choices=['GRCh38', 'GRCm38'], help='select either GRCh38 or GRCm38 for genome assembly')
+        parser.add_argument( '-p', '--peaks', dest='peaks', type=str, required=True, help='cluster specific peaks output from Seurat2 or Seurat3 delimitated by tab')
         parser.add_argument( '-o', '--output', dest='outpath', type=str, required=True, help='directory of output file')
         parser.add_argument( '-s', '--separate', dest='separate', required=True, help='_ for Seurat2 and - for Seurat3')
         args = parser.parse_args()
