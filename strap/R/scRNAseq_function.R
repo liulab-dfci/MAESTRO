@@ -1,5 +1,5 @@
 #' Preprocess and analysis scRNA-seq data
-#' Seurat 2.3.4
+#' Seurat 3.0.0
 #' Function declare
 #' @Count2TPM
 #' @Count2FPKM
@@ -22,10 +22,11 @@ library(Seurat)
 library(dplyr)
 library(biomaRt)
 library(MAST)
+library(ggplot2)
+library(Matrix)
 
 srcdir = "../"
 Rdir = "./"
-
 
 hg38_genome = read.delim(paste0(srcdir, "annotations/GRCh38_mart_export.txt"), check.names = FALSE)
 mm10_genome = read.delim(paste0(srcdir, "annotations/GRCm38_mart_export.txt"), check.names = FALSE)
@@ -108,9 +109,9 @@ Ensembl2Symbol <- function(countMat, organism="GRCh38")
   return(countMat)
 }
 
-PipelineSeurat <- function(tpmMat, proj, min.c = 3, min.g = 200, max.g = 20000, organism="GRCh38",
-  normalization.method = NULL, do.scale = TRUE, do.center = FALSE, vars.to.regress = c("nUMI"),
-  dims.use = 1:15, marker.use = "markers.CIBERSORT", res = 0.6)
+PipelineSeurat <- function(tpmMat, proj, min.c = 3, min.g = 200, max.g = 20000, nfeatures = 2000, organism="GRCh38",
+  normalization.method = NULL, do.scale = TRUE, do.center = TRUE, vars.to.regress = c("nCount_RNA","percent.mito"),
+  dims.use = 1:15, marker.use = "human_immune_CIBERSORT", res = 0.6, orig.ident = NULL)
 {
   #=========QC========
   message("Check gene and cell coverage ...")
@@ -124,58 +125,55 @@ PipelineSeurat <- function(tpmMat, proj, min.c = 3, min.g = 200, max.g = 20000, 
   abline(h=min.c,lwd=2,lty=2);text(nrow(tpmMat)/2,min.c+max(nCell)*0.05,paste0("n = ",min.c));legend("topleft",paste0("ave C = ",round(mean(nCell))),box.lty=0)
   dev.off()
   
-  SeuratObj <- CreateSeuratObject(tpmMat, project = proj, min.cells = min.c, min.genes = min.g)
+  message("Check the mitochondria and spike-in percentage ...")
+  SeuratObj <- CreateSeuratObject(tpmMat, project = proj, min.cells = min.c, min.features = min.g)
+  if(!is.null(orig.ident)) SeuratObj$orig.ident <- orig.ident
   if(organism=="GRCh38"){
-     mito.genes <- grep("^MT-", rownames(SeuratObj@data), value = TRUE)
-     ercc.genes <- grep("^ERCC", rownames(SeuratObj@data), value = TRUE)}
+     mito.genes <- grep("^MT-", rownames(GetAssayData(object = SeuratObj)), value = TRUE)
+     ercc.genes <- grep("^ERCC", rownames(GetAssayData(object = SeuratObj)), value = TRUE)}
   else{
-     mito.genes <- grep("^mt-", rownames(SeuratObj@data), value = TRUE)
-     ercc.genes <- grep("^ercc", rownames(SeuratObj@data), value = TRUE)}   
-  percent.mito <- colSums(SeuratObj@data[mito.genes, ])/colSums(SeuratObj@data)
-  percent.ercc <- colSums(SeuratObj@data[ercc.genes, ])/colSums(SeuratObj@data)
-  SeuratObj <- AddMetaData(SeuratObj, percent.mito, "percent.mito")
-  SeuratObj <- AddMetaData(SeuratObj, percent.ercc, "percent.ercc")
-  png(paste0(proj, "_QC_Spikein.png"), res=300, width=6, height=4.5, units = "in")
-  VlnPlot(SeuratObj, c("percent.mito","percent.ercc"), nCol = 2)
-  dev.off()
+     mito.genes <- grep("^mt-", rownames(GetAssayData(object = SeuratObj)), value = TRUE)
+     ercc.genes <- grep("^ercc", rownames(GetAssayData(object = SeuratObj)), value = TRUE)}   
+  percent.mito <- colSums(as.matrix(GetAssayData(object = SeuratObj)[mito.genes, ]))/colSums(as.matrix(GetAssayData(object = SeuratObj)))
+  percent.ercc <- colSums(as.matrix(GetAssayData(object = SeuratObj)[ercc.genes, ]))/colSums(as.matrix(GetAssayData(object = SeuratObj)))
+  SeuratObj$percent.mito <- percent.mito
+  SeuratObj$percent.ercc <- percent.ercc
+  # png(paste0(proj, "_QC_Spikein.png"), res=300, width=6, height=4.5, units = "in")
+  p1 = VlnPlot(SeuratObj, c("percent.mito","percent.ercc"), ncol = 2)
+  ggsave(paste0(proj, "_QC_Spikein.png"), p1,  width=6, height=4.5)
+  # dev.off()
   
   #=========Filter========
   message("Filter cells and find variable genes ...")  
-  SeuratObj <- SubsetData(SeuratObj, subset.name = "percent.mito", accept.high = 0.05)
-  SeuratObj <- SubsetData(SeuratObj, subset.name = "percent.ercc", accept.high = 0.05)
-  SeuratObj <- FilterCells(object = SeuratObj, subset.names = c("nGene"),
-               low.thresholds = min.g, high.thresholds = max.g) 
+  SeuratObj <- subset(SeuratObj, subset.name = "percent.mito", high.threshold = 0.05)
+  SeuratObj <- subset(SeuratObj, subset.name = "percent.ercc", high.threshold = 0.05)
+  SeuratObj <- subset(SeuratObj, subset.names = "nGene", low.thresholds = min.g, high.thresholds = max.g) 
   
   SeuratObj <- NormalizeData(object = SeuratObj, normalization.method = normalization.method, scale.factor = 10000)
-  SeuratObj <- FindVariableGenes(object = SeuratObj, mean.function = ExpMean, dispersion.function = LogVMR,
-               x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5, do.plot = FALSE)
+  SeuratObj <- FindVariableFeatures(object = SeuratObj, selection.method = "vst", nfeatures = nfeatures)
   if(do.scale) SeuratObj <- ScaleData(object = SeuratObj, vars.to.regress = vars.to.regress, do.center = do.center)
   
   #=========PCA===========
   message("PCA analysis ...")
-  SeuratObj <- RunPCA(object = SeuratObj, pc.genes = SeuratObj@var.genes,
-                        do.print = FALSE, rev.pca = TRUE)
-  # VizPCA(object = SeuratObj, pcs.use = 1:2)
-  # PCAPlot(object = SeuratObj, dim.1 = 1, dim.2 = 2)
-  # PCHeatmap(object = SeuratObj, pc.use = 1:12, cells.use = 500, do.balanced = TRUE,
-  #           label.columns = FALSE, use.full = FALSE)
-  # SeuratObj <- JackStraw(object = SeuratObj, num.replicate = 100, display.progress = FALSE)
-  # JackStrawPlot(object = SeuratObj, PCs = 1:12)
-  png(file.path(paste0(proj,"_PCElbowPlot.png")), res=300, width=5, height=4, units = "in")
-  PCElbowPlot(object = SeuratObj)
-  dev.off()
+  SeuratObj <- RunPCA(object = SeuratObj, features = VariableFeatures(SeuratObj))
+  # png(file.path(paste0(proj,"_PCElbowPlot.png")), res=300, width=5, height=4, units = "in")
+  p2 = ElbowPlot(object = SeuratObj)
+  ggsave(file.path(paste0(proj,"_PCElbowPlot.png")), p2,  width=5, height=4)
+  # dev.off()
   
   #=========tSNE===========
-  message("t-SNE analysis ...")
-  SeuratObj <- FindClusters(object = SeuratObj, reduction.type = "pca", dims.use = dims.use,
-                resolution = res, print.output = 0, save.SNN = TRUE)
-  SeuratObj <- RunTSNE(object = SeuratObj, dims.use = dims.use, do.fast = TRUE)
-  png(file.path(paste0("tSNE_origIdent_", SeuratObj@project.name, "_cluster.png")), res=300, width=5, height=4, units = "in")
-  TSNEPlot(object = SeuratObj, do.label = TRUE, pt.size = 0.2, group.by = paste0("res.",res))
-  dev.off()
-  png(file.path(paste0("tSNE_origIdent_", SeuratObj@project.name, "_primary.png")), res=300, width=6, height=4, units = "in")
-  TSNEPlot(object = SeuratObj, do.label = TRUE, pt.size = 0.2, group.by = "orig.ident")
-  dev.off()
+  message("UMAP analysis ...")
+  SeuratObj <- RunUMAP(object = SeuratObj, reduction = "pca", dims = dims.use)
+  SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "pca", dims = dims.use)
+  SeuratObj <- FindClusters(object = SeuratObj, resolution = res)
+  # png(file.path(paste0("UMAP_origIdent_", SeuratObj@project.name, "_cluster.png")), res=300, width=5, height=4, units = "in")
+  p3 = DimPlot(object = SeuratObj, label = TRUE, pt.size = 0.2)
+  ggsave(file.path(paste0("UMAP_origIdent_", SeuratObj@project.name, "_cluster.png")), p3,  width=5, height=4)
+  # dev.off()
+  # png(file.path(paste0("UMAP_origIdent_", SeuratObj@project.name, "_primary.png")), res=300, width=6, height=4, units = "in")
+  p4 = DimPlot(object = SeuratObj, label = TRUE, pt.size = 0.2, group.by = "orig.ident", label.size = 3)
+  ggsave(file.path(paste0("UMAP_origIdent_", SeuratObj@project.name, "_primary.png")), p4,  width=6, height=4)
+  # dev.off()
   saveRDS(SeuratObj, file.path(paste0(proj, "_SeuratObj.rds")))
 
   #=========identify marker===========
@@ -183,16 +181,16 @@ PipelineSeurat <- function(tpmMat, proj, min.c = 3, min.g = 200, max.g = 20000, 
   cluster.markers <- NULL
   cluster.markers <- FindAllMarkers(object = SeuratObj, only.pos = TRUE, min.pct = 0.1)
   cluster.markers <- cluster.markers[cluster.markers$p_val_adj<0.000001, ]
-  
+
   current.cluster.ids = as.integer(levels(cluster.markers$cluster))
   new.cluster.ids = AssignCellTypeSeurat(cluster.markers, marker.use)
-  SeuratObj@meta.data$assign.ident = SeuratObj@ident[rownames(SeuratObj@meta.data)]
+  SeuratObj@meta.data$assign.ident = Idents(SeuratObj)[rownames(SeuratObj@meta.data)]
   SeuratObj@meta.data$assign.ident = plyr::mapvalues(x = SeuratObj@meta.data$assign.ident,
                        from = current.cluster.ids, to = new.cluster.ids)
-  png(file.path(paste0("tSNE_assignIdent_", SeuratObj@project.name, "_annotated.png")),res=300, 
-                                                         width=6, height=4, units = "in")
-  TSNEPlot(object = SeuratObj, do.label = TRUE, pt.size = 0.2, group.by = "assign.ident")
-  dev.off()  
+  # png(file.path(paste0("UMAP_assignIdent_", SeuratObj@project.name, "_annotated.png")),res=300, width=6, height=4, units = "in")
+  p5 = DimPlot(object = SeuratObj, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3)
+  ggsave(file.path(paste0("UMAP_assignIdent_", SeuratObj@project.name, "_annotated.png")), p5,  width=6, height=4)
+  # dev.off()  
   
   saveRDS(cluster.markers, file.path(paste0(proj, "_DiffMarkers.rds")))
   saveRDS(SeuratObj, file.path(paste0(proj, "_SeuratObj.rds")))

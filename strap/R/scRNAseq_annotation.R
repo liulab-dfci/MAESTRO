@@ -36,7 +36,7 @@ human_immune_CIBERSORT = sapply(1:length(CIBERSORT_celltype),function(i){return(
 names(human_immune_CIBERSORT) = CIBERSORT_celltype
 human_immune_CIBERSORT <- c(human_immune_CIBERSORT, human_immune_simple)
 
-BioLegend = read.table(paste0(srcdir,"annotations/human_BioLegend.txt"),header = TRUE, sep = '\t',check.names = FALSE)
+BioLegend = read.table(paste0(srcdir,"annotations/human_immune_BioLegend.txt"),header = TRUE, sep = '\t',check.names = FALSE)
 BioLegend_celltype = unique(BioLegend$Celltype)
 human_immune_BioLegend = sapply(1:length(BioLegend_celltype),function(i){return(as.character(BioLegend[BioLegend$Celltype == BioLegend_celltype[i],2]))})
 names(human_immune_BioLegend) = BioLegend_celltype

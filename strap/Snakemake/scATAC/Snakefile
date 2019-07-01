@@ -20,7 +20,8 @@ rule all:
         seuratobj = "Result/Analysis/" + outprefix + "_SeuratObj.rds",
         count = "Result/Analysis/" + outprefix + "_binary.txt",
         genescore = "Result/Analysis/" + outprefix + "_genescore.txt",
-        specifictf = "giggleTF.txt"
+        specifictf = "Result/Analysis/SpetificTF",
+        mergeobject = "Result/Analysis/" + outprefix + "_combined_SeuratObj.rds"
         # tfscore = "Result/Analysis/" + outprefix + "_tfscore.txt"
 
 if config["platform"] == "microfluidic":
@@ -228,14 +229,13 @@ if config["platform"] == "microfluidic":
         input:
             specificpeak = "Result/Analysis/" + outprefix + "_ClusterSpecificPeaks.txt"
         output:
-            specifictf = "giggleTF.txt"
+            specifictf = directory("Result/Analysis/SpetificTF")
         params:
-            species = config["species"],
-            outdir = "Result/Analysis"
+            species = config["species"]
         threads:
             config["cores"]
         shell:
-            "python " + SCRIPT_PATH + "/scATAC_specificTF.py -a {params.species} -p {input.specificpeaks} -o {params.outdir} -s _"
+            "python " + SCRIPT_PATH + "/scATAC_specificTF.py -a {params.species} -p {input.specificpeak} -o {output.specifictf} -s -"
 
 else:
     if config["platform"] == "sci-ATAC-seq":
@@ -383,14 +383,16 @@ else:
             count = "Result/Analysis/" + outprefix + "_binary.txt"
         output:
             seuratobj = "Result/Analysis/" + outprefix + "_SeuratObj.rds",
+            specificpeak = "Result/Analysis/" + outprefix + "_ClusterSpecificPeaks.txt"
         params:
             outdir = "Result/Analysis",
+            genescore = outprefix + "_genescore.txt",
             outpre = outprefix,
             species = config["species"],
             count = outprefix + "_binary.txt",
             rscriptpath = RSCRIPT_PATH
         shell:
-            "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R {params.count} {params.species} {params.outpre} {params.outdir} {params.rscriptpath}"
+            "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R {params.count} {params.genescore} {params.species} {params.outpre} {params.outdir} {params.rscriptpath}"
 
     rule scatac_genescore:
         input:
@@ -423,11 +425,26 @@ else:
         input:
             specificpeak = "Result/Analysis/" + outprefix + "_ClusterSpecificPeaks.txt"
         output:
-            specifictf = "giggleTF.txt"
+            specifictf = directory("Result/Analysis/SpetificTF")
         params:
-            species = config["species"],
-            outdir = "Result/Analysis"
+            species = config["species"]
         threads:
             config["cores"]
         shell:
-            "python " + SCRIPT_PATH + "/scATAC_specificTF.py -a {params.species} -p {input.specificpeaks} -o {params.outdir} -s _"
+            "python " + SCRIPT_PATH + "/scATAC_specificTF.py -a {params.species} -p {input.specificpeak} -o {output.specifictf} -s -"
+
+    rule scatac_merge:
+        input:
+            genescore = "Result/Analysis/" + outprefix + "_genescore.txt",
+            rnaseuratobj = config["rnaobject"]
+        output:
+            mergeobject = "Result/Analysis/" + outprefix + "_combined_SeuratObj.rds"
+        params:
+            genescore = outprefix + "_genescore.txt",
+            outpre = outprefix,
+            outdir = "Result/Analysis",
+            rscriptpath = RSCRIPT_PATH
+        shell:
+            "Rscript " + RSCRIPT_PATH + "/scATACseq_integrate.R {params.genescore} {input.rnaseuratobj} {params.outpre} {params.outdir} {params.rscriptpath}"
+
+            
