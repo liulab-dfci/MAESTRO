@@ -1,0 +1,127 @@
+E001	ESC
+E002	ESC
+E003	ESC
+E004	ES-deriv
+E005	ES-deriv
+E006	ES-deriv
+E007	ES-deriv
+E008	ESC
+E009	ES-deriv
+E010	ES-deriv
+E011	ES-deriv
+E012	ES-deriv
+E013	ES-deriv
+E014	ESC
+E015	ESC
+E016	ESC
+E017	Lung
+E018	iPSC
+E019	iPSC
+E020	iPSC
+E021	iPSC
+E022	iPSC
+E023	Mesench
+E024	ESC
+E025	Mesench
+E026	Mesench
+E027	Epithelial
+E028	Epithelial
+E029	HSC & B-cell
+E030	HSC & B-cell
+E031	HSC & B-cell
+E032	HSC & B-cell
+E033	Blood & T-cell
+E034	Blood & T-cell
+E035	HSC & B-cell
+E036	HSC & B-cell
+E037	Blood & T-cell
+E038	Blood & T-cell
+E039	Blood & T-cell
+E040	Blood & T-cell
+E041	Blood & T-cell
+E042	Blood & T-cell
+E043	Blood & T-cell
+E044	Blood & T-cell
+E045	Blood & T-cell
+E046	HSC & B-cell
+E047	Blood & T-cell
+E048	Blood & T-cell
+E049	Mesench
+E050	HSC & B-cell
+E051	HSC & B-cell
+E052	Muscle
+E053	Neurosph
+E054	Neurosph
+E055	Epithelial
+E056	Epithelial
+E057	Epithelial
+E058	Epithelial
+E059	Epithelial
+E061	Epithelial
+E062	Blood & T-cell
+E063	Other
+E065	Heart
+E066	Other
+E067	Brain
+E068	Brain
+E069	Brain
+E070	Brain
+E071	Brain
+E072	Brain
+E073	Brain
+E074	Brain
+E075	Digestive
+E076	Sm Muscle
+E077	Digestive
+E078	Sm Muscle
+E079	Digestive
+E080	Other
+E081	Brain
+E082	Brain
+E083	Heart
+E084	Digestive
+E085	Digestive
+E086	Other
+E087	Other
+E088	Other
+E089	Muscle
+E090	Muscle
+E091	Other
+E092	Digestive
+E093	Thymus
+E094	Digestive
+E095	Heart
+E096	Other
+E097	Other
+E098	Other
+E099	Other
+E100	Muscle
+E101	Digestive
+E102	Digestive
+E103	Sm Muscle
+E104	Heart
+E105	Heart
+E106	Digestive
+E107	Muscle
+E108	Muscle
+E109	Digestive
+E110	Digestive
+E111	Sm Muscle
+E112	Thymus
+E113	Other
+E114	Cancer Cell Line
+E115	Cancer Cell Line
+E116	Blood & T-cell
+E117	Cancer Cell Line
+E118	Cancer Cell Line
+E119	Epithelial
+E120	Muscle
+E121	Muscle
+E122	Epithelial
+E123	Cancer Cell Line
+E124	HSC & B-cell
+E125	Brain
+E126	Epithelial
+E127	Epithelial
+E128	Lung
+E129	Other
