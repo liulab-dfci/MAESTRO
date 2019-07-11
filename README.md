@@ -1,6 +1,6 @@
 # MASTER
 
-**MASTER**(**M**odel-based **A**nalysis of **S**ingle-cell **T**ranscriptom**E** and **R**egulome) is a comprehensive scATAC-seq and scRNA-seq analysis tool built using [snakemake](https://bitbucket.org/snakemake/snakemake/wiki/Home) which allows for ease of use. It can apply to different platforms, such as Smart-seq2, drop-seq, SPLiT-seq, microwell-seq, Chang&Greenleaf and JayShedure protocol for ATAC-seq, and 10X gemomics. STRAP combines the use of several dozen tools, suites, and packages to create a complete pipeline that takes scATAC-seq and scRNA-seq analysis from raw sequencing data(fastq files or count 
+**MAESTRO**(**M**odel-based **A**nalys**E**s of **S**ingle-cell **T**ranscriptome and **R**egul**O**me) is a comprehensive scATAC-seq and scRNA-seq analysis tool built using [snakemake](https://bitbucket.org/snakemake/snakemake/wiki/Home) which allows for ease of use. It can apply to different platforms, such as Smart-seq2, drop-seq, SPLiT-seq, microwell-seq, Chang&Greenleaf and JayShedure protocol for ATAC-seq, and 10X gemomics. STRAP combines the use of several dozen tools, suites, and packages to create a complete pipeline that takes scATAC-seq and scRNA-seq analysis from raw sequencing data(fastq files or count 
 table ) all the way through alignment, quality control, unsupervised analyses, differential expression,annotation, downstream analysis. The results are compiled in a labelled tSNE plot or heatmap.
 
 ## 0. System requirements
