@@ -1,0 +1,15 @@
+1_TssA	Active_TSS
+2_TssAFlnk	Flanking_Active_TSS
+3_TxFlnk	Transcr_at_gene_5_and_3
+4_Tx	Strong_transcription
+5_TxWk	Weak_transcription
+6_EnhG	Genic_enhancers
+7_Enh	Enhancers
+8_ZNF/Rpts	ZNF_genes_and_repeats
+9_Het	Heterochromatin
+10_TssBiv	Bivalent_Poised_TSS
+11_BivFlnk	Flanking_Bivalent_TSS_Enh
+12_EnhBiv	Bivalent_Enhancer
+13_ReprPC	Repressed_PolyComb
+14_ReprPCWk	Weak_Repressed_PolyComb
+15_Quies	Quiescent_Low

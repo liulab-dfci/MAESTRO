@@ -1,0 +1,272 @@
+.cssload-tetrominos {
+  position: absolute;
+  left: 50%;
+  transform: translate(-62px, -53px);
+    -o-transform: translate(-62px, -53px);
+    -ms-transform: translate(-62px, -53px);
+    -webkit-transform: translate(-62px, -53px);
+    -moz-transform: translate(-62px, -53px);
+}
+
+.cssload-tetromino {
+  width: 53px;
+  height: 62px;
+  position: absolute;
+  transition: all ease 0.255s;
+    -o-transition: all ease 0.255s;
+    -ms-transition: all ease 0.255s;
+    -webkit-transition: all ease 0.255s;
+    -moz-transition: all ease 0.255s;
+  background: url('data:image/svg+xml;utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 612 684"%3E%3Cpath fill="rgba(29, 145, 192, .8)" d="M305.7 0L0 170.9v342.3L305.7 684 612 513.2V170.9L305.7 0z"/%3E%3Cpath fill="rgb(127, 205, 187)" d="M305.7 80.1l-233.6 131 233.6 131 234.2-131-234.2-131"/%3E%3C/svg%3E') no-repeat top center;
+}
+
+.cssload-box1 {
+  animation: cssload-tetromino1 1.275s ease-out infinite;
+    -o-animation: cssload-tetromino1 1.275s ease-out infinite;
+    -ms-animation: cssload-tetromino1 1.275s ease-out infinite;
+    -webkit-animation: cssload-tetromino1 1.275s ease-out infinite;
+    -moz-animation: cssload-tetromino1 1.275s ease-out infinite;
+}
+
+.cssload-box2 {
+  animation: cssload-tetromino2 1.275s ease-out infinite;
+    -o-animation: cssload-tetromino2 1.275s ease-out infinite;
+    -ms-animation: cssload-tetromino2 1.275s ease-out infinite;
+    -webkit-animation: cssload-tetromino2 1.275s ease-out infinite;
+    -moz-animation: cssload-tetromino2 1.275s ease-out infinite;
+}
+
+.cssload-box3 {
+  animation: cssload-tetromino3 1.275s ease-out infinite;
+    -o-animation: cssload-tetromino3 1.275s ease-out infinite;
+    -ms-animation: cssload-tetromino3 1.275s ease-out infinite;
+    -webkit-animation: cssload-tetromino3 1.275s ease-out infinite;
+    -moz-animation: cssload-tetromino3 1.275s ease-out infinite;
+  z-index: 2;
+}
+
+.cssload-box4 {
+  animation: cssload-tetromino4 1.275s ease-out infinite;
+    -o-animation: cssload-tetromino4 1.275s ease-out infinite;
+    -ms-animation: cssload-tetromino4 1.275s ease-out infinite;
+    -webkit-animation: cssload-tetromino4 1.275s ease-out infinite;
+    -moz-animation: cssload-tetromino4 1.275s ease-out infinite;
+}
+
+
+
+
+
+
+
+
+
+@keyframes cssload-tetromino1 {
+  0%, 40% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(26px, -15px);
+  }
+  60%, 100% {
+    transform: translate(53px, 0);
+  }
+}
+
+@-o-keyframes cssload-tetromino1 {
+  0%, 40% {
+    -o-transform: translate(0, 0);
+  }
+  50% {
+    -o-transform: translate(26px, -15px);
+  }
+  60%, 100% {
+    -o-transform: translate(53px, 0);
+  }
+}
+
+@-ms-keyframes cssload-tetromino1 {
+  0%, 40% {
+    -ms-transform: translate(0, 0);
+  }
+  50% {
+    -ms-transform: translate(26px, -15px);
+  }
+  60%, 100% {
+    -ms-transform: translate(53px, 0);
+  }
+}
+
+@-webkit-keyframes cssload-tetromino1 {
+  0%, 40% {
+    -webkit-transform: translate(0, 0);
+  }
+  50% {
+    -webkit-transform: translate(26px, -15px);
+  }
+  60%, 100% {
+    -webkit-transform: translate(53px, 0);
+  }
+}
+
+@-moz-keyframes cssload-tetromino1 {
+  0%, 40% {
+    -moz-transform: translate(0, 0);
+  }
+  50% {
+    -moz-transform: translate(26px, -15px);
+  }
+  60%, 100% {
+    -moz-transform: translate(53px, 0);
+  }
+}
+
+@keyframes cssload-tetromino2 {
+  0%, 20% {
+    transform: translate(53px, 0px);
+  }
+  40%, 100% {
+    transform: translate(79px, 15px);
+  }
+}
+
+@-o-keyframes cssload-tetromino2 {
+  0%, 20% {
+    -o-transform: translate(53px, 0px);
+  }
+  40%, 100% {
+    -o-transform: translate(79px, 15px);
+  }
+}
+
+@-ms-keyframes cssload-tetromino2 {
+  0%, 20% {
+    -ms-transform: translate(53px, 0px);
+  }
+  40%, 100% {
+    -ms-transform: translate(79px, 15px);
+  }
+}
+
+@-webkit-keyframes cssload-tetromino2 {
+  0%, 20% {
+    -webkit-transform: translate(53px, 0px);
+  }
+  40%, 100% {
+    -webkit-transform: translate(79px, 15px);
+  }
+}
+
+@-moz-keyframes cssload-tetromino2 {
+  0%, 20% {
+    -moz-transform: translate(53px, 0px);
+  }
+  40%, 100% {
+    -moz-transform: translate(79px, 15px);
+  }
+}
+
+@keyframes cssload-tetromino3 {
+  0% {
+    transform: translate(79px, 15px);
+  }
+  20%, 60% {
+    transform: translate(53px, 30px);
+  }
+  90%, 100% {
+    transform: translate(26px, 15px);
+  }
+}
+
+@-o-keyframes cssload-tetromino3 {
+  0% {
+    -o-transform: translate(79px, 15px);
+  }
+  20%, 60% {
+    -o-transform: translate(53px, 30px);
+  }
+  90%, 100% {
+    -o-transform: translate(26px, 15px);
+  }
+}
+
+@-ms-keyframes cssload-tetromino3 {
+  0% {
+    -ms-transform: translate(79px, 15px);
+  }
+  20%, 60% {
+    -ms-transform: translate(53px, 30px);
+  }
+  90%, 100% {
+    -ms-transform: translate(26px, 15px);
+  }
+}
+
+@-webkit-keyframes cssload-tetromino3 {
+  0% {
+    -webkit-transform: translate(79px, 15px);
+  }
+  20%, 60% {
+    -webkit-transform: translate(53px, 30px);
+  }
+  90%, 100% {
+    -webkit-transform: translate(26px, 15px);
+  }
+}
+
+@-moz-keyframes cssload-tetromino3 {
+  0% {
+    -moz-transform: translate(79px, 15px);
+  }
+  20%, 60% {
+    -moz-transform: translate(53px, 30px);
+  }
+  90%, 100% {
+    -moz-transform: translate(26px, 15px);
+  }
+}
+
+@keyframes cssload-tetromino4 {
+  0%, 60% {
+    transform: translate(26px, 15px);
+  }
+  90%, 100% {
+    transform: translate(0, 0);
+  }
+}
+
+@-o-keyframes cssload-tetromino4 {
+  0%, 60% {
+    -o-transform: translate(26px, 15px);
+  }
+  90%, 100% {
+    -o-transform: translate(0, 0);
+  }
+}
+
+@-ms-keyframes cssload-tetromino4 {
+  0%, 60% {
+    -ms-transform: translate(26px, 15px);
+  }
+  90%, 100% {
+    -ms-transform: translate(0, 0);
+  }
+}
+
+@-webkit-keyframes cssload-tetromino4 {
+  0%, 60% {
+    -webkit-transform: translate(26px, 15px);
+  }
+  90%, 100% {
+    -webkit-transform: translate(0, 0);
+  }
+}
+
+@-moz-keyframes cssload-tetromino4 {
+  0%, 60% {
+    -moz-transform: translate(26px, 15px);
+  }
+  90%, 100% {
+    -moz-transform: translate(0, 0);
+  }
+}      

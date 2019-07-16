@@ -1,0 +1,59 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript">
+</script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script> 
+<!-- Write Javascript code here -->
+<script type="text/javascript">
+$(document).ready(function(){
+
+  $(':submit').on('click', function() { // This event fires when a button is clicked
+    var button = $(this).val();
+    var server = $('#RequestInfo').find('input[name="Server"]').val();
+    var region = $('#RequestInfo').find('input[name="Region"]').val();
+    $.ajax({ // ajax call starts
+      url: server, // JQuery loads serverside.php
+      data: 'region=' + region, // Send value of the clicked button
+      dataType: 'jsonp', // Choosing a JSON datatype
+      jsonp: false,
+      jsonpCallback: "myJsonMethod",
+    })
+    .done(function(data) { // Variable data contains the data we get from serverside
+        $('#overlaps').html(''); // Clear #overlaps div
+        $('#overlaptable').append('<thead> <tr> <td>hits</td><td>track</td></tr></thead>');
+        for (var i in data.files) {
+          $('#overlaps').append('<tr><td>' + 
+                                data.files[i].overlaps + 
+                                '</td><td>' + 
+                                data.files[i].name + 
+                                '</td></tr>');
+        }
+    });
+    return false; // keeps the page from not refreshing 
+  });
+});
+</script> 
+</head>
+ 
+<body>
+  <div id="RequestInfo">
+    <input type="text" name="Server" value="http://localhost:8080/" /> </br>
+    <input type="text" name="Region" value="chr1:100-1000" /> </br>
+    <button value="all" type="submit">Get Overlaps</button>
+  </div>
+  <div id="Time"></div>
+  <table id="overlaptable" class="table table-striped">
+        <tbody id="overlaps">
+        </tbody>
+  </table>
+ 
+</body>
+</html>
