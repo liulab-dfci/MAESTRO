@@ -17,6 +17,10 @@
 #' @PipelineRCA
 #' @PipelineSSCC
 #' @AssignCellTypeSSCC
+#' @ReadPlot
+#' @GenebodyCoverPlot
+#' @CountGenePlot
+#' @RunRabit
 
 library(Seurat)
 library(dplyr)
@@ -550,3 +554,87 @@ AssignCellTypeSSCC <- function(cluster.markers, cluster.all, celltype.markers = 
     names(CT) = names(cluster.marker.list)
     return(CT)
   }
+
+ReadPlot <- function(read_distr_file, prefix){
+  read_distr = read.table(read_distr_file, header = TRUE, skip = 4, nrows = 10)
+  total_tags = unlist(strsplit(readLines(read_distr_file, n = 1, skip = 2), split = " "))
+  total_tags = as.integer(total_tags[length(total_tags)])
+  
+  read_distr_plot = read_distr[c(1:4,7,10),]
+  read_distr_plot$Ratio = read_distr_plot$Tag_count/total_tags
+  read_distr_plot$Group = factor(c("CDS", "5'UTR", "3'UTR", "Introns", "TSS_up_10kb", "TES_down_10kb"))
+  png(paste0(prefix ,"_read_distr.png"), width=4.8,height=4.8, res = 300, units = "in")
+  p1 = ggplot(read_distr_plot, aes(x = Group, y = Ratio)) + geom_bar(stat="identity", fill = "blue") + 
+    theme(axis.text.x = element_text(angle = 45, size = 9, hjust = 1)) + xlab(NULL)
+  print(p1)
+  dev.off()
+}
+
+GenebodyCoverPlot <- function(gene_cov_file, prefix){
+  gene_cov = as.data.frame(t(read.table(gene_cov_file, header = FALSE, row.names = 1, sep = "\t")))
+  row.names(gene_cov) = NULL
+  gene_cov$Coverage = (gene_cov$possorted_genome_bam-min(gene_cov$possorted_genome_bam))/(max(gene_cov$possorted_genome_bam)-min(gene_cov$possorted_genome_bam))
+  
+  png(paste0(prefix, "_genebody_cov.png"), width = 4.8,height = 4.8, res = 300, units = "in")
+  par(mai = c(0.9,0.9,0.25,0.25))
+  plot(gene_cov$Percentile,gene_cov$Coverage,type='l',xlab="Gene body percentile (5'->3')", ylab="Coverage",lwd=2,col="blue")
+  dev.off()
+}
+
+CountGenePlot <- function(count_gene_file, count_cutoff = 500, gene_cutoff = 200, prefix){
+  count_gene = read.table(count_gene_file)
+  png(paste0(prefix,"_count_gene.png"),width=4.8,height=4.8, res = 300, units = "in")
+  par(mai = c(0.85, 0.85, 0.25, 0.25))
+  plot(log10(count_gene[which(count_gene[,1] < count_cutoff| count_gene[,2] < gene_cutoff),1]+1),count_gene[which(count_gene[,1] < count_cutoff| count_gene[,2] < gene_cutoff),2],
+       xlim=c(0,log10(max(count_gene[,1])+1)+0.25), ylim=c(0,max(count_gene[,2])+150), pch='.',col='blue',ylab='Genes covered',xlab='Count (log10)')
+  points(log10(count_gene[which(count_gene[,1] >= count_cutoff| count_gene[,2] >= gene_cutoff),1]+1),count_gene[which(count_gene[,1] >= count_cutoff| count_gene[,2] >= gene_cutoff),2],
+         pch='.',col='red')
+  legend("topleft",c("cells","non-cells"),col=c("red","blue"),pch=20, bty = "n")
+  dev.off()
+}
+
+RunRabit <- function(cluster_markers, rabitlibdir){
+  cluster_markers$entrezid = TransGeneID(cluster_markers$gene, fromType = "Symbol", toType = "Entrez",
+                                         organism = "hsa", useBiomart = FALSE,
+                                         ensemblHost = "www.ensembl.org")
+  cluster_markers <- cluster_markers[cluster_markers$p_val_adj<0.000001, ]
+  cluster_markers = na.omit(cluster_markers)
+  
+  cluster_markers_list = split(cluster_markers, cluster_markers$cluster)
+  for(i in names(cluster_markers_list)){
+    cluster_marker_logfc = cluster_markers_list[[i]][,c(2,8)]
+    row.names(cluster_marker_logfc) = cluster_marker_logfc[,'entrezid']
+    cluster_marker_logfc = data.frame(logfc = cluster_marker_logfc[,1], row.names = cluster_marker_logfc[,2])
+    write.table(cluster_marker_logfc, paste0("RABIT/", i, ".txt"), sep = "\t", col.names = TRUE, row.names = TRUE, quote = FALSE)
+  }
+  
+  for(i in names(cluster_markers_list)){
+    system(paste0("Rabit -x ", rabitlibdir, "/interaction.Cistrome -y RABIT/", i,".txt -b ", rabitlibdir, "/interaction.Cistrome.background -o RABIT/", i, ".output"))
+    message(paste0("Rabit in cluster ", i, " is done!"))
+  }
+  
+  rabit_cluster_list = list.files("RABIT", pattern = "output.FDR")
+  rabit_cluster_list = unlist(strsplit(rabit_cluster_list, split = ".output.FDR"))
+  i = rabit_cluster_list[1]
+  out_fdr = read.table(paste0("RABIT/",i,".output.FDR"),header = TRUE, row.names = 1, sep = "\t", check.names = FALSE)
+  out_fdr = t(out_fdr)
+  out_fdr = as.data.frame(out_fdr)
+  out_fdr$gene = unlist(strsplit(row.names(out_fdr), split = "@"))[seq(1,2*nrow(out_fdr),2)]
+  out_fdr_max = aggregate(logfc ~ gene, data = out_fdr, min)
+  colnames(out_fdr_max)[2] = i
+  for(i in rabit_cluster_list[2:length(rabit_cluster_list)]){
+    out_fdr_cur = read.table(paste0("RABIT/", i, ".output.FDR"), header = TRUE, row.names = 1, sep = "\t", check.names = FALSE)
+    out_fdr_cur = t(out_fdr_cur)
+    out_fdr_cur = as.data.frame(out_fdr_cur)
+    out_fdr_cur$gene = unlist(strsplit(row.names(out_fdr_cur), split = "@"))[seq(1,2*nrow(out_fdr_cur),2)]
+    out_fdr_max_cur = aggregate(logfc ~ gene, data = out_fdr_cur, min)
+    colnames(out_fdr_max_cur)[2] = i
+    out_fdr_max = merge(out_fdr_max,out_fdr_max_cur)
+  }
+  out_fdr_max$gene = unlist(strsplit(out_fdr_max$gene, split = "\\."))[seq(2,2*nrow(out_fdr_max),2)]
+  rownames(out_fdr_max) = out_fdr_max$gene
+  out_fdr_max = out_fdr_max[,-1]
+  out_fdr_max_log = -log10(out_fdr_max)
+  write.table(out_fdr_max_log, "RABIT/RABIT_res0.6.txt", col.names = TRUE, row.names = TRUE, quote = FALSE, sep = "\t")
+  return(out_fdr_max_log)
+}

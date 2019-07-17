@@ -14,24 +14,24 @@ if(argue[3] == "10xGenomics"){
   colnames(exp.dat) = barcode_list$V1
   row.names(exp.dat) = gene_list$V1
   exp.dat = as.matrix(exp.dat)
-  if(is.na(argue[8])){
+  if(is.na(argue[9])){
     idtype = "ENSEMBL"
   } else{
-    idtype = argue[8]
+    idtype = argue[9]
   }
 } else if(argue[3] == "Smartseq2"){
-    if(is.na(argue[8])){
+    if(is.na(argue[9])){
       idtype = "ENSEMBL"
     } else{
-      idtype = argue[8]
+      idtype = argue[9]
     }
     exp.dat <- read.table(argue[1], header = TRUE, row.names = 1, sep = '\t')
     exp.dat = exp.dat[!duplicated(row.names(exp.dat)),]
 } else{
-    if(is.na(argue[8])){
+    if(is.na(argue[9])){
       idtype = "SYMBOL"
     } else{
-      idtype = argue[8]
+      idtype = argue[9]
     }
     exp.dat <- read.table(argue[1], header = TRUE, row.names = 1, sep = '\t')
     exp.dat = exp.dat[!duplicated(row.names(exp.dat)),]
@@ -56,5 +56,8 @@ if(argue[4] == "RCA"){
     PipelinescMCA(exp.dat, proj = argue[5])
   }
 }
+
+rabitlibdir = argue[8]
+RunRabit(Seurat$markers,rabitlibdir = rabitlibdir)
 
 

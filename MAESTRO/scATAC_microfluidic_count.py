@@ -9,20 +9,17 @@ Created on Sat Jun 1 19:53:16 2019
 import os,sys
 import time
 import multiprocessing as mp
+
 from MAESTRO.scATAC_utility import *
 
 tmp = randomString()
-chroms = ['chrY', 'chrX', 'chrM', 'chr13', 'chr12', 'chr11', 'chr10', 'chr17',\
-          'chr16', 'chr15', 'chr14', 'chr19', 'chr18', 'chr22', 'chr20',\
-          'chr21', 'chr7', 'chr6', 'chr5', 'chr4', 'chr3', 'chr2', 'chr1',\
-          'chr9', 'chr8']
 
 def bedtools_intersect(barcode):
     """Intersect bam file with peak file to genearate binary count output."""
-    if not os.path.isfile(sys.argv[3]+"/"+barcode+".bam"):
-        error(sys.argv[3]+"/"+barcode+".bam not exist!")
+    if not os.path.isfile(sys.argv[3]+"/"+barcode+".sortedByPos.rmdp.bam"):
+        error(sys.argv[3]+"/"+barcode+".sortedByPos.rmdp.bam not exist!")
     else:
-        os.system("bedtools intersect -wa -a " + sys.argv[1] + " -b " + sys.argv[3] + '/' + barcode + ".bam -u > " + tmp + '/' + barcode + ".bed")
+        os.system("bedtools intersect -wa -a " + sys.argv[1] + " -b " + sys.argv[3] + '/' + barcode + ".sortedByPos.rmdp.bam -u > " + tmp + '/' + barcode + ".bed")
     return(tmp + "/" + barcode + ".bed")
 
 def merge_binary_file(peak_file, count_list, count_file):
@@ -31,8 +28,7 @@ def merge_binary_file(peak_file, count_list, count_file):
     binary_count = {}
     for line in open(peak_file, 'r'):
         line = line.strip().split('\t')
-        if line[0] in chroms:
-            binary_count[line[0]+'_'+line[1]+'_'+line[2]] = ['0']*len(count_list)
+        binary_count[line[0]+'_'+line[1]+'_'+line[2]] = ['0']*len(count_list)
     
     header = []
     for i in range(0,len(count_list)):

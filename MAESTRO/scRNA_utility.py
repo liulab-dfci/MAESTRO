@@ -10,7 +10,7 @@ import os
 from pkg_resources import resource_filename
 
 SCRIPT_PATH = os.path.dirname(__file__)
-RSCRIPT_PATH = resource_filename('strap', 'R')
+RSCRIPT_PATH = resource_filename('MAESTRO', 'R')
 
 def get_fastqfile(fastqpath):
     files = os.listdir(fastqpath)

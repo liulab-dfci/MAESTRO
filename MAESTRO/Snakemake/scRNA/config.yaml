@@ -18,6 +18,8 @@ geneidtype: ENSEMBL
 outprefix: pbmc_1k_v2
 # Number of cores to use
 cores: 8
+# annotation to run rabit
+rabitlib: 
 
 # Reference genome 
 genome:

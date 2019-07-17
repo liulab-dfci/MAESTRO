@@ -7,14 +7,14 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="http://cistrome.org/~dsun/MASTER/dashboard.css" rel="stylesheet">
-    <title>MASTER</title>
+    <link href="http://cistrome.org/~dsun/MAESTRO/dashboard.css" rel="stylesheet">
+    <title>MAESTRO</title>
   </head>
 
   <body>
     <nav class="navbar navbar-dark fixed-top navbar-expand-lg flex-md-nowrap p-0" style="background-color:#1E284A">
       
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://github.com/chenfeiwang/MASTER">MASTER</a>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://github.com/chenfeiwang/MAESTRO">MAESTRO</a>
       <div class="container-fluid">
         <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
           <li class="nav-item">
@@ -39,20 +39,20 @@
                 <a class="nav-link" href="#sample" style="font-size: 1rem">Sample Information</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#QC" style="font-size: 1rem">Quality Control</a>
-                <ul>
+                <a class="nav-link" href="#QC" style="font-size: 1rem">Integration</a>
+<!--                 <ul>
                   <li class="nav-item">
                     <a class="nav-link" href="#bulk" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Bulk level</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="#single" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Single-cell level</a>
                   </li>
-                </ul>
+                </ul> -->
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#clustering" style="font-size: 1rem">Cell Clustering</a>
               </li>
-              <li class="nav-item">
+<!--               <li class="nav-item">
                 <a class="nav-link" href="#annotation" style="font-size: 1rem">Annotation</a>
                 <ul>
                   <li>
@@ -60,7 +60,7 @@
                   </li>
                   <li>
                     <a class="nav-link" href="#regulator" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Regulator annotation</a>
-                  </li>
+                  </li> -->
                 </ul>
               </li>
             </ul>
@@ -68,7 +68,7 @@
           </div>
         </nav>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" style="margin-bottom: 8rem;">
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" style="margin-bottom: 6rem;">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
             <h1 class="h2" id="sample">Sample Information</h1>
           </div>
@@ -76,34 +76,56 @@
             <tbody>
               <tr>
                 <th scope="row">Sample ID</th>
-                <td>%(prefix)s</td>
+                <td>%(outprefix)s</td>
               </tr>
               <tr>
                 <th scope="row">scRNA Object Path</th>
-                <td>%(fastqdir)s</td>
+                <td>%(scrnaobject)s</td>
               </tr>
               <tr>
                 <th scope="row">scATAC Object Path</th>
-                <td>%(species)s</td>
+                <td>%(scatacaobject)s</td>
               </tr>
             </tbody>
           </table>
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2" id="QC">Quality Control</h1>
+            <h1 class="h2" id="QC">Integration</h1>
           </div>
           <div class="row">
             <div class="container-fluid">
-              <h2 class="h3" id="bulk">Bulk level</h2>
               <div class="row">
                 <div class="col-6">
-                  <h3 class="h5">Fragment size distribution</h3>
-                  <a href=%(fragment)s><img src=%(fragment)s width="450" height="450" class="float-left"></a>
+                  <h3 class="h5">Cell alignment</h3>
+                  <a href=%(allsource)s><img src=%(allsource)s width="585" height="450" class="float-left"></a>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-6">
+                  <h3 class="h5">Cell clustering of scRNA-seq</h3>
+                  <a href=%(rnacluster)s><img src=%(rnacluster)s width="562.5" height="450" class="float-left"></a>
+                </div>
+                
+                <div class="col-6">
+                  <h3 class="h5">Celltype annotation of scRNA-seq</h3>
+                  <a href=%(rnaannotate)s><img src=%(rnaannotate)s width="652.5" height="450" class="float-left"></a>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-6">
+                  <h3 class="h5">Cell clustering of scATAC-seq</h3>
+                  <a href=%(ataccluster)s><img src=%(ataccluster)s width="562.5" height="450" class="float-left"></a>
+                </div>
+                
+                <div class="col-6">
+                  <h3 class="h5">Celltype annotation of scATAC-seq</h3>
+                  <a href=%(atacannotate)s><img src=%(atacannotate)s width="652.5" height="450" class="float-left"></a>
+                </div>
+              </div>              
             </div> 
           </div>
           
-          <div class="row">
+<!--           <div class="row">
             <div class="container-fluid">
               <h2 class="h3" id="single">Single-cell level</h2>
               <div class="row">
@@ -118,7 +140,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2" id="clustering">Cell Clustering</h1>
@@ -128,14 +150,18 @@
             <div class="container-fluid">
               <div class="row">
                 <div class="col-6">
-                  <h3 class="h5">Cell clustering based on peaks</h3>
-                  <a href=%(peakcluster)s><img src=%(peakcluster)s width="562.5" height="450" class="float-left"></a>
+                  <h3 class="h5">Cell clustering based on alignment</h3>
+                  <a href=%(allcluster)s><img src=%(allcluster)s width="562.5" height="450" class="float-left"></a>
+                </div>
+                <div class="col-6">
+                  <h3 class="h5">Celltype annotation based on alignment</h3>
+                  <a href=%(allannotate)s><img src=%(allannotate)s width="652.5" height="450" class="float-left"></a>
                 </div>
               </div>
             </div> 
           </div> 
 
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+<!--           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2" id="annotation">Annotation</h1>
           </div>
 
@@ -144,14 +170,14 @@
               <h2 class="h3" id="celltype">Celltype annotation</h2>
               <div class="row">
                 <div class="col-6">
-                  <h3 class="h5">Celltype annotation based on RP and DE genes</h3>
+                  <h3 class="h5">Celltype annotation based on alignment</h3>
                   <a href=%(rpannotate)s><img src=%(rpannotate)s width="652.5" height="450" class="float-left"></a>
                 </div>
               </div>
             </div> 
-          </div>
+          </div> -->
           
-          <div class="row">
+<!--           <div class="row">
             <div class="container-fluid">
               <h2 class="h3" id="regulator">Regulator annotation</h2>
               <div class="row">
@@ -161,7 +187,7 @@
                 
               </div>
             </div>
-          </div>
+          </div> -->
 
         </main>
       </div>

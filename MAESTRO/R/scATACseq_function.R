@@ -40,7 +40,7 @@ FripPlot_micro <- function(matrix, prefix, reads_cutoff = 1000, frip_cutoff = 0.
        xlim=c(0,5),ylim=c(0,1),pch='.',col='blue',ylab='Fraction of promoter reads',xlab='Reads passed filters (log10)',main=prefix)
        points(log10(matrix[which(matrix[,5]>=reads_cutoff&(matrix[,6]/matrix[,5])>=frip_cutoff),5]+1),matrix[which(matrix[,5]>=reads_cutoff&(matrix[,6]/matrix[,5])>=frip_cutoff),6]/matrix[which(matrix[,5]>=reads_cutoff&(matrix[,6]/matrix[,5])>=frip_cutoff),5],
        pch='.',col='red')
-  legend("topright",c("cells","non-cells"),col=c("red","blue"),pch=20,box.lty=0)
+  legend("topright",c("cells","non-cells"),col=c("red","blue"),pch=20,bty = "n")
   dev.off()
   write.table(rownames(matrix[which(matrix[,5]>=reads_cutoff&(matrix[,6]/matrix[,5])>=frip_cutoff),]), paste0(prefix,"_barcodes.txt"), sep = "\n", quote=F, row.names=F, col.names=F)
 }
@@ -62,7 +62,7 @@ FripPlot_10x <- function(matrix, prefix, reads_cutoff = 1000, frip_cutoff = 0.05
        xlim=c(0,5),ylim=c(0,1),pch='.',col='blue',ylab='Fraction of promoter reads',xlab='Reads passed filters (log10)',main=prefix)
        points(log10(matrix[which(matrix[,8]>=reads_cutoff&(matrix[,14]/matrix[,8])>=frip_cutoff),8]+1),matrix[which(matrix[,8]>=reads_cutoff&(matrix[,14]/matrix[,8])>=frip_cutoff),14]/matrix[which(matrix[,8]>=reads_cutoff&(matrix[,14]/matrix[,8])>=frip_cutoff),8],
        pch='.',col='red')
-  legend("topright",c("cells","non-cells"),col=c("red","blue"),pch=20,box.lty=0)
+  legend("topright",c("cells","non-cells"),col=c("red","blue"),pch=20, bty = "n")
   dev.off()
   write.table(as.character(matrix[which(matrix[,8]>=reads_cutoff&(matrix[,14]/matrix[,8])>=frip_cutoff),1]), paste0(prefix,"_barcodes.txt"), sep = "\n", quote=F, row.names=F, col.names=F)
 }
@@ -147,17 +147,30 @@ Incorparate <- function(Seurat1, Seurat2, proj, type1 = "ATAC", type2 = "RNA", p
   Seurat.combined <- RunUMAP(Seurat.combined, reduction = "pca", dims = dims.use)
   Seurat.combined <- FindNeighbors(Seurat.combined, reduction = "pca", dims = dims.use)
   Seurat.combined <- FindClusters(Seurat.combined, resolution = res)
- 
+
+  transfer.anchors <- FindTransferAnchors(reference = SeuratObj2, query = Seurat.combined, dims = dims.use, reduction = "cca")
+  predictions <- TransferData(anchorset = transfer.anchors, refdata = SeuratObj2$assign.ident, dims = dims.use, weight.reduction = "cca")
+  Seurat.combined$transfer.ident <- predictions$predicted.id
   Seurat.combined@project.name <- proj
+  
   p1 <- DimPlot(Seurat.combined, reduction = "umap", group.by = "batch")
-  ggsave(file.path(paste0("UMAP_origIdent_", Seurat.combined@project.name, "_source.png")), p1, width=5, height=4)
+  ggsave(file.path(paste0("UMAP_origIdent_", Seurat.combined@project.name, "_source.png")), p1, width=5.2, height=4)
   p2 <- DimPlot(Seurat.combined, reduction = "umap", label = TRUE)
   ggsave(file.path(paste0("UMAP_origIdent_", Seurat.combined@project.name, "_all.png")), p2, width=5, height=4)
-  p3 <- DimPlot(Seurat.combined, reduction = "umap", group.by = "assign.ident", cells = colnames(SeuratObj2), label = TRUE, label.size = 2)
-  ggsave(file.path(paste0("UMAP_origIdent_", Seurat.combined@project.name, "_RNAonly.png")), p3, width=6, height=4)
-  p4 <- DimPlot(Seurat.combined, reduction = "umap", group.by = "RNA_snn_res.0.6", cells = colnames(SeuratObj1), label = TRUE, label.size = 2)
-  ggsave(file.path(paste0("UMAP_origIdent_", Seurat.combined@project.name, "_ATAConly.png")), p4, width=5, height=4)
   
+  p3 <- DimPlot(Seurat.combined, reduction = "umap", group.by = "RNA_snn_res.0.6", cells = colnames(SeuratObj2), label = TRUE)
+  ggsave(file.path(paste0("UMAP_origIdent_", Seurat.combined@project.name, "_RNAonly.png")), p3, width=5, height=4)
+  p4 <- DimPlot(Seurat.combined, reduction = "umap", group.by = "RNA_snn_res.0.6", cells = colnames(SeuratObj1), label = TRUE)
+  ggsave(file.path(paste0("UMAP_origIdent_", Seurat.combined@project.name, "_ATAConly.png")), p4, width=5, height=4)
+
+  p5 <- DimPlot(Seurat.combined, reduction = "umap", group.by = "assign.ident", cells = colnames(SeuratObj2), label = TRUE, label.size = 3) + theme(legend.text = element_text(size = 9))
+  ggsave(file.path(paste0("UMAP_assignIdent_", Seurat.combined@project.name, "_RNAonly_annotated.png")), p5, width=5.8, height=4)
+  p6 <- DimPlot(Seurat.combined, reduction = "umap", group.by = "assign.ident", cells = colnames(SeuratObj1), label = TRUE, label.size = 3) + theme(legend.text = element_text(size = 9))
+  ggsave(file.path(paste0("UMAP_assignIdent_", Seurat.combined@project.name, "_ATAConly_annotated.png")), p6, width=5.8, height=4)
+
+  p7 <- DimPlot(Seurat.combined, reduction = "umap", group.by = "transfer.ident", label = TRUE, label.size = 3) + theme(legend.text = element_text(size = 9))
+  ggsave(file.path(paste0("UMAP_assignIdent_", Seurat.combined@project.name, "_all_annotated.png")), p7, width=5.8, height=4)
+
   saveRDS(Seurat.combined, file.path(paste0(Seurat.combined@project.name, "_SeuratObj.rds")))
   return(Seurat.combined)
 }

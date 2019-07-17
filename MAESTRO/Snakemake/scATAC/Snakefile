@@ -10,7 +10,7 @@ import yaml
 import sys
 import os
 
-from strap.scATAC_utility import get_fastqlist, ENV_PATH, SCRIPT_PATH, RSCRIPT_PATH
+from MAESTRO.scATAC_utility import get_fastqlist, ENV_PATH, SCRIPT_PATH, RSCRIPT_PATH
 
 rule all:
     input:
@@ -258,9 +258,12 @@ if config["platform"] == "microfluidic":
         output:
             summaryreport = "Result" + outprefix + "_scATAC_report.html"
         params:
-            outpre = outprefix
+            outpre = outprefix,
+            fastqdir = config["fastqdir"],
+            species = config["species"],
+            platform = config["platform"]
         shell:
-            "python " + SCRIPT_PATH + "/scATAC_report.py {params.outpre}"
+            "python " + SCRIPT_PATH + "/scATAC_report.py {params.outpre} {params.fastqdir} {params.species} {params.platform}"
             
 else:
     if config["platform"] == "sci-ATAC-seq":
@@ -485,6 +488,9 @@ else:
         output:
             summaryreport = "Result" + outprefix + "_scATAC_report.html"
         params:
-            outpre = outprefix
+            outpre = outprefix,
+            fastqdir = config["fastqdir"],
+            species = config["species"],
+            platform = config["platform"]
         shell:
-            "python " + SCRIPT_PATH + "/scATAC_report.py {params.outpre}"
+            "python " + SCRIPT_PATH + "/scATAC_report.py {params.outpre} {params.fastqdir} {params.species} {params.platform}"
