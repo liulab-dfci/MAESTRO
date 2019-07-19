@@ -10,8 +10,8 @@
 #' @Incorparate
 #' @runGIGGLE
 
-srcdir = "../"
-Rdir = "./"
+curfilepath = funr::get_script_path()
+srcdir = paste0(curfilepath, "/../")
 
 
 #' Quality Control Function 
@@ -175,7 +175,7 @@ Incorparate <- function(Seurat1, Seurat2, proj, type1 = "ATAC", type2 = "RNA", p
   return(Seurat.combined)
 }
 
-source(paste0(Rdir,"scRNAseq_function.R"))
+source(file.path(curfilepath,"scRNAseq_function.R"))
 AnnotateRP <- function(SeuratObj, RPmat, proj){
   SeuratObjRP <- CreateSeuratObject(RPmat, project = proj, min.cells = 3, min.features = 200)
   SeuratObjRP <- subset(SeuratObjRP, subset.names = "nGene", low.thresholds = 200, high.thresholds = 20000)  
@@ -201,16 +201,16 @@ AnnotateRP <- function(SeuratObj, RPmat, proj){
   # dev.off() 
 }
 
-runGIGGLE <- function(clusterPeaks, species, output){
+runGIGGLE <- function(clusterPeaks, species){
   targetList <- list()
-  antFile <- read.csv("/project/dev/changxin/strap/source_files/CistromeDB_sample_annotation.txt", sep="\t", row.names=1)
-  geneScore <- readRDS(paste0("/project/dev/changxin/strap/source_files/", species, "_genescore_5fold_top500_index.rds"))
+  antFile <- read.csv(paste0(srcdir, "annotations/giggle/CistromeDB_sample_annotation.txt"), sep="\t", row.names=1)
+  geneScore <- readRDS(file.path(srcdir,paste0("annotations/giggle/", species, "_genescore_5fold_top500_index.rds")))
   for (icluster in unique(clusterPeaks$cluster)) {
       targetList[[icluster]] = list()
       iclusterPeaks <- clusterPeaks[clusterPeaks$cluster == icluster, "gene"]
       iclusterPeaks <- strsplit(iclusterPeaks, "-")
       iclusterPeaks <- data.frame(matrix(unlist(iclusterPeaks), nrow=length(iclusterPeaks), byrow=T))
-      outputDir <- paste0(output, "/cluster_", icluster)
+      outputDir <- paste0("GIGGLE/cluster_", icluster)
       outputBed <- paste0(outputDir, "/cluster_specific_peaks.bed")
       if (!file.exists(outputDir)) {
           dir.create(path=outputDir, recursive = TRUE)   
@@ -219,7 +219,7 @@ runGIGGLE <- function(clusterPeaks, species, output){
       
       cmd <- paste0("sort --buffer-size 2G -k1,1 -k2,2n -k3,3n ", outputBed, " | bgzip -c > ", outputBed, ".gz")
       system(cmd)
-      cmd <- paste0("/home1/wangchenfei/Tool/giggle/bin/giggle search -i /project/dev/changxin/strap/source_files/strap_giggle_index_", species, " -q ", outputBed, ".gz -s > ", outputBed, ".result.xls")
+      cmd <- paste0(srcdir,"../pkg/giggle/bin/giggle search -i ", srcdir, "annotations/giggle/giggle_index_", species, " -q ", outputBed, ".gz -s > ", outputBed, ".result.xls")
       system(cmd)
       resultDf <- read.table(paste0(outputBed, ".result.xls"), sep="\t", row.names=NULL, comment.char="")
       resultDf <- resultDf[,-9]

@@ -1,5 +1,6 @@
 ## Marker gene list ##
-srcdir = "../"
+curfilepath = funr::get_script_path()
+srcdir = paste0(curfilepath, "/../")
 human_immune_simple <- list(B = c("MS4A1", "SLAMF7", "CD79A", "BLNK", "FCRL5"),
 							  MacrophageM0 = c("PLA2G7", "PPBP", "QPCT", "SLAMF8", "SLC12A8", "TNFSF14"),
 							  MacrophageM1 = c("PLA1A", "PTGIR", "RASSF4", "RSAD2", "SLAMF1", "SLC2A6","SOCS1","TNFAIP6","TNIP3","TRPM4"),

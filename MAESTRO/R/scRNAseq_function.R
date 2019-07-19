@@ -28,9 +28,10 @@ library(biomaRt)
 library(MAST)
 library(ggplot2)
 library(Matrix)
+library(MAGeCKFlute)
 
-srcdir = "../"
-Rdir = "./"
+curfilepath = funr::get_script_path()
+srcdir = paste0(curfilepath, "/../")
 
 hg38_genome = read.delim(paste0(srcdir, "annotations/GRCh38_mart_export.txt"), check.names = FALSE)
 mm10_genome = read.delim(paste0(srcdir, "annotations/GRCm38_mart_export.txt"), check.names = FALSE)
@@ -248,7 +249,7 @@ PipelinePagoda <- function(tpmMat, proj, min.c = 3, min.g = 200, nPCs = 100, nKs
   return(list(PagodaObj=r, markers = deSets))
 }
 
-source(paste0(Rdir,"scRNAseq_annotation.R"))
+source(file.path(curfilepath,"scRNAseq_annotation.R"))
 AssignCellTypeSeurat <- function(cluster.markers, marker.use = "human_immune_CIBERSORT", organism="GRCh38"){
 # celltype.markers include human_immune_TCIA, markers.pubmed, "human_immune_CIBERSORT", mouse_brain (from split-seq), markers.brain.adult(from science)
   if(marker.use == "human_immune_CIBERSORT" | marker.use == "human_immune_TCIA" | marker.use == "human_immune_simple"){
@@ -593,11 +594,23 @@ CountGenePlot <- function(count_gene_file, count_cutoff = 500, gene_cutoff = 200
   dev.off()
 }
 
-RunRabit <- function(cluster_markers, rabitlibdir){
+
+tf_cluster = readLines(paste0(srcdir, "annotations/HOCOMOCOv11_full_human_TF_cluster.txt"))
+tf_cluster_list = lapply(tf_cluster, function(x){
+  return(unlist(strsplit(x, "\t")))
+})
+names(tf_cluster_list) = sapply(tf_cluster_list, function(x){
+  return(x[1])
+})
+tf_cluster_list = lapply(tf_cluster_list, function(x){
+  return(x[-1])
+})
+
+RunRabit <- function(cluster_markers, SeuratObj, rabitlibdir){
   cluster_markers$entrezid = TransGeneID(cluster_markers$gene, fromType = "Symbol", toType = "Entrez",
                                          organism = "hsa", useBiomart = FALSE,
                                          ensemblHost = "www.ensembl.org")
-  cluster_markers <- cluster_markers[cluster_markers$p_val_adj<0.000001, ]
+  cluster_markers = cluster_markers[cluster_markers$p_val_adj<0.000001, ]
   cluster_markers = na.omit(cluster_markers)
   
   cluster_markers_list = split(cluster_markers, cluster_markers$cluster)
@@ -608,10 +621,12 @@ RunRabit <- function(cluster_markers, rabitlibdir){
     write.table(cluster_marker_logfc, paste0("RABIT/", i, ".txt"), sep = "\t", col.names = TRUE, row.names = TRUE, quote = FALSE)
   }
   
+  message("Start to run Rabit.")
   for(i in names(cluster_markers_list)){
     system(paste0("Rabit -x ", rabitlibdir, "/interaction.Cistrome -y RABIT/", i,".txt -b ", rabitlibdir, "/interaction.Cistrome.background -o RABIT/", i, ".output"))
     message(paste0("Rabit in cluster ", i, " is done!"))
   }
+  message("Rabit is done.")
   
   rabit_cluster_list = list.files("RABIT", pattern = "output.FDR")
   rabit_cluster_list = unlist(strsplit(rabit_cluster_list, split = ".output.FDR"))
@@ -635,6 +650,33 @@ RunRabit <- function(cluster_markers, rabitlibdir){
   rownames(out_fdr_max) = out_fdr_max$gene
   out_fdr_max = out_fdr_max[,-1]
   out_fdr_max_log = -log10(out_fdr_max)
-  write.table(out_fdr_max_log, "RABIT/RABIT_res0.6.txt", col.names = TRUE, row.names = TRUE, quote = FALSE, sep = "\t")
-  return(out_fdr_max_log)
+  write.table(out_fdr_max_log, paste0("RABIT/", SeuratObj@project.name, "_RABIT_res0.6.txt"), col.names = TRUE, row.names = TRUE, quote = FALSE, sep = "\t")
+  
+  cluster_tf_list = sapply(colnames(out_fdr_max_log), function(x){
+    return(rownames(out_fdr_max_log)[order(out_fdr_max_log[,x],decreasing=T)][1:10])
+  })
+  cluster_tf_df = reshape2::melt(cluster_tf_list)[,2:3]
+  cluster_tf_df[,2] = as.character(cluster_tf_df[,2])
+  tf = cluster_tf_df[,2]
+  cluster_tf_df$TF = sapply(cluster_tf_df[,2],function(x){
+    if(x %in% names(tf_cluster_list)){
+      tf_family = tf_cluster_list[[x]]
+      return(paste(tf_family, collapse = " | "))
+    }else{
+      return(x)
+    }
+  })
+  cluster_tf_df = cluster_tf_df[,c(1,3)]
+  cluster_tf_df_unique = unique.data.frame(cluster_tf_df)
+  colnames(cluster_tf_df_unique)[1] = "Cluster"
+  
+  reg_table = data.frame(Cluster=Idents(SeuratObj), CelltypeAnnotation=SeuratObj@meta.data$assign.ident)
+  row.names(reg_table) = NULL
+  reg_table_unique = unique.data.frame(reg_table)
+  
+  reg_df = merge(reg_table_unique, cluster_tf_df_unique)
+  write.table(reg_df,paste0("RABIT/", SeuratObj@project.name, "_ClusterDriverTFtop10.txt"), col.names = TRUE, row.names = FALSE, sep = "\t", quote = FALSE)
+  return(reg_df)
 }
+
+

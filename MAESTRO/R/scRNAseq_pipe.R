@@ -58,6 +58,6 @@ if(argue[4] == "RCA"){
 }
 
 rabitlibdir = argue[8]
-RunRabit(Seurat$markers,rabitlibdir = rabitlibdir)
+RunRabit(Seurat$markers,Seurat$SeuratObj, rabitlibdir = rabitlibdir)
 
 
