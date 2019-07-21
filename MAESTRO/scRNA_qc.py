@@ -36,10 +36,10 @@ def CountGenePlot(expmatrix, count_cutoff, gene_cutoff, outprefix):
     genes_per_cell = np.asarray((expmatrix > 0).sum(axis=0))
     log_count_per_cell = np.log10(count_per_cell+1)
     count_gene = np.concatenate((count_per_cell,genes_per_cell), axis=0)
-    np.savetxt(outprefix + "_ount_gene_stat.txt", count_gene.T, delimiter=" ", fmt = "%d")
+    np.savetxt(outprefix + "_count_gene_stat.txt", count_gene.T, delimiter=" ", fmt = "%d")
     
-    passed_cell = np.logical_and(count_per_cell > count_cutoff, genes_per_cell > gene_cutoff)
-    filtered_cell = np.logical_not(passed_cell)
+    # passed_cell = np.logical_and(count_per_cell > count_cutoff, genes_per_cell > gene_cutoff)
+    # filtered_cell = np.logical_not(passed_cell)
     
     # plt.figure(figsize=(4, 4))
     # p1 = plt.scatter(log_count_per_cell[passed_cell], genes_per_cell[passed_cell], linewidths=0, s=2, c="r")
