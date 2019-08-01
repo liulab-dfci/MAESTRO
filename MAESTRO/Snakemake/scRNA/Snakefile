@@ -10,13 +10,13 @@ import yaml
 import sys
 import os
 
-from MAESTRO.scRNA_utility import get_fastqfile, get_fastqid, get_fastqlist, get_bamfile, SCRIPT_PATH, RSCRIPT_PATH
+from strap.scRNA_utility import get_fastqfile, get_fastqid, get_fastqlist, get_bamfile, RSCRIPT_PATH
 
 if not config["startfromcount"]:
     rule all:
         input:
             analysis = "Result/Analysis",
-            qc = "Result/QC/" + outprefix + "_read_distribution.txt"
+            qc = "Result/RSeQC/" + outprefix + "_read_distribution.txt"
 else:
     rule all:
         input:
@@ -30,8 +30,7 @@ if config["platform"] == "10xGenomics":
             genome = config["genome"]["cellranger"]
         output:
             matrix = "Result/cellranger/" + outprefix + "/outs/filtered_feature_bc_matrix/barcodes.tsv",
-            bam = "Result/cellranger/" + outprefix + "/outs/possorted_genome_bam.bam",
-            rawh5 = "Result/cellranger/" + outprefix + "/outs/raw_feature_bc_matrix.h5"
+            bam = "Result/cellranger/" + outprefix + "/outs/possorted_genome_bam.bam"
         params:
             outpre = outprefix,
             sourceoutdir = outprefix + "/",
@@ -50,45 +49,21 @@ if config["platform"] == "10xGenomics":
             "rm -r {params.sourceoutdir};"
             "gzip -d {params.expression}"
 
-    rule scrna_qc:
-        input:
-            rawh5 = "Result/cellranger/" + outprefix + "/outs/raw_feature_bc_matrix.h5"
-        output:
-            countgene = "Result/QC/" + outprefix + "_count_gene.txt"
-        params:
-            platform = config["platform"],
-            outpre = outprefix,
-            outdir = "Result/QC"
-        shell:
-            "python " + SCRIPT_PATH + "/scRNA_qc.py {input.rawh5} {params.platform} {params.outpre} {params.outdir}"
-
     rule rseqc_qc:
         input:
             bam = "Result/cellranger/" + outprefix + "/outs/possorted_genome_bam.bam",
-            genome = config["genome"]["bed"],
-            hkgene = SCRIPT_PATH + "/annotations/GRCh38_HouseKeepingGenes.bed",
-            countgene = "Result/QC/" + outprefix + "_count_gene.txt"
+            genome = config["genome"]["bed"]
         output:
-            stat = "Result/QC/" + outprefix + "_bam_stat.txt",
-            distr = "Result/QC/" + outprefix + "_read_distribution.txt",
-            genecov = "Result/QC/" + outprefix + ".geneBodyCoverage.txt"
+            stat = "Result/RSeQC/" + outprefix + "_bam_stat.txt",
+            distr = "Result/RSeQC/" + outprefix + "_read_distribution.txt"
         params:
-            # dup = "Result/QC/" + outprefix + "_dup",
-            # qual = "Result/QC/" + outprefix + "_qual",
-            outpre = outprefix,
-            rscriptpath = RSCRIPT_PATH,
-            outdir = "Result/QC",
-            stat = outprefix + "_bam_stat.txt",
-            distr = outprefix + "_read_distribution.txt",
-            genecov = outprefix + ".geneBodyCoverage.txt",
-            countgene = outprefix + "_count_gene.txt"
+            dup = "Result/RSeQC/" + outprefix + "_dup",
+            qual = "Result/RSeQC/" + outprefix + "_qual"
         shell:
             "bam_stat.py -i {input.bam} > {output.stat};"
-            # "read_duplication.py -i {input.bam} -o {params.dup};"
-            # "read_quality.py -i {input.bam} -o {params.qual};"
+            "read_duplication.py -i {input.bam} -o {params.dup};"
+            "read_quality.py -i {input.bam} -o {params.qual};"
             "read_distribution.py -i {input.bam} -r {input.genome} > {output.distr};"
-            "geneBody_coverage.py -r {input.hkgene} -i {input.bam} -o {params.outpre};"
-            "Rscript " + RSCRIPT_PATH + "/scRNAseq_qc.R {params.genecov} {params.countgene} {params.outpre} {params.outdir} {params.rscriptpath};"
 
     if not config["startfromcount"]:
         rule scrna_analysis:
@@ -102,11 +77,10 @@ if config["platform"] == "10xGenomics":
                 method = config["method"],
                 platform = config["platform"],
                 outpre = outprefix,
-                rscriptpath = RSCRIPT_PATH,
-                rabitlib = config["rabitlib"]
+                rscriptpath = RSCRIPT_PATH
             shell:
                 "mkdir " + "Result/Analysis;"
-                "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R {params.expression} {params.species} {params.platform} {params.method} {params.outpre} {output} {params.rscriptpath} {params.rabitlib}"
+                "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R {params.expression} {params.species} {params.platform} {params.method} {params.outpre} {output} {params.rscriptpath}"
     else:
         rule scrna_analysis:
             input:
@@ -120,11 +94,10 @@ if config["platform"] == "10xGenomics":
                 platform = config["platform"],
                 outpre = outprefix,
                 idtype = config["geneidtype"],
-                rscriptpath = RSCRIPT_PATH,
-                rabitlib = config["rabitlib"]
+                rscriptpath = RSCRIPT_PATH
             shell:
                 "mkdir Result/Analysis;"
-                "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R {params.expression} {params.species} {params.platform} {params.method} {params.outpre} {output} {params.rscriptpath} {params.rabitlib} {params.idtype}"
+                "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R {params.expression} {params.species} {params.platform} {params.method} {params.outpre} {output} {params.rscriptpath} {params.idtype}"
 
 if config["platform"] == "Dropseq":
     if "start" in config["barcode"]:
@@ -137,7 +110,7 @@ if config["platform"] == "Dropseq":
                 start = config["barcode"]["start"],
                 end = config["barcode"]["end"]
             shell:
-                "python " + SCRIPT_PATH + "/scRNA_rmLinker.py -f {input.barcode} -s {params.start} -e {params.end} -o {output}"
+                "python scRNA_rmLinker.py -f {input.barcode} -s {params.start} -e {params.end} -o {output}"
     else:
         rule rename:
             input:
@@ -172,45 +145,20 @@ if config["platform"] == "Dropseq":
             ">> ../../{log};"
             "cd ../../;"
 
-    rule scrna_qc:
-        input:
-            expression = "Result/Drseq/" + outprefix + "/expmatrix/" + outprefix + "_expmat.txt",
-        output:
-            countgene = "Result/QC/" + outprefix + "_count_gene.txt"
-        params:
-            platform = config["platform"],
-            outpre = outprefix,
-            outdir = "Result/QC"
-        shell:
-            "python " + SCRIPT_PATH + "/scRNA_qc.py {input.expression} {params.platform} {params.outpre} {params.outdir}"
-
     rule rseqc_qc:
         input:
             sam = "Result/Drseq/" + outprefix + "/mapping/" + outprefix + ".sam",
-            genome = config["genome"]["bed"],
-            hkgene = SCRIPT_PATH + "/annotations/GRCh38_HouseKeepingGenes.bed",
-            countgene = "Result/QC/" + outprefix + "_count_gene.txt"
+            genome = config["genome"]["bed"]
         output:
-            stat = "Result/QC/" + outprefix + "_bam_stat.txt",
-            distr = "Result/QC/" + outprefix + "_read_distribution.txt",
-            genecov = "Result/QC/" + outprefix + ".geneBodyCoverage.txt"
-        params:
-            # dup = "Result/QC/" + outprefix + "_dup",
-            # qual = "Result/QC/" + outprefix + "_qual",
-            outpre = outprefix,
-            rscriptpath = RSCRIPT_PATH,
-            outdir = "Result/QC",
-            stat = outprefix + "_bam_stat.txt",
-            distr = outprefix + "_read_distribution.txt",
-            genecov = outprefix + ".geneBodyCoverage.txt",
-            countgene = outprefix + "_count_gene.txt"
+            stat = "Result/RSeQC/" + outprefix + "_bam_stat.txt",
+            dup = "Result/RSeQC/" + outprefix + "_dup",
+            qual = "Result/RSeQC/" + outprefix + "_qual",
+            distr = "Result/RSeQC/" + outprefix + "_read_distribution.txt"
         shell:
             "bam_stat.py -i {input.sam} > {output.stat};"
-            # "read_duplication.py -i {input.bam} -o {params.dup};"
-            # "read_quality.py -i {input.bam} -o {params.qual};"
+            "read_duplication.py -i {input.sam} -o {output.dup};"
+            "read_quality.py -i {input.sam} -o {output.qual};"
             "read_distribution.py -i {input.sam} -r {input.genome} > {output.distr};"
-            "geneBody_coverage.py -r {input.hkgene} -i {input.sam} -o {params.outpre};"
-            "Rscript " + RSCRIPT_PATH + "/scRNAseq_qc.R {params.genecov} {params.countgene} {params.outpre} {params.outdir} {params.rscriptpath};"
     
     if not config["startfromcount"]:
         rule scrna_analysis:
@@ -223,12 +171,10 @@ if config["platform"] == "Dropseq":
                 species = config["species"],
                 method = config["method"],
                 platform = config["platform"],
-                outpre = outprefix,
-                rscriptpath = RSCRIPT_PATH,
-                rabitlib = config["rabitlib"]
+                outpre = outprefix
             shell:
                 "mkdir Result/Analysis;"
-                "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R {params.expression} {params.species} {params.platform} {params.method} {params.outpre} {output} {params.rscriptpath} {params.rabitlib}"
+                "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R {params.expression} {params.species} {params.platform} {params.method} {params.outpre} {output}"
     else:
         rule scrna_analysis:
             input:
@@ -241,12 +187,10 @@ if config["platform"] == "Dropseq":
                 method = config["method"],
                 platform = config["platform"],
                 outpre = outprefix,
-                idtype = config["geneidtype"],
-                rscriptpath = RSCRIPT_PATH,
-                rabitlib = config["rabitlib"]
+                idtype = config["geneidtype"]
             shell:
                 "mkdir Result/Analysis;"
-                "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R {params.expression} {params.species} {params.platform} {params.method} {params.outpre} {output} {params.rscriptpath} {params.rabitlib} {params.idtype}"
+                "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R {params.expression} {params.species} {params.platform} {params.method} {params.outpre} {output} {params.idtype}"      
 
 if config["platform"] == "Smartseq2":
     rule star_map:
@@ -311,18 +255,6 @@ if config["platform"] == "Smartseq2":
         shell:
             "Rscript " + RSCRIPT_PATH + "/scRNAseq_csv2table.R {input.csv} {output.table}"
 
-    rule scrna_qc:
-        input:
-            expression = "Result/Count/" + outprefix + "_expmat.txt",
-        output:
-            countgene = "Result/QC/" + outprefix + "_count_gene.txt"
-        params:
-            platform = config["platform"],
-            outpre = outprefix,
-            outdir = "Result/QC"
-        shell:
-            "python " + SCRIPT_PATH + "/scRNA_qc.py {input.expression} {params.platform} {params.outpre} {params.outdir}"
-
     rule bam_rsort:
         input:
             bam = "Result/Mapping/{fastqid}Aligned.sortedByCoord.out.bam"
@@ -349,35 +281,23 @@ if config["platform"] == "Smartseq2":
             "bam_num=$(ls {params.bam_dir}*Aligned.sortedByReads.out.bam | wc -l);"
             "ulimit -n $(($bam_num+20));"
             "samtools merge --threads {threads} {output.bam} $bam"
-   
+
     rule rseqc_qc:
         input:
             bam = "Result/Mapping/" + outprefix + "Aligned.sortedByReads.out.bam",
-            genome = config["genome"]["bed"],
-            hkgene = SCRIPT_PATH + "/annotations/GRCh38_HouseKeepingGenes.bed",
-            countgene = "Result/QC/" + outprefix + "_count_gene.txt"
+            genome = config["genome"]["bed"]
         output:
-            stat = "Result/QC/" + outprefix + "_bam_stat.txt",
-            distr = "Result/QC/" + outprefix + "_read_distribution.txt",
-            genecov = "Result/QC/" + outprefix + ".geneBodyCoverage.txt"
+            stat = "Result/RSeQC/" + outprefix + "_bam_stat.txt",
+            distr = "Result/RSeQC/" + outprefix + "_read_distribution.txt"
         params:
-            # dup = "Result/QC/" + outprefix + "_dup",
-            # qual = "Result/QC/" + outprefix + "_qual",
-            outpre = outprefix,
-            rscriptpath = RSCRIPT_PATH,
-            outdir = "Result/QC",
-            stat = outprefix + "_bam_stat.txt",
-            distr = outprefix + "_read_distribution.txt",
-            genecov = outprefix + ".geneBodyCoverage.txt",
-            countgene = outprefix + "_count_gene.txt"
+            dup = "Result/RSeQC/" + outprefix + "_dup",
+            qual = "Result/RSeQC/" + outprefix + "_qual"
         shell:
             "bam_stat.py -i {input.bam} > {output.stat};"
-            # "read_duplication.py -i {input.bam} -o {params.dup};"
-            # "read_quality.py -i {input.bam} -o {params.qual};"
+            "read_duplication.py -i {input.bam} -o {params.dup};"
+            "read_quality.py -i {input.bam} -o {params.qual};"
             "read_distribution.py -i {input.bam} -r {input.genome} > {output.distr};"
-            "geneBody_coverage.py -r {input.hkgene} -i {input.bam} -o {params.outpre};"
-            "Rscript " + RSCRIPT_PATH + "/scRNAseq_qc.R {params.genecov} {params.countgene} {params.outpre} {params.outdir} {params.rscriptpath};"
-
+    
     if not config["startfromcount"]:
         rule scrna_analysis:
             input:
@@ -390,11 +310,10 @@ if config["platform"] == "Smartseq2":
                 method = config["method"],
                 platform = config["platform"],
                 outpre = outprefix,
-                rscriptpath = RSCRIPT_PATH,
-                rabitlib = config["rabitlib"]
+                rscriptpath = RSCRIPT_PATH
             shell:
                 "mkdir Result/Analysis;"
-                "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R {params.expression} {params.species} {params.platform} {params.method} {params.outpre} {output} {params.rscriptpath} {params.rabitlib}"
+                "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R {params.expression} {params.species} {params.platform} {params.method} {params.outpre} {output} {params.rscriptpath}"
     else:
         rule scrna_analysis:
             input:
@@ -408,10 +327,7 @@ if config["platform"] == "Smartseq2":
                 platform = config["platform"],
                 outpre = outprefix,
                 idtype = config["geneidtype"],
-                rscriptpath = RSCRIPT_PATH,
-                rabitlib = config["rabitlib"]
+                rscriptpath = RSCRIPT_PATH
             shell:
                 "mkdir Result/Analysis;"
-                "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R {params.expression} {params.species} {params.platform} {params.method} {params.outpre} {output} {params.rscriptpath} {params.rabitlib} {params.idtype}"
-
-        
+                "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R {params.expression} {params.species} {params.platform} {params.method} {params.outpre} {output} {params.rscriptpath} {params.idtype}"

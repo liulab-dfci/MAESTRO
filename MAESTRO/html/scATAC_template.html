@@ -1,4 +1,4 @@
-  <!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -7,15 +7,15 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="http://cistrome.org/~dsun/MAESTRO/dashboard.css" rel="stylesheet">
+    <link href="http://cistrome.org/~dsun/MASTER/dashboard.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
-    <title>MAESTRO</title>
+    <title>MASTER</title>
   </head>
 
   <body>
     <nav class="navbar navbar-dark fixed-top navbar-expand-lg flex-md-nowrap p-0" style="background-color:#1E284A">
       
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://github.com/chenfeiwang/MAESTRO">MAESTRO</a>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://github.com/chenfeiwang/MASTER">MASTER</a>
       <div class="container-fluid">
         <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
           <li class="nav-item">
@@ -69,7 +69,7 @@
           </div>
         </nav>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" style="margin-bottom: 6rem;">
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" style="margin-bottom: 8rem;">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
             <h1 class="h2" id="sample">Sample Information</h1>
           </div>
@@ -77,11 +77,11 @@
             <tbody>
               <tr>
                 <th scope="row">Sample ID</th>
-                <td>%(outprefix)s</td>
+                <td>%(prefix)s</td>
               </tr>
               <tr>
                 <th scope="row">FASTQ Path</th>
-                <td>%(atacfastqdir)s</td>
+                <td>%(fastqdir)s</td>
               </tr>
               <tr>
                 <th scope="row">Species</th>
@@ -114,7 +114,7 @@
               <div class="row">
                 <div class="col-6">
                   <h3 class="h5">Mappability</h3>
-                  <a href=%(atacmap)s><img src=%(atacmap)s width="450" height="450" class="float-left"></a>
+                  <a href=%(map)s><img src=%(map)s width="450" height="450" class="float-left"></a>
                 </div>
                 
                 <div class="col-6">
@@ -160,24 +160,35 @@
             <div class="container-fluid">
               <h2 class="h3" id="regulator">Regulator annotation</h2>
               <div class="row">
-                <div class="col-12">
-                  <h3 class="h5">Cluster-specific regulator identified by GIGGLE</h3>
+                <div class="col">
+                  <h3 class="h5">Cluster-specific regulator</h3>
                   <table class="table table-striped table-bordered" id="myTable">
                     <thead class="thead">
                       <tr>
-                        <th scope="col" style="vertical-align: middle">Cluster</th>
-                        <th scope="col" style="vertical-align: middle">Celltype Annotation</th>
-                        <th scope="col" style="vertical-align: middle">Transcription Factor</th>
+                        <th scope="col" style="vertical-align: middle;">Cluster</th>
+                        <th scope="col" style="vertical-align: middle;">Celltype Annotation</th>
+                        <th scope="col" style="vertical-align: middle;">Transcription Factor</th>
+                        <th scope="col" style="vertical-align: middle;">Expression</th>
+                        <th scope="col" style="vertical-align: middle;">Regulatory Score</th>
                       </tr>
                     </thead>
                     <tbody style="font-size: 0.9rem">
-%(regtable)S
+                      <tr>
+<!--                         <td>{{ data.cluster }}</td>
+                        <td>{{ data.annotation }}</td>
+                        <td>{{ data.tf }}</td>
+                        <td>{{ data.expression }}</td>
+                        <td>{{ data.regscore }}</td> -->
+                        %(regtable)s
+                      </tr>
                     </tbody>
                     <tfoot class="tfoot">
                       <tr>
                         <th scope="col" style="vertical-align: middle;">Cluster</th>
                         <th scope="col" style="vertical-align: middle;">Celltype Annotation</th>
                         <th scope="col" style="vertical-align: middle;">Transcription Factor</th>
+                        <th scope="col" style="vertical-align: middle;">Expression</th>
+                        <th scope="col" style="vertical-align: middle;">Regulatory Score</th>
                       </tr>
                     </tfoot>
                   </table>

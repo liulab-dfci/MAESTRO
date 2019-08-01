@@ -7,15 +7,14 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="http://cistrome.org/~dsun/MAESTRO/dashboard.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
-    <title>MAESTRO</title>
+    <link href="http://cistrome.org/~dsun/MASTER/dashboard.css" rel="stylesheet">
+    <title>MASTER</title>
   </head>
 
   <body>
     <nav class="navbar navbar-dark fixed-top navbar-expand-lg flex-md-nowrap p-0" style="background-color:#1E284A">
       
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://github.com/chenfeiwang/MAESTRO">MAESTRO</a>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://github.com/chenfeiwang/MASTER">MASTER</a>
       <div class="container-fluid">
         <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
           <li class="nav-item active">
@@ -69,7 +68,7 @@
           </div>
         </nav>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" style="margin-bottom: 6rem;">
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" style="margin-bottom: 8rem;">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
             <h1 class="h2" id="sample">Sample Information</h1>
           </div>
@@ -77,7 +76,7 @@
             <tbody>
               <tr>
                 <th scope="row">Sample ID</th>
-                <td>%(outprefix)s</td>
+                <td>%(prefix)s</td>
               </tr>
               <tr>
                 <th scope="row">FASTQ Path</th>
@@ -100,11 +99,9 @@
             <div class="container-fluid">
               <h2 class="h3" id="bulk">Bulk level</h2>
               <div class="row">
-<!--   -->
-
                 <div class="col-6">
-                  <h3 class="h5">Gene body coverage</h3>
-                  <a href=%(genecov)s><img src=%(genecov)s width="450" height="450" class="float-left"></a>
+                  <h3 class="h5">Fragment size distribution</h3>
+                  <a href=%(fragment)s><img src=%(fragment)s width="450" height="450" class="float-left"></a>
                 </div>
               </div>
             </div> 
@@ -116,12 +113,12 @@
               <div class="row">
                 <div class="col-6">
                   <h3 class="h5">Mappability</h3>
-                  <a href=%(rnamap)s><img src=%(rnamap)s width="450" height="450" class="float-left"></a>
+                  <a href=%(map)s><img src=%(map)s width="450" height="450" class="float-left"></a>
                 </div>
                 
                 <div class="col-6">
-                  <h3 class="h5">Cell filtering based on counts and covered genes</h3>
-                  <a href=%(countgene)s><img src=%(countgene)s width="450" height="450" class="float-left"></a>
+                  <h3 class="h5">Cell filtering based on valid fragments and FRIP</h3>
+                  <a href=%(frip)s><img src=%(frip)s width="450" height="450" class="float-left"></a>
                 </div>
               </div>
             </div>
@@ -135,8 +132,8 @@
             <div class="container-fluid">
               <div class="row">
                 <div class="col-6">
-                  <h3 class="h5">Cell clustering based on gene expression</h3>
-                  <a href=%(genecluster)s><img src=%(genecluster)s width="562.5" height="450" class="float-left"></a>
+                  <h3 class="h5">Cell clustering based on peaks</h3>
+                  <a href=%(peakcluster)s><img src=%(peakcluster)s width="562.5" height="450" class="float-left"></a>
                 </div>
               </div>
             </div> 
@@ -151,8 +148,8 @@
               <h2 class="h3" id="celltype">Celltype annotation</h2>
               <div class="row">
                 <div class="col-6">
-                  <h3 class="h5">Celltype annotation based on DE genes</h3>
-                  <a href=%(geneannotate)s><img src=%(geneannotate)s width="675" height="450" class="float-left"></a>
+                  <h3 class="h5">Celltype annotation based on RP and DE genes</h3>
+                  <a href=%(rpannotate)s><img src=%(rpannotate)s width="652.5" height="450" class="float-left"></a>
                 </div>
               </div>
             </div> 
@@ -162,666 +159,8 @@
             <div class="container-fluid">
               <h2 class="h3" id="regulator">Regulator annotation</h2>
               <div class="row">
-                <div class="col">
-                  <h3 class="h5">Cluster-specific regulator identified by Rabit</h3>
-                  <table class="table table-striped table-bordered" id="myTable">
-                    <thead class="thead">
-                      <tr>
-                        <th scope="col" style="vertical-align: middle">Cluster</th>
-                        <th scope="col" style="vertical-align: middle">Celltype Annotation</th>
-                        <th scope="col" style="vertical-align: middle">Transcription Factor</th>
-                      </tr>
-                    </thead>
-                    <tbody style="font-size: 0.9rem">
-                      <tr>
-                        <td>0</td>
-                        <td>RestMemCD4T</td>
-                        <td>BATF | BATF3</td>
-                      </tr>
-                      <tr>
-                        <td>0</td>
-                        <td>RestMemCD4T</td>
-                        <td>SCML2</td>
-                      </tr>
-                      <tr>
-                        <td>0</td>
-                        <td>RestMemCD4T</td>
-                        <td>BRF2</td>
-                      </tr>
-                      <tr>
-                        <td>0</td>
-                        <td>RestMemCD4T</td>
-                        <td>NCAPG2</td>
-                      </tr>
-                      <tr>
-                        <td>0</td>
-                        <td>RestMemCD4T</td>
-                        <td>CTNNB1</td>
-                      </tr>
-                      <tr>
-                        <td>0</td>
-                        <td>RestMemCD4T</td>
-                        <td>CUX1</td>
-                      </tr>
-                      <tr>
-                        <td>0</td>
-                        <td>RestMemCD4T</td>
-                        <td>MCRS1</td>
-                      </tr>
-                      <tr>
-                        <td>0</td>
-                        <td>RestMemCD4T</td>
-                        <td>ATF4 | BATF | CEBPA | CEBPB | CEBPD | CEBPE | CEBPG | DBP | DDIT3 | HLF | NFIL3</td>
-                      </tr>
-                      <tr>
-                        <td>0</td>
-                        <td>RestMemCD4T</td>
-                        <td>ZNF383</td>
-                      </tr>
-                      <tr>
-                        <td>0</td>
-                        <td>RestMemCD4T</td>
-                        <td>EHF | ELF1 | ELF2 | ELF3 | ELF5 | ELK1 | ELK3 | ELK4 | ERG | ETS1 | ETS2 | ETV1 | ETV2 | ETV4 | ETV5 | ETV6 | ETV7 | FEV | FLI1 | GABPA | NFAT5</td>
-                      </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>Monocyte</td>
-                        <td>HSF1 | HSF2 | HSF4 | HOXB2</td>
-                      </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>Monocyte</td>
-                        <td>KDM3A</td>
-                      </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>Monocyte</td>
-                        <td>ZNF395</td>
-                      </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>Monocyte</td>
-                        <td>SALL4 | ZNF219 | ZNF740</td>
-                      </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>Monocyte</td>
-                        <td>CBX8</td>
-                      </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>Monocyte</td>
-                        <td>REST</td>
-                      </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>Monocyte</td>
-                        <td>POLR3D</td>
-                      </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>Monocyte</td>
-                        <td>EP300</td>
-                      </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>Monocyte</td>
-                        <td>AHR | ARNT | E4F1 | EPAS1 | GMEB2 | HIF1A</td>
-                      </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>Monocyte</td>
-                        <td>EHF | ELF1 | ELF2 | ELF3 | ELF5 | ELK1 | ELK3 | ELK4 | ERG | ETS1 | ETS2 | ETV1 | ETV2 | ETV4 | ETV5 | ETV6 | ETV7 | FEV | FLI1 | GABPA | NFAT5</td>
-                      </tr>
-                      <tr>
-                        <td>10</td>
-                        <td>RestNK</td>
-                        <td>CDK7</td>
-                      </tr>
-                      <tr>
-                        <td>10</td>
-                        <td>RestNK</td>
-                        <td>HDAC6</td>
-                      </tr>
-                      <tr>
-                        <td>10</td>
-                        <td>RestNK</td>
-                        <td>CEBPZ | FOXI1 | NFYA | NFYB | NFYC</td>
-                      </tr>
-                      <tr>
-                        <td>10</td>
-                        <td>RestNK</td>
-                        <td>TRIM28</td>
-                      </tr>
-                      <tr>
-                        <td>10</td>
-                        <td>RestNK</td>
-                        <td>ATF4 | BATF | CEBPA | CEBPB | CEBPD | CEBPE | CEBPG | DBP | DDIT3 | HLF | NFIL3</td>
-                      </tr>
-                      <tr>
-                        <td>10</td>
-                        <td>RestNK</td>
-                        <td>ARNT2 | IKZF1 | NR0B1 | RBPJ</td>
-                      </tr>
-                      <tr>
-                        <td>10</td>
-                        <td>RestNK</td>
-                        <td>HMG20A</td>
-                      </tr>
-                      <tr>
-                        <td>10</td>
-                        <td>RestNK</td>
-                        <td>CDX1 | CDX2 | HOXA11 | HOXA13 | HOXB13 | HOXC11 | HOXC12 | HOXC13 | HOXC9 | HOXD11 | HOXD12 | HOXD9</td>
-                      </tr>
-                      <tr>
-                        <td>10</td>
-                        <td>RestNK</td>
-                        <td>ZNF711</td>
-                      </tr>
-                      <tr>
-                        <td>10</td>
-                        <td>RestNK</td>
-                        <td>ZBTB33</td>
-                      </tr>
-                      <tr>
-                        <td>11</td>
-                        <td>MemoryB</td>
-                        <td>ZNF3</td>
-                      </tr>
-                      <tr>
-                        <td>11</td>
-                        <td>MemoryB</td>
-                        <td>ZNF711</td>
-                      </tr>
-                      <tr>
-                        <td>11</td>
-                        <td>MemoryB</td>
-                        <td>RB1</td>
-                      </tr>
-                      <tr>
-                        <td>11</td>
-                        <td>MemoryB</td>
-                        <td>BACH1 | BACH2 | FOS | FOSB | FOSL1 | FOSL2 | JUN | JUNB | JUND | NFE2L2 | NFE2 | ZNF554</td>
-                      </tr>
-                      <tr>
-                        <td>11</td>
-                        <td>MemoryB</td>
-                        <td>ATF4 | BATF | CEBPA | CEBPB | CEBPD | CEBPE | CEBPG | DBP | DDIT3 | HLF | NFIL3</td>
-                      </tr>
-                      <tr>
-                        <td>11</td>
-                        <td>MemoryB</td>
-                        <td>T | EOMES | TBR1 | TBX21 | TBX3 | TBX5 | ZNF18</td>
-                      </tr>
-                      <tr>
-                        <td>11</td>
-                        <td>MemoryB</td>
-                        <td>NR2F1 | NR2F2 | ESRRA | ESRRB | ESRRG | ESR1 | ESR2 | NR1H3 | NR1H4 | NR1I2 | NR1I3 | NR2C1 | NR4A1 | NR4A2 | NR4A3 | NR5A2 | PPARA | PPARG | RARA | RARB | RARG | RXRA | RXRB | NR5A1 | THRA | THRB | VDR</td>
-                      </tr>
-                      <tr>
-                        <td>11</td>
-                        <td>MemoryB</td>
-                        <td>GATA1 | GATA2 | GATA3 | GATA4 | GATA5 | GATA6 | TAL1</td>
-                      </tr>
-                      <tr>
-                        <td>11</td>
-                        <td>MemoryB</td>
-                        <td>NKX2-1 | NKX2-2 | NKX2-3 | NKX2-5 | NKX3-1 | NKX3-2</td>
-                      </tr>
-                      <tr>
-                        <td>11</td>
-                        <td>MemoryB</td>
-                        <td>RAG1</td>
-                      </tr>
-                      <tr>
-                        <td>12</td>
-                        <td>Megakaryocytes</td>
-                        <td>ZNF570</td>
-                      </tr>
-                      <tr>
-                        <td>12</td>
-                        <td>Megakaryocytes</td>
-                        <td>CTCF | CTCFL</td>
-                      </tr>
-                      <tr>
-                        <td>12</td>
-                        <td>Megakaryocytes</td>
-                        <td>CREB3L4</td>
-                      </tr>
-                      <tr>
-                        <td>12</td>
-                        <td>Megakaryocytes</td>
-                        <td>ZBTB33</td>
-                      </tr>
-                      <tr>
-                        <td>12</td>
-                        <td>Megakaryocytes</td>
-                        <td>ATF1 | ATF2 | ATF7 | CREB1 | CREB5 | CREM | JDP2</td>
-                      </tr>
-                      <tr>
-                        <td>12</td>
-                        <td>Megakaryocytes</td>
-                        <td>ZNF417</td>
-                      </tr>
-                      <tr>
-                        <td>12</td>
-                        <td>Megakaryocytes</td>
-                        <td>SIX5</td>
-                      </tr>
-                      <tr>
-                        <td>12</td>
-                        <td>Megakaryocytes</td>
-                        <td>E2F1 | E2F2 | E2F3 | E2F4 | E2F5 | E2F6 | E2F7 | E2F8 | TFDP1</td>
-                      </tr>
-                      <tr>
-                        <td>12</td>
-                        <td>Megakaryocytes</td>
-                        <td>ZNF597</td>
-                      </tr>
-                      <tr>
-                        <td>12</td>
-                        <td>Megakaryocytes</td>
-                        <td>ZNF785</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>CD8T</td>
-                        <td>USP7</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>CD8T</td>
-                        <td>NFE2L1</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>CD8T</td>
-                        <td>ZNF711</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>CD8T</td>
-                        <td>THAP11 | ZNF143 | ZNF76</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>CD8T</td>
-                        <td>SMAD2 | SMAD3 | SMAD4</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>CD8T</td>
-                        <td>SIX5</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>CD8T</td>
-                        <td>CUX1</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>CD8T</td>
-                        <td>EHF | ELF1 | ELF2 | ELF3 | ELF5 | ELK1 | ELK3 | ELK4 | ERG | ETS1 | ETS2 | ETV1 | ETV2 | ETV4 | ETV5 | ETV6 | ETV7 | FEV | FLI1 | GABPA | NFAT5</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>CD8T</td>
-                        <td>HOXA1 | HOXA10 | HOXA5 | HOXA9 | HOXB1 | HOXB6 | HOXB7 | HOXB8 | HOXC8 | MEIS1 | PBX1 | PBX2 | PDX1 | MEIS3 | TBX20 | TGIF1</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>RestMemCD4T</td>
-                        <td>AR | NR3C1 | PGR | ZNF341</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>RestMemCD4T</td>
-                        <td>BCL6 | STAT5A | STAT5B | STAT1 | STAT3 | STAT4</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>RestMemCD4T</td>
-                        <td>HSF1 | HSF2 | HSF4 | HOXB2</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>RestMemCD4T</td>
-                        <td>FOXA1 | FOXA2 | FOXA3 | FOXC1 | FOXD1 | FOXD3 | FOXF1 | FOXF2 | FOXJ2 | FOXK1 | FOXM1 | FOXO1 | FOXO3 | FOXO4 | FOXO6 | FOXP1 | FOXP2 | FOXQ1</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>RestMemCD4T</td>
-                        <td>REST</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>RestMemCD4T</td>
-                        <td>ZNF711</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>RestMemCD4T</td>
-                        <td>NR2F1 | NR2F2 | ESRRA | ESRRB | ESRRG | ESR1 | ESR2 | NR1H3 | NR1H4 | NR1I2 | NR1I3 | NR2C1 | NR4A1 | NR4A2 | NR4A3 | NR5A2 | PPARA | PPARG | RARA | RARB | RARG | RXRA | RXRB | NR5A1 | THRA | THRB | VDR</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>RestMemCD4T</td>
-                        <td>CDX1 | CDX2 | HOXA11 | HOXA13 | HOXB13 | HOXC11 | HOXC12 | HOXC13 | HOXC9 | HOXD11 | HOXD12 | HOXD9</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>RestMemCD4T</td>
-                        <td>JARID2</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>RestMemCD4T</td>
-                        <td>KLF15 | MAZ | PATZ1 | VEZF1 | WT1 | ZNF263 | ZNF467 | ZSCAN22</td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>ActivateNK</td>
-                        <td>CCNT1</td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>ActivateNK</td>
-                        <td>E2F1 | E2F2 | E2F3 | E2F4 | E2F5 | E2F6 | E2F7 | E2F8 | TFDP1</td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>ActivateNK</td>
-                        <td>ZNF711</td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>ActivateNK</td>
-                        <td>GLI1 | GLI2 | GLI3 | ZIC1</td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>ActivateNK</td>
-                        <td>HSF1 | HSF2 | HSF4 | HOXB2</td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>ActivateNK</td>
-                        <td>ZNF3</td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>ActivateNK</td>
-                        <td>SND1</td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>ActivateNK</td>
-                        <td>ZNF274</td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>ActivateNK</td>
-                        <td>NR2F1 | NR2F2 | ESRRA | ESRRB | ESRRG | ESR1 | ESR2 | NR1H3 | NR1H4 | NR1I2 | NR1I3 | NR2C1 | NR4A1 | NR4A2 | NR4A3 | NR5A2 | PPARA | PPARG | RARA | RARB | RARG | RXRA | RXRB | NR5A1 | THRA | THRB | VDR</td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>MemoryB</td>
-                        <td>TP53 | TP63 | TP73</td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>MemoryB</td>
-                        <td>FOXA1 | FOXA2 | FOXA3 | FOXC1 | FOXD1 | FOXD3 | FOXF1 | FOXF2 | FOXJ2 | FOXK1 | FOXM1 | FOXO1 | FOXO3 | FOXO4 | FOXO6 | FOXP1 | FOXP2 | FOXQ1</td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>MemoryB</td>
-                        <td>ZNF711</td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>MemoryB</td>
-                        <td>HDAC6</td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>MemoryB</td>
-                        <td>NR2C2</td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>MemoryB</td>
-                        <td>ZNF3</td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>MemoryB</td>
-                        <td>HNF1A | HNF1B</td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>MemoryB</td>
-                        <td>ATF4 | BATF | CEBPA | CEBPB | CEBPD | CEBPE | CEBPG | DBP | DDIT3 | HLF | NFIL3</td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>MemoryB</td>
-                        <td>NR2F1 | NR2F2 | ESRRA | ESRRB | ESRRG | ESR1 | ESR2 | NR1H3 | NR1H4 | NR1I2 | NR1I3 | NR2C1 | NR4A1 | NR4A2 | NR4A3 | NR5A2 | PPARA | PPARG | RARA | RARB | RARG | RXRA | RXRB | NR5A1 | THRA | THRB | VDR</td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>MemoryB</td>
-                        <td>LEF1 | TCF7 | TCF7L1 | TCF7L2</td>
-                      </tr>
-                      <tr>
-                        <td>6</td>
-                        <td>NaiveB</td>
-                        <td>ZNF711</td>
-                      </tr>
-                      <tr>
-                        <td>6</td>
-                        <td>NaiveB</td>
-                        <td>REST</td>
-                      </tr>
-                      <tr>
-                        <td>6</td>
-                        <td>NaiveB</td>
-                        <td>CTCF | CTCFL</td>
-                      </tr>
-                      <tr>
-                        <td>6</td>
-                        <td>NaiveB</td>
-                        <td>NR2F1 | NR2F2 | ESRRA | ESRRB | ESRRG | ESR1 | ESR2 | NR1H3 | NR1H4 | NR1I2 | NR1I3 | NR2C1 | NR4A1 | NR4A2 | NR4A3 | NR5A2 | PPARA | PPARG | RARA | RARB | RARG | RXRA | RXRB | NR5A1 | THRA | THRB | VDR</td>
-                      </tr>
-                      <tr>
-                        <td>6</td>
-                        <td>NaiveB</td>
-                        <td>HSF1 | HSF2 | HSF4 | HOXB2</td>
-                      </tr>
-                      <tr>
-                        <td>6</td>
-                        <td>NaiveB</td>
-                        <td>ASCL1 | ASCL2 | ATOH1 | BHLHA15 | FIGLA | TCF12 | ID4 | TCF4 | LYL1 | MESP1 | MYF6 | MYOD1 | MYOG | NEUROD1 | NEUROD2 | NEUROG2 | OLIG2 | PTF1A | SNAI1 | SNAI2 | TAL1 | TFAP4 | TCF3 | TWIST1 | ZBTB18 | ZEB1</td>
-                      </tr>
-                      <tr>
-                        <td>6</td>
-                        <td>NaiveB</td>
-                        <td>BACH1 | BACH2 | FOS | FOSB | FOSL1 | FOSL2 | JUN | JUNB | JUND | NFE2L2 | NFE2 | ZNF554</td>
-                      </tr>
-                      <tr>
-                        <td>6</td>
-                        <td>NaiveB</td>
-                        <td>CTNNB1</td>
-                      </tr>
-                      <tr>
-                        <td>6</td>
-                        <td>NaiveB</td>
-                        <td>CARM1</td>
-                      </tr>
-                      <tr>
-                        <td>6</td>
-                        <td>NaiveB</td>
-                        <td>BCL11A | IRF1 | IRF2 | IRF3 | IRF4 | IRF8 | PRDM1 | SPI1 | SPIB | STAT1 | STAT2</td>
-                      </tr>
-                      <tr>
-                        <td>7</td>
-                        <td>NaiveCD4T</td>
-                        <td>ZNF33B</td>
-                      </tr>
-                      <tr>
-                        <td>7</td>
-                        <td>NaiveCD4T</td>
-                        <td>GTF2E2</td>
-                      </tr>
-                      <tr>
-                        <td>7</td>
-                        <td>NaiveCD4T</td>
-                        <td>HSF1 | HSF2 | HSF4 | HOXB2</td>
-                      </tr>
-                      <tr>
-                        <td>7</td>
-                        <td>NaiveCD4T</td>
-                        <td>HES4</td>
-                      </tr>
-                      <tr>
-                        <td>7</td>
-                        <td>NaiveCD4T</td>
-                        <td>CTCF | CTCFL</td>
-                      </tr>
-                      <tr>
-                        <td>7</td>
-                        <td>NaiveCD4T</td>
-                        <td>BCL11A | IRF1 | IRF2 | IRF3 | IRF4 | IRF8 | PRDM1 | SPI1 | SPIB | STAT1 | STAT2</td>
-                      </tr>
-                      <tr>
-                        <td>7</td>
-                        <td>NaiveCD4T</td>
-                        <td>THAP11 | ZNF143 | ZNF76</td>
-                      </tr>
-                      <tr>
-                        <td>7</td>
-                        <td>NaiveCD4T</td>
-                        <td>ZNF711</td>
-                      </tr>
-                      <tr>
-                        <td>7</td>
-                        <td>NaiveCD4T</td>
-                        <td>SMAD2 | SMAD3 | SMAD4</td>
-                      </tr>
-                      <tr>
-                        <td>7</td>
-                        <td>NaiveCD4T</td>
-                        <td>CDX1 | CDX2 | HOXA11 | HOXA13 | HOXB13 | HOXC11 | HOXC12 | HOXC13 | HOXC9 | HOXD11 | HOXD12 | HOXD9</td>
-                      </tr>
-                      <tr>
-                        <td>8</td>
-                        <td>Monocyte</td>
-                        <td>CHD1</td>
-                      </tr>
-                      <tr>
-                        <td>8</td>
-                        <td>Monocyte</td>
-                        <td>CHD2</td>
-                      </tr>
-                      <tr>
-                        <td>8</td>
-                        <td>Monocyte</td>
-                        <td>WDR5</td>
-                      </tr>
-                      <tr>
-                        <td>8</td>
-                        <td>Monocyte</td>
-                        <td>EHMT2</td>
-                      </tr>
-                      <tr>
-                        <td>8</td>
-                        <td>Monocyte</td>
-                        <td>ZNF274</td>
-                      </tr>
-                      <tr>
-                        <td>8</td>
-                        <td>Monocyte</td>
-                        <td>ZNF273</td>
-                      </tr>
-                      <tr>
-                        <td>8</td>
-                        <td>Monocyte</td>
-                        <td>CTCF | CTCFL</td>
-                      </tr>
-                      <tr>
-                        <td>8</td>
-                        <td>Monocyte</td>
-                        <td>SIX1 | SIX2</td>
-                      </tr>
-                      <tr>
-                        <td>8</td>
-                        <td>Monocyte</td>
-                        <td>SRCAP</td>
-                      </tr>
-                      <tr>
-                        <td>8</td>
-                        <td>Monocyte</td>
-                        <td>RUVBL2</td>
-                      </tr>
-                      <tr>
-                        <td>9</td>
-                        <td>RestDC</td>
-                        <td>ZNF711</td>
-                      </tr>
-                      <tr>
-                        <td>9</td>
-                        <td>RestDC</td>
-                        <td>PAX6 | PAX8</td>
-                      </tr>
-                      <tr>
-                        <td>9</td>
-                        <td>RestDC</td>
-                        <td>EP300</td>
-                      </tr>
-                      <tr>
-                        <td>9</td>
-                        <td>RestDC</td>
-                        <td>AR | NR3C1 | PGR | ZNF341</td>
-                      </tr>
-                      <tr>
-                        <td>9</td>
-                        <td>RestDC</td>
-                        <td>ZNF3</td>
-                      </tr>
-                      <tr>
-                        <td>9</td>
-                        <td>RestDC</td>
-                        <td>HNF4A | HNF4G | NR2F6 | PPARA | PPARD | PPARG | RXRG</td>
-                      </tr>
-                      <tr>
-                        <td>9</td>
-                        <td>RestDC</td>
-                        <td>RFX7</td>
-                      </tr>
-                      <tr>
-                        <td>9</td>
-                        <td>RestDC</td>
-                        <td>TP53 | TP63 | TP73</td>
-                      </tr>
-                      <tr>
-                        <td>9</td>
-                        <td>RestDC</td>
-                        <td>HES2</td>
-                      </tr>
-                      <tr>
-                        <td>9</td>
-                        <td>RestDC</td>
-                        <td>NR2F1 | NR2F2 | ESRRA | ESRRB | ESRRG | ESR1 | ESR2 | NR1H3 | NR1H4 | NR1I2 | NR1I3 | NR2C1 | NR4A1 | NR4A2 | NR4A3 | NR5A2 | PPARA | PPARG | RARA | RARB | RARG | RXRA | RXRB | NR5A1 | THRA | THRB | VDR</td>
-                      </tr>
-                    </tbody>
-                    <tfoot class="tfoot">
-                      <tr>
-                        <th scope="col" style="vertical-align: middle;">Cluster</th>
-                        <th scope="col" style="vertical-align: middle;">Celltype Annotation</th>
-                        <th scope="col" style="vertical-align: middle;">Transcription Factor</th>
-                      </tr>
-                    </tfoot>
-                  </table>
+                <div class="col-6">
+                  <h3 class="h5">Cluster-specific regulator</h3>
                 </div>
                 
               </div>
@@ -841,89 +180,8 @@
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script>window.jQuery || document.write('<script src="/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script><script src="/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-
-    <script type="text/javascript">
-      $(document).ready(function() {
-          $('#myTable').DataTable( {
-              initComplete: function () {
-                  var api = this.api();
-                  api.columns().indexes().flatten().each( function ( i ) {
-                      var column = api.column( i );
-                      var select = $('<select><option value=""></option></select>')
-                          .appendTo( $(column.footer()).empty() )
-                          .on( 'change', function () {
-                              var val = $.fn.dataTable.util.escapeRegex(
-                                  $(this).val()
-                              );
-                              column
-                                  .search( val ? '^'+val+'$' : '', true, false )
-                                  .draw();
-                          } );
-                      column.data().unique().sort().each( function ( d, j ) {
-                          select.append( '<option value="'+d+'">'+d+'</option>' )
-                      } );
-                  } );
-              }
-          } );
-      } );
-    </script>
-    <script type="text/javascript">
-      $(document).ready(function() {
-        $('.js-example-basic-single').select2({
-          theme: "bootstrap"
-        });
-      });
-    </script>
-    <script type="text/javascript">
-      function clean_formatted_data(str) {
-        return parseFloat(str.replace(/([%,$,\,])+/g,''));
-      }
-
-      function col_to_array(tbl_col,target) {
-      // Returns column `n` (zero indexed) in table id `target` as an array 
-
-        var colArray = $('#'+target+' td:nth-child('+tbl_col+')').map(function(){
-          return clean_formatted_data( $(this).text() );
-        }).get();
-
-        return colArray;
-      }
-
-      //------ new schtuff ------------------------//
-
-      function get_pos_of_max(col_data) {
-        return $.inArray( Math.max.apply(Math,col_data), col_data) 
-      }
-
-      function generate_opacities(col_data, max) {
-        var opacity_array = [];
-        var increment = max/(col_data.length);
-
-        for(i=col_data.length; i >= 1; i--) {
-          opacity_array.push(i*increment/100);
-        }
-
-        return opacity_array;
-      }
-
-
-      function process_col_best_performing(tbl_col, target) {
-        var col_data = col_to_array(tbl_col,target);
-        var opacity_array = generate_opacities(col_data, 50);
-        var row_count = col_data.length; 
-       
-        for (var i=1; i <= row_count; i++) {    
-          $('#'+target+' tr:nth-child('+(get_pos_of_max(col_data)+1)+') td:nth-child('+tbl_col+')').css('background','rgba(65,105,255,'+opacity_array[0]+')');
-          col_data[get_pos_of_max(col_data)] = null;
-          opacity_array.splice(0,1);
-        }
-      }
-
-      process_col_best_performing(5,'myTable');
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
   </body>
 
 </html>

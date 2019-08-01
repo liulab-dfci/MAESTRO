@@ -1,0 +1,4 @@
+Rabit 2.0:
+1, Removed dependency auto-installation process.
+2, Pack all Rabit procedures into librabit.a.
+3, Optimized memory allocation.

@@ -1,0 +1,27 @@
+language: c
+
+before_install:
+    - cd $TRAVIS_BUILD_DIR
+    - git clone https://github.com/arq5x/bedtools2.git
+    - cd bedtools2
+    - make
+    - cd bin
+    - export PATH=$PATH:`pwd`
+    - cd $TRAVIS_BUILD_DIR
+    - git clone https://github.com/samtools/htslib.git
+    - cd htslib
+    - pwd
+    - autoheader
+    - autoconf
+    - ./configure --disable-bz2 --disable-lzma --enable-libcurl
+    - make
+    - cd $TRAVIS_BUILD_DIR
+
+script:
+    - cd test/unit/
+    - make
+    - cd $TRAVIS_BUILD_DIR
+    - make
+    - cd $TRAVIS_BUILD_DIR
+    - cd test/func/
+    - ./giggle_tests.sh

@@ -3,7 +3,7 @@
 """
 Created on Tue Jan 22 22:36:07 2019
 
-@author: Dongqing Sun, Chenfei Wang
+@author: Dongqing Sun
 """
 
 import sys, os, time
@@ -15,8 +15,8 @@ from pkg_resources import resource_filename
 
 error   = logging.critical
 warn    = logging.warning
-ENV_PATH = resource_filename('MAESTRO', 'env')
 SCRIPT_PATH = os.path.dirname(__file__)
+ENV_PATH = resource_filename('MAESTRO', 'env')
 RSCRIPT_PATH = resource_filename('MAESTRO', 'R')
 
 def Info(infoStr):

@@ -1,29 +1,32 @@
 # Directory where fastq files are stored
-fastqdir: /home1/wangchenfei/Project/SingleCell/scATAC/Analysis/10X_PBMC_5k/Data/atac_pbmc_5k_v1_fastqs
+fastqdir: /homes/cwang/projects/ATAC/data/Data_cancer/CFCE_LUCAP/Raw/LUCAP_49_IDX
 # Sample name of fastq file
-fastqprefix: atac_pbmc_5k_v1
+fastqprefix: LUCAP_49_IDX
 # Species to use [GRCh38, GRCm38] (GRCh38 for human and GRCm38 for mouse)
 species: GRCh38
 # Platform of single cell ATAC-seq [10xGenomics, sci-ATAC-seq, microfluidic]
 platform: 10xGenomics
 # The prefix of output files
-outprefix: 10X_PBMC_5k
+outprefix: LUCAP_49
+# Please specify the barcode library if the platform is sci-ATAC-seq, or the pipeline will automatically output the barcodes with enough reads count (>1000).
+barcodelib: NULL
 # The core number
 cores: 8
-# Flag to provide custom peaks [TRUE, FALSE]
-custompeaks: TRUE
-# File location of custom peaks
-custompeaksloc: /home1/wangchenfei/Project/SingleCell/scATAC/Code/strap/strap/annotations/GRCh38_rDHS_dynamic.bed
-# Gene threshold, only consider the peaks within 100KB of the TSS region when calculate gene score.
-genedistance: 100000
-# RNA Seurat object to integrate with ATAC
-rnaobject: /home1/wangchenfei/Project/SingleCell/scRNA/Analysis/10X_PBMC_5k/Result/Analysis/10X_PBMC_5k_SeuratObj.rds
-# TF threshold, only consider the TFs with at least 1% overlap with peak regions
-tfpercent: 0.01
-
+# Whether or not to use custom peaks [TRUE, FALSE]
+custompeaks: FALSE
+# IF custompeaks = TRUE, provide the file location of custom peaks
+custompeaksloc: NULL
+# Whether or not to call peaks from short fragment (less than 50bp)
+shortpeaks: FALSE
+# Gene score decay distance, could be optional from 1kb (promoter-based regulation) and 10kb(enhancer-based regulation), default is 10kb
+genedistance: 10000
+# Gene signature used to annotate the clusters, if NULL, will use human immune signatures to annotate the clusters.
+genesignature: NULL
+# Path of the giggle annotation file.
+giggleannotation: /homes/cwang/annotations/giggle 
 # Reference genome 
 genome:
   # Genome index directory for BWA
-  fasta: /home1/wangchenfei/annotations/refdata-cellranger-atac-GRCh38-1.1.0/fasta/genome.fa
+  fasta: /homes/cwang/annotations/refdata-cellranger-atac-hg38-1.0.0/fasta/genome.fa
   # genome annotation file from 10xGenomics required for Cell Ranger ATAC
-  cellranger: /home1/wangchenfei/annotations/refdata-cellranger-atac-GRCh38-1.1.0
+  cellranger: /homes/cwang/annotations/refdata-cellranger-atac-hg38-1.0.0
