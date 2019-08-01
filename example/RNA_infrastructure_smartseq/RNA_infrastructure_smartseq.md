@@ -67,7 +67,7 @@ We next try to annotate different clusters based on their marker genes. We use p
 >                                          min.score = 0.1)
 ```
 
-<img src="./HNSCC.scRNA.Seurat.annotated.png" width="560" height="400" /> 
+<img src="./HNSCC.scRNA.Seurat.annotated.png" width="600" height="400" /> 
 
 **Step 4. Identify driver transcription factors**     
 Identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilize rabit to predict the potential upstream transcription factors based on the marker genes in each cluster. For our analysis, we used the TF ChIP-seq peaks from CistromeDB to identify potential TFs that could shaping the gene expression patterns. To run this function, you need to first install [rabit](http://rabit.dfci.harvard.edu/), download the rabit index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz), and provide the file location of the index to MAESTRO.
@@ -149,7 +149,7 @@ According to the annotation of the clusters, we know that cluster 7 is Treg cell
 >               height = 7.5, 
 >               name = "HNSCC.RNA.tfs.Treg")
 ```
-<img src="./HNSCC.RNA.tfs.Treg.umap.png" width="800" height="620" /> 
+<img src="./HNSCC.RNA.tfs.Treg.umap.png" width="900" height="620" /> 
 
 **Step 6. Save the project for future analysis**     
 Finally, you can save the R project for future analysis.
