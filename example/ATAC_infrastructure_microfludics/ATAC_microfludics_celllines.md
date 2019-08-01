@@ -139,7 +139,7 @@ According to the annotation of the clusters, we know that cluster 0 is GM12878 c
 >              height = 7.5, 
 >              name = "cellline.scATAC.tfs.GM12878")
 ```
-<img src="./cellline.scATAC.tfs.GM12878.umap.png" width="600" height="650" /> 
+<img src="./cellline.scATAC.tfs.GM12878.umap.png" width="600" height="620" /> 
 
 Based on the predicted expression level of TFs, we can see that JUNB is highly expressed in the GM12878 cellline. We will next visualize the predicted expression of JUNB target genes.
 
