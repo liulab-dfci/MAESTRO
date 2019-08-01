@@ -13,7 +13,7 @@ $ gunzip GSE65360_cellline_gene_score.txt.gz
 ```
 
 **Step 1. Read the data into R environment**     
-To use the MAESTRO R function, following the instructions in MAESTRO [README](https://github.com/chenfeiwang/MAESTRO/README.md) page and install the R package. Then read the peak count matrix and gene score matrix into R.
+To use the MAESTRO R function, following the instructions in MAESTRO [README](https://github.com/chenfeiwang/MAESTRO/blob/master/README.md) page and install the R package. Then read the peak count matrix and gene score matrix into R.
 
 ```R
 > library(MAESTRO)
@@ -22,7 +22,7 @@ To use the MAESTRO R function, following the instructions in MAESTRO [README](ht
 ```
 
 **Step 2. Clustering and differential peak calling**      
-We next create an Seurat object using the peak count matrix, and perform the clustering analysis as well as differential peak calling for different clusters. 1) We first run dimension reduction on the input matrix. As we and others reported [Cusanovich et al, Science 2015](https://science.sciencemag.org/content/348/6237/910/tab-pdf), the Latent Semantic Index (LSI) have been widely used in learning the structure of scATAC-seq data. We use LSI as the default dimension reduction method, which has the best performance according to our benchmark. You can also use "PCA" as an optional dimension reduction method. 2) We apply UMAP to further reduce the dimensions and identify the clusters using graph-based clustering approach implemented in [Seurat](https://www.cell.com/cell/pdf/S0092-8674(19)30559-8.pdf). 3) We used a [wilcox-test](https://www.tandfonline.com/doi/abs/10.1080/01621459.1972.10481279) based method to identify the differential peaks for each clusters. The original peak count matrix is scaled and weighed by the total peaks present in each cell to overcome the potential ties in wilcox-test. It will take 10-20mins to calculate the differential peaks for each cluster.
+We next create an Seurat object using the peak count matrix, and perform the clustering analysis as well as differential peak calling for different clusters. 1) We first run dimension reduction on the input matrix. As we and others reported [Cusanovich et al, Science 2015](https://science.sciencemag.org/content/348/6237/910/tab-pdf), the Latent Semantic Index (LSI) have been widely used in learning the structure of scATAC-seq data. We use LSI as the default dimension reduction method, which has the best performance according to our benchmark. You can also use "PCA" as an optional dimension reduction method. 2) We apply UMAP to further reduce the dimensions and identify the clusters using graph-based clustering approach implemented in [Seurat](https://www.cell.com/cell/pdf/S0092-8674(19)30559-8.pdf). 3) We used a [wilcox-test](https://www.tandfonline.com/doi/abs/10.1080/01621459.1972.10481279) based method to identify the differential peaks for each clusters. The original peak count matrix is scaled and weighed by the total peaks present in each cell to overcome the potential ties in wilcox-test. It will take 10-20mins to calculate the differential peaks for all the clusters.
 
 ```R
 > cellline.ATAC.res <- ATACRunSeurat(inputMat = cellline.peak, 
@@ -55,7 +55,7 @@ chr21-42078065-42078756 chr21-42078065-42078756
 <img src="./cellline.scATAC.Seurat.cluster.png" width="500" height="400" /> 
 
 **Step 3. Annotate celltypes**     
-The cell identity for the microfludics based scATACs-seq are known before clustering. To visualize the cell type annotation of the clusters, we need to pass the original identify to the clustering result.
+The cell identity for the microfludics based scATACs-seq are known before clustering. To visualize the cell type annotation of the clusters, we need to pass the original identity to the clustering result.
 
 ```R
 > cellline.ATAC.orig <- gsub(".well","",sapply(strsplit(rownames(cellline.ATAC.res$ATAC@meta.data),"\\."),function(x) x[2]))
@@ -68,11 +68,11 @@ The cell identity for the microfludics based scATACs-seq are known before cluste
 >                                                orig.ident = cellline.ATAC.orig)
 ```
 
-<img src="./cellline.scATAC.Seurat.original.png" width="500" height="400" /> 
+<img src="./cellline.scATAC.Seurat.original.png" width="530" height="400" /> 
 
 **Step 4. Identify driver transcription factors**     
-Identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilize giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster specific peaks. To run this function, you need to first install [giggle](https://github.com/ryanlayer/giggle), and download the giggle index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz), and provide the file location of the index to MAESTRO. 
-After identify enriched transcription regulators, MAESTRO also provide the potential target gene list of the top 10 transcription factors for each cluster. The target genes are based on the ChIP-seq peaks from Cistrome databased. The target genes will be generated in the "cellline.scATAC.TF.GIGGLE" directory.
+Identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilize giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster specific peaks. To run this function, you need to first install [giggle](https://github.com/ryanlayer/giggle), download the giggle index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz), and provide the file location of the index to MAESTRO. 
+After identify enriched transcription regulators, MAESTRO also provide the potential target gene list of the top 10 transcription factors for each cluster, which are based on the ChIP-seq peaks from [CistromeDB](http://cistrome.org/db/#/). The target genes will be generated in the "cellline.scATAC.TF.GIGGLE" directory.
 
 ```R
 > cellline.ATAC.tfs <- ATACAnnotateTranscriptionFactor(ATAC = cellline.ATAC.res$ATAC, 
@@ -141,7 +141,7 @@ According to the annotation of the clusters, we know that cluster 0 is GM12878 c
 ```
 <img src="./cellline.scATAC.tfs.GM12878.umap.png" width="600" height="650" /> 
 
-Based on the predicted expression level of TFs, we can see that JUNB is highly expressed in the GM12878 cellline. We next want to visualize the predicted expression of JUNB target genes.
+Based on the predicted expression level of TFs, we can see that JUNB is highly expressed in the GM12878 cellline. We will next visualize the predicted expression of JUNB target genes.
 
 ```R
 > JUNB_target <- as.character(read.table('cellline.scATAC.TF.GIGGLE/0.JUNB.64780.target.genes.top500.txt')[,1])
