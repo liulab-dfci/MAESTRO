@@ -38,11 +38,11 @@ RNARunPagoda <- function(inputMat, project = "MAESTRO.scRNA.Pagoda", min.c = 10,
   PagodaObj$makeKnnGraph(k=nKs,type='PCA',center=T,distance='cosine');
   PagodaObj$getKnnClusters(method=multilevel.community,type='PCA',name='multilevel')
   PagodaObj$getEmbedding(type='PCA',embeddingType='tSNE',perplexity=50,verbose=T)
-  png(paste0(project, "_cluster.png"), width=4.8, height=4)
+  pdf(paste0(project, ".cluster.pdf"), width=4.8, height=4)
   PagodaObj$plotEmbedding(type='PCA',embeddingType='tSNE',show.legend=F,mark.clusters=T,min.group.size=10,shuffle.colors=F,mark.cluster.cex=1,alpha=0.3,main=project)
   dev.off()
   deSets <- get.de.geneset(PagodaObj, groups = PagodaObj$clusters$PCA[[1]], prefix = 'de_')
-  saveRDS(deSets, paste0(project, "_DiffGenes.rds"))
+  saveRDS(deSets, paste0(project, ".DiffGenes.rds"))
   return(list(RNA=PagodaObj, genes=deSets))
 }
 

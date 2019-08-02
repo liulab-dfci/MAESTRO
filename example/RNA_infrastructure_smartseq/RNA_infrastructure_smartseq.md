@@ -59,8 +59,8 @@ We next try to annotate different clusters based on their marker genes. We use p
 > data(human.immune.CIBERSORT)
 > human.immune.CIBERSORT <- rbind(human.immune.CIBERSORT,
 >                           cbind("Fibroblasts", c("FAP", "PDPN", "MMP2", "PDGFRA", "THY1", "MMP11","PDGFRL", "TGFB3", "COL1A2", "DCN", "COL3A1", "COL6A1")),
-> 					      cbind("Myofibroblasts", c("ACTA2", "MCAM", "MYLK", "MYL9", "IL6", "PDGFA")),
-> 					      cbind("Endothelial", c("PECAM1", "VWF", "ENG")))
+>                           cbind("Myofibroblasts", c("ACTA2", "MCAM", "MYLK", "MYL9", "IL6", "PDGFA")),
+>                           cbind("Endothelial", c("PECAM1", "VWF", "ENG")))
 > HNSCC.RNA.res$RNA <- RNAAnnotateCelltype(RNA = HNSCC.RNA.res$RNA, 
 >                                          gene = HNSCC.RNA.res$gene,
 >                                          signatures = human.immune.CIBERSORT, 

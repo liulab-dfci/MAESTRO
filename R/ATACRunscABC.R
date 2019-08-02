@@ -63,7 +63,7 @@ ATACRunscABC <- function(inputMat, project = "MAESTRO.scATAC.scABC", min.c = 50,
   scABCCell2LandmarkCorrelationNormalized[scABCCell2LandmarkCorrelationNormalized<0] <- 0
   scABCCell2LandmarkCorrelationNormalized <- cbind(scABCCell2LandmarkCorrelationNormalized, scABCLandmarksAssignments)
   scABCCell2LandmarkCorrelationNormalized <- scABCCell2LandmarkCorrelationNormalized[order(scABCCell2LandmarkCorrelationNormalized[,cluster.number+1]),1:cluster.number]
-  png(paste0(project,"_heatmap.png"),width=8,height=6)
+  pdf(paste0(project,".heatmap.pdf"),width=8,height=6)
   heatmap.3(scABCCell2LandmarkCorrelationNormalized, dendrogram='none', Rowv=FALSE, Colv=FALSE,
            trace='none', col = scalered, margin = c(5, 5), density.info = "none",
            RowSideColors = rowcols, RowSideColorsSize=2, symm=F,symkey=F,
@@ -76,7 +76,7 @@ ATACRunscABC <- function(inputMat, project = "MAESTRO.scATAC.scABC", min.c = 50,
   d_umap <- as.dist(1 - cor(scABCForeGroundMatrix, method = "spearman"))
   p_umap <- umap(d_umap, pca = 50, n_threads = 8)
   scABC_col <- t(as.matrix(ncols[scABCLandmarksAssignments]))
-  png(paste0(project,"_umap.png"),width=6,height=6)
+  pdf(paste0(project,".umap.pdf"),width=6,height=6)
   plot(p_umap[,1], p_umap[,2], col=scABC_col, type = "p", pch = 20, xlab = "UMAP_1", ylab = "UMAP_2", main = project)
   legend("bottomright", legend = 1:cluster.number, col=ncols, border=FALSE, bty="n", y.intersp = 1, cex= 1, pch = 16)
   dev.off()

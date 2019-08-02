@@ -49,8 +49,9 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, orga
   outputDir <- paste0(project, ".RABIT")
   if (!file.exists(outputDir)) dir.create(path=outputDir)  
   for(i in names(cluster_markers_list)){    
-    cluster_marker_logfc <- cluster_markers_list[[i]][,c(2,8)]
+    cluster_marker_logfc <- as.matrix(cluster_markers_list[[i]][,c(2,8)])
     row.names(cluster_marker_logfc) <- cluster_marker_logfc[,'entrezid']
+    cluster_marker_logfc <- cluster_marker_logfc[!duplicated(rownames(cluster_marker_logfc)),]
     cluster_marker_logfc <- data.frame(logfc = cluster_marker_logfc[,1], row.names = cluster_marker_logfc[,2])
     write.table(cluster_marker_logfc, paste0(project, ".RABIT/", i, ".txt"), sep = "\t", col.names = TRUE, row.names = TRUE, quote = FALSE)
   }
@@ -101,7 +102,9 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, orga
         out_fdr_max <- merge(out_fdr_max,out_fdr_max_cur)
       }
     }
-    message(paste0("There are no significant TFs identified in Cluster ",paste(rabit_cluster_list[notf_clusters], collapse = ", "),"."))
+    if(!is.null(notf_clusters)){
+      message(paste0("There are no significant TFs identified in Cluster ",paste(rabit_cluster_list[notf_clusters], collapse = ", "),"."))
+    }
     
     out_fdr_max$gene <- unlist(strsplit(out_fdr_max$gene, split = "\\."))[seq(2,2*nrow(out_fdr_max),2)]
     rownames(out_fdr_max) <- out_fdr_max$gene
@@ -125,19 +128,13 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, orga
       return(apply(GetAssayData(object = RNA)[, cluster_cell_list[[x]]], 1, mean))
     })
 
-    noncluster_avg_expr = sapply(names(cluster_cell_list), function(x){
-      return(apply(GetAssayData(object = RNA)[, setdiff(colnames(RNA),cluster_cell_list[[x]])], 1, mean))
-    })
-
     cluster_tf_list_filter <- sapply(names(cluster_drivertf_list), function(x){
       tf_family_filter <- sapply(cluster_drivertf_list[[x]], function(y){
         if(y %in% names(tf_family_list) & length(intersect(tf_family_list[[y]], rownames(cluster_avg_expr))) > 1){
           tf_family_expr <- cluster_avg_expr[intersect(tf_family_list[[y]], rownames(cluster_avg_expr)),x]
           tf_family_expr <- tf_family_expr[which(tf_family_expr != 0.00)]
-          tf_family_fc <- cluster_avg_expr[names(tf_family_expr), x]/noncluster_avg_expr[names(tf_family_expr), x]
-          names(tf_family_fc) = names(tf_family_expr)
-          tf_family <- names(tf_family_fc)[order(tf_family_fc, decreasing=T)]
-          return(paste(tf_family, collapse = " | "))
+          tf_family <- names(tf_family_expr)[order(tf_family_expr, decreasing=T)]
+          return(tf_family)
         }else{
           if(!(y %in% rownames(cluster_avg_expr)) || cluster_avg_expr[y,x] == 0.00){
             return(NULL)
@@ -146,7 +143,18 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, orga
           }
         }
       })
-      return(unique(unlist(tf_family_filter))[1:top.tf])
+      tf_family_filter_dedup = unique(tf_family_filter)
+      tf_family_filter_desubset = lapply(tf_family_filter_dedup,function(x){
+        ifsubset = sapply(tf_family_filter_dedup, function(y){
+          all(x %in% y)
+        })
+        return(tf_family_filter_dedup[ifsubset][[1]])
+      })
+      tf_family_filter_desubset = unique(tf_family_filter_desubset)
+      tf_family_filter_desubset_str = lapply(tf_family_filter_desubset, function(x){
+        return(paste(x, collapse = " | "))
+      })
+      return(unlist(tf_family_filter_desubset_str)[1:top.tf])
     })
     cluster_tf_df <- reshape2::melt(cluster_tf_list_filter)[,2:3]
     cluster_tf_df[,1] <- as.character(cluster_tf_df[,1])

@@ -31,8 +31,7 @@
 #' 
 #' @export
 
-VisualizeUmap <- function(genes, cluster, type, SeuratObj, ncol = NULL, width = 6, height = 4, name = "MultipleUmapPlot"){
-  require(ggplot2)
+VisualizeUmap <- function(genes, cluster, type, SeuratObj, ncol = NULL, width = 6, height = 4, name = "MultipleUmapPlot.pdf"){
   if(is.list(genes)){
     genes = genes[[cluster]]
     genes = sapply(genes, function(x){
@@ -61,7 +60,7 @@ VisualizeUmap <- function(genes, cluster, type, SeuratObj, ncol = NULL, width = 
     return(p)
   })
   combinedplot = CombinePlots(umapplots, ncol = ncol)
-  ggsave(paste0(name, "_umap.png"), combinedplot,  width=width, height=height)  
+  ggsave(paste0(name, ".umap.pdf"), combinedplot,  width=width, height=height)  
 }
 
 

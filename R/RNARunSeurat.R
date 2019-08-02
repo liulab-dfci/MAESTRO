@@ -60,7 +60,7 @@ RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident 
     SeuratObj$percent.mito <- percent.mito
     SeuratObj$percent.ercc <- percent.ercc
     p1 = VlnPlot(SeuratObj, c("percent.mito","percent.ercc"), ncol = 2)
-    ggsave(paste0(SeuratObj@project.name, ".spikein.png"), p1,  width=6, height=4.5)
+    ggsave(paste0(SeuratObj@project.name, ".spikein.pdf"), p1,  width=6, height=4.5)
     SeuratObj <- subset(SeuratObj, subset.name = "percent.mito", high.threshold = 0.05)
     SeuratObj <- subset(SeuratObj, subset.name = "percent.ercc", high.threshold = 0.05)
     vars.to.regress = c("nCount_RNA","percent.mito","percent.ercc")}
@@ -77,7 +77,7 @@ RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident 
   message("PCA analysis ...")
   SeuratObj <- RunPCA(object = SeuratObj, features = VariableFeatures(SeuratObj))
   p2 = ElbowPlot(object = SeuratObj)
-  ggsave(file.path(paste0(SeuratObj@project.name, "_PCElbowPlot.png")), p2,  width=5, height=4)
+  ggsave(file.path(paste0(SeuratObj@project.name, ".PCElbowPlot.pdf")), p2,  width=5, height=4)
   
   #=========UMAP===========
   message("UMAP analysis ...")
@@ -85,17 +85,17 @@ RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident 
   SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "pca", dims = dims.use)
   SeuratObj <- FindClusters(object = SeuratObj, resolution = cluster.res)
   p3 = DimPlot(object = SeuratObj, label = TRUE, pt.size = 0.2)
-  ggsave(file.path(paste0(SeuratObj@project.name, "_cluster.png")), p3,  width=5, height=4)
+  ggsave(file.path(paste0(SeuratObj@project.name, ".cluster.pdf")), p3,  width=5, height=4)
   if(!is.null(orig.ident)){
     SeuratObj$orig.ident <- orig.ident
     p4 = DimPlot(object = SeuratObj, label = TRUE, pt.size = 0.2, group.by = "orig.ident", label.size = 3)
-    ggsave(file.path(paste0(SeuratObj@project.name, "_original.png")), p4,  width=5, height=4)}
+    ggsave(file.path(paste0(SeuratObj@project.name, "_original.pdf")), p4,  width=5, height=4)}
 
   #=========DE analysis===========
   message("Identify cluster specific genes ...")
   cluster.genes <- FindAllMarkers(object = SeuratObj, only.pos = TRUE, min.pct = 0.1, test.use = genes.test.use)
   cluster.genes <- cluster.genes[cluster.genes$p_val_adj<genes.cutoff, ]
-  write.table(cluster.genes, paste0(SeuratObj@project.name, "_DiffGenes.tsv"), quote = F, sep = "\t")
+  write.table(cluster.genes, paste0(SeuratObj@project.name, ".DiffGenes.tsv"), quote = F, sep = "\t")
 
   return(list(RNA=SeuratObj, genes=cluster.genes))
 }

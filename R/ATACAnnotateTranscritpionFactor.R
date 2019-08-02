@@ -32,6 +32,7 @@
 
 ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@project.name, giggle.path, organism = "GRCh38", top.tf = 10)
 {
+  require(Seurat)
   if(organism == "GRCh38"){
       data(GRCh38.CistromeDB.genescore)
       data(human.tf.family)
@@ -88,18 +89,13 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@projec
     return(apply(GetAssayData(object = ATAC)[, cluster_cell_list[[x]]], 1, mean))
   })
   
-  noncluster_avg_rp = sapply(names(cluster_cell_list), function(x){
-    return(apply(GetAssayData(object = ATAC)[, setdiff(colnames(ATAC),cluster_cell_list[[x]])], 1, mean))
-  })
-  
   cluster_tf_list_filter = sapply(names(tfList), function(x){
     tf_family_filter = sapply(tfList[[x]], function(y){
       if(y %in% names(tf_family_list) & length(intersect(tf_family_list[[y]], rownames(cluster_avg_rp))) > 1){
         tf_family_expr = cluster_avg_rp[intersect(tf_family_list[[y]], rownames(cluster_avg_rp)),x]
         tf_family_expr = tf_family_expr[which(tf_family_expr != 0.00)]
-        tf_family_fc = cluster_avg_rp[names(tf_family_expr), x]/noncluster_avg_rp[names(tf_family_expr), x]
-        tf_family = names(tf_family_fc)[order(tf_family_fc, decreasing=T)]
-        return(paste(tf_family, collapse = " | "))
+        tf_family = names(tf_family_expr)[order(tf_family_expr, decreasing=T)]
+        return(tf_family)
       }else{
         if(!(y %in% rownames(cluster_avg_rp)) || cluster_avg_rp[y,x] == 0.00){
           return(NULL)
@@ -108,7 +104,18 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@projec
         }
       }
     })
-    return(unique(unlist(tf_family_filter))[1:top.tf])
+    tf_family_filter_dedup = unique(tf_family_filter)
+    tf_family_filter_desubset = lapply(tf_family_filter_dedup,function(x){
+      ifsubset = sapply(tf_family_filter_dedup, function(y){
+        all(x %in% y)
+      })
+      return(tf_family_filter_dedup[ifsubset][[1]])
+    })
+    tf_family_filter_desubset = unique(tf_family_filter_desubset)
+    tf_family_filter_desubset_str = lapply(tf_family_filter_desubset, function(x){
+      return(paste(x, collapse = " | "))
+    })
+    return(unlist(tf_family_filter_desubset_str)[1:top.tf])
   })
   cluster_tf_df = reshape2::melt(cluster_tf_list_filter)[,2:3]
   cluster_tf_df[,1] = as.character(cluster_tf_df[,1])

@@ -51,7 +51,7 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "lsi", dims = dims.use)
   SeuratObj <- FindClusters(object = SeuratObj, resolution = cluster.res)
   p1 <- DimPlot(object = SeuratObj, pt.size = 0.5, label = TRUE)
-  ggsave(file.path(paste0(project, "_cluster.png")), p1, width=5, height=4)
+  ggsave(file.path(paste0(project, ".cluster.pdf")), p1, width=5, height=4)
  
   #============ DE analysis ============
   message("Identify cluster specific peaks ...")
@@ -59,7 +59,7 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   cluster.peaks <- NULL
   cluster.peaks <- FindAllMarkers(object = SeuratObj, only.pos = TRUE, min.pct = 0.01, logfc.threshold = 0.1, test.use = peaks.test.use)
   cluster.peaks <- cluster.peaks[cluster.peaks$p_val_adj<peaks.cutoff, ]
-  write.table(cluster.peaks, paste0(project, "_DiffPeaks.tsv"), quote=F, sep="\t")}
+  write.table(cluster.peaks, paste0(project, ".DiffPeaks.tsv"), quote=F, sep="\t")}
   
   if(method == "PCA"){
   #============ PCA ============
@@ -68,7 +68,7 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   SeuratObj <- ScaleData(object = SeuratObj, var.to.regress="nCount_RNA")
   SeuratObj <- RunPCA(object = SeuratObj, features = rownames(SeuratObj))
   p2 = ElbowPlot(object = SeuratObj)
-  ggsave(file.path(paste0(project,"_PCElbowPlot.png")), p2, width = 5, height = 4)
+  ggsave(file.path(paste0(project,".PCElbowPlot.pdf")), p2, width = 5, height = 4)
   
   #============ UMAP ============
   message("UMAP analysis ...")
@@ -76,14 +76,14 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "pca", dims = dims.use)
   SeuratObj <- FindClusters(object = SeuratObj, resolution = res)
   p3 <- DimPlot(object = SeuratObj, pt.size = 0.5, label = TRUE)
-  ggsave(file.path(paste0(project, "_cluster.png")), p3, width=5, height=4)
+  ggsave(file.path(paste0(project, ".cluster.pdf")), p3, width=5, height=4)
 
   #============ DE analysis ============
   message("Identify cluster specific peaks ...")
   cluster.peaks <- NULL
   cluster.peaks <- FindAllMarkers(object = SeuratObj, only.pos = TRUE, min.pct = 0.01, logfc.threshold = 0.1, test.use = peaks.test.use)
   cluster.peaks <- cluster.peaks[cluster.peaks$p_val_adj<peaks.cutoff, ]
-  write.table(cluster.peaks, paste0(proj, "_DiffPeaks.tsv"), quote=F, sep="\t")   
+  write.table(cluster.peaks, paste0(proj, ".DiffPeaks.tsv"), quote=F, sep="\t")   
   }
   return(list(ATAC=SeuratObj, peaks=cluster.peaks))
 }

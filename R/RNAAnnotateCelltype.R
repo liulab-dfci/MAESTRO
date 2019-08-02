@@ -29,6 +29,7 @@
 #' @export
 
 RNAAnnotateCelltype <- function(RNA, genes, signatures, min.score = 0.1, orig.ident = NULL){
+    require(Seurat)
     if(is.null(orig.ident)){
         celltypes <- as.character(unique(signatures[,1]))
         signature_list <- sapply(1:length(celltypes),function(x){
@@ -55,12 +56,11 @@ RNAAnnotateCelltype <- function(RNA, genes, signatures, min.score = 0.1, orig.id
         RNA@meta.data$assign.ident = plyr::mapvalues(x = RNA@meta.data$assign.ident,
                                                            from = current.cluster.ids, to = new.cluster.ids)
         p = DimPlot(object = RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3)
-        ggsave(paste0(RNA@project.name, "_annotated.pdf"), p, width=6, height=4)}
+        ggsave(paste0(RNA@project.name, ".annotated.pdf"), p, width=6, height=4)}
     else{
         RNA$assign.ident <- orig.ident
         p = DimPlot(object = RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3)
-        ggsave(file.path(paste0(RNA@project.name, "_original.pdf")), p,  width=5, height=4)}
+        ggsave(file.path(paste0(RNA@project.name, ".original.pdf")), p,  width=5, height=4)}
     
     return(RNA)    
 }
-

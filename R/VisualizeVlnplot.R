@@ -34,8 +34,7 @@
 #'
 #' @export
 
-VisualizeVlnplot <- function(genes, cluster, type, SeuratObj, ncol = NULL, width = 6, height = 4, name = "MultipleVlnPlot"){
-  require(ggplot2)
+VisualizeVlnplot <- function(genes, cluster, type, SeuratObj, ncol = NULL, width = 6, height = 4, name = "MultipleVlnPlot.pdf"){
   if(is.list(genes)){
     genes = genes[[cluster]]
     genes = sapply(genes, function(x){
@@ -65,7 +64,7 @@ VisualizeVlnplot <- function(genes, cluster, type, SeuratObj, ncol = NULL, width
     return(p)
   })
   combinedplot = CombinePlots(vlnplots, ncol = ncol)
-  ggsave(paste0(name,"_vlnplot.png"), combinedplot,  width=width, height=height)
+  ggsave(paste0(name,".vlnplot.pdf"), combinedplot,  width=width, height=height)
 }
 
 
