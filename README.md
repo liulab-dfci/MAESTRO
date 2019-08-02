@@ -46,11 +46,11 @@ MAESTRO utilize rabit to predict the potential transcription factors based on th
 
 ## Galleries & Tutorials (click on the image for details)
 
-[![](image/RNA.Smartseq2.png)](./example/RNA_infrastructure_smartseq/RNA_infrastructure_smartseq.md)
-[![](image/RNA.10x.png)](./example/RNA_infrastructure_10x/RNA_infrastructure_10x.md)
-[![](image/ATAC.microfludics.png)](./example/ATAC_infrastructure_microfludics/ATAC_infrastructure_microfludics.md)
-[![](image/ATAC.10x.png)](./example/ATAC_infrastructure_10x/ATAC_infrastructure_10x.md)
-[![](image/intergration_10x.png)](./example/Integration/Integration.md)
+[<img src="./images/RNA.Smarseq2.png" width="280" height="318" />](./example/RNA_infrastructure_smartseq/RNA_infrastructure_smartseq.md)
+[<img src="./images/RNA.10x.png" width="280" height="318" />](./example/RNA_infrastructure_10x/RNA_infrastructure_10x.md)
+[<img src="./images/ATAC.microfludics.png" width="280" height="318" />](./example/ATAC_infrastructure_microfludics/ATAC_infrastructure_microfludics.md)
+[<img src="./images/ATAC.10X.png" width="280" height="318" />](./example/ATAC_infrastructure_10x/ATAC_infrastructure_10x.md)
+[<img src="./images/Intergration.png" width="280" height="318" />](./example/Integration/Integration.md)
 
 
 ## Citation
