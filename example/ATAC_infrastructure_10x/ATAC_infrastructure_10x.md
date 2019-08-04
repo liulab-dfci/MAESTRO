@@ -103,7 +103,7 @@ We next try to annotate different clusters based on their marker genes. For scAT
 >                                            genes.cutoff = 1E-5)
 ```
 
-<img src="./10X_PBMC_10K.annotated.png" width="530" height="400" /> 
+<img src="./10X_PBMC_10K.annotated.png" width="600" height="400" /> 
 
 **Step 7. Identify driver transcription factors**     
 Identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilize giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster specific peaks. To run this function, you need to first install [giggle](https://github.com/ryanlayer/giggle), download the giggle index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz), and provide the file location of the index to MAESTRO. 
@@ -174,9 +174,9 @@ According to the annotation of the clusters, we know that cluster 0 is Monocyte.
 >                  ncol = 5, 
 >                  width = 10, 
 >                  height = 4, 
->                  name = "10X_PBMC_10K_Monocyte")
+>                  name = "10X_PBMC_10K_TF_Monocyte")
 ```
-<img src="./10X_PBMC_10K_Monocyte.vlnplot.png" width="850" height="350" />   
+<img src="./10X_PBMC_10K_TF_Monocyte.vlnplot.png" width="850" height="350" />   
 
 ```R
 > VisualizeUmap(genes = pbmc.ATAC.tfs, 
@@ -186,9 +186,9 @@ According to the annotation of the clusters, we know that cluster 0 is Monocyte.
 >              ncol = 3, 
 >              width = 9, 
 >              height = 7.5, 
->              name = "10X_PBMC_10K_Monocyte")
+>              name = "10X_PBMC_10K_TF_Monocyte")
 ```
-<img src="./10X_PBMC_10K_Monocyte.umap.png" width="650" height="620" /> 
+<img src="./10X_PBMC_10K_TF_Monocyte.umap.png" width="650" height="620" /> 
 
 Based on the predicted expression level of TFs, we can see that IRF1 is highly expressed in the monocytes from PBMC. We will next visualize the predicted expression of IRF1 target genes.
 
@@ -200,9 +200,9 @@ Based on the predicted expression level of TFs, we can see that IRF1 is highly e
 [6] "ACVRL1"
 > pbmc.ATAC.res$ATAC@meta.data$IRF1_target <- colMeans(x = as.matrix(GetAssayData(pbmc.ATAC.res$ATAC))[IRF1_target, ], na.rm = TRUE)
 > p <- FeaturePlot(pbmc.ATAC.res$ATAC,  features = "IRF1_target", cols = c("grey", "blue"))
-> ggsave(file.path("10X_PBMC_10K_Monocyte_IRF1.pdf"), p, width = 5, height = 4)
+> ggsave(file.path("10X_PBMC_10K_TF_Monocyte_IRF1.pdf"), p, width = 5, height = 4)
 ```
-<img src="./10X_PBMC_10K_IRF1.png" width="500" height="400" />  
+<img src="./10X_PBMC_10K_TF_Monocyte_IRF1.png" width="500" height="400" />  
 
 **Step 9. Save the project for future analysis**     
 Finally, you can save the R project including the raw data, normalized data, clustering result and meta informations for future analysis.
@@ -216,28 +216,4 @@ The differential peaks, TFs and target genes have already been saved in the curr
 ```bash
 $ ls 10X_PBMC_10K.DiffPeak.tsv 10X_PBMC_10K.TF.GIGGLE 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

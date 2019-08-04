@@ -192,7 +192,7 @@ Finally, you can save the R project including the raw data, normalized data, clu
 The differential genes, predicted TFs for each cluster have already been saved in the current directory by MAESTRO.
 
 ```bash
-$ ls 10X_PBMC_8K.DiffGenes.tsv 10X_PBMC_8K_TF.RABIT```
+$ ls 10X_PBMC_8K.DiffGenes.tsv 10X_PBMC_8K_TF.RABIT
 ```
 
 
