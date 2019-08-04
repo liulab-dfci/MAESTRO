@@ -155,7 +155,7 @@ Based on the predicted expression level of TFs, we can see that JUNB is highly e
 <img src="./cellline.scATAC.tfs.GM12878.JUNB.png" width="500" height="400" />  
 
 **Step 6. Save the project for future analysis**     
-Finally, you can save the R project for future analysis.
+Finally, you can save the R project including the raw data, normalized data, clustering result and meta informations for future analysis.
 
 ```R
 saveRDS(cellline.ATAC.res, "cellline.ATAC.res.rds")
@@ -164,7 +164,7 @@ saveRDS(cellline.ATAC.res, "cellline.ATAC.res.rds")
 The differential peaks, TFs and target genes have already been saved in the current directory by MAESTRO.
 
 ```bash
-$ ls cellline.ATAC.res.rds cellline.scATAC.Seurat.DiffPeaks.tsv cellline.scATAC.TF.GIGGLE 
+$ ls cellline.scATAC.Seurat.DiffPeaks.tsv cellline.scATAC.TF.GIGGLE 
 ```
 
 

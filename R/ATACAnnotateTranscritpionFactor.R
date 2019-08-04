@@ -30,9 +30,10 @@
 #'
 #' @export
 
-ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@project.name, giggle.path, organism = "GRCh38", top.tf = 10)
+ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATAC@project.name, giggle.path, organism = "GRCh38", top.tf = 10)
 {
   require(Seurat)
+  require(ggplot2)
   if(organism == "GRCh38"){
       data(GRCh38.CistromeDB.genescore)
       data(human.tf.family)
@@ -44,6 +45,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@projec
       geneScore <- GRCm38.CistromeDB.genescore
       tf_family_list <- MOUSE.TFFamily}
 
+  peaks$cluster <- as.factor(peaks$cluster)
   targetList <- list()
   tfList <- list()
   antFile <- read.csv(paste0(giggle.path,"/CistromeDB.sample.annotation.txt"), sep="\t", row.names=1, stringsAsFactors = FALSE)  

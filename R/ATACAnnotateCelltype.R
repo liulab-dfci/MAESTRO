@@ -36,6 +36,7 @@
 ATACAnnotateCelltype <- function(ATAC, RPmatrix, signatures, min.score = 0.1, genes.test.use = "wilcox", genes.cutoff = 1E-5, orig.ident = NULL)
 {
   require(Seurat)
+  require(ggplot2)
   RPmatrix <- RPmatrix[,colnames(ATAC)]
   ATAC[["ACTIVITY"]] <- CreateAssayObject(counts = RPmatrix)
   DefaultAssay(ATAC) <- "ACTIVITY"
