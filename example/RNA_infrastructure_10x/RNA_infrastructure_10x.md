@@ -193,15 +193,6 @@ The differential genes, predicted TFs for each cluster have already been saved i
 
 ```bash
 $ ls 10X_PBMC_8K.DiffGenes.tsv 10X_PBMC_8K_TF.RABIT```
-
-
-
-
-
-
-
-
-
-
+```
 
 

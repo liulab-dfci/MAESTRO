@@ -62,7 +62,7 @@ We next create an Seurat object using the peak count matrix, and perform the clu
 
 ```R
 > pbmc.ATAC.res <- ATACRunSeurat(inputMat = as.matrix(pbmc.peak), 
->                                project = "PBMC_10K_scATAC", 
+>                                project = "10X_PBMC_10K", 
 >                                method = "LSI",
 >                                min.c = 50,
 >                                min.p = 500,
@@ -88,7 +88,7 @@ chr8-141137795-141138489 chr8-141137795-141138489
 chr2-112839364-112840014 chr2-112839364-112840014
 ```
 
-<img src="./PBMC_10K_scATAC.cluster.png" width="500" height="400" /> 
+<img src="./10X_PBMC_10K.cluster.png" width="500" height="400" /> 
 
 **Step 6. Annotate celltypes**     
 We next try to annotate different clusters based on their marker genes. For scATAC, we first need to pass the gene regulatory potential matrix to the clustering result, then perform differential gene analysis for each cluster on the gene RPscore matrix, and identify the marker genes. We use public immune signatures like [CIBERSORT](https://www.nature.com/articles/nmeth.3337) to annotate the clusters. You can also use your own signatures to annotate the clusters.
@@ -103,16 +103,16 @@ We next try to annotate different clusters based on their marker genes. For scAT
 >                                            genes.cutoff = 1E-5)
 ```
 
-<img src="./PBMC_10K_scATAC.annotated.png" width="530" height="400" /> 
+<img src="./10X_PBMC_10K.annotated.png" width="530" height="400" /> 
 
 **Step 7. Identify driver transcription factors**     
 Identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilize giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster specific peaks. To run this function, you need to first install [giggle](https://github.com/ryanlayer/giggle), download the giggle index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz), and provide the file location of the index to MAESTRO. 
-After identify enriched transcription regulators, MAESTRO also provide the potential target gene list of the top 10 transcription factors for each cluster, which are based on the ChIP-seq peaks from [CistromeDB](http://cistrome.org/db/#/). The target genes will be generated in the "PBMC_10K_scATAC.TF.GIGGLE" directory.
+After identify enriched transcription regulators, MAESTRO also provide the potential target gene list of the top 10 transcription factors for each cluster, which are based on the ChIP-seq peaks from [CistromeDB](http://cistrome.org/db/#/). The target genes will be generated in the "10X_PBMC_10K.TF.GIGGLE" directory.
 
 ```R
 > pbmc.ATAC.tfs <- ATACAnnotateTranscriptionFactor(ATAC = pbmc.ATAC.res$ATAC, 
 >                                                      peaks = pbmc.ATAC.res$peaks, 
->                                                      project = "PBMC_10K_scATAC.TF", 
+>                                                      project = "10X_PBMC_10K.TF", 
 >                                                      giggle.path = "/homes/cwang/annotations/giggle")
 Identify enriched TFs for cluster  0 ...
 Identify enriched TFs for cluster  1 ...
@@ -174,9 +174,9 @@ According to the annotation of the clusters, we know that cluster 0 is Monocyte.
 >                  ncol = 5, 
 >                  width = 10, 
 >                  height = 4, 
->                  name = "PBMC_10K_scATAC_Monocyte")
+>                  name = "10X_PBMC_10K_Monocyte")
 ```
-<img src="./PBMC_10K_scATAC_Monocyte.vlnplot.png" width="850" height="350" />   
+<img src="./10X_PBMC_10K_Monocyte.vlnplot.png" width="850" height="350" />   
 
 ```R
 > VisualizeUmap(genes = pbmc.ATAC.tfs, 
@@ -186,9 +186,9 @@ According to the annotation of the clusters, we know that cluster 0 is Monocyte.
 >              ncol = 3, 
 >              width = 9, 
 >              height = 7.5, 
->              name = "PBMC_10K_scATAC_Monocyte")
+>              name = "10X_PBMC_10K_Monocyte")
 ```
-<img src="./PBMC_10K_scATAC_Monocyte.umap.png" width="650" height="620" /> 
+<img src="./10X_PBMC_10K_Monocyte.umap.png" width="650" height="620" /> 
 
 Based on the predicted expression level of TFs, we can see that IRF1 is highly expressed in the monocytes from PBMC. We will next visualize the predicted expression of IRF1 target genes.
 
@@ -200,9 +200,9 @@ Based on the predicted expression level of TFs, we can see that IRF1 is highly e
 [6] "ACVRL1"
 > pbmc.ATAC.res$ATAC@meta.data$IRF1_target <- colMeans(x = as.matrix(GetAssayData(pbmc.ATAC.res$ATAC))[IRF1_target, ], na.rm = TRUE)
 > p <- FeaturePlot(pbmc.ATAC.res$ATAC,  features = "IRF1_target", cols = c("grey", "blue"))
-> ggsave(file.path("PBMC_10K_scATAC_Monocyte_IRF1.pdf"), p, width = 5, height = 4)
+> ggsave(file.path("10X_PBMC_10K_Monocyte_IRF1.pdf"), p, width = 5, height = 4)
 ```
-<img src="./PBMC_10K_scATAC_IRF1.png" width="500" height="400" />  
+<img src="./10X_PBMC_10K_IRF1.png" width="500" height="400" />  
 
 **Step 9. Save the project for future analysis**     
 Finally, you can save the R project including the raw data, normalized data, clustering result and meta informations for future analysis.
