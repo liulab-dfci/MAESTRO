@@ -1,40 +1,81 @@
-## 10x-genomics based scRNA-seq from human PBMC samples
+## 10x PBMC 8k scRNA-seq
 
 In this example, we will be analyzing a scRNA-seq dataset of 8K human peripheral blood mononuclear cells (PBMCs) freely available from 10X-genomics. The raw dataset can be downloaded from 10x-genomics website. We will show you how to run through the whole MAESTRO pipeline from the raw sequencing fastq files to the final results. 
 
-**Step 0. Download the data and prepare your working directory**     
-Prepare your working directory.
+**Step 0. Download the data and prepare your working directory**      
+Before you run MAESTRO, you need to activate the MAESTRO environment and prepare your working directory.
 ```bash
+source activate MAESTRO
+MAESTRO init --help
+MAESTRO init -d 10X_PBMC_8K -m scRNA
 ```      
 
-The raw data can be downloaded from 10X genomics:
+The raw data can be downloaded from 10X genomics website.
 ```bash
-$ cd 10x.pbmc8k.RNA
-$ mkdir data
-$ cd data
+$ cd 10X_PBMC_8K
 $ wget http://s3-us-west-2.amazonaws.com/10x.files/samples/cell-exp/2.1.0/pbmc8k/pbmc8k_fastqs.tar
 $ tar xvf pbmc8k_fastqs.tar
 ```               
 
 **Step 1. Configure the MAESTRO workflow**                              
-Open the `config.yaml` file and edit it to your needs. Especially, define your single-cell platform for use. 
+Open the `config.yaml` file in you working directory and edit it to your needs. Currently, for scRNA-seq analysis, MAESTRO support Smart-seq2, 10x-genomics and Drop-seq protocols, here is an example config file for 10x-genomis scRNA-seq. 
 ```bash
-$ cd /root/MAESTRO/Snakemake
 $ vi config.yaml
-```
+# Directory where fastq files are stored
+fastqdir: /homes/cwang/projects/MAESTRO/snakemake/RNA/10X/10X_PBMC_8K
+# Sample name of fastq file (only for platform of "10x-genomics", for example, 
+# if there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the sample name is "pbmc_1k_v2". )
+fastqprefix: pbmc8k_fastqs
+# Species to use [GRCh38, mmu] (GRCh38 for human and mmu for mouse)
+species: GRCh38
+# Platform of single cell RNA-seq [Smartseq2, 10x-genomics, Dropseq]
+platform: 10x-genomics
+# The prefix of output files
+outprefix: 10X_PBMC_8K
+# Number of cores to use
+cores: 8
+# annotation to run rabit
+rabitlib: /homes/cwang/annotations/rabit
 
-Here is an example for `config.yaml` file used for the PBMC 8K data analysis.
-```bash
-``` 
-Once configured, the workflow can be executed with Snakemake.                
+# Reference genome 
+genome:
+  # Genome index directory for STAR
+  mapindex: /homes/cwang/annotations/refdata-cellranger-hg38-1.2.0/star
+  # gtf format genome annotation file
+  gtf: /homes/cwang/annotations/refdata-cellranger-hg38-1.2.0/genes/genes.gtf
+  # bed format genome annotation file 
+  bed: /homes/cwang/annotations/MAESTRO/GRCh38_RefSeq.bed
+  # txt format genome annotation file (only for platform of "Dropseq")
+  anno: 
+  # directory of cellranger annotations (only for platform of "10x-genomics")
+  cellranger: /home1/wangchenfei/annotations/refdata-cellranger-GRCh38-3.0.0
+
+# Information about barcode (only for platform of "Dropseq")
+barcode:
+  # The start site of each barcode (deinterleave linkers and connect barcodes and UMI)
+  start: 
+  # The end  site of each barcode (deinterleave linkers and connect barcodes and UMI)
+  end: 
+  # The range of umi (after linker removal)
+  umirange: 
+  # The range of cell barcode (after linker removal)
+  barcoderange: 
+
+# Specify the barcode fastq file and reads fastq file (only for platform of "Dropseq")
+fastq:
+  # barcode fastq file
+  barcode: 
+  # transcript fastq file
+  transcript: 
+```
 
 **Step 2. Run MAESTRO**     
-To start, we must activate the MAESTRO CONDA ENVIRONMENT.If successful, you will see "(MAESTRO)" prepended to your command prompt.
-
-Next we will perform a DRY-RUN to make sure that we setup the MAESTRO PROJECT directory correctly. In your PROJECT folder run the following command:
+Once configured, you can use snakemake to run the workflow. 
 ```bash
-nohup snakemake --cores 8 --use-conda > 10x.pbmc.1k.out &
+snakemake -np
+nohup snakemake --cores 8 --use-conda > 10X_PBMC_8K.out &
 ```
+
 **Step 3. Understanding the final output files**     
 
 Here, we assume you've run MAESTRO successfully. An output directory is specified in the run call, and will contain several useful outputs as described below.            

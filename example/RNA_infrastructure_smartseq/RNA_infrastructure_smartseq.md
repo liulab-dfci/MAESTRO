@@ -1,4 +1,4 @@
-## Smart-seq2 based scRNA-seq from HNSCC samples
+## Smart-seq2 HNSCC scRNA-seq
 
 In this example, we will be analyzing datasets from head and neck cancers (HNSCC), the dataset are generate using Smart-seq2 based protocal.  The raw data can be downloaded from the GEO [GSE103322](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE103322). Here we will start from the processed data, which is the gene based logTPM matrix,.
 

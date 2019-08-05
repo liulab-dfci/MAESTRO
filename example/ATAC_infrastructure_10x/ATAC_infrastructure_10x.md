@@ -1,4 +1,4 @@
-## 10x-genomics based scATAC-seq from human PBMC samples
+## 10x PBMC 10k scATAC-seq
 
 In this example, we will be analyzing a scATAC-seq dataset of 10K human peripheral blood mononuclear cells (PBMCs) freely available from 10X-genomics. The raw dataset can be downloaded from 10x-genomic website. We will show you how to run through the whole MAESTRO pipeline from the raw sequencing fastq files to the final results. 
 
