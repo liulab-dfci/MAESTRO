@@ -29,7 +29,7 @@ to show all available Ensembl archives hosts.}
 A character vector, named by unique input gene ids.
 }
 \description{
-Gene ID conversion between ENTREZID and SYMBOL
+Convert gene symbol to entreID, imported form MAGeckFlute.
 }
 \examples{
 data(mle.gene_summary)
