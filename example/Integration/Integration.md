@@ -16,10 +16,19 @@ To visualize all the scRNA-seq and scATAC-seq cells together, we can co-embedded
 > Incorporate(RNA = pbmc.RNA.res$RNA, ATAC = pbmc.ATAC.res$ATAC, project = "PBMC.coembedded")
 > saveRDS(pbmc.coembedded.res, "pbmc.coembedded.Seurat.rds")
 ```
+
+Cells co-embedding visualization:
 <img src="./PBMC.coembedded_source.png" width="530" height="400" /> 
-<img src="./PBMC.coembedded_RNAonly.png" width="530" height="400" /> 
-<img src="./PBMC.coembedded_ATAConly.png" width="530" height="400" /> 
+
+Cells co-embedding and annotated visualization:
 <img src="./PBMC.coembedded_annotated.png" width="600" height="400" /> 
+
+Cells scRNA-only visualization:
+<img src="./PBMC.coembedded_RNAonly.png" width="530" height="400" /> 
+
+Cells scATAC-only visualization:
+<img src="./PBMC.coembedded_ATAConly.png" width="530" height="400" /> 
+
 
 
 
