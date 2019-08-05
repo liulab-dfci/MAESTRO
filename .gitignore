@@ -1,0 +1,8 @@
+MANIFEST
+build/*
+dist/*
+*.pyc
+.pydevproject
+.project
+*~
+.DS_Store
