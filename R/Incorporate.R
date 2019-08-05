@@ -36,6 +36,8 @@
 
 Incorporate <- function(RNA, ATAC, RPmatrix, project = "MAESTRO.coembedding", dims.use = 1:30, RNA.res = 0.6, ATAC.res = 0.6)
 {
+  require(Seurat)
+  require(ggplot2)
   ATAC$tech <- "ATAC"
   RNA$tech <- "RNA"
   
