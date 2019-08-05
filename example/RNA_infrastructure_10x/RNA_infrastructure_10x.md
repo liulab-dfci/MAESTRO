@@ -48,7 +48,7 @@ genome:
   # txt format genome annotation file (only for platform of "Dropseq")
   anno: 
   # directory of cellranger annotations (only for platform of "10x-genomics")
-  cellranger: /home1/wangchenfei/annotations/refdata-cellranger-GRCh38-3.0.0
+  cellranger: /homes/cwang/annotations/refdata-cellranger-hg38-1.2.0
 
 # Information about barcode (only for platform of "Dropseq")
 barcode:
