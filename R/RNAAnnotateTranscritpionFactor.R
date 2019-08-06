@@ -32,7 +32,7 @@
 RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, organism = "GRCh38", top.tf = 10)
 {
   require(Seurat)
-  require(MAGeCKFlute)
+  require(ggplot2)
   if(organism == "GRCh38"){
     org = "hsa"
     data(human.tf.family)
@@ -41,7 +41,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, orga
     org = "mmu"
     data(mouse.tf.family)
     tf_family_list <- MOUSE.TFFamily}
-  genes$entrezid = TransGeneID(genes$gene, fromType = "Symbol", toType = "Entrez",
+  genes$entrezid = RNAEnsemblToEntrez(genes$gene, fromType = "Symbol", toType = "Entrez",
                                          organism = org, useBiomart = FALSE,
                                          ensemblHost = "www.ensembl.org")
   genes = na.omit(genes)
@@ -50,9 +50,8 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, orga
   outputDir <- paste0(project, ".RABIT")
   if (!file.exists(outputDir)) dir.create(path=outputDir)  
   for(i in names(cluster_markers_list)){    
-    cluster_marker_logfc <- as.matrix(cluster_markers_list[[i]][,c(2,8)])
+    cluster_marker_logfc <- cluster_markers_list[[i]][,c(2,8)]
     row.names(cluster_marker_logfc) <- cluster_marker_logfc[,'entrezid']
-    cluster_marker_logfc <- cluster_marker_logfc[!duplicated(rownames(cluster_marker_logfc)),]
     cluster_marker_logfc <- data.frame(logfc = cluster_marker_logfc[,1], row.names = cluster_marker_logfc[,2])
     write.table(cluster_marker_logfc, paste0(project, ".RABIT/", i, ".txt"), sep = "\t", col.names = TRUE, row.names = TRUE, quote = FALSE)
   }
@@ -145,15 +144,18 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, orga
         }
       })
       tf_family_filter_dedup = unique(tf_family_filter)
-      tf_family_filter_desubset = lapply(tf_family_filter_dedup,function(x){
-        ifsubset = sapply(tf_family_filter_dedup, function(y){
-          all(x %in% y)
+      listlen = sapply(tf_family_filter_dedup, function(xx){
+        length(xx)
+      })
+      tf_family_filter_desubset = sapply(tf_family_filter_dedup,function(xx){
+        ifsubset = sapply(tf_family_filter_dedup, function(yy){
+          all(xx %in% yy)
         })
-        return(tf_family_filter_dedup[ifsubset][[1]])
+        return(tf_family_filter_dedup[ifsubset][[which.max(listlen[ifsubset])]])
       })
       tf_family_filter_desubset = unique(tf_family_filter_desubset)
-      tf_family_filter_desubset_str = lapply(tf_family_filter_desubset, function(x){
-        return(paste(x, collapse = " | "))
+      tf_family_filter_desubset_str = lapply(tf_family_filter_desubset, function(xx){
+        return(paste(xx, collapse = " | "))
       })
       return(unlist(tf_family_filter_desubset_str)[1:top.tf])
     })

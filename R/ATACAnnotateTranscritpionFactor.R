@@ -30,7 +30,7 @@
 #'
 #' @export
 
-ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATAC@project.name, giggle.path, organism = "GRCh38", top.tf = 10)
+ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@project.name, giggle.path, organism = "GRCh38", top.tf = 10)
 {
   require(Seurat)
   require(ggplot2)
@@ -45,7 +45,6 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATAC@project.
       geneScore <- GRCm38.CistromeDB.genescore
       tf_family_list <- MOUSE.TFFamily}
 
-  peaks$cluster <- as.factor(peaks$cluster)
   targetList <- list()
   tfList <- list()
   antFile <- read.csv(paste0(giggle.path,"/CistromeDB.sample.annotation.txt"), sep="\t", row.names=1, stringsAsFactors = FALSE)  
@@ -107,15 +106,18 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATAC@project.
       }
     })
     tf_family_filter_dedup = unique(tf_family_filter)
-    tf_family_filter_desubset = lapply(tf_family_filter_dedup,function(x){
-      ifsubset = sapply(tf_family_filter_dedup, function(y){
-        all(x %in% y)
+    listlen = sapply(tf_family_filter_dedup, function(xx){
+      length(xx)
+    })
+    tf_family_filter_desubset = sapply(tf_family_filter_dedup,function(xx){
+      ifsubset = sapply(tf_family_filter_dedup, function(yy){
+        all(xx %in% yy)
       })
-      return(tf_family_filter_dedup[ifsubset][[1]])
+      return(tf_family_filter_dedup[ifsubset][[which.max(listlen[ifsubset])]])
     })
     tf_family_filter_desubset = unique(tf_family_filter_desubset)
-    tf_family_filter_desubset_str = lapply(tf_family_filter_desubset, function(x){
-      return(paste(x, collapse = " | "))
+    tf_family_filter_desubset_str = lapply(tf_family_filter_desubset, function(xx){
+      return(paste(xx, collapse = " | "))
     })
     return(unlist(tf_family_filter_desubset_str)[1:top.tf])
   })

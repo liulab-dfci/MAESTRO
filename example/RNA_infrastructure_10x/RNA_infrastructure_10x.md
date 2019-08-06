@@ -78,7 +78,19 @@ nohup snakemake --cores 8 --use-conda > 10X_PBMC_8K.out &
 
 **Step 3. Understanding the final output files**     
 
-Here, we assume you've run MAESTRO successfully. An output directory is specified in the run call, and will contain several useful outputs as described below.            
+Here, we assume you've run MAESTRO successfully. An output directory is specified in the run call, and will contain several useful outputs as described below.
+```bash
+$ ls 10X_PBMC_8K/Result
+$ Analysis CellRanger Log QC Summary
+```
+
+1) The CellRanger directory contains all the mapping and analysis files from CellRanger pipeline. 2) The QC directory contains qualtiy control analysis of scRNA-seq data, including the barcodes filtering table. 3) The Analysis directory contains the gene count table, clustering result, annotated result, driver transcription factor identification result, for which we will introduce in the step-by-step analysis. 4) The Log directory contains the log files generated in the pipeline analysis. 5) The Summary directroy contains the 10X_PBMC_8K_report.html, which summarized all the results in a html based document. The summary html for the 10X_PBMC_8K example can be found [here] (http://cistrome.org/~chenfei/MAESTRO/10X_PBMC_5k_scRNA/10X_PBMC_5k_MAESTRO_scRNA_report.html).
+
+Gene-body coverage plot for scRNA-seq QC analysis:      
+<img src="./10X_PBMC_8K_genebody_cov.png" width="500" height="400" /> 
+
+Cell filtering plot for scRNA-seq QC analysis, cells with less than 500 UMIs and 200 genes covered are treated as non-cells and filtered out from the downstream analysis:      
+<img src="./10X_PBMC_8K_cell_filtering.png" width="500" height="400" /> 
 
 **Step 4. Custom analysis starting from the processed dataset**     
 Although MAESTRO will generate all the analysis result through the snakemake based workflow, in most cases, you might want to analysis the result from the processed dataset(count or TPM matrix of a cell by gene table), tune the parameters, focused on specific clusters or sub-clusters, and learn the gene set enrichment as well as transcription regulation in those clusters. Considering this, we build a stand alone MAESTRO R package for downstream analysis. We will show you how to run though the MAESTRO analysis using the R package step by step.
@@ -119,9 +131,9 @@ S100A12           0  2.555861 0.919 0.125         0       0       S100A12
 RP11-1143G9.4     0  2.382604 0.978 0.147         0       0 RP11-1143G9.4
 FCN1              0  2.171051 0.988 0.210         0       0          FCN1
 ```
-<img src="./10X_PBMC_8K.spikein.png" width="520" height="400" /> 
-<img src="./10X_PBMC_8K.PCElbowPlot.png" width="500" height="400" /> 
-<img src="./10X_PBMC_8K.cluster.png" width="500" height="400" /> 
+<img src="./10X_PBMC_8K_spikein.png" width="520" height="400" /> 
+<img src="./10X_PBMC_8K_PCElbowPlot.png" width="500" height="400" /> 
+<img src="./10X_PBMC_8K_cluster.png" width="500" height="400" /> 
 
 **Step 6. Annotate celltypes**     
 We next try to annotate different clusters based on their marker genes. We use public immune signatures like [CIBERSORT](https://www.nature.com/articles/nmeth.3337) to annotate the clusters. You can also use your own signatures to annotate the clusters.
@@ -133,7 +145,7 @@ We next try to annotate different clusters based on their marker genes. We use p
 >                                         signatures = human.immune.CIBERSORT, 
 >                                         min.score = 0.1)
 ```
-<img src="./10X_PBMC_8K.annotated.png" width="600" height="400" /> 
+<img src="./10X_PBMC_8K_annotated.png" width="600" height="400" /> 
 
 **Step 7. Identify driver transcription factors**     
 Identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilize rabit to predict the potential upstream transcription factors based on the marker genes in each cluster. For our analysis, we used the TF ChIP-seq peaks from CistromeDB to identify potential TFs that could shaping the gene expression patterns. To run this function, you need to first install [rabit](http://rabit.dfci.harvard.edu/), download the rabit index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz), and provide the file location of the index to MAESTRO.
@@ -209,7 +221,7 @@ According to the annotation of the clusters, we know that cluster 0 is Monocyte 
 >                  height = 4, 
 >                  name = "10X_PBMC_8K_TF_Monocyte")
 ```
-<img src="./10X_PBMC_8K_TF_Monocyte.vlnplot.png" width="850" height="350" />   
+<img src="./10X_PBMC_8K_TF_Monocyte_vlnplot.png" width="850" height="350" />   
 
 ```R
 > VisualizeUmap(genes = pbmc.RNA.tfs, 
@@ -221,7 +233,7 @@ According to the annotation of the clusters, we know that cluster 0 is Monocyte 
 >               height = 7.5, 
 >               name = "10X_PBMC_8K_TF_Monocyte")
 ```
-<img src="./10X_PBMC_8K_TF_Monocyte.umap.png" width="900" height="620" /> 
+<img src="./10X_PBMC_8K_TF_Monocyte_umap.png" width="900" height="620" /> 
 
 **Step 9. Save the project for future analysis**     
 Finally, you can save the R project including the raw data, normalized data, clustering result and meta informations for future analysis.

@@ -57,7 +57,23 @@ nohup snakemake --cores 8 --use-conda > 10X_PBMC_8K.out &
 
 **Step 3. Understanding the final output files**
 
-Here, we assume you've run MAESTRO successfully. An output directory is specified in the run call, and will contain several useful outputs as described below.            
+Here, we assume you've run MAESTRO successfully. An output directory is specified in the run call, and will contain several useful outputs as described below.
+```bash
+$ ls 10X_PBMC_10K/Result
+$ Analysis CellRangerATAC Log QC Summary
+```
+
+1) The CellRangerATAC directory contains all the mapping and analysis files fron CellRangerATAC pipeline. 2) The QC directory contains qualtiy control analysis of scATAC-seq data, including the barcodes filtering table. 3) The Analysis directory contains the MACS peak calling result, peak count table, clustering result, annotated result, driver transcription factor identification result, for which we will introduce in the step-by-step analysis. 4) The Log directory contains the log files generated in the pipeline analysis. 5) The Summary directroy contains the 10X_PBMC_10K_report.html, which summarized all the results in a html based document. The summary html for the 10X_PBMC_10K example can be found [here] (http://cistrome.org/~chenfei/MAESTRO/10X_PBMC_5k_scATAC/10X_PBMC_5k_MAESTRO_scATAC_report.html).
+
+Mappability plot for scATAC-seq QC analysis:
+<img src="./10X_PBMC_10K_mapping_summary.png" width="500" height="400" /> 
+
+Fragment size distribution for scATAC-seq QC analysis:      
+<img src="./10X_PBMC_10K_fragment_size.png" width="500" height="400" /> 
+
+Cell filtering plot for scATAC-seq QC analysis, cells with less than 1000 unique fragments and 20% fraction of promoter reads are treated as non-cells and filtered out from the downstream analysis:      
+<img src="./10X_PBMC_10K_cell_filtering.png" width="500" height="400" /> 
+
 
 **Step 4. Custom analysis starting from the processed dataset**
 Although MAESTRO will generate all the analysis result through the snakemake based workflow, in most cases, you might want to analysis the result from the processed dataset(count matrix of a cell by peak table), tune the parameters, focused on specific clusters or sub-clusters, and learn transcription regulation in those clusters. Considering this, we build a stand alone MAESTRO R package for downstream analysis. We will show you how to run though the MAESTRO analysis using the R package step by step.
@@ -106,7 +122,7 @@ chr8-141137795-141138489 chr8-141137795-141138489
 chr2-112839364-112840014 chr2-112839364-112840014
 ```
 
-<img src="./10X_PBMC_10K.cluster.png" width="500" height="400" /> 
+<img src="./10X_PBMC_10K_cluster.png" width="500" height="400" /> 
 
 **Step 6. Annotate celltypes**     
 We next try to annotate different clusters based on their marker genes. For scATAC, we first need to pass the gene regulatory potential matrix to the clustering result, then perform differential gene analysis for each cluster on the gene RPscore matrix, and identify the marker genes. We use public immune signatures like [CIBERSORT](https://www.nature.com/articles/nmeth.3337) to annotate the clusters. You can also use your own signatures to annotate the clusters.
@@ -121,7 +137,7 @@ We next try to annotate different clusters based on their marker genes. For scAT
 >                                            genes.cutoff = 1E-5)
 ```
 
-<img src="./10X_PBMC_10K.annotated.png" width="600" height="400" /> 
+<img src="./10X_PBMC_10K_annotated.png" width="600" height="400" /> 
 
 **Step 7. Identify driver transcription factors**     
 Identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilize giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster specific peaks. To run this function, you need to first install [giggle](https://github.com/ryanlayer/giggle), download the giggle index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz), and provide the file location of the index to MAESTRO. 
@@ -194,7 +210,7 @@ According to the annotation of the clusters, we know that cluster 0 is Monocyte.
 >                  height = 4, 
 >                  name = "10X_PBMC_10K_TF_Monocyte")
 ```
-<img src="./10X_PBMC_10K_TF_Monocyte.vlnplot.png" width="850" height="350" />   
+<img src="./10X_PBMC_10K_TF_Monocyte_vlnplot.png" width="850" height="350" />   
 
 ```R
 > VisualizeUmap(genes = pbmc.ATAC.tfs, 
@@ -206,7 +222,7 @@ According to the annotation of the clusters, we know that cluster 0 is Monocyte.
 >              height = 7.5, 
 >              name = "10X_PBMC_10K_TF_Monocyte")
 ```
-<img src="./10X_PBMC_10K_TF_Monocyte.umap.png" width="650" height="620" /> 
+<img src="./10X_PBMC_10K_TF_Monocyte_umap.png" width="650" height="620" /> 
 
 Based on the predicted expression level of TFs, we can see that IRF1 is highly expressed in the monocytes from PBMC. We will next visualize the predicted expression of IRF1 target genes.
 
