@@ -1,0 +1,7 @@
+Start Drseq 
+Step0: Data integrate 
+Detected input file format is fastq 
+use STAR as alignment tools 
+memory check is turned off, start mapping with STAR ### STAR consume > 30G memory, make sure your server have enough memory ### 
+option setting:  
+mapping thread is 8 

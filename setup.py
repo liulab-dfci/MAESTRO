@@ -18,31 +18,48 @@ def install_drseq():
     os.chdir("pkg/Dr.seq.1.2.0")
     os.system("python setup.py install")
     os.chdir(curdir)
+    print("Installation of Dr.seq is DONE")
 
 def install_giggle():
     curdir = os.getcwd()
     os.chdir("pkg/giggle")
     os.system("make")
     os.chdir(curdir)
+    print("Installation of GIGGLE is DONE")
+
+def install_rabit():
+    curdir = os.getcwd()
+    os.chdir("pkg/Rabit")
+    os.system("./configure --prefix=" + curdir)
+    os.system("make")
+    os.system("make install")
+    os.chdir(curdir)
+    print("Installation of Rabit is DONE")
+
+def install_rpackage():
+    os.system("Rscript MAESTRO/R/MAESTRO_install.R")
+    print("Installation of required R packages is DONE")
 
 def main():
     install_drseq()
-    install_giggle()
+    # install_giggle()
+    # install_rabit()
+    install_rpackage()
     setup(
-        name = "MASTER",
+        name = "MAESTRO",
         version = "0.0.1",
-        package_dir = {'MASTER':'MASTER'},
-        packages = ['MASTER'],
-        package_data={'MASTER':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'R/*', 'env/*', 'annotations/*', '']},
-        scripts = ['MASTER/MASTER'],
+        package_dir = {'MAESTRO':'MAESTRO'},
+        packages = ['MAESTRO'],
+        package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'R/*', 'env/*', 'annotations/*', '']},
+        scripts = ['MAESTRO/MAESTRO'],
         include_package_data = True,
         
         author = "Chenfei Wang, Dongqing Sun",
         author_email = "",
-        description = "MASTER (model-based analysis of single-cell transcriptome and regulome) is a comprehensive "
-        "quality control, analysis and visualization pipeline for scATAC-seq and scRNA-seq",
+        description = "MAESTRO(Model-based AnalysEs of Single-cell Transcriptome and RegulOme) is a comprehensive "
+        "single-cell RNA-seq and ATAC-seq analysis suit built using snakemake.",
         license = "GPL-3.0",
-        url = "https://github.com/chenfeiwang/MASTER",
+        url = "https://github.com/chenfeiwang/MAESTRO",
         
         zip_safe = False,
         install_requires=[],

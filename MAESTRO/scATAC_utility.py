@@ -15,8 +15,8 @@ from pkg_resources import resource_filename
 
 error   = logging.critical
 warn    = logging.warning
-ENV_PATH = resource_filename('MAESTRO', 'env')
 SCRIPT_PATH = os.path.dirname(__file__)
+ENV_PATH = resource_filename('MAESTRO', 'env')
 RSCRIPT_PATH = resource_filename('MAESTRO', 'R')
 
 def Info(infoStr):

@@ -16,7 +16,7 @@ import argparse as ap
 from pkg_resources import resource_filename
 
 
-def init_workflow(directory, mode):
+def init_workflow(directory, module):
     try:
         os.makedirs(directory)
     except OSError:
@@ -25,9 +25,9 @@ def init_workflow(directory, mode):
         pass
 
 
-    def get_resource(f,mode):
+    def get_resource(f,module):
         pkgpath = resource_filename('MAESTRO', '.')
-        return os.path.join(pkgpath, "Snakemake", mode, f)
+        return os.path.join(pkgpath, "Snakemake", module, f)
 
     def get_target(f):
         return os.path.join(directory, f)
@@ -37,20 +37,20 @@ def init_workflow(directory, mode):
         if os.path.exists(target):
             shutil.copy(target, target + ".old")
 
-    def install(f, mode):
-        source = get_resource(f, mode)
+    def install(f, module):
+        source = get_resource(f, module)
         target = get_target(f)
         shutil.copy(source, target)
 
     backup("Snakefile")
-    install("Snakefile", mode)
+    install("Snakefile", module)
     backup("config.yaml")
-    install("config.yaml", mode)
+    install("config.yaml", module)
 
 
 def main():
     # create arg parser
-    parser = ap.ArgumentParser(description = "MAESTRO is a comprehensive quality control, analysis and visualization pipeline for scATAC-seq and scRNA-seq. ")
+    parser = ap.ArgumentParser(description = "MAESTRO(Model-based AnalysEs of Single-cell Transcriptome and RegulOme) is a comprehensive single-cell RNA-seq and ATAC-seq analysis suit built using snakemake.")
     parser.add_argument("-v", "--version", action = "store_true", help = "Print version info.")
 
     subparsers = parser.add_subparsers(dest = "subcommand")
@@ -59,7 +59,7 @@ def main():
         "You can configure the config file according to your needs, and run the workflow with Snakemake "
         "(https://bitbucket.org/johanneskoester/snakemake).")
     workflow.add_argument("-d", "--directory", help = "Path to the directory where the workflow shall be initialized and results shall be stored.")
-    workflow.add_argument("-m", "--mode", choices = ["scATAC","scRNA"], help="Analyze scATAC-seq or scRNA-seq")
+    workflow.add_argument("-m", "--module", choices = ["scATAC","scRNA","integrate"], help="Analysis of scATAC-seq or scRNA-seq, or integrattion analysis")
 
     logging.basicConfig(format="%(message)s", level=logging.INFO, stream=sys.stderr)
 
@@ -69,7 +69,7 @@ def main():
         print(version)
         exit(0)
     elif args.subcommand == "init":
-        init_workflow(args.directory, args.mode)
+        init_workflow(args.directory, args.module)
     else:
         parser.print_help()
         exit(1)
