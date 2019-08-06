@@ -84,13 +84,13 @@ $ ls 10X_PBMC_8K/Result
 $ Analysis CellRanger Log QC Summary
 ```
 
-1) The CellRanger directory contains all the mapping and analysis files from CellRanger pipeline. 2) The QC directory contains qualtiy control analysis of scRNA-seq data, including the barcodes filtering table. 3) The Analysis directory contains the gene count table, clustering result, annotated result, driver transcription factor identification result, for which we will introduce in the step-by-step analysis. 4) The Log directory contains the log files generated in the pipeline analysis. 5) The Summary directroy contains the 10X_PBMC_8K_report.html, which summarized all the results in a html based document. The summary html for the 10X_PBMC_8K example can be found [here] (http://cistrome.org/~chenfei/MAESTRO/10X_PBMC_5k_scRNA/10X_PBMC_5k_MAESTRO_scRNA_report.html).
+Outputfiles: 1)The CellRanger directory contains all the mapping and analysis files from CellRanger pipeline. 2) The QC directory contains qualtiy control analysis of scRNA-seq data, including the barcodes filtering table. 3) The Analysis directory contains the gene count table, clustering result, annotated result, driver transcription factor identification result, for which we will introduce in the step-by-step analysis. 4) The Log directory contains the log files generated in the pipeline analysis. 5) The Summary directroy contains the 10X_PBMC_8K_report.html, which summarized all the results in a html based document. The summary html for the 10X_PBMC_8K example can be found [here](http://cistrome.org/~chenfei/MAESTRO/10X_PBMC_5k_scRNA/10X_PBMC_5k_MAESTRO_scRNA_report.html).
 
 Gene-body coverage plot for scRNA-seq QC analysis:      
-<img src="./10X_PBMC_8K_genebody_cov.png" width="500" height="400" /> 
+<img src="./10X_PBMC_8K_genebody_cov.png" width="500" height="500" /> 
 
 Cell filtering plot for scRNA-seq QC analysis, cells with less than 500 UMIs and 200 genes covered are treated as non-cells and filtered out from the downstream analysis:      
-<img src="./10X_PBMC_8K_cell_filtering.png" width="500" height="400" /> 
+<img src="./10X_PBMC_8K_cell_filtering.png" width="500" height="500" /> 
 
 **Step 4. Custom analysis starting from the processed dataset**     
 Although MAESTRO will generate all the analysis result through the snakemake based workflow, in most cases, you might want to analysis the result from the processed dataset(count or TPM matrix of a cell by gene table), tune the parameters, focused on specific clusters or sub-clusters, and learn the gene set enrichment as well as transcription regulation in those clusters. Considering this, we build a stand alone MAESTRO R package for downstream analysis. We will show you how to run though the MAESTRO analysis using the R package step by step.
