@@ -48,15 +48,14 @@ genome:
   cellranger: /homes/cwang/annotations/refdata-cellranger-atac-hg38-1.0.0
 ```
 
-**Step 2. Run MAESTRO**
+**Step 2. Run MAESTRO**     
 Once configured, you can use snakemake to run the workflow. 
 ```bash
 snakemake -np
 nohup snakemake --cores 8 --use-conda > 10X_PBMC_8K.out &
 ```
 
-**Step 3. Understanding the final output files**
-
+**Step 3. Understanding the final output files**     
 Here, we assume you've run MAESTRO successfully. An output directory is specified in the run call, and will contain several useful outputs as described below.
 ```bash
 $ ls 10X_PBMC_10K/Result
@@ -73,7 +72,6 @@ Fragment size distribution for scATAC-seq QC analysis:
 
 Cell filtering plot for scATAC-seq QC analysis, cells with less than 1000 unique fragments and 20% fraction of promoter reads are treated as non-cells and filtered out from the downstream analysis:      
 <img src="./10X_PBMC_10K_cell_filtering.png" width="500" height="500" /> 
-
 
 **Step 4. Custom analysis starting from the processed dataset**
 Although MAESTRO will generate all the analysis result through the snakemake based workflow, in most cases, you might want to analysis the result from the processed dataset(count matrix of a cell by peak table), tune the parameters, focused on specific clusters or sub-clusters, and learn transcription regulation in those clusters. Considering this, we build a stand alone MAESTRO R package for downstream analysis. We will show you how to run though the MAESTRO analysis using the R package step by step.
