@@ -1,23 +1,18 @@
 # Directory where fastq files are stored
 fastqdir: /mnt/Storage/home/sundongqing/Project/Single_cell/Analysis/10xPBMC_1k/pbmc_1k_v2_fastqs
-# Sample name of fastq file (only for platform of "10xGenomics", for example, 
+# Sample name of fastq file (only for platform of "10x-genomics", for example, 
 # if there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the sample name is "pbmc_1k_v2". )
 fastqprefix: pbmc_1k_v2
 # Species to use [GRCh38, mmu] (GRCh38 for human and mmu for mouse)
 species: GRCh38
-# Method to use [Seurat, Pagoda, scMCA, RCA, SSCC]
-method: Seurat
-# Platform of single cell RNA-seq [Smartseq2, 10xGenomics, Dropseq]
-platform: 10xGenomics
-# Does the pipeline start from count ? [TRUE, FALSE]
-startfromcount: TRUE
-# The type of gene ID
-# If you start from count table, you must specify it [ENSEMBL, SYMBOL].
-geneidtype: ENSEMBL
+# Platform of single cell RNA-seq [Smartseq2, 10x-genomics, Dropseq]
+platform: 10x-genomics
 # The prefix of output files
 outprefix: pbmc_1k_v2
 # Number of cores to use
 cores: 8
+# annotation to run rabit
+rabitlib: /home1/wangchenfei/Project/SingleCell/scATAC/Code/MAESTRO/MAESTRO/annotations/Rabit_lib
 
 # Reference genome 
 genome:
@@ -25,23 +20,20 @@ genome:
   mapindex: /home1/wangchenfei/annotations/refdata-cellranger-GRCh38-3.0.0/star
   # .gtf format genome annotation file
   gtf: /home1/wangchenfei/annotations/refdata-cellranger-GRCh38-3.0.0/genes/genes.gtf
-  # .bed format genome annotation file 
-  bed: /home1/wangchenfei/Project/SingleCell/scATAC/Code/strap/scATAC/src/annotations/GRCh38_ensembl.bed
-  # .txt format genome annotation file (only for platform of "Dropseq")
-  anno: /home1/wangchenfei/Project/SingleCell/scATAC/Code/strap/scATAC/src/annotations/GRCm38_refgenes.txt
-  # genome annotation file from 10xGenomics required for Cell Ranger
-  cellranger: /mnt/Storage/home/sundongqing/RefGenome/hg38/refdata-cellranger-GRCh38-3.0.0
+  # genome annotation file from 10x-genomics required for Cell Ranger
+  cellranger: /home1/wangchenfei/annotations/refdata-cellranger-GRCh38-3.0.0
 
 # Information about barcode (only for platform of "Dropseq")
 barcode:
   # The start site of each barcode (deinterleave linkers and connect barcodes and UMI)
+  # If there's no need to remove linkers, set "start" as NULL.
   start: "0,48,86"
-  # The end  site of each barcode (deinterleave linkers and connect barcodes and UMI)
+  # The end site of each barcode (deinterleave linkers and connect barcodes and UMI)
   end: "18,56,150"
   # The range of umi (after linker removal)
-  umirange: 10
+  umilength: 8
   # The range of cell barcode (after linker removal)
-  barcoderange: 14
+  barcodelength: 12
 
 # Specify the barcode fastq file and reads fastq file (only for platform of "Dropseq")
 fastq:

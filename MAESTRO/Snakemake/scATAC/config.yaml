@@ -4,29 +4,28 @@ fastqdir: /homes/cwang/projects/ATAC/data/Data_cancer/CFCE_LUCAP/Raw/LUCAP_49_ID
 fastqprefix: LUCAP_49_IDX
 # Species to use [GRCh38, GRCm38] (GRCh38 for human and GRCm38 for mouse)
 species: GRCh38
-# Platform of single cell ATAC-seq [10xGenomics, sci-ATAC-seq, microfluidic]
-platform: 10xGenomics
+# Platform of single cell ATAC-seq [10x-genomics, sci-ATAC-seq, microfluidic]
+platform: 10x-genomics
 # The prefix of output files
 outprefix: LUCAP_49
 # Please specify the barcode library if the platform is sci-ATAC-seq, or the pipeline will automatically output the barcodes with enough reads count (>1000).
 barcodelib: NULL
 # The core number
 cores: 8
-# Whether or not to use custom peaks [TRUE, FALSE]
-custompeaks: FALSE
+# Flag to provide custom peaks [TRUE, FALSE]
+custompeaks: TRUE
 # IF custompeaks = TRUE, provide the file location of custom peaks
-custompeaksloc: NULL
+custompeaksloc: /home1/wangchenfei/Project/SingleCell/scATAC/Code/strap/scATAC/src/annotations/GRCh38_rDHS_dynamic.bed
 # Whether or not to call peaks from short fragment (less than 50bp)
 shortpeaks: FALSE
 # Gene score decay distance, could be optional from 1kb (promoter-based regulation) and 10kb(enhancer-based regulation), default is 10kb
 genedistance: 10000
-# Gene signature used to annotate the clusters, if NULL, will use human immune signatures to annotate the clusters.
-genesignature: NULL
 # Path of the giggle annotation file.
 giggleannotation: /homes/cwang/annotations/giggle 
+
 # Reference genome 
 genome:
   # Genome index directory for BWA
-  fasta: /homes/cwang/annotations/refdata-cellranger-atac-hg38-1.0.0/fasta/genome.fa
-  # genome annotation file from 10xGenomics required for Cell Ranger ATAC
-  cellranger: /homes/cwang/annotations/refdata-cellranger-atac-hg38-1.0.0
+  fasta: /home1/wangchenfei/annotations/refdata-cellranger-atac-GRCh38-1.1.0/fasta/genome.fa
+  # genome annotation file from 10x-genomics required for Cell Ranger ATAC
+  cellranger: /home1/wangchenfei/annotations/refdata-cellranger-atac-GRCh38-1.1.0
