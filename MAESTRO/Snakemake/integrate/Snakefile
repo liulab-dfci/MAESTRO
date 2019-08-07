@@ -1,0 +1,50 @@
+"""
+Integration analysis of scATAC and scRNA
+"""
+
+configfile: "config.yaml"
+
+
+import yaml
+import sys
+import os
+
+from MAESTRO.scATAC_utility import SCRIPT_PATH, RSCRIPT_PATH
+
+rule all:
+    input:
+        summaryreport = "Result/Summary/" + config["outprefix"] + "_integrate_report.html"
+
+rule integrate_merge:
+    input:
+        atacobj = config["atacobject"],
+        rnaobj = config["rnaobject"]
+    output:
+        mergeobject = "Result/Analysis/" + config["outprefix"] + "_integrate_Object.rds",
+        sourceplot = "Result/Analysis/" + config["outprefix"] + "_source.png",
+        rnaplot = "Result/Analysis/" + config["outprefix"] + "_RNAonly.png",
+        atacplot = "Result/Analysis/" + config["outprefix"] + "_ATAConly.png",
+        annoplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
+    params:
+        outpre = config["outprefix"],
+        outdir = "Result/Analysis",
+    shell:
+        "Rscript " + RSCRIPT_PATH + "/integrate.R {input.atacobj} {input.rnaobj} {params.outpre} {params.outdir}"
+
+rule integrate_report:
+    input:
+        mergeobject = "Result/Analysis/" + config["outprefix"] + "_integrate_Object.rds",
+        sourceplot = "Result/Analysis/" + config["outprefix"] + "_source.png",
+        rnaplot = "Result/Analysis/" + config["outprefix"] + "_RNAonly.png",
+        atacplot = "Result/Analysis/" + config["outprefix"] + "_ATAConly.png",
+        annoplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
+    output:
+        summaryreport = "Result/Summary/" + config["outprefix"] + "_integrate_report.html",
+        outdir = directory("Result/Summary/Plot/")
+    params:
+        outpre = config["outprefix"],
+        rnaobj = config["rnaobject"],
+        atacobj = config["atacobject"],
+    shell:
+        "cp {input.sourceplot} {input.rnaplot} {input.atacplot} {input.annoplot} {output.outdir};"
+        "python " + SCRIPT_PATH + "/integrate_report.py {params.outpre} {params.rnaobj} {params.atacobj}"
