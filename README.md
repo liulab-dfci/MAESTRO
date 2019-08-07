@@ -20,7 +20,7 @@ $ bash Miniconda3-latest-Linux-x86_64.sh
 ```
 And now you are ready to install MAESTRO through conda:
 ``` bash
-$ conda install -c dongqingsun MAESTRO
+$ conda install -c dongqingsun maestro
 ```
 
 **Installing the MAESTRO R package** 
