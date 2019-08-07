@@ -283,8 +283,11 @@ elif config["platform"] == "10x-genomics":
             outpre = config["outprefix"],
             stat = "../Cellranger/" + config["outprefix"] + "/outs/singlecell.csv",
             fragbed = config["outprefix"] + "_frag.bed",
+            sam = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_bam.sam"
         shell:
-            "samtools view {input.bam} | head -10000000 | awk '{{if ($9>0) print $9}}' > {output.fragbed};"
+            "samtools view {input.bam} > {params.sam};"
+            "head -n 10000000 {params.sam} | awk '{{if ($9>0) print $9}}' > {output.fragbed};"
+            "rm {params.sam};"
             "Rscript " + RSCRIPT_PATH + "/scATACseq_qc.R {params.stat} {params.fragbed} {params.platform} {params.outpre} {params.outdir}"
 
     rule scatac_allpeakcall:
@@ -304,7 +307,7 @@ elif config["platform"] == "10x-genomics":
     if config["shortpeaks"]:
         rule scatac_shortfragment:
             input:
-                bam = "Result/Cellranger/" + config["outprefix"] + "outs/possorted_bam.bam"
+                bam = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_bam.bam"
             output:
                 shortsam = "Result/Cellranger/" + config["outprefix"] + "possorted_50bp.sam"
             shell:

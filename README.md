@@ -18,9 +18,9 @@ Use following commands to the install Minicoda3：
 $ wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
 $ bash Miniconda3-latest-Linux-x86_64.sh
 ```
-And now you are ready to install MAESTRO through conda:
+And now you are ready to install MAESTRO or create an isolated environment through conda:
 ``` bash
-$ conda install -c dongqingsun MAESTRO
+$ conda create -n MAESTRO maestro -c dongqingsun
 ```
 
 **Installing the MAESTRO R package** 

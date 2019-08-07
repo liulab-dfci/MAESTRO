@@ -1,0 +1,6 @@
+# The path of scRNA Seurat object
+rnaobject: /home1/wangchenfei/Project/SingleCell/scRNA/Analysis/10X_PBMC_5k/Result/Analysis/10X_PBMC_5k_SeuratObj.rds
+# The path of scATAC RP Seurat object 
+atacobject: /home1/wangchenfei/Project/SingleCell/scATAC/Analysis/10X_PBMC_5k/Result/Analysis/10X_PBMC_5k_RP_SeuratObj.rds
+# The prefix of output files
+outprefix: 10X_PBMC_5k
