@@ -20,6 +20,9 @@ $ bash Miniconda3-latest-Linux-x86_64.sh
 ```
 And now you are ready to install MAESTRO or create an isolated environment through conda:
 ``` bash
+$ conda config --add channels defaults
+$ conda config --add channels bioconda
+$ conda config --add channels conda-forge
 $ conda create -n MAESTRO maestro -c dongqingsun
 ```
 

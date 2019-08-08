@@ -43,10 +43,6 @@ genome:
   mapindex: /homes/cwang/annotations/refdata-cellranger-hg38-1.2.0/star
   # gtf format genome annotation file
   gtf: /homes/cwang/annotations/refdata-cellranger-hg38-1.2.0/genes/genes.gtf
-  # bed format genome annotation file 
-  bed: /homes/cwang/annotations/MAESTRO/GRCh38_RefSeq.bed
-  # txt format genome annotation file (only for platform of "Dropseq")
-  anno: 
   # directory of cellranger annotations (only for platform of "10x-genomics")
   cellranger: /homes/cwang/annotations/refdata-cellranger-hg38-1.2.0
 
