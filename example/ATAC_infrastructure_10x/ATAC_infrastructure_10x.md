@@ -33,7 +33,7 @@ platform: 10x-genomics
 # The prefix of output files
 outprefix: 10X_PBMC_10K
 # Please specify the barcode library if the platform is sci-ATAC-seq, or the pipeline will automatically output the barcodes with enough reads count (>1000).
-barcodelib: NULL
+barcodelib: 
 # The core number
 cores: 8
 # Flag to provide custom peaks [TRUE, FALSE]
