@@ -22,7 +22,7 @@ Open the `config.yaml` file in you working directory and edit it to your needs. 
 ```bash
 $ vi config.yaml
 # Directory where fastq files are stored
-fastqdir: /homes/cwang/projects/MAESTRO/snakemake/RNA/10X/10X_PBMC_8K
+fastqdir: /homes/cwang/projects/MAESTRO/snakemake/RNA/10X
 # Sample name of fastq file (only for platform of "10x-genomics", for example, 
 # if there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the sample name is "pbmc_1k_v2". )
 fastqprefix: pbmc8k_fastqs
@@ -43,10 +43,6 @@ genome:
   mapindex: /homes/cwang/annotations/refdata-cellranger-hg38-1.2.0/star
   # gtf format genome annotation file
   gtf: /homes/cwang/annotations/refdata-cellranger-hg38-1.2.0/genes/genes.gtf
-  # bed format genome annotation file 
-  bed: /homes/cwang/annotations/MAESTRO/GRCh38_RefSeq.bed
-  # txt format genome annotation file (only for platform of "Dropseq")
-  anno: 
   # directory of cellranger annotations (only for platform of "10x-genomics")
   cellranger: /homes/cwang/annotations/refdata-cellranger-hg38-1.2.0
 

@@ -9,7 +9,7 @@ Our analysis are based on the clustering result from previous examples. The step
 > pbmc.RNA.res <- readRDS('pbmc.RNA.res.rds')
 > pbmc.ATAC.res <- readRDS('pbmc.ATAC.res.rds')
 ```
-**Step 2. Co-embedding of scRNA-seq and scATAC-seq cells**
+**Step 2. Co-embedding of scRNA-seq and scATAC-seq cells**     
 To visualize all the scRNA-seq and scATAC-seq cells together, we can co-embedded the scRNA-seq and scATAC-seq cells in the same low dimensional space. MAESTRO co-embedding are largely based on canonical correlation analysis (CCA) from [Seurat](https://satijalab.org/seurat/v3.0/atacseq_integration_vignette.html). 1) We first calculated the gene regulatory potential matrix using MAESTRO, which could represent the predicted gene expression level from ATAC-seq reads. 2) Then we identify 'anchors' between scRNA-seq and scATAC-seq datasets. 3) Finally, we transfer the cell type labels from scRNA-seq and also co-embedded the scRNA-seq and scATAC-seq cells using CCA. 
 
 ```R
