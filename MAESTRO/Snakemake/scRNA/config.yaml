@@ -1,42 +1,43 @@
 # Directory where fastq files are stored
-fastqdir: /homes/cwang/projects/MAESTRO/snakemake/RNA/10X
+fastqdir: /mnt/Storage/home/sundongqing/Project/Single_cell/Analysis/10xPBMC_1k/pbmc_1k_v2_fastqs
 # Sample name of fastq file (only for platform of "10x-genomics", for example, 
 # if there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the sample name is "pbmc_1k_v2". )
-fastqprefix: pbmc8k_fastqs
+fastqprefix: pbmc_1k_v2
 # Species to use [GRCh38, mmu] (GRCh38 for human and mmu for mouse)
 species: GRCh38
 # Platform of single cell RNA-seq [Smartseq2, 10x-genomics, Dropseq]
 platform: 10x-genomics
 # The prefix of output files
-outprefix: 10X_PBMC_8K
+outprefix: pbmc_1k_v2
 # Number of cores to use
 cores: 8
 # annotation to run rabit
-rabitlib: /homes/cwang/annotations/rabit
+rabitlib: /home1/wangchenfei/Project/SingleCell/scATAC/Code/MAESTRO/MAESTRO/annotations/Rabit_lib
 
 # Reference genome 
 genome:
   # Genome index directory for STAR
-  mapindex: /homes/cwang/annotations/refdata-cellranger-hg38-1.2.0/star
-  # gtf format genome annotation file
-  gtf: /homes/cwang/annotations/refdata-cellranger-hg38-1.2.0/genes/genes.gtf
-  # directory of cellranger annotations (only for platform of "10x-genomics")
-  cellranger: /homes/cwang/annotations/refdata-cellranger-hg38-1.2.0
+  mapindex: /home1/wangchenfei/annotations/refdata-cellranger-GRCh38-3.0.0/star
+  # .gtf format genome annotation file
+  gtf: /home1/wangchenfei/annotations/refdata-cellranger-GRCh38-3.0.0/genes/genes.gtf
+  # genome annotation file from 10x-genomics required for Cell Ranger
+  cellranger: /home1/wangchenfei/annotations/refdata-cellranger-GRCh38-3.0.0
 
 # Information about barcode (only for platform of "Dropseq")
 barcode:
   # The start site of each barcode (deinterleave linkers and connect barcodes and UMI)
-  start: 
-  # The end  site of each barcode (deinterleave linkers and connect barcodes and UMI)
-  end: 
+  # If there's no need to remove linkers, set "start" as NULL.
+  start: "0,48,86"
+  # The end site of each barcode (deinterleave linkers and connect barcodes and UMI)
+  end: "18,56,150"
   # The range of umi (after linker removal)
-  umirange: 
+  umilength: 8
   # The range of cell barcode (after linker removal)
-  barcoderange: 
+  barcodelength: 12
 
 # Specify the barcode fastq file and reads fastq file (only for platform of "Dropseq")
 fastq:
   # barcode fastq file
-  barcode: 
+  barcode: test_2
   # transcript fastq file
-  transcript:
+  transcript: test_1
