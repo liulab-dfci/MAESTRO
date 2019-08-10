@@ -17,13 +17,13 @@
 #'
 #' @export
 
-RNAFilteringPlot <- function(filepath, UMI.cutoff = 500, gene.number.cutoff = 200, name){
+RNAFilteringPlot <- function(filepath, UMI.cutoff = 1000, gene.number.cutoff = 500, name){
   UMI_gene = read.table(filepath)
   png(paste0(name,"_scRNA_cell_filtering.png"),width=4.8,height=4.8, res = 300, units = "in")
   par(mai = c(0.85, 0.85, 0.25, 0.25))
-  plot(log10(UMI_gene[which(UMI_gene[,1] < UMI.cutoff| UMI_gene[,2] < gene.number.cutoff),1]+1),UMI_gene[which(UMI_gene[,1] < UMI.cutoff| UMI_gene[,2] < gene.number.cutoff),2],
+  plot(log10(UMI_gene[which(UMI_gene[,1] < UMI.cutoff | UMI_gene[,2] < gene.number.cutoff),1]+1),UMI_gene[which(UMI_gene[,1] < UMI.cutoff | UMI_gene[,2] < gene.number.cutoff),2],
        xlim=c(0,log10(max(UMI_gene[,1])+1)+0.25), ylim=c(0,max(UMI_gene[,2])+150), pch='.',col='blue',ylab='Number of genes covered',xlab='Number of UMIs (log10)')
-  points(log10(UMI_gene[which(UMI_gene[,1] >= UMI.cutoff| UMI_gene[,2] >= gene.number.cutoff),1]+1),UMI_gene[which(UMI_gene[,1] >= UMI.cutoff| UMI_gene[,2] >= gene.number.cutoff),2],
+  points(log10(UMI_gene[which(UMI_gene[,1] >= UMI.cutoff & UMI_gene[,2] >= gene.number.cutoff),1]+1),UMI_gene[which(UMI_gene[,1] >= UMI.cutoff & UMI_gene[,2] >= gene.number.cutoff),2],
          pch='.',col='red')
   legend("topleft",c("cells","non-cells"),col=c("red","blue"),pch=20, bty = "n")
   dev.off()
