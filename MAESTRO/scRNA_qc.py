@@ -95,7 +95,7 @@ def main():
     outpre = sys.argv[3]
     outdir = sys.argv[4]
     
-    if platform == "10xGenomics":
+    if platform == "10x-genomics":
         raw_matrix = get_matrix_from_h5(raw_matrix_file)
         FilterCell(raw_matrix, 500, 200, os.path.join(outdir, outpre), platform)
     elif platform == "Smartseq2":
@@ -103,7 +103,7 @@ def main():
         FilterCell(raw_matrix_df, 500, 200, os.path.join(outdir, outpre), platform)
     else:
         raw_matrix_df = pd.read_csv(raw_matrix_file, sep = "\t", header = 0, index_col = 0)
-        FilterCell(raw_matrix_df, 50, 20, os.path.join(outdir, outpre), platform)
+        FilterCell(raw_matrix_df, 500, 200, os.path.join(outdir, outpre), platform)
 
 
 if __name__ == "__main__":
