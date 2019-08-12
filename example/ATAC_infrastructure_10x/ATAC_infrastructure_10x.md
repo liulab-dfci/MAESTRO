@@ -23,9 +23,9 @@ Open the `config.yaml` file in you working directory and edit it to your needs. 
 ```bash
 $ vi config.yaml
 # Directory where fastq files are stored
-fastqdir: /homes/cwang/projects/MAESTRO/snakemake/ATAC/10X
+fastqdir: /home/cw254/projects/MAESTRO/snakemake/ATAC/10X/atac_v1_pbmc_10k_fastqs
 # Sample name of fastq file
-fastqprefix: atac_v1_pbmc_10k_fastqs
+fastqprefix: atac_v1_pbmc_10k
 # Species to use [GRCh38, GRCm38] (GRCh38 for human and GRCm38 for mouse)
 species: GRCh38
 # Platform of single cell ATAC-seq [10x-genomics, sci-ATAC-seq, microfluidic]
@@ -45,14 +45,14 @@ shortpeaks: FALSE
 # Gene score decay distance, could be optional from 1kb (promoter-based regulation) and 10kb(enhancer-based regulation), default is 10kb
 genedistance: 10000
 # Path of the giggle annotation file.
-giggleannotation: /homes/cwang/annotations/giggle 
+giggleannotation: /home/cw254/annotation/giggle 
 
 # Reference genome 
 genome:
   # Genome index directory for BWA
-  fasta: /homes/cwang/annotations/refdata-cellranger-atac-hg38-1.0.0/fasta/genome.fa
+  fasta: /home/cw254/annotation/refdata-cellranger-atac-GRCh38-1.1.0/fasta/genome.fa
   # genome annotation file from 10x-genomics required for Cell Ranger ATAC
-  cellranger: /homes/cwang/annotations/refdata-cellranger-atac-hg38-1.0.0
+  cellranger: /home/cw254/annotation/refdata-cellranger-atac-GRCh38-1.1.0
 ```
 
 **Step 2. Run MAESTRO**     
