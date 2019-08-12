@@ -32,7 +32,7 @@ def get_matrix_from_h5(filename):
         return FeatureBCMatrix(feature_ids, feature_names, barcodes, matrix)
 
 def FilterCell(rawmatrix, count_cutoff, gene_cutoff, outprefix, platform):
-    if platform == "10xGenomics":
+    if platform == "10x-genomics":
         expmatrix = rawmatrix.matrix
         raw_feature_ids = rawmatrix.feature_ids
         raw_feature_names = rawmatrix.feature_names
