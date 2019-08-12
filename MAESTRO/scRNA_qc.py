@@ -32,7 +32,7 @@ def get_matrix_from_h5(filename):
         return FeatureBCMatrix(feature_ids, feature_names, barcodes, matrix)
 
 def FilterCell(rawmatrix, count_cutoff, gene_cutoff, outprefix, platform):
-    if platform == "10xGenomics":
+    if platform == "10x-genomics":
         expmatrix = rawmatrix.matrix
         raw_feature_ids = rawmatrix.feature_ids
         raw_feature_names = rawmatrix.feature_names
@@ -95,15 +95,15 @@ def main():
     outpre = sys.argv[3]
     outdir = sys.argv[4]
     
-    if platform == "10xGenomics":
+    if platform == "10x-genomics":
         raw_matrix = get_matrix_from_h5(raw_matrix_file)
-        FilterCell(raw_matrix, 500, 200, os.path.join(outdir, outpre), platform)
+        FilterCell(raw_matrix, 1000, 500, os.path.join(outdir, outpre), platform)
     elif platform == "Smartseq2":
         raw_matrix_df = pd.read_csv(raw_matrix_file, sep = ",", header = 0, index_col = 0)
-        FilterCell(raw_matrix_df, 500, 200, os.path.join(outdir, outpre), platform)
+        FilterCell(raw_matrix_df, 1000, 500, os.path.join(outdir, outpre), platform)
     else:
         raw_matrix_df = pd.read_csv(raw_matrix_file, sep = "\t", header = 0, index_col = 0)
-        FilterCell(raw_matrix_df, 50, 20, os.path.join(outdir, outpre), platform)
+        FilterCell(raw_matrix_df, 1000, 500, os.path.join(outdir, outpre), platform)
 
 
 if __name__ == "__main__":
