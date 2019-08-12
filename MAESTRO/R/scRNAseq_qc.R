@@ -8,7 +8,7 @@ countgene_file = argue[2]
 prefix = argue[3]
 
 RNAGenebodyCoveragePlot(filepath = genecov_file, name = prefix)
-RNAFilteringPlot(filepath = countgene_file, UMI.cutoff = 500, gene.number.cutoff = 200, name = prefix)
+RNAFilteringPlot(filepath = countgene_file, UMI.cutoff = 1000, gene.number.cutoff = 500, name = prefix)
 
 
 # argue = commandArgs(T)
