@@ -1,0 +1,278 @@
+colData <- DataFrame(celltype=colnames(peakCount), depth=apply(peakCount,2,sum))#
+  colData <- colData[which(colData[,2]>minPeak),]#
+  rowData <- DataFrame(peaks=rownames(peakCount), depth=apply(peakCount[,colData[,1]],1,sum))#
+  rowData = rowData[which(rowData[,2]>0),]#
+  finalPeak = as.matrix(peakLoc[rowData[,1],])#
+  finalCount = as.matrix(peakCount[rowData[,1],colData[,1]])#
+  rowRanges = GRanges(as.character(finalPeak[,1]),IRanges(as.integer(finalPeak[,2]),as.integer(finalPeak[,3])),strand="*",score=as.integer(5),qval=1,name=rownames(finalPeak))
+dim(finalCount)
+chromVAR_counts  = SummarizedExperiment(assays=SimpleList(counts=finalCount),rowRanges=rowRanges, colData=colData)
+chromVAR_counts = addGCBias(chromVAR_counts, genome = BSgenome.Hsapiens.UCSC.hg38)
+motif_ix = matchMotifs(human_pwms_v2, chromVAR_counts, genome = BSgenome.Hsapiens.UCSC.hg38)
+dev = computeDeviations(object = chromVAR_counts, annotations = motif_ix)
+library(Seurat)
+?NormalizeData
+?barplot
+?CombinePlots
+library(Seurat)
+?CombinePlots
+?VlnPlot
+?apply
+?pch
+?barplot
+?pch
+library(Seurat)
+?Seurat
+library(Seurat)
+?DotPlot
+?DimPlot
+?pch
+library(Seurat)
+?SubsetData
+?subset
+?legend
+?pch
+?FeaturePlot
+library(Seurat)
+?DoHeatmap
+?FindVariableFeatures
+？flexmix
+?flexmix
+library(Seurat)
+?FeaturePlot
+?cutree
+library(Read10X)
+library(Seurat)
+? Read10X
+Read10X
+library(Seurat)
+?CreateGeneActivityMatrix
+library(Seurat)
+?FindMarkers
+library(fpc)
+?dbscan
+load("/Users/cwang/Library/Caches/Cleanup At Startup/Transmit/4769A3EB-1347-4180-AA6A-C1C500B264E8/GSE107817_Tcell_cisTopic_cluster.rds")
+?par
+?pch
+library(Seurat)
+?GetAssay
+?GetData
+?pch
+rbPal(10)
+colorRampPalette(c('red','blue'))
+colorRampPalette(c('red','blue'))[10]
+colorRampPalette(c('red','blue'))(10)
+colorRampPalette(c('red','blue'))(10)[PBMC_MASTER_RNA_B]
+library(Seurat)
+?NormalizeData
+library(Seurat)
+?CreateSeuratObject
+libary(seurat)
+libary(Seurat)
+library(Seurat)
+?CreateSeuratObject
+??CreateSeuratObject
+?subset
+?FindVariableFeatures
+library(cicero)
+?run_cicero
+?ScaleData
+?subset
+cor(c(1,2,3),c(3,4,5,6,7))
+library(Seurat)
+?RunLSI
+?CCA
+?RunCCA
+library(MageckFlute)
+library(MaGeCKFlute)
+library(MAGeCKFlute)
+?BatchRemove
+library(MAGeCKflute)
+library(MAGeCKFlute)
+?MAView
+library(Seurat)
+?FindAllMarkers
+?MAView
+?FindAllMarkers
+?MAView
+?FindAllMarkers
+source('~/Desktop/MAESTRO/R/AnnotateCelltype.R')
+AssignCellType
+markers <- read.table('~/Desktop/MAESTRO/data/pbmc.markers.txt')
+head(markers)
+signatures <- read.table('~/Desktop/MAESTRO/data/human.immune.CIBERSORT.txt')
+AssignCellType(markers, signatures)
+signatures
+signatures <- read.table('~/Desktop/MAESTRO/data/human.immune.CIBERSORT.txt')
+AssignCellType(markers, signatures)
+signatures
+source('~/Desktop/MAESTRO/R/AnnotateCelltype.R')
+AssignCellType(markers, signatures)
+source('~/Desktop/MAESTRO/R/AnnotateCelltype.R')
+AssignCellType(markers, signatures)
+source('~/Desktop/MAESTRO/R/AnnotateCelltype.R')
+AssignCellType(markers, signatures)
+unique(signaures[,1])
+unique(signatures[,1])
+source('~/Desktop/MAESTRO/R/AnnotateCelltype.R')
+AssignCellType(markers, signatures)
+as.character(unique(signatures[,1]))
+markers
+head(markers)
+celltypes <- as.character(unique(signatures[,1]))
+celltypes
+signature_list <- sapply(1:length(celltypes),function(x){#
+                      return(to.upper(as.character(signatures[which(signatures[,2]==celltypes[x]),2])))})#
+    names(signature_list) <- celltypes
+signature_list <- sapply(1:length(celltypes),function(x){#
+                      return(toupper(as.character(signatures[which(signatures[,2]==celltypes[x]),2])))})#
+    names(signature_list) <- celltypes
+signature_list
+celltypes <- as.character(unique(signatures[,1]))#
+    signature_list <- sapply(1:length(celltypes),function(x){#
+                      return(toupper(as.character(signatures[which(signatures[,1]==celltypes[x]),2])))})#
+    names(signature_list) <- celltypes
+signature_list
+source('~/Desktop/MAESTRO/R/AnnotateCelltype.R')
+AssignCellType(markers, signatures)
+source('~/Desktop/MAESTRO/R/AnnotateCelltype.R')
+AssignCellType(markers, signatures)
+AssignCellType(markers, signatures, 0)
+AssignCellType(markers, signatures, 1)
+AssignCellType(markers, signatures, 5)
+?FindAllMarkers
+?MAView
+source('~/Desktop/MAESTRO/R/AnnotateCelltype.R')
+AssignCellType(markers, signatures, 5)
+source('~/Desktop/MAESTRO/R/AnnotateCelltypeAll.R')
+AssignCellTypeAll(markers, signatures)
+source('~/Desktop/MAESTRO/R/AnnotateCelltypeAll.R')
+AssignCellTypeAll(markers, signatures)
+AssignCellTypeAll
+signature_list
+source('~/Desktop/MAESTRO/R/AnnotateCelltypeAll.R')
+AssignCellTypeAll(markers, signatures)
+markers
+celltypes <- as.character(unique(signatures[,1]))#
+    signature_list <- sapply(1:length(celltypes),function(x){#
+                      return(toupper(as.character(signatures[which(signatures[,1]==celltypes[x]),2])))})#
+    names(signature_list) <- celltypes
+signature_list
+markers <- pbmc.markers
+markers
+cluster_celltypes = sapply(as.integer(levels(markers$cluster)), function(x){#
+    idx = markers$cluster==x#
+    avglogFC = markers$avg_logFC[idx]#
+    names(avglogFC) = toupper(markers$gene[idx])#
+    score_cluster = sapply(signature_list, function(y){#
+                    score = sum(avglogFC[y], na.rm = TRUE) / log2(length(y))#
+                    return(score)#
+    })#
+    if(max(score_cluster, na.rm = TRUE)>=minscore)#
+      cluster_celltypes = names(score_cluster)[which.max(score_cluster)]#
+    else#
+      cluster_celltypes = "Others"#
+    })
+cluster_celltypes
+as.integer(levels(markers$cluster))
+markers$cluster
+levels(markers$cluster)
+as.integer(unique(markers$cluster)
+)
+source('~/Desktop/MAESTRO/R/AnnotateCelltypeAll.R')
+AssignCellTypeAll(markers, signatures)
+?MAView
+?FindAllMarkers
+celtypescore <- AnnotateCelltype(pbmc.markers, human.immune.CIBERSORT, cluster = 0)
+source('~/Desktop/MAESTRO/R/AnnotateCelltypeAll.R')
+pbmc.markers <- pbmc.markers
+pbmc.markers <- markers
+human.immune.CIBERSORT <- signatures
+celtypescore <- AnnotateCelltype(pbmc.markers, human.immune.CIBERSORT, cluster = 0)
+source('~/Desktop/MAESTRO/R/AnnotateCelltypeAll.R')
+source('~/Desktop/MAESTRO/R/AnnotateCelltype.R')
+celtypescore <- AnnotateCelltype(pbmc.markers, human.immune.CIBERSORT, cluster = 0)
+head(celtypescore)
+celtypescore
+?FindAllMarkers
+?CreateSeuratObject
+?plot
+?FindAllMarkers
+?CreateSeuratObj
+?CreateSeurat
+?Create
+??CreateSeuratObj
+?CreateSeuratObj
+?CreateSeuratObject
+?MAView
+?CreateSeuratObject
+?MAView
+?CreateSeuratObject
+?FindVariableFeatures
+?subset
+?RunUMAP
+?FindNeighbors
+?FindClusters
+?FindVariableFeatures
+?FindAllMarkers
+1E-6
+?RunLSI
+library(Seurat)
+?ScaleData
+?FindAllMarkers
+max(1:15)
+library(Seurat)
+?FindAllMarkers
+?dbscan
+library(fpc)
+?dbscan
+system('bedtools')
+?stop
+stop(system('bedtools'))
+try(system('bedtools')) stop("Bedtools not found!")
+try(system('bedtools') stop("Bedtools not found!"))
+?stop
+test <- readRDS('/Volumes/Macintosh HD/Users/cwang/Desktop/MAESTRO/data/GRCh38.CistromeDB.genescore.rds')
+head(test)
+file.path()
+file.path("test","aa")
+GRCh38.CistromeDB.genescore <- readRDS('/Volumes/Macintosh HD/Users/cwang/Desktop/MAESTRO/data/giggle/GRCh38.CistromeDB.genescore.rds')
+save(GRCh38.CistromeDB.genescore, file="~/MAESTRO/data/GRCh38.CistromeDB.genescore.rdata")
+save(GRCh38.CistromeDB.genescore, file="~/Desktop/MAESTRO/data/GRCh38.CistromeDB.genescore.rdata")
+GRCm38.CistromeDB.genescore <- readRDS('/Volumes/Macintosh HD/Users/cwang/Desktop/MAESTRO/data/giggle/GRCm38.CistromeDB.genescore.rds')å
+GRCm38.CistromeDB.genescore <- readRDS('/Volumes/Macintosh HD/Users/cwang/Desktop/MAESTRO/data/giggle/GRCm38.CistromeDB.genescore.rds')
+save(GRCm38.CistromeDB.genescore, file="~/Desktop/MAESTRO/data/GRCm38.CistromeDB.genescore.rdata")
+library(Seurat)
+?subset
+?CreateGeneActivityMatrix
+library(hdf5r)
+test <- Read10X_h5('/Volumes/Macintosh HD/Users/cwang/Desktop/filtered_peak_bc_matrix.h5')
+head(test)
+str(test)
+library(preprocessCore)
+?normalize.quantile
+?normalize.quantiles
+setwd('~/Desktop/MAESTRO/data')
+load(GRCh38.CistromeDB.genescore.rdata)
+load('GRCh38.CistromeDB.genescore.rdata')
+ls()
+load('GRCm38.CistromeDB.genescore.rdata')
+ls()
+load('GRCh38.ensembl.txt.gz')
+file <- read.table('GRCh38.ensembl.txt.gz')
+file <- read.table('GRCh38.ensembl.txt')
+load(TFFamilyList_HUMAN.Rdata)
+load('TFFamilyList_HUMAN.Rdata')
+ls()
+HUMAN.TFFamily
+ls()
+GRCh38.ensembl <- read.delim('GRCh38.ensembl.txt')
+head(GRCh38.ensembl)
+save(GRCh38.ensembl,file="GRCh38.ensembl.Rdata")
+GRCm38.ensembl <- read.delim('GRCm38.ensembl.txt')
+head(GRCm38.ensembl)
+save(GRCm38.ensembl,file="GRCm38.ensembl.Rdata")
+human.immune.CIBERSORT <- read.table(human.immune.CIBERSORT.txt)
+human.immune.CIBERSORT <- read.table('human.immune.CIBERSORT.txt')
+human.immune.CIBERSORT
+save(human.immune.CIBERSORT, file="human.immune.CIBERSORT.Rdata")

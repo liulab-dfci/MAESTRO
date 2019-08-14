@@ -9,7 +9,7 @@ import argparse
 import numpy as np
 import multiprocessing as mp
 import pysam
-import time
+import time, os
 
 def CommandLineParser():
     parser=argparse.ArgumentParser(description = "This is a description of input args")
@@ -52,7 +52,7 @@ def split(index_se):
             read_list += [read.strip() for read in split_samfile_in]
         if len(read_list) > 200:
             read_str = "\n".join(read_list)
-            outfile = open("Result/BWA/" + bc + ".sam","w")
+            outfile = open("Result/BWA/Split/" + bc + ".sam","w")
             outfile.write(str(samfile_in.header))
             outfile.write(read_str)
             outfile.close()
@@ -66,9 +66,10 @@ barcode_file = parser.barcode_library
 
 
 start_time = time.time()
-print("Start to split sam file",time.strftime("%a %b %d %H:%M:%S %Y", time.localtime()))
-samfile_in = pysam.AlignmentFile(samfile,"r")
+print("Start to split bam file",time.strftime("%a %b %d %H:%M:%S %Y", time.localtime()))
+samfile_in = pysam.AlignmentFile(samfile,"rb")
 barcode_list = []
+os.mkdir("Result/BWA/tmp/")
 for read in samfile_in:
     barcode = read.query_name.strip().split("\t")[0].split(":")[1].split("-")[-1]
     out_bam = open("Result/BWA/tmp/" + barcode + ".sam", "a")
@@ -82,7 +83,7 @@ print("End:", end_time-start_time)
 start_time = time.time()
 print("Start to read barcode library",time.strftime("%a %b %d %H:%M:%S %Y", time.localtime()))
 barcode_lib_list = open(barcode_file).readlines()
-barcode_lib_list = [bc.strip() for bc in barcode_lib_list]
+barcode_lib_list = [bc.strip().split("\t")[0] for bc in barcode_lib_list]
 end_time = time.time()
 print("End:", end_time-start_time)
 
@@ -122,11 +123,11 @@ barcode_num = len(barcode_dict.keys())
 i = 0
 index_list = []
 while i < barcode_num:
-    if i + barcode_num/process_num + 1 < barcode_num:
-        index_list.append((i, i + barcode_num/process_num + 1))
+    if i + int(barcode_num/process_num) + 1 < barcode_num:
+        index_list.append((i, i + int(barcode_num/process_num) + 1))
     else:
         index_list.append((i, barcode_num))
-    i = i + barcode_num/process_num + 1
+    i = i + int(barcode_num/process_num) + 1
 
 pool = mp.Pool(processes=process_num)
 result = pool.map_async(split, index_list)
@@ -134,3 +135,5 @@ pool.close()
 pool.join()
 end_time = time.time()
 print("End:", end_time-start_time)
+
+os.system("rm -r Result/BWA/tmp/")

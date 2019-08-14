@@ -248,9 +248,6 @@ if config["platform"] == "microfluidic":
 if config["platform"] == "10x-genomics":
     rule scatac_cellranger:
         input:
-            R1 = config["fastqdir"] + "/" + config["fastqprefix"] + "_S1_L001_R1_001.fastq",
-            R2 = config["fastqdir"] + "/" + config["fastqprefix"] + "_S1_L001_R2_001.fastq",
-            R3 = config["fastqdir"] + "/" + config["fastqprefix"] + "_S1_L001_R3_001.fastq",
             fastqs = config["fastqdir"],
             genome = config["genome"]["cellranger"]
         output:

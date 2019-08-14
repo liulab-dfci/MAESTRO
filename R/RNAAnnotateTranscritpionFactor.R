@@ -32,7 +32,6 @@
 RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, organism = "GRCh38", top.tf = 10)
 {
   require(Seurat)
-  require(ggplot2)
   if(organism == "GRCh38"){
     org = "hsa"
     data(human.tf.family)
