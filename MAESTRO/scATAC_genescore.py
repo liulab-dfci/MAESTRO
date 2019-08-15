@@ -129,7 +129,7 @@ def calculate_RP_score(cell_peak, cell_list, score_file, gene_distance, gene_bed
     print("\t".join(cell_list), file=outf)
     for k in score_cells_dict_dedup.keys():
         print(k + "\t" + "\t".join(map(str, score_cells_dict_dedup[k])), file=outf)
-        outf.close()
+    outf.close()
 
 def main():
 
