@@ -131,19 +131,19 @@ def calculate_RP_score(cell_peak, cell_list, score_file, gene_distance, gene_bed
         print(k + "\t" + "\t".join(map(str, score_cells_dict_dedup[k])), file=outf)
         outf.close()
 
-    def main():
+def main():
 
-        peak_file = sys.argv[1]
-        score_file = sys.argv[2]
-        gene_distance = float(sys.argv[3])
-        gene_bed = sys.argv[4]
-        cores = int(sys.argv[5])
+    peak_file = sys.argv[1]
+    score_file = sys.argv[2]
+    gene_distance = float(sys.argv[3])
+    gene_bed = sys.argv[4]
+    cores = int(sys.argv[5])
 
-        start = time.time()
-        cell_peak, cell_list = read_peak_file(peak_file)
-        calculate_RP_score(cell_peak, cell_list, score_file, gene_distance, gene_bed, cores)
-        end = time.time()
-        print("GeneScore Time:", end - start)
+    start = time.time()
+    cell_peak, cell_list = read_peak_file(peak_file)
+    calculate_RP_score(cell_peak, cell_list, score_file, gene_distance, gene_bed, cores)
+    end = time.time()
+    print("GeneScore Time:", end - start)
 
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":
+    main()
