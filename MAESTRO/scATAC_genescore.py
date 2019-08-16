@@ -7,61 +7,39 @@ Created on Tue Jun 1 10:24:36 2019
 """
 
 import os, sys
-import math, numpy
+import math
 import time
-import multiprocessing as mp
+import numpy as np
+import pandas as pd
+import scipy.sparse as sparse
 from MAESTRO.scATAC_utility import *
 
 
-def read_peak_file(peak_file):
-    """Read peak count file, store it into dict, first level key is cell name, second 
-       level key is chromomsome for single cell peaks, third level value is peak."""
-
-    cell_peak = {}
-    cell_list = []
-    for line in open(peak_file, 'r').readlines():
-        line = line.strip().split('\t')
-        peak = line[0].split('_')
-        if not peak[0].startswith("chr"):
-            cell_list = line
-            for cell in cell_list:
-                cell_peak[cell] = []
-        else:
-            for i in range(0, len(cell_list)):
-                if int(line[i + 1]) > 0:
-                    cell_peak[cell_list[i]].append((peak[0], (int(peak[1]) + int(peak[2])) / 2.0, 0, None))
-
-    return (cell_peak, cell_list)
-
-
-def RP(args):
+def RP(peaks_info, genes_info, gene_distance):
     """Multiple processing function to calculate regulation potential."""
 
-    Sg = lambda ldx: sum([math.exp(-0.5 - 4 * t) for t in ldx])
-    gene_info, cell_peak, gene_distance = args
-    score_dict = {}
+    Sg = lambda x: math.exp(-0.5 - 4 * x)
+    genes_peaks_score_array = sparse.dok_matrix((len(genes_info), len(peaks_info)), dtype=np.float64)
 
-    w = gene_info + cell_peak
+    w = genes_info + peaks_info
 
-    D = {}
     A = {}
 
     w.sort()
     for elem in w:
         if elem[2] == 1:
             A[elem[-1]] = [elem[0], elem[1]]
-            D[elem[-1]] = []
         else:
             dlist = []
             for gene_name in list(A.keys()):
                 g = A[gene_name]
-                if (g[0] != elem[0]) or ((elem[1] - g[1]) > gene_distance):
+                tmp_distance = elem[1] - g[1]
+                if (g[0] != elem[0]) or (tmp_distance > gene_distance):
                     dlist.append(gene_name)
                 else:
-                    A[gene_name].append(
-                        (elem[1] - g[1]) / gene_distance)  # peak in distance will calculate the distance
+                    genes_peaks_score_array[gene_name, elem[-1]] = Sg(tmp_distance / gene_distance)
             for gene_name in dlist:
-                D[gene_name] += A.pop(gene_name)[2:]
+                del A[gene_name]
 
     w.reverse()
     for elem in w:
@@ -71,64 +49,74 @@ def RP(args):
             dlist = []
             for gene_name in list(A.keys()):
                 g = A[gene_name]
-                if (g[0] != elem[0]) or (-(elem[1] - g[1]) > gene_distance):
+                tmp_distance = g[1] - elem[1]
+                if (g[0] != elem[0]) or tmp_distance > gene_distance:
                     dlist.append(gene_name)
                 else:
-                    A[gene_name].append(-(elem[1] - g[1]) / gene_distance)
+                    genes_peaks_score_array[gene_name, elem[-1]] = Sg(tmp_distance / gene_distance)
             for gene_name in dlist:
-                D[gene_name] += A.pop(gene_name)[2:]
+                del A[gene_name]
 
-    for gene_name in list(A.keys()):
-        D[gene_name] += A.pop(gene_name)[2:]
-
-    for gene in D.keys():
-        score_dict[gene] = Sg(D[gene])
-
-    return (score_dict)
+    return(genes_peaks_score_array)
 
 
-def calculate_RP_score(cell_peak, cell_list, score_file, gene_distance, gene_bed, cores):
+def calculate_RP_score(peak_file, gene_bed, gene_distance, score_file):
     """Calculate regulatery potential for each gene based on the single-cell peaks."""
 
-    gene_info = []
+    genes_info = []
+    genes_list = []
     for line in open(gene_bed, 'r'):
         line = line.strip().split('\t')
         if not line[0].startswith('#'):
             if line[2] == "+":
-                gene_info.append((line[1], int(line[3]), 1, "%s@%s@%s" % (line[5], line[1], line[3])))
+                genes_info.append((line[1], int(line[3]), 1, "%s@%s@%s" % (line[5], line[1], line[3])))
             else:
-                gene_info.append((line[1], int(line[4]), 1, "%s@%s@%s" % (line[5], line[1], line[3])))
+                genes_info.append((line[1], int(line[4]), 1, "%s@%s@%s" % (line[5], line[1], line[4])))
                 # gene_info [chrom, tss, 1, gene_unique]
+    genes_info = list(set(genes_info))
+    for igene in range(len(genes_info)):
+        tmp_gene = list(genes_info[igene])
+        genes_list.append(tmp_gene[3])
+        tmp_gene[3] = igene
+        genes_info[igene] = tmp_gene
+    genes = list(set([i.split("@")[0] for i in genes_list]))
 
-    gene_info = list(set(gene_info))
-    genes = list(set([i[3].split("@")[0] for i in gene_info]))
+    peaks_info = []
+    cell_peaks = pd.read_csv(peak_file, sep="\t", header=0, index_col=0)
+    cells_list = list(cell_peaks.columns)
+    peaks_list = list(cell_peaks.index)
+    cell_peaks = sparse.csc_matrix(cell_peaks.values)
+    for ipeak in range(len(peaks_list)):
+        peaks_tmp = peaks_list[ipeak].split("_")
+        peaks_info.append([peaks_tmp[0], (int(peaks_tmp[1]) + int(peaks_tmp[2])) / 2.0, 0, ipeak])
 
-    args = ((gene_info, cell_peak[cell], gene_distance) for cell in cell_list)
-    pool = mp.Pool(processes=cores)
-    result = pool.map_async(RP, args)
-    pool.close()
-    pool.join()
-    score_list = result.get()
+    genes_peaks_score_dok = RP(peaks_info, genes_info, gene_distance)
+    genes_peaks_score_csc = genes_peaks_score_dok.tocsc()
+    genes_cells_score_csc = genes_peaks_score_csc.dot(cell_peaks)
 
     score_cells_dict = {}
-    for gene in gene_info:
-        score_cells_dict[gene[3]] = []
-        for icell in range(0, len(cell_list)):
-            score_cells_dict[gene[3]].append(score_list[icell][gene[3]])
+    score_cells_sum_dict = {}
+    score_cells_sum = np.asarray(genes_cells_score_csc.sum(axis=1)).ravel().tolist()
+    genes_cells_score_csr = genes_cells_score_csc.tocsr()
+    for igene in range(len(genes_list)):
+        score_cells_dict[genes_list[igene]] = genes_cells_score_csr[igene, :].toarray().ravel().tolist()
+        score_cells_sum_dict[genes_list[igene]] = score_cells_sum[igene]
 
-    score_cells_dict_dedup = {}  # recode gene score with duplicate names
+    score_cells_dict_dedup = {}
+    score_cells_dict_max = {}
     for gene in genes:
-        score_cells_dict_dedup[gene] = [0]
-    for gene in score_cells_dict.keys():
-        if sum(score_cells_dict[gene]) >= sum(score_cells_dict_dedup[gene.split("@")[0]]):
-            score_cells_dict_dedup[gene.split("@")[0]] = score_cells_dict[gene]
-        else:
-            continue
+        score_cells_dict_max[gene] = 0
+
+    for gene in genes_list:
+        symbol = gene.split("@")[0]
+        if score_cells_sum_dict[gene] >= score_cells_dict_max[symbol]:
+            score_cells_dict_dedup[symbol] = score_cells_dict[gene]
+            score_cells_dict_max[symbol] = score_cells_sum_dict[gene]
 
     outf = open(score_file, 'w')
-    print("\t".join(cell_list), file=outf)
-    for k in score_cells_dict_dedup.keys():
-        print(k + "\t" + "\t".join(map(str, score_cells_dict_dedup[k])), file=outf)
+    outf.write("\t".join(cells_list) + "\n")
+    for symbol in score_cells_dict_dedup.keys():
+        outf.write(symbol + "\t" + "\t".join(map(str, score_cells_dict_dedup[symbol])) + "\n")
     outf.close()
 
 def main():
@@ -140,8 +128,7 @@ def main():
     cores = int(sys.argv[5])
 
     start = time.time()
-    cell_peak, cell_list = read_peak_file(peak_file)
-    calculate_RP_score(cell_peak, cell_list, score_file, gene_distance, gene_bed, cores)
+    calculate_RP_score(peak_file, gene_bed, gene_distance, score_file)
     end = time.time()
     print("GeneScore Time:", end - start)
 
