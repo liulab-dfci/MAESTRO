@@ -1,0 +1,9637 @@
+{
+  "dimensions": [
+    {
+      "elements": [
+        "A549",
+        "ADIPOSE_NUCLEI",
+        "ADULT_LIVER",
+        "AG04449",
+        "AG04450",
+        "AG09309",
+        "AG09319",
+        "AG10803",
+        "AOAF",
+        "AORTA",
+        "BC_COLON_H12817N",
+        "BC_LUNG_01-11002",
+        "BC_LUNG_H12817N",
+        "BC_SPLEEN_H12817N",
+        "BE2_C",
+        "BJ",
+        "BONE_MARROW_DERIVED_MESENCHYMAL_STEM_CELL_CULTURED_CELLS",
+        "BRAIN_ANGULAR_GYRUS",
+        "BRAIN_ANTERIOR_CAUDATE",
+        "BRAIN_CINGULATE_GYRUS",
+        "BRAIN_HIPPOCAMPUS_MIDDLE",
+        "BRAIN_INFERIOR_TEMPORAL_LOBE",
+        "BRAIN_MID_FRONTAL_LOBE",
+        "BRAIN_SUBSTANTIA_NIGRA",
+        "BREAST_MYOEPITHELIAL_CELLS",
+        "BREAST_VHMEC",
+        "CACO-2",
+        "CD14_PRIMARY_CELLS",
+        "CD19_PRIMARY_CELLS_PERIPHERAL_UW",
+        "CD3_PRIMARY_CELLS_CORD_BI",
+        "CD3_PRIMARY_CELLS_PERIPHERAL_UW",
+        "CD4+_CD25+_CD127-_TREG_PRIMARY_CELLS",
+        "CD4+_CD25-_CD45RA+_NAIVE_PRIMARY_CELLS",
+        "CD4+_CD25-_CD45RO+_MEMORY_PRIMARY_CELLS",
+        "CD4+_CD25-_IL17+_PMA-IONOMCYIN_STIMULATED_TH17_PRIMARY_CELLS",
+        "CD4+_CD25-_IL17-_PMA-IONOMYCIN_STIMULATED_MACS_PURIFIED_TH_PRIMARY_CELLS",
+        "CD4+_CD25INT_CD127+_TMEM_PRIMARY_CELLS",
+        "CD4+_CD25-_TH_PRIMARY_CELLS",
+        "CD4_MEMORY_PRIMARY_CELLS",
+        "CD4_NAIVE_PRIMARY_CELLS",
+        "CD56_PRIMARY_CELLS",
+        "CD8_MEMORY_PRIMARY_CELLS",
+        "CD8_NAIVE_PRIMARY_CELLS",
+        "CHONDROCYTES_FROM_BONE_MARROW_DERIVED_MESENCHYMAL_STEM_CELL_CULTURED_CELLS",
+        "COLONIC_MUCOSA",
+        "COLON_SMOOTH_MUSCLE",
+        "DND41",
+        "DUODENUM_MUCOSA",
+        "DUODENUM_SMOOTH_MUSCLE",
+        "ECC-1",
+        "ES-I3_CELL_LINE",
+        "ES-WA7_CELL_LINE",
+        "FETAL_ADRENAL_GLAND",
+        "FETAL_BRAIN_FEMALE",
+        "FETAL_BRAIN_MALE",
+        "FETAL_HEART",
+        "FETAL_INTESTINE_LARGE",
+        "FETAL_INTESTINE_SMALL",
+        "FETAL_KIDNEY",
+        "FETAL_LUNG",
+        "FETAL_MUSCLE_LEG",
+        "FETAL_MUSCLE_TRUNK",
+        "FETAL_PLACENTA",
+        "FETAL_STOMACH",
+        "FETAL_THYMUS",
+        "GASTRIC",
+        "GLIOBLA",
+        "GM06990",
+        "GM12864",
+        "GM12865",
+        "GM12891",
+        "GM12892",
+        "H1_BMP4_DERIVED_MESENDODERM_CULTURED_CELLS",
+        "H1_BMP4_DERIVED_TROPHOBLAST_CULTURED_CELLS",
+        "H1_DERIVED_MESENCHYMAL_STEM_CELLS",
+        "H1_DERIVED_NEURONAL_PROGENITOR_CULTURED_CELLS",
+        "H1-HESC",
+        "H7-HESC",
+        "H9_DERIVED_NEURONAL_PROGENITOR_CULTURED_CELLS",
+        "H9_DERIVED_NEURON_CULTURED_CELLS",
+        "H9ES",
+        "HAC",
+        "HA-SP",
+        "HBMEC",
+        "HCFAA",
+        "HCM",
+        "HCPEPIC",
+        "HCT-116",
+        "HEEPIC",
+        "HEK293",
+        "HEPG2",
+        "HESC_DERIVED_CD184+_ENDODERM_CULTURED_CELLS",
+        "HESC_DERIVED_CD56+_ECTODERM_CULTURED_CELLS",
+        "HESC_DERIVED_CD56+_MESODERM_CULTURED_CELLS",
+        "HFF",
+        "HFF-MYC",
+        "HL-60",
+        "HMEC",
+        "HMF",
+        "HPAF",
+        "HPF",
+        "HRE",
+        "HRPEPIC",
+        "HSMM",
+        "HSMMTUBE",
+        "HUES48_CELL_LINE",
+        "HUES64_CELL_LINE",
+        "HUES6_CELL_LINE",
+        "HUVEC",
+        "IMR90",
+        "IPS-15B_CELL_LINE",
+        "IPS-18_CELL_LINE",
+        "IPS-20B_CELL_LINE",
+        "IPS_DF_19",
+        "IPS_DF_6",
+        "K562",
+        "LEFT_VENTRICLE",
+        "LHCN-M2",
+        "MCF-7",
+        "MESENCHYMAL_STEM_CELL_DERIVED_ADIPOCYTE_CULTURED_CELLS",
+        "MOBILIZED_CD34_PRIMARY_CELLS_FEMALE",
+        "MOBILIZED_CD34_PRIMARY_CELLS_MALE",
+        "MONOCYTES-CD14+_RO01746",
+        "NB4",
+        "NH-A",
+        "NHDF-AD",
+        "NHDF-NEO",
+        "NHEK",
+        "NHLF",
+        "NT2-D1",
+        "OSTEOBL",
+        "OVARY",
+        "PANC-1",
+        "PANISLETS",
+        "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN01",
+        "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN02",
+        "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN02",
+        "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN03",
+        "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN01",
+        "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN03",
+        "PERIPHERAL_BLOOD_MONONUCLEAR_PRIMARY_CELLS",
+        "PLACENTA_AMNION",
+        "PROGFIB",
+        "PSOAS_MUSCLE_OC",
+        "RECTAL_MUCOSA",
+        "RECTAL_SMOOTH_MUSCLE",
+        "RIGHT_ATRIUM",
+        "RIGHT_VENTRICLE",
+        "RPTEC",
+        "SAEC",
+        "SIGMOID_COLON",
+        "SKELETAL_MUSCLE_FEMALE",
+        "SKELETAL_MUSCLE_MALE",
+        "SK-N-MC",
+        "SK-N-SH",
+        "SK-N-SH_RA",
+        "SMALL_INTESTINE_OC",
+        "STOMACH_MUCOSA",
+        "STOMACH_SMOOTH_MUSCLE",
+        "T-47D",
+        "THYMUS",
+        "WERI-RB-1",
+        "WI-38"
+      ], 
+      "number": "163", 
+      "title": "Tissues/Cell Lines"
+    }, 
+    {
+      "elements": [
+        "Bivalent",
+        "ConstitutiveHet",
+        "Enhancer",
+        "FacultativeHet",
+        "LowConfidence",
+        "Promoter",
+        "Quiescent",
+        "RegPermissive",
+        "Transcribed"
+      ], 
+      "number": "9", 
+      "title": "Genomic States"
+    }
+  ], 
+  "sourceFiles": [
+    {
+      "name": "A549_ConstitutiveHet.bed.gz",
+      "position": [
+        0,
+        1
+      ],
+      "type": "bed"
+    },
+    {
+      "name": "A549_Enhancer.bed.gz",
+      "position": [
+        0,
+        2
+      ],
+      "type": "bed"
+    },
+    {
+      "name": "A549_FacultativeHet.bed.gz",
+      "position": [
+        0,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "A549_LowConfidence.bed.gz",
+      "position": [
+        0,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "A549_Promoter.bed.gz",
+      "position": [
+        0,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "A549_Quiescent.bed.gz",
+      "position": [
+        0,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "A549_RegPermissive.bed.gz",
+      "position": [
+        0,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "A549_Transcribed.bed.gz",
+      "position": [
+        0,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ADIPOSE_NUCLEI_ConstitutiveHet.bed.gz",
+      "position": [
+        1,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ADIPOSE_NUCLEI_Enhancer.bed.gz",
+      "position": [
+        1,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ADIPOSE_NUCLEI_FacultativeHet.bed.gz",
+      "position": [
+        1,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ADIPOSE_NUCLEI_Quiescent.bed.gz",
+      "position": [
+        1,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ADIPOSE_NUCLEI_RegPermissive.bed.gz",
+      "position": [
+        1,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ADIPOSE_NUCLEI_Transcribed.bed.gz",
+      "position": [
+        1,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ADULT_LIVER_ConstitutiveHet.bed.gz",
+      "position": [
+        2,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ADULT_LIVER_Enhancer.bed.gz",
+      "position": [
+        2,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ADULT_LIVER_FacultativeHet.bed.gz",
+      "position": [
+        2,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ADULT_LIVER_Promoter.bed.gz",
+      "position": [
+        2,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ADULT_LIVER_Quiescent.bed.gz",
+      "position": [
+        2,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ADULT_LIVER_RegPermissive.bed.gz",
+      "position": [
+        2,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ADULT_LIVER_Transcribed.bed.gz",
+      "position": [
+        2,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG04449_Enhancer.bed.gz",
+      "position": [
+        3,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG04449_FacultativeHet.bed.gz",
+      "position": [
+        3,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG04449_Promoter.bed.gz",
+      "position": [
+        3,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG04449_Quiescent.bed.gz",
+      "position": [
+        3,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG04449_RegPermissive.bed.gz",
+      "position": [
+        3,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG04450_Enhancer.bed.gz",
+      "position": [
+        4,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG04450_LowConfidence.bed.gz",
+      "position": [
+        4,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG04450_Promoter.bed.gz",
+      "position": [
+        4,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG04450_Quiescent.bed.gz",
+      "position": [
+        4,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG04450_RegPermissive.bed.gz",
+      "position": [
+        4,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG04450_Transcribed.bed.gz",
+      "position": [
+        4,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG09309_Enhancer.bed.gz",
+      "position": [
+        5,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG09309_Promoter.bed.gz",
+      "position": [
+        5,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG09309_Quiescent.bed.gz",
+      "position": [
+        5,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG09309_RegPermissive.bed.gz",
+      "position": [
+        5,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG09319_Bivalent.bed.gz",
+      "position": [
+        6,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG09319_Enhancer.bed.gz",
+      "position": [
+        6,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG09319_Promoter.bed.gz",
+      "position": [
+        6,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG09319_Quiescent.bed.gz",
+      "position": [
+        6,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG09319_RegPermissive.bed.gz",
+      "position": [
+        6,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG10803_Bivalent.bed.gz",
+      "position": [
+        7,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG10803_Enhancer.bed.gz",
+      "position": [
+        7,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG10803_FacultativeHet.bed.gz",
+      "position": [
+        7,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG10803_LowConfidence.bed.gz",
+      "position": [
+        7,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG10803_Quiescent.bed.gz",
+      "position": [
+        7,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AG10803_RegPermissive.bed.gz",
+      "position": [
+        7,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AOAF_Enhancer.bed.gz",
+      "position": [
+        8,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AOAF_FacultativeHet.bed.gz",
+      "position": [
+        8,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AOAF_Promoter.bed.gz",
+      "position": [
+        8,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AOAF_Quiescent.bed.gz",
+      "position": [
+        8,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AOAF_RegPermissive.bed.gz",
+      "position": [
+        8,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AORTA_Bivalent.bed.gz",
+      "position": [
+        9,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AORTA_ConstitutiveHet.bed.gz",
+      "position": [
+        9,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AORTA_Enhancer.bed.gz",
+      "position": [
+        9,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AORTA_FacultativeHet.bed.gz",
+      "position": [
+        9,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AORTA_Promoter.bed.gz",
+      "position": [
+        9,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AORTA_Quiescent.bed.gz",
+      "position": [
+        9,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AORTA_RegPermissive.bed.gz",
+      "position": [
+        9,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "AORTA_Transcribed.bed.gz",
+      "position": [
+        9,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_COLON_H12817N_ConstitutiveHet.bed.gz",
+      "position": [
+        10,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_COLON_H12817N_Enhancer.bed.gz",
+      "position": [
+        10,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_COLON_H12817N_LowConfidence.bed.gz",
+      "position": [
+        10,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_COLON_H12817N_Promoter.bed.gz",
+      "position": [
+        10,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_COLON_H12817N_Quiescent.bed.gz",
+      "position": [
+        10,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_COLON_H12817N_RegPermissive.bed.gz",
+      "position": [
+        10,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_COLON_H12817N_Transcribed.bed.gz",
+      "position": [
+        10,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_LUNG_01-11002_ConstitutiveHet.bed.gz",
+      "position": [
+        11,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_LUNG_01-11002_Enhancer.bed.gz",
+      "position": [
+        11,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_LUNG_01-11002_FacultativeHet.bed.gz",
+      "position": [
+        11,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_LUNG_01-11002_Promoter.bed.gz",
+      "position": [
+        11,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_LUNG_01-11002_Quiescent.bed.gz",
+      "position": [
+        11,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_LUNG_01-11002_RegPermissive.bed.gz",
+      "position": [
+        11,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_LUNG_01-11002_Transcribed.bed.gz",
+      "position": [
+        11,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_LUNG_H12817N_ConstitutiveHet.bed.gz",
+      "position": [
+        12,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_LUNG_H12817N_Enhancer.bed.gz",
+      "position": [
+        12,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_LUNG_H12817N_FacultativeHet.bed.gz",
+      "position": [
+        12,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_LUNG_H12817N_Promoter.bed.gz",
+      "position": [
+        12,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_LUNG_H12817N_Quiescent.bed.gz",
+      "position": [
+        12,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_LUNG_H12817N_RegPermissive.bed.gz",
+      "position": [
+        12,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_LUNG_H12817N_Transcribed.bed.gz",
+      "position": [
+        12,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_SPLEEN_H12817N_ConstitutiveHet.bed.gz",
+      "position": [
+        13,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_SPLEEN_H12817N_Enhancer.bed.gz",
+      "position": [
+        13,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_SPLEEN_H12817N_FacultativeHet.bed.gz",
+      "position": [
+        13,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_SPLEEN_H12817N_Promoter.bed.gz",
+      "position": [
+        13,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_SPLEEN_H12817N_Quiescent.bed.gz",
+      "position": [
+        13,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_SPLEEN_H12817N_RegPermissive.bed.gz",
+      "position": [
+        13,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BC_SPLEEN_H12817N_Transcribed.bed.gz",
+      "position": [
+        13,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BE2_C_Enhancer.bed.gz",
+      "position": [
+        14,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BE2_C_FacultativeHet.bed.gz",
+      "position": [
+        14,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BE2_C_Promoter.bed.gz",
+      "position": [
+        14,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BE2_C_Quiescent.bed.gz",
+      "position": [
+        14,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BE2_C_RegPermissive.bed.gz",
+      "position": [
+        14,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BJ_Promoter.bed.gz",
+      "position": [
+        15,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BJ_Quiescent.bed.gz",
+      "position": [
+        15,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BJ_Transcribed.bed.gz",
+      "position": [
+        15,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BONE_MARROW_DERIVED_MESENCHYMAL_STEM_CELL_CULTURED_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        16,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BONE_MARROW_DERIVED_MESENCHYMAL_STEM_CELL_CULTURED_CELLS_Enhancer.bed.gz",
+      "position": [
+        16,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BONE_MARROW_DERIVED_MESENCHYMAL_STEM_CELL_CULTURED_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        16,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BONE_MARROW_DERIVED_MESENCHYMAL_STEM_CELL_CULTURED_CELLS_Promoter.bed.gz",
+      "position": [
+        16,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BONE_MARROW_DERIVED_MESENCHYMAL_STEM_CELL_CULTURED_CELLS_Quiescent.bed.gz",
+      "position": [
+        16,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BONE_MARROW_DERIVED_MESENCHYMAL_STEM_CELL_CULTURED_CELLS_Transcribed.bed.gz",
+      "position": [
+        16,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_ANGULAR_GYRUS_ConstitutiveHet.bed.gz",
+      "position": [
+        17,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_ANGULAR_GYRUS_Enhancer.bed.gz",
+      "position": [
+        17,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_ANGULAR_GYRUS_Quiescent.bed.gz",
+      "position": [
+        17,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_ANGULAR_GYRUS_RegPermissive.bed.gz",
+      "position": [
+        17,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_ANGULAR_GYRUS_Transcribed.bed.gz",
+      "position": [
+        17,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_ANTERIOR_CAUDATE_ConstitutiveHet.bed.gz",
+      "position": [
+        18,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_ANTERIOR_CAUDATE_Enhancer.bed.gz",
+      "position": [
+        18,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_ANTERIOR_CAUDATE_LowConfidence.bed.gz",
+      "position": [
+        18,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_ANTERIOR_CAUDATE_Quiescent.bed.gz",
+      "position": [
+        18,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_ANTERIOR_CAUDATE_Transcribed.bed.gz",
+      "position": [
+        18,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_CINGULATE_GYRUS_Bivalent.bed.gz",
+      "position": [
+        19,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_CINGULATE_GYRUS_ConstitutiveHet.bed.gz",
+      "position": [
+        19,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_CINGULATE_GYRUS_Enhancer.bed.gz",
+      "position": [
+        19,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_CINGULATE_GYRUS_FacultativeHet.bed.gz",
+      "position": [
+        19,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_CINGULATE_GYRUS_Quiescent.bed.gz",
+      "position": [
+        19,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_CINGULATE_GYRUS_Transcribed.bed.gz",
+      "position": [
+        19,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_HIPPOCAMPUS_MIDDLE_Bivalent.bed.gz",
+      "position": [
+        20,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_HIPPOCAMPUS_MIDDLE_ConstitutiveHet.bed.gz",
+      "position": [
+        20,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_HIPPOCAMPUS_MIDDLE_Enhancer.bed.gz",
+      "position": [
+        20,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_HIPPOCAMPUS_MIDDLE_FacultativeHet.bed.gz",
+      "position": [
+        20,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_HIPPOCAMPUS_MIDDLE_Quiescent.bed.gz",
+      "position": [
+        20,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_HIPPOCAMPUS_MIDDLE_RegPermissive.bed.gz",
+      "position": [
+        20,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_HIPPOCAMPUS_MIDDLE_Transcribed.bed.gz",
+      "position": [
+        20,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_INFERIOR_TEMPORAL_LOBE_ConstitutiveHet.bed.gz",
+      "position": [
+        21,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_INFERIOR_TEMPORAL_LOBE_Enhancer.bed.gz",
+      "position": [
+        21,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_INFERIOR_TEMPORAL_LOBE_FacultativeHet.bed.gz",
+      "position": [
+        21,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_INFERIOR_TEMPORAL_LOBE_Quiescent.bed.gz",
+      "position": [
+        21,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_INFERIOR_TEMPORAL_LOBE_Transcribed.bed.gz",
+      "position": [
+        21,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_MID_FRONTAL_LOBE_ConstitutiveHet.bed.gz",
+      "position": [
+        22,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_MID_FRONTAL_LOBE_Enhancer.bed.gz",
+      "position": [
+        22,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_MID_FRONTAL_LOBE_FacultativeHet.bed.gz",
+      "position": [
+        22,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_MID_FRONTAL_LOBE_Quiescent.bed.gz",
+      "position": [
+        22,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_MID_FRONTAL_LOBE_Transcribed.bed.gz",
+      "position": [
+        22,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_SUBSTANTIA_NIGRA_Bivalent.bed.gz",
+      "position": [
+        23,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_SUBSTANTIA_NIGRA_ConstitutiveHet.bed.gz",
+      "position": [
+        23,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_SUBSTANTIA_NIGRA_Enhancer.bed.gz",
+      "position": [
+        23,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_SUBSTANTIA_NIGRA_FacultativeHet.bed.gz",
+      "position": [
+        23,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_SUBSTANTIA_NIGRA_Quiescent.bed.gz",
+      "position": [
+        23,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BRAIN_SUBSTANTIA_NIGRA_Transcribed.bed.gz",
+      "position": [
+        23,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BREAST_MYOEPITHELIAL_CELLS_Bivalent.bed.gz",
+      "position": [
+        24,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BREAST_MYOEPITHELIAL_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        24,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BREAST_MYOEPITHELIAL_CELLS_Enhancer.bed.gz",
+      "position": [
+        24,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BREAST_MYOEPITHELIAL_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        24,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BREAST_MYOEPITHELIAL_CELLS_Quiescent.bed.gz",
+      "position": [
+        24,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BREAST_MYOEPITHELIAL_CELLS_RegPermissive.bed.gz",
+      "position": [
+        24,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BREAST_MYOEPITHELIAL_CELLS_Transcribed.bed.gz",
+      "position": [
+        24,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BREAST_VHMEC_ConstitutiveHet.bed.gz",
+      "position": [
+        25,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BREAST_VHMEC_Enhancer.bed.gz",
+      "position": [
+        25,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BREAST_VHMEC_FacultativeHet.bed.gz",
+      "position": [
+        25,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BREAST_VHMEC_Quiescent.bed.gz",
+      "position": [
+        25,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BREAST_VHMEC_RegPermissive.bed.gz",
+      "position": [
+        25,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "BREAST_VHMEC_Transcribed.bed.gz",
+      "position": [
+        25,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CACO-2_FacultativeHet.bed.gz",
+      "position": [
+        26,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CACO-2_LowConfidence.bed.gz",
+      "position": [
+        26,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CACO-2_Promoter.bed.gz",
+      "position": [
+        26,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CACO-2_Quiescent.bed.gz",
+      "position": [
+        26,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CACO-2_RegPermissive.bed.gz",
+      "position": [
+        26,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CACO-2_Transcribed.bed.gz",
+      "position": [
+        26,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD14_PRIMARY_CELLS_Bivalent.bed.gz",
+      "position": [
+        27,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD14_PRIMARY_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        27,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD14_PRIMARY_CELLS_Enhancer.bed.gz",
+      "position": [
+        27,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD14_PRIMARY_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        27,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD14_PRIMARY_CELLS_Promoter.bed.gz",
+      "position": [
+        27,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD14_PRIMARY_CELLS_Quiescent.bed.gz",
+      "position": [
+        27,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD14_PRIMARY_CELLS_RegPermissive.bed.gz",
+      "position": [
+        27,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD14_PRIMARY_CELLS_Transcribed.bed.gz",
+      "position": [
+        27,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD19_PRIMARY_CELLS_PERIPHERAL_UW_Bivalent.bed.gz",
+      "position": [
+        28,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD19_PRIMARY_CELLS_PERIPHERAL_UW_ConstitutiveHet.bed.gz",
+      "position": [
+        28,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD19_PRIMARY_CELLS_PERIPHERAL_UW_FacultativeHet.bed.gz",
+      "position": [
+        28,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD19_PRIMARY_CELLS_PERIPHERAL_UW_LowConfidence.bed.gz",
+      "position": [
+        28,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD19_PRIMARY_CELLS_PERIPHERAL_UW_Promoter.bed.gz",
+      "position": [
+        28,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD19_PRIMARY_CELLS_PERIPHERAL_UW_Quiescent.bed.gz",
+      "position": [
+        28,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD19_PRIMARY_CELLS_PERIPHERAL_UW_RegPermissive.bed.gz",
+      "position": [
+        28,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD19_PRIMARY_CELLS_PERIPHERAL_UW_Transcribed.bed.gz",
+      "position": [
+        28,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_CORD_BI_Bivalent.bed.gz",
+      "position": [
+        29,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_CORD_BI_ConstitutiveHet.bed.gz",
+      "position": [
+        29,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_CORD_BI_Enhancer.bed.gz",
+      "position": [
+        29,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_CORD_BI_FacultativeHet.bed.gz",
+      "position": [
+        29,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_CORD_BI_LowConfidence.bed.gz",
+      "position": [
+        29,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_CORD_BI_Promoter.bed.gz",
+      "position": [
+        29,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_CORD_BI_Quiescent.bed.gz",
+      "position": [
+        29,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_CORD_BI_RegPermissive.bed.gz",
+      "position": [
+        29,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_CORD_BI_Transcribed.bed.gz",
+      "position": [
+        29,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_PERIPHERAL_UW_Bivalent.bed.gz",
+      "position": [
+        30,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_PERIPHERAL_UW_ConstitutiveHet.bed.gz",
+      "position": [
+        30,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_PERIPHERAL_UW_FacultativeHet.bed.gz",
+      "position": [
+        30,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_PERIPHERAL_UW_Promoter.bed.gz",
+      "position": [
+        30,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_PERIPHERAL_UW_Quiescent.bed.gz",
+      "position": [
+        30,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_PERIPHERAL_UW_RegPermissive.bed.gz",
+      "position": [
+        30,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD3_PRIMARY_CELLS_PERIPHERAL_UW_Transcribed.bed.gz",
+      "position": [
+        30,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25+_CD127-_TREG_PRIMARY_CELLS_Bivalent.bed.gz",
+      "position": [
+        31,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25+_CD127-_TREG_PRIMARY_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        31,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25+_CD127-_TREG_PRIMARY_CELLS_Enhancer.bed.gz",
+      "position": [
+        31,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25+_CD127-_TREG_PRIMARY_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        31,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25+_CD127-_TREG_PRIMARY_CELLS_Quiescent.bed.gz",
+      "position": [
+        31,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25+_CD127-_TREG_PRIMARY_CELLS_Transcribed.bed.gz",
+      "position": [
+        31,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_CD45RA+_NAIVE_PRIMARY_CELLS_Bivalent.bed.gz",
+      "position": [
+        32,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_CD45RA+_NAIVE_PRIMARY_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        32,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_CD45RA+_NAIVE_PRIMARY_CELLS_Enhancer.bed.gz",
+      "position": [
+        32,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_CD45RA+_NAIVE_PRIMARY_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        32,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_CD45RA+_NAIVE_PRIMARY_CELLS_Quiescent.bed.gz",
+      "position": [
+        32,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_CD45RA+_NAIVE_PRIMARY_CELLS_RegPermissive.bed.gz",
+      "position": [
+        32,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_CD45RA+_NAIVE_PRIMARY_CELLS_Transcribed.bed.gz",
+      "position": [
+        32,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_CD45RO+_MEMORY_PRIMARY_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        33,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_CD45RO+_MEMORY_PRIMARY_CELLS_Enhancer.bed.gz",
+      "position": [
+        33,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_CD45RO+_MEMORY_PRIMARY_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        33,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_CD45RO+_MEMORY_PRIMARY_CELLS_Promoter.bed.gz",
+      "position": [
+        33,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_CD45RO+_MEMORY_PRIMARY_CELLS_Quiescent.bed.gz",
+      "position": [
+        33,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_CD45RO+_MEMORY_PRIMARY_CELLS_RegPermissive.bed.gz",
+      "position": [
+        33,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_CD45RO+_MEMORY_PRIMARY_CELLS_Transcribed.bed.gz",
+      "position": [
+        33,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_IL17+_PMA-IONOMCYIN_STIMULATED_TH17_PRIMARY_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        34,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_IL17+_PMA-IONOMCYIN_STIMULATED_TH17_PRIMARY_CELLS_Enhancer.bed.gz",
+      "position": [
+        34,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_IL17+_PMA-IONOMCYIN_STIMULATED_TH17_PRIMARY_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        34,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_IL17+_PMA-IONOMCYIN_STIMULATED_TH17_PRIMARY_CELLS_Quiescent.bed.gz",
+      "position": [
+        34,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_IL17+_PMA-IONOMCYIN_STIMULATED_TH17_PRIMARY_CELLS_RegPermissive.bed.gz",
+      "position": [
+        34,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_IL17+_PMA-IONOMCYIN_STIMULATED_TH17_PRIMARY_CELLS_Transcribed.bed.gz",
+      "position": [
+        34,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_IL17-_PMA-IONOMYCIN_STIMULATED_MACS_PURIFIED_TH_PRIMARY_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        35,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_IL17-_PMA-IONOMYCIN_STIMULATED_MACS_PURIFIED_TH_PRIMARY_CELLS_Enhancer.bed.gz",
+      "position": [
+        35,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_IL17-_PMA-IONOMYCIN_STIMULATED_MACS_PURIFIED_TH_PRIMARY_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        35,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_IL17-_PMA-IONOMYCIN_STIMULATED_MACS_PURIFIED_TH_PRIMARY_CELLS_Quiescent.bed.gz",
+      "position": [
+        35,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_IL17-_PMA-IONOMYCIN_STIMULATED_MACS_PURIFIED_TH_PRIMARY_CELLS_RegPermissive.bed.gz",
+      "position": [
+        35,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_IL17-_PMA-IONOMYCIN_STIMULATED_MACS_PURIFIED_TH_PRIMARY_CELLS_Transcribed.bed.gz",
+      "position": [
+        35,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25INT_CD127+_TMEM_PRIMARY_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        36,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25INT_CD127+_TMEM_PRIMARY_CELLS_Enhancer.bed.gz",
+      "position": [
+        36,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25INT_CD127+_TMEM_PRIMARY_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        36,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25INT_CD127+_TMEM_PRIMARY_CELLS_LowConfidence.bed.gz",
+      "position": [
+        36,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25INT_CD127+_TMEM_PRIMARY_CELLS_Quiescent.bed.gz",
+      "position": [
+        36,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25INT_CD127+_TMEM_PRIMARY_CELLS_RegPermissive.bed.gz",
+      "position": [
+        36,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25INT_CD127+_TMEM_PRIMARY_CELLS_Transcribed.bed.gz",
+      "position": [
+        36,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_TH_PRIMARY_CELLS_Bivalent.bed.gz",
+      "position": [
+        37,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_TH_PRIMARY_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        37,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_TH_PRIMARY_CELLS_Enhancer.bed.gz",
+      "position": [
+        37,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_TH_PRIMARY_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        37,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_TH_PRIMARY_CELLS_Promoter.bed.gz",
+      "position": [
+        37,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_TH_PRIMARY_CELLS_Quiescent.bed.gz",
+      "position": [
+        37,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_TH_PRIMARY_CELLS_RegPermissive.bed.gz",
+      "position": [
+        37,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4+_CD25-_TH_PRIMARY_CELLS_Transcribed.bed.gz",
+      "position": [
+        37,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4_MEMORY_PRIMARY_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        38,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4_MEMORY_PRIMARY_CELLS_Enhancer.bed.gz",
+      "position": [
+        38,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4_MEMORY_PRIMARY_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        38,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4_MEMORY_PRIMARY_CELLS_Quiescent.bed.gz",
+      "position": [
+        38,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4_MEMORY_PRIMARY_CELLS_Transcribed.bed.gz",
+      "position": [
+        38,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4_NAIVE_PRIMARY_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        39,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4_NAIVE_PRIMARY_CELLS_Enhancer.bed.gz",
+      "position": [
+        39,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4_NAIVE_PRIMARY_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        39,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4_NAIVE_PRIMARY_CELLS_Quiescent.bed.gz",
+      "position": [
+        39,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4_NAIVE_PRIMARY_CELLS_RegPermissive.bed.gz",
+      "position": [
+        39,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD4_NAIVE_PRIMARY_CELLS_Transcribed.bed.gz",
+      "position": [
+        39,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD56_PRIMARY_CELLS_Bivalent.bed.gz",
+      "position": [
+        40,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD56_PRIMARY_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        40,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD56_PRIMARY_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        40,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD56_PRIMARY_CELLS_LowConfidence.bed.gz",
+      "position": [
+        40,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD56_PRIMARY_CELLS_Promoter.bed.gz",
+      "position": [
+        40,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD56_PRIMARY_CELLS_Quiescent.bed.gz",
+      "position": [
+        40,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD56_PRIMARY_CELLS_RegPermissive.bed.gz",
+      "position": [
+        40,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD56_PRIMARY_CELLS_Transcribed.bed.gz",
+      "position": [
+        40,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD8_MEMORY_PRIMARY_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        41,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD8_MEMORY_PRIMARY_CELLS_Enhancer.bed.gz",
+      "position": [
+        41,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD8_MEMORY_PRIMARY_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        41,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD8_MEMORY_PRIMARY_CELLS_Quiescent.bed.gz",
+      "position": [
+        41,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD8_MEMORY_PRIMARY_CELLS_RegPermissive.bed.gz",
+      "position": [
+        41,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD8_MEMORY_PRIMARY_CELLS_Transcribed.bed.gz",
+      "position": [
+        41,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD8_NAIVE_PRIMARY_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        42,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD8_NAIVE_PRIMARY_CELLS_Enhancer.bed.gz",
+      "position": [
+        42,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD8_NAIVE_PRIMARY_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        42,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD8_NAIVE_PRIMARY_CELLS_Quiescent.bed.gz",
+      "position": [
+        42,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD8_NAIVE_PRIMARY_CELLS_RegPermissive.bed.gz",
+      "position": [
+        42,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CD8_NAIVE_PRIMARY_CELLS_Transcribed.bed.gz",
+      "position": [
+        42,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CHONDROCYTES_FROM_BONE_MARROW_DERIVED_MESENCHYMAL_STEM_CELL_CULTURED_CELLS_Bivalent.bed.gz",
+      "position": [
+        43,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CHONDROCYTES_FROM_BONE_MARROW_DERIVED_MESENCHYMAL_STEM_CELL_CULTURED_CELLS_Enhancer.bed.gz",
+      "position": [
+        43,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CHONDROCYTES_FROM_BONE_MARROW_DERIVED_MESENCHYMAL_STEM_CELL_CULTURED_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        43,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CHONDROCYTES_FROM_BONE_MARROW_DERIVED_MESENCHYMAL_STEM_CELL_CULTURED_CELLS_Promoter.bed.gz",
+      "position": [
+        43,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CHONDROCYTES_FROM_BONE_MARROW_DERIVED_MESENCHYMAL_STEM_CELL_CULTURED_CELLS_Quiescent.bed.gz",
+      "position": [
+        43,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CHONDROCYTES_FROM_BONE_MARROW_DERIVED_MESENCHYMAL_STEM_CELL_CULTURED_CELLS_RegPermissive.bed.gz",
+      "position": [
+        43,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "CHONDROCYTES_FROM_BONE_MARROW_DERIVED_MESENCHYMAL_STEM_CELL_CULTURED_CELLS_Transcribed.bed.gz",
+      "position": [
+        43,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "COLONIC_MUCOSA_Bivalent.bed.gz",
+      "position": [
+        44,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "COLONIC_MUCOSA_ConstitutiveHet.bed.gz",
+      "position": [
+        44,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "COLONIC_MUCOSA_Enhancer.bed.gz",
+      "position": [
+        44,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "COLONIC_MUCOSA_LowConfidence.bed.gz",
+      "position": [
+        44,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "COLONIC_MUCOSA_Promoter.bed.gz",
+      "position": [
+        44,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "COLONIC_MUCOSA_Quiescent.bed.gz",
+      "position": [
+        44,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "COLONIC_MUCOSA_Transcribed.bed.gz",
+      "position": [
+        44,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "COLON_SMOOTH_MUSCLE_ConstitutiveHet.bed.gz",
+      "position": [
+        45,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "COLON_SMOOTH_MUSCLE_FacultativeHet.bed.gz",
+      "position": [
+        45,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "COLON_SMOOTH_MUSCLE_Promoter.bed.gz",
+      "position": [
+        45,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "COLON_SMOOTH_MUSCLE_Quiescent.bed.gz",
+      "position": [
+        45,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "COLON_SMOOTH_MUSCLE_RegPermissive.bed.gz",
+      "position": [
+        45,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "COLON_SMOOTH_MUSCLE_Transcribed.bed.gz",
+      "position": [
+        45,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DND41_ConstitutiveHet.bed.gz",
+      "position": [
+        46,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DND41_Enhancer.bed.gz",
+      "position": [
+        46,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DND41_FacultativeHet.bed.gz",
+      "position": [
+        46,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DND41_LowConfidence.bed.gz",
+      "position": [
+        46,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DND41_Promoter.bed.gz",
+      "position": [
+        46,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DND41_Quiescent.bed.gz",
+      "position": [
+        46,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DND41_RegPermissive.bed.gz",
+      "position": [
+        46,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DND41_Transcribed.bed.gz",
+      "position": [
+        46,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DUODENUM_MUCOSA_ConstitutiveHet.bed.gz",
+      "position": [
+        47,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DUODENUM_MUCOSA_Enhancer.bed.gz",
+      "position": [
+        47,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DUODENUM_MUCOSA_FacultativeHet.bed.gz",
+      "position": [
+        47,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DUODENUM_MUCOSA_Quiescent.bed.gz",
+      "position": [
+        47,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DUODENUM_MUCOSA_Transcribed.bed.gz",
+      "position": [
+        47,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DUODENUM_SMOOTH_MUSCLE_Bivalent.bed.gz",
+      "position": [
+        48,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DUODENUM_SMOOTH_MUSCLE_ConstitutiveHet.bed.gz",
+      "position": [
+        48,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DUODENUM_SMOOTH_MUSCLE_Enhancer.bed.gz",
+      "position": [
+        48,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DUODENUM_SMOOTH_MUSCLE_FacultativeHet.bed.gz",
+      "position": [
+        48,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DUODENUM_SMOOTH_MUSCLE_Quiescent.bed.gz",
+      "position": [
+        48,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "DUODENUM_SMOOTH_MUSCLE_Transcribed.bed.gz",
+      "position": [
+        48,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ECC-1_Promoter.bed.gz",
+      "position": [
+        49,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ECC-1_Quiescent.bed.gz",
+      "position": [
+        49,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ECC-1_RegPermissive.bed.gz",
+      "position": [
+        49,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ECC-1_Transcribed.bed.gz",
+      "position": [
+        49,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ES-I3_CELL_LINE_Bivalent.bed.gz",
+      "position": [
+        50,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ES-I3_CELL_LINE_ConstitutiveHet.bed.gz",
+      "position": [
+        50,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ES-I3_CELL_LINE_Enhancer.bed.gz",
+      "position": [
+        50,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ES-I3_CELL_LINE_FacultativeHet.bed.gz",
+      "position": [
+        50,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ES-I3_CELL_LINE_Quiescent.bed.gz",
+      "position": [
+        50,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ES-I3_CELL_LINE_RegPermissive.bed.gz",
+      "position": [
+        50,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ES-I3_CELL_LINE_Transcribed.bed.gz",
+      "position": [
+        50,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ES-WA7_CELL_LINE_Bivalent.bed.gz",
+      "position": [
+        51,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ES-WA7_CELL_LINE_ConstitutiveHet.bed.gz",
+      "position": [
+        51,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ES-WA7_CELL_LINE_Enhancer.bed.gz",
+      "position": [
+        51,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ES-WA7_CELL_LINE_FacultativeHet.bed.gz",
+      "position": [
+        51,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ES-WA7_CELL_LINE_Quiescent.bed.gz",
+      "position": [
+        51,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "ES-WA7_CELL_LINE_Transcribed.bed.gz",
+      "position": [
+        51,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_ADRENAL_GLAND_Bivalent.bed.gz",
+      "position": [
+        52,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_ADRENAL_GLAND_ConstitutiveHet.bed.gz",
+      "position": [
+        52,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_ADRENAL_GLAND_Enhancer.bed.gz",
+      "position": [
+        52,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_ADRENAL_GLAND_FacultativeHet.bed.gz",
+      "position": [
+        52,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_ADRENAL_GLAND_Promoter.bed.gz",
+      "position": [
+        52,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_ADRENAL_GLAND_Quiescent.bed.gz",
+      "position": [
+        52,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_ADRENAL_GLAND_RegPermissive.bed.gz",
+      "position": [
+        52,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_ADRENAL_GLAND_Transcribed.bed.gz",
+      "position": [
+        52,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_BRAIN_FEMALE_Bivalent.bed.gz",
+      "position": [
+        53,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_BRAIN_FEMALE_ConstitutiveHet.bed.gz",
+      "position": [
+        53,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_BRAIN_FEMALE_FacultativeHet.bed.gz",
+      "position": [
+        53,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_BRAIN_FEMALE_LowConfidence.bed.gz",
+      "position": [
+        53,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_BRAIN_FEMALE_Quiescent.bed.gz",
+      "position": [
+        53,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_BRAIN_FEMALE_RegPermissive.bed.gz",
+      "position": [
+        53,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_BRAIN_FEMALE_Transcribed.bed.gz",
+      "position": [
+        53,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_BRAIN_MALE_ConstitutiveHet.bed.gz",
+      "position": [
+        54,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_BRAIN_MALE_Enhancer.bed.gz",
+      "position": [
+        54,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_BRAIN_MALE_FacultativeHet.bed.gz",
+      "position": [
+        54,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_BRAIN_MALE_Promoter.bed.gz",
+      "position": [
+        54,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_BRAIN_MALE_Quiescent.bed.gz",
+      "position": [
+        54,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_BRAIN_MALE_RegPermissive.bed.gz",
+      "position": [
+        54,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_BRAIN_MALE_Transcribed.bed.gz",
+      "position": [
+        54,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_HEART_ConstitutiveHet.bed.gz",
+      "position": [
+        55,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_HEART_Enhancer.bed.gz",
+      "position": [
+        55,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_HEART_FacultativeHet.bed.gz",
+      "position": [
+        55,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_HEART_LowConfidence.bed.gz",
+      "position": [
+        55,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_HEART_Quiescent.bed.gz",
+      "position": [
+        55,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_HEART_RegPermissive.bed.gz",
+      "position": [
+        55,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_HEART_Transcribed.bed.gz",
+      "position": [
+        55,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_LARGE_Bivalent.bed.gz",
+      "position": [
+        56,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_LARGE_ConstitutiveHet.bed.gz",
+      "position": [
+        56,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_LARGE_Enhancer.bed.gz",
+      "position": [
+        56,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_LARGE_FacultativeHet.bed.gz",
+      "position": [
+        56,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_LARGE_Promoter.bed.gz",
+      "position": [
+        56,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_LARGE_Quiescent.bed.gz",
+      "position": [
+        56,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_LARGE_RegPermissive.bed.gz",
+      "position": [
+        56,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_LARGE_Transcribed.bed.gz",
+      "position": [
+        56,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_SMALL_Bivalent.bed.gz",
+      "position": [
+        57,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_SMALL_ConstitutiveHet.bed.gz",
+      "position": [
+        57,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_SMALL_Enhancer.bed.gz",
+      "position": [
+        57,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_SMALL_FacultativeHet.bed.gz",
+      "position": [
+        57,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_SMALL_Promoter.bed.gz",
+      "position": [
+        57,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_SMALL_Quiescent.bed.gz",
+      "position": [
+        57,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_SMALL_RegPermissive.bed.gz",
+      "position": [
+        57,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_INTESTINE_SMALL_Transcribed.bed.gz",
+      "position": [
+        57,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_KIDNEY_ConstitutiveHet.bed.gz",
+      "position": [
+        58,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_KIDNEY_Enhancer.bed.gz",
+      "position": [
+        58,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_KIDNEY_FacultativeHet.bed.gz",
+      "position": [
+        58,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_KIDNEY_Promoter.bed.gz",
+      "position": [
+        58,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_KIDNEY_Quiescent.bed.gz",
+      "position": [
+        58,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_KIDNEY_RegPermissive.bed.gz",
+      "position": [
+        58,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_KIDNEY_Transcribed.bed.gz",
+      "position": [
+        58,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_LUNG_Bivalent.bed.gz",
+      "position": [
+        59,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_LUNG_ConstitutiveHet.bed.gz",
+      "position": [
+        59,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_LUNG_FacultativeHet.bed.gz",
+      "position": [
+        59,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_LUNG_Promoter.bed.gz",
+      "position": [
+        59,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_LUNG_Quiescent.bed.gz",
+      "position": [
+        59,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_LUNG_RegPermissive.bed.gz",
+      "position": [
+        59,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_LUNG_Transcribed.bed.gz",
+      "position": [
+        59,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_LEG_Bivalent.bed.gz",
+      "position": [
+        60,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_LEG_ConstitutiveHet.bed.gz",
+      "position": [
+        60,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_LEG_Enhancer.bed.gz",
+      "position": [
+        60,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_LEG_FacultativeHet.bed.gz",
+      "position": [
+        60,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_LEG_LowConfidence.bed.gz",
+      "position": [
+        60,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_LEG_Promoter.bed.gz",
+      "position": [
+        60,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_LEG_Quiescent.bed.gz",
+      "position": [
+        60,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_LEG_Transcribed.bed.gz",
+      "position": [
+        60,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_TRUNK_Bivalent.bed.gz",
+      "position": [
+        61,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_TRUNK_ConstitutiveHet.bed.gz",
+      "position": [
+        61,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_TRUNK_Enhancer.bed.gz",
+      "position": [
+        61,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_TRUNK_FacultativeHet.bed.gz",
+      "position": [
+        61,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_TRUNK_LowConfidence.bed.gz",
+      "position": [
+        61,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_TRUNK_Promoter.bed.gz",
+      "position": [
+        61,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_TRUNK_Quiescent.bed.gz",
+      "position": [
+        61,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_TRUNK_RegPermissive.bed.gz",
+      "position": [
+        61,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_MUSCLE_TRUNK_Transcribed.bed.gz",
+      "position": [
+        61,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_PLACENTA_Bivalent.bed.gz",
+      "position": [
+        62,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_PLACENTA_ConstitutiveHet.bed.gz",
+      "position": [
+        62,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_PLACENTA_Enhancer.bed.gz",
+      "position": [
+        62,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_PLACENTA_FacultativeHet.bed.gz",
+      "position": [
+        62,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_PLACENTA_Promoter.bed.gz",
+      "position": [
+        62,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_PLACENTA_Quiescent.bed.gz",
+      "position": [
+        62,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_PLACENTA_RegPermissive.bed.gz",
+      "position": [
+        62,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_PLACENTA_Transcribed.bed.gz",
+      "position": [
+        62,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_STOMACH_Bivalent.bed.gz",
+      "position": [
+        63,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_STOMACH_ConstitutiveHet.bed.gz",
+      "position": [
+        63,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_STOMACH_Enhancer.bed.gz",
+      "position": [
+        63,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_STOMACH_FacultativeHet.bed.gz",
+      "position": [
+        63,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_STOMACH_Promoter.bed.gz",
+      "position": [
+        63,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_STOMACH_Quiescent.bed.gz",
+      "position": [
+        63,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_STOMACH_RegPermissive.bed.gz",
+      "position": [
+        63,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_STOMACH_Transcribed.bed.gz",
+      "position": [
+        63,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_THYMUS_Bivalent.bed.gz",
+      "position": [
+        64,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_THYMUS_ConstitutiveHet.bed.gz",
+      "position": [
+        64,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_THYMUS_Enhancer.bed.gz",
+      "position": [
+        64,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_THYMUS_FacultativeHet.bed.gz",
+      "position": [
+        64,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_THYMUS_Promoter.bed.gz",
+      "position": [
+        64,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_THYMUS_Quiescent.bed.gz",
+      "position": [
+        64,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_THYMUS_RegPermissive.bed.gz",
+      "position": [
+        64,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "FETAL_THYMUS_Transcribed.bed.gz",
+      "position": [
+        64,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GASTRIC_Bivalent.bed.gz",
+      "position": [
+        65,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GASTRIC_ConstitutiveHet.bed.gz",
+      "position": [
+        65,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GASTRIC_Enhancer.bed.gz",
+      "position": [
+        65,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GASTRIC_FacultativeHet.bed.gz",
+      "position": [
+        65,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GASTRIC_LowConfidence.bed.gz",
+      "position": [
+        65,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GASTRIC_Promoter.bed.gz",
+      "position": [
+        65,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GASTRIC_Quiescent.bed.gz",
+      "position": [
+        65,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GASTRIC_RegPermissive.bed.gz",
+      "position": [
+        65,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GASTRIC_Transcribed.bed.gz",
+      "position": [
+        65,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GLIOBLA_Bivalent.bed.gz",
+      "position": [
+        66,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GLIOBLA_ConstitutiveHet.bed.gz",
+      "position": [
+        66,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GLIOBLA_FacultativeHet.bed.gz",
+      "position": [
+        66,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GLIOBLA_LowConfidence.bed.gz",
+      "position": [
+        66,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GLIOBLA_Promoter.bed.gz",
+      "position": [
+        66,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GLIOBLA_Quiescent.bed.gz",
+      "position": [
+        66,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GLIOBLA_RegPermissive.bed.gz",
+      "position": [
+        66,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM06990_ConstitutiveHet.bed.gz",
+      "position": [
+        67,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM06990_Promoter.bed.gz",
+      "position": [
+        67,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM06990_Quiescent.bed.gz",
+      "position": [
+        67,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM06990_Transcribed.bed.gz",
+      "position": [
+        67,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12864_FacultativeHet.bed.gz",
+      "position": [
+        68,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12864_LowConfidence.bed.gz",
+      "position": [
+        68,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12864_Promoter.bed.gz",
+      "position": [
+        68,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12864_Quiescent.bed.gz",
+      "position": [
+        68,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12864_RegPermissive.bed.gz",
+      "position": [
+        68,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12864_Transcribed.bed.gz",
+      "position": [
+        68,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12865_Enhancer.bed.gz",
+      "position": [
+        69,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12865_FacultativeHet.bed.gz",
+      "position": [
+        69,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12865_LowConfidence.bed.gz",
+      "position": [
+        69,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12865_Quiescent.bed.gz",
+      "position": [
+        69,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12865_Transcribed.bed.gz",
+      "position": [
+        69,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12891_Bivalent.bed.gz",
+      "position": [
+        70,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12891_FacultativeHet.bed.gz",
+      "position": [
+        70,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12891_Promoter.bed.gz",
+      "position": [
+        70,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12891_Quiescent.bed.gz",
+      "position": [
+        70,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12891_RegPermissive.bed.gz",
+      "position": [
+        70,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12891_Transcribed.bed.gz",
+      "position": [
+        70,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12892_FacultativeHet.bed.gz",
+      "position": [
+        71,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12892_Promoter.bed.gz",
+      "position": [
+        71,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12892_Quiescent.bed.gz",
+      "position": [
+        71,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12892_RegPermissive.bed.gz",
+      "position": [
+        71,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "GM12892_Transcribed.bed.gz",
+      "position": [
+        71,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_BMP4_DERIVED_MESENDODERM_CULTURED_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        72,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_BMP4_DERIVED_MESENDODERM_CULTURED_CELLS_Enhancer.bed.gz",
+      "position": [
+        72,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_BMP4_DERIVED_MESENDODERM_CULTURED_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        72,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_BMP4_DERIVED_MESENDODERM_CULTURED_CELLS_LowConfidence.bed.gz",
+      "position": [
+        72,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_BMP4_DERIVED_MESENDODERM_CULTURED_CELLS_Promoter.bed.gz",
+      "position": [
+        72,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_BMP4_DERIVED_MESENDODERM_CULTURED_CELLS_Quiescent.bed.gz",
+      "position": [
+        72,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_BMP4_DERIVED_MESENDODERM_CULTURED_CELLS_RegPermissive.bed.gz",
+      "position": [
+        72,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_BMP4_DERIVED_MESENDODERM_CULTURED_CELLS_Transcribed.bed.gz",
+      "position": [
+        72,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_BMP4_DERIVED_TROPHOBLAST_CULTURED_CELLS_Bivalent.bed.gz",
+      "position": [
+        73,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_BMP4_DERIVED_TROPHOBLAST_CULTURED_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        73,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_BMP4_DERIVED_TROPHOBLAST_CULTURED_CELLS_Enhancer.bed.gz",
+      "position": [
+        73,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_BMP4_DERIVED_TROPHOBLAST_CULTURED_CELLS_Promoter.bed.gz",
+      "position": [
+        73,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_BMP4_DERIVED_TROPHOBLAST_CULTURED_CELLS_Quiescent.bed.gz",
+      "position": [
+        73,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_BMP4_DERIVED_TROPHOBLAST_CULTURED_CELLS_RegPermissive.bed.gz",
+      "position": [
+        73,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_BMP4_DERIVED_TROPHOBLAST_CULTURED_CELLS_Transcribed.bed.gz",
+      "position": [
+        73,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_MESENCHYMAL_STEM_CELLS_Bivalent.bed.gz",
+      "position": [
+        74,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_MESENCHYMAL_STEM_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        74,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_MESENCHYMAL_STEM_CELLS_Enhancer.bed.gz",
+      "position": [
+        74,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_MESENCHYMAL_STEM_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        74,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_MESENCHYMAL_STEM_CELLS_LowConfidence.bed.gz",
+      "position": [
+        74,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_MESENCHYMAL_STEM_CELLS_Promoter.bed.gz",
+      "position": [
+        74,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_MESENCHYMAL_STEM_CELLS_Quiescent.bed.gz",
+      "position": [
+        74,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_MESENCHYMAL_STEM_CELLS_RegPermissive.bed.gz",
+      "position": [
+        74,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_MESENCHYMAL_STEM_CELLS_Transcribed.bed.gz",
+      "position": [
+        74,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_NEURONAL_PROGENITOR_CULTURED_CELLS_Bivalent.bed.gz",
+      "position": [
+        75,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_NEURONAL_PROGENITOR_CULTURED_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        75,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_NEURONAL_PROGENITOR_CULTURED_CELLS_LowConfidence.bed.gz",
+      "position": [
+        75,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_NEURONAL_PROGENITOR_CULTURED_CELLS_Promoter.bed.gz",
+      "position": [
+        75,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_NEURONAL_PROGENITOR_CULTURED_CELLS_Quiescent.bed.gz",
+      "position": [
+        75,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_NEURONAL_PROGENITOR_CULTURED_CELLS_RegPermissive.bed.gz",
+      "position": [
+        75,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1_DERIVED_NEURONAL_PROGENITOR_CULTURED_CELLS_Transcribed.bed.gz",
+      "position": [
+        75,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1-HESC_Bivalent.bed.gz",
+      "position": [
+        76,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1-HESC_ConstitutiveHet.bed.gz",
+      "position": [
+        76,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1-HESC_Enhancer.bed.gz",
+      "position": [
+        76,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1-HESC_FacultativeHet.bed.gz",
+      "position": [
+        76,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1-HESC_LowConfidence.bed.gz",
+      "position": [
+        76,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1-HESC_Quiescent.bed.gz",
+      "position": [
+        76,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1-HESC_RegPermissive.bed.gz",
+      "position": [
+        76,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H1-HESC_Transcribed.bed.gz",
+      "position": [
+        76,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H7-HESC_Bivalent.bed.gz",
+      "position": [
+        77,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H7-HESC_LowConfidence.bed.gz",
+      "position": [
+        77,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H7-HESC_Quiescent.bed.gz",
+      "position": [
+        77,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H7-HESC_RegPermissive.bed.gz",
+      "position": [
+        77,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H7-HESC_Transcribed.bed.gz",
+      "position": [
+        77,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9_DERIVED_NEURONAL_PROGENITOR_CULTURED_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        78,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9_DERIVED_NEURONAL_PROGENITOR_CULTURED_CELLS_Enhancer.bed.gz",
+      "position": [
+        78,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9_DERIVED_NEURONAL_PROGENITOR_CULTURED_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        78,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9_DERIVED_NEURONAL_PROGENITOR_CULTURED_CELLS_Quiescent.bed.gz",
+      "position": [
+        78,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9_DERIVED_NEURONAL_PROGENITOR_CULTURED_CELLS_Transcribed.bed.gz",
+      "position": [
+        78,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9_DERIVED_NEURON_CULTURED_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        79,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9_DERIVED_NEURON_CULTURED_CELLS_Enhancer.bed.gz",
+      "position": [
+        79,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9_DERIVED_NEURON_CULTURED_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        79,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9_DERIVED_NEURON_CULTURED_CELLS_LowConfidence.bed.gz",
+      "position": [
+        79,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9_DERIVED_NEURON_CULTURED_CELLS_Quiescent.bed.gz",
+      "position": [
+        79,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9_DERIVED_NEURON_CULTURED_CELLS_RegPermissive.bed.gz",
+      "position": [
+        79,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9_DERIVED_NEURON_CULTURED_CELLS_Transcribed.bed.gz",
+      "position": [
+        79,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9ES_Bivalent.bed.gz",
+      "position": [
+        80,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9ES_FacultativeHet.bed.gz",
+      "position": [
+        80,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9ES_Promoter.bed.gz",
+      "position": [
+        80,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9ES_Quiescent.bed.gz",
+      "position": [
+        80,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9ES_RegPermissive.bed.gz",
+      "position": [
+        80,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "H9ES_Transcribed.bed.gz",
+      "position": [
+        80,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HAC_Enhancer.bed.gz",
+      "position": [
+        81,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HAC_LowConfidence.bed.gz",
+      "position": [
+        81,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HAC_Promoter.bed.gz",
+      "position": [
+        81,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HAC_Quiescent.bed.gz",
+      "position": [
+        81,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HAC_RegPermissive.bed.gz",
+      "position": [
+        81,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HAC_Transcribed.bed.gz",
+      "position": [
+        81,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HA-SP_ConstitutiveHet.bed.gz",
+      "position": [
+        82,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HA-SP_Enhancer.bed.gz",
+      "position": [
+        82,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HA-SP_FacultativeHet.bed.gz",
+      "position": [
+        82,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HA-SP_Quiescent.bed.gz",
+      "position": [
+        82,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HA-SP_RegPermissive.bed.gz",
+      "position": [
+        82,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HBMEC_Enhancer.bed.gz",
+      "position": [
+        83,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HBMEC_FacultativeHet.bed.gz",
+      "position": [
+        83,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HBMEC_LowConfidence.bed.gz",
+      "position": [
+        83,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HBMEC_Promoter.bed.gz",
+      "position": [
+        83,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HBMEC_Quiescent.bed.gz",
+      "position": [
+        83,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HBMEC_RegPermissive.bed.gz",
+      "position": [
+        83,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCFAA_Enhancer.bed.gz",
+      "position": [
+        84,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCFAA_FacultativeHet.bed.gz",
+      "position": [
+        84,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCFAA_Promoter.bed.gz",
+      "position": [
+        84,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCFAA_Quiescent.bed.gz",
+      "position": [
+        84,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCFAA_RegPermissive.bed.gz",
+      "position": [
+        84,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCM_Bivalent.bed.gz",
+      "position": [
+        85,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCM_LowConfidence.bed.gz",
+      "position": [
+        85,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCM_Promoter.bed.gz",
+      "position": [
+        85,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCM_Quiescent.bed.gz",
+      "position": [
+        85,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCM_RegPermissive.bed.gz",
+      "position": [
+        85,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCPEPIC_Enhancer.bed.gz",
+      "position": [
+        86,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCPEPIC_LowConfidence.bed.gz",
+      "position": [
+        86,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCPEPIC_Promoter.bed.gz",
+      "position": [
+        86,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCPEPIC_Quiescent.bed.gz",
+      "position": [
+        86,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCPEPIC_RegPermissive.bed.gz",
+      "position": [
+        86,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCT-116_FacultativeHet.bed.gz",
+      "position": [
+        87,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCT-116_Promoter.bed.gz",
+      "position": [
+        87,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCT-116_Quiescent.bed.gz",
+      "position": [
+        87,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCT-116_RegPermissive.bed.gz",
+      "position": [
+        87,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HCT-116_Transcribed.bed.gz",
+      "position": [
+        87,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEEPIC_Enhancer.bed.gz",
+      "position": [
+        88,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEEPIC_LowConfidence.bed.gz",
+      "position": [
+        88,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEEPIC_Promoter.bed.gz",
+      "position": [
+        88,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEEPIC_Quiescent.bed.gz",
+      "position": [
+        88,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEEPIC_RegPermissive.bed.gz",
+      "position": [
+        88,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEK293_FacultativeHet.bed.gz",
+      "position": [
+        89,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEK293_LowConfidence.bed.gz",
+      "position": [
+        89,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEK293_Promoter.bed.gz",
+      "position": [
+        89,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEK293_Quiescent.bed.gz",
+      "position": [
+        89,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEK293_RegPermissive.bed.gz",
+      "position": [
+        89,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEPG2_Bivalent.bed.gz",
+      "position": [
+        90,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEPG2_ConstitutiveHet.bed.gz",
+      "position": [
+        90,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEPG2_Enhancer.bed.gz",
+      "position": [
+        90,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEPG2_FacultativeHet.bed.gz",
+      "position": [
+        90,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEPG2_Promoter.bed.gz",
+      "position": [
+        90,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEPG2_Quiescent.bed.gz",
+      "position": [
+        90,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEPG2_RegPermissive.bed.gz",
+      "position": [
+        90,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HEPG2_Transcribed.bed.gz",
+      "position": [
+        90,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD184+_ENDODERM_CULTURED_CELLS_Bivalent.bed.gz",
+      "position": [
+        91,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD184+_ENDODERM_CULTURED_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        91,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD184+_ENDODERM_CULTURED_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        91,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD184+_ENDODERM_CULTURED_CELLS_Promoter.bed.gz",
+      "position": [
+        91,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD184+_ENDODERM_CULTURED_CELLS_Quiescent.bed.gz",
+      "position": [
+        91,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD184+_ENDODERM_CULTURED_CELLS_RegPermissive.bed.gz",
+      "position": [
+        91,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD184+_ENDODERM_CULTURED_CELLS_Transcribed.bed.gz",
+      "position": [
+        91,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD56+_ECTODERM_CULTURED_CELLS_Bivalent.bed.gz",
+      "position": [
+        92,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD56+_ECTODERM_CULTURED_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        92,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD56+_ECTODERM_CULTURED_CELLS_Enhancer.bed.gz",
+      "position": [
+        92,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD56+_ECTODERM_CULTURED_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        92,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD56+_ECTODERM_CULTURED_CELLS_Quiescent.bed.gz",
+      "position": [
+        92,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD56+_ECTODERM_CULTURED_CELLS_Transcribed.bed.gz",
+      "position": [
+        92,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD56+_MESODERM_CULTURED_CELLS_Bivalent.bed.gz",
+      "position": [
+        93,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD56+_MESODERM_CULTURED_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        93,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD56+_MESODERM_CULTURED_CELLS_Enhancer.bed.gz",
+      "position": [
+        93,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD56+_MESODERM_CULTURED_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        93,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD56+_MESODERM_CULTURED_CELLS_LowConfidence.bed.gz",
+      "position": [
+        93,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD56+_MESODERM_CULTURED_CELLS_Quiescent.bed.gz",
+      "position": [
+        93,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD56+_MESODERM_CULTURED_CELLS_RegPermissive.bed.gz",
+      "position": [
+        93,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HESC_DERIVED_CD56+_MESODERM_CULTURED_CELLS_Transcribed.bed.gz",
+      "position": [
+        93,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HFF_Bivalent.bed.gz",
+      "position": [
+        94,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HFF_Enhancer.bed.gz",
+      "position": [
+        94,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HFF_FacultativeHet.bed.gz",
+      "position": [
+        94,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HFF_LowConfidence.bed.gz",
+      "position": [
+        94,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HFF-MYC_Enhancer.bed.gz",
+      "position": [
+        95,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HFF-MYC_FacultativeHet.bed.gz",
+      "position": [
+        95,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HFF-MYC_LowConfidence.bed.gz",
+      "position": [
+        95,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HFF-MYC_Promoter.bed.gz",
+      "position": [
+        95,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HFF-MYC_Quiescent.bed.gz",
+      "position": [
+        95,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HFF-MYC_RegPermissive.bed.gz",
+      "position": [
+        95,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HFF_Promoter.bed.gz",
+      "position": [
+        94,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HFF_Quiescent.bed.gz",
+      "position": [
+        94,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HFF_RegPermissive.bed.gz",
+      "position": [
+        94,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HL-60_Promoter.bed.gz",
+      "position": [
+        96,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HL-60_Quiescent.bed.gz",
+      "position": [
+        96,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HL-60_RegPermissive.bed.gz",
+      "position": [
+        96,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HL-60_Transcribed.bed.gz",
+      "position": [
+        96,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HMEC_ConstitutiveHet.bed.gz",
+      "position": [
+        97,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HMEC_Enhancer.bed.gz",
+      "position": [
+        97,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HMEC_FacultativeHet.bed.gz",
+      "position": [
+        97,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HMEC_Promoter.bed.gz",
+      "position": [
+        97,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HMEC_Quiescent.bed.gz",
+      "position": [
+        97,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HMEC_RegPermissive.bed.gz",
+      "position": [
+        97,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HMEC_Transcribed.bed.gz",
+      "position": [
+        97,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HMF_Enhancer.bed.gz",
+      "position": [
+        98,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HMF_Promoter.bed.gz",
+      "position": [
+        98,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HMF_Quiescent.bed.gz",
+      "position": [
+        98,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HMF_RegPermissive.bed.gz",
+      "position": [
+        98,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HPAF_Enhancer.bed.gz",
+      "position": [
+        99,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HPAF_FacultativeHet.bed.gz",
+      "position": [
+        99,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HPAF_Promoter.bed.gz",
+      "position": [
+        99,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HPAF_Quiescent.bed.gz",
+      "position": [
+        99,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HPAF_RegPermissive.bed.gz",
+      "position": [
+        99,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HPAF_Transcribed.bed.gz",
+      "position": [
+        99,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HPF_Promoter.bed.gz",
+      "position": [
+        100,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HPF_Quiescent.bed.gz",
+      "position": [
+        100,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HPF_RegPermissive.bed.gz",
+      "position": [
+        100,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HRE_Bivalent.bed.gz",
+      "position": [
+        101,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HRE_Enhancer.bed.gz",
+      "position": [
+        101,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HRE_FacultativeHet.bed.gz",
+      "position": [
+        101,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HRE_LowConfidence.bed.gz",
+      "position": [
+        101,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HRE_Promoter.bed.gz",
+      "position": [
+        101,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HRE_Quiescent.bed.gz",
+      "position": [
+        101,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HRE_Transcribed.bed.gz",
+      "position": [
+        101,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HRPEPIC_Bivalent.bed.gz",
+      "position": [
+        102,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HRPEPIC_Enhancer.bed.gz",
+      "position": [
+        102,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HRPEPIC_Promoter.bed.gz",
+      "position": [
+        102,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HRPEPIC_Quiescent.bed.gz",
+      "position": [
+        102,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HRPEPIC_RegPermissive.bed.gz",
+      "position": [
+        102,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HSMM_Bivalent.bed.gz",
+      "position": [
+        103,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HSMM_ConstitutiveHet.bed.gz",
+      "position": [
+        103,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HSMM_Enhancer.bed.gz",
+      "position": [
+        103,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HSMM_Promoter.bed.gz",
+      "position": [
+        103,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HSMM_Quiescent.bed.gz",
+      "position": [
+        103,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HSMM_RegPermissive.bed.gz",
+      "position": [
+        103,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HSMM_Transcribed.bed.gz",
+      "position": [
+        103,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HSMMTUBE_Bivalent.bed.gz",
+      "position": [
+        104,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HSMMTUBE_ConstitutiveHet.bed.gz",
+      "position": [
+        104,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HSMMTUBE_Enhancer.bed.gz",
+      "position": [
+        104,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HSMMTUBE_FacultativeHet.bed.gz",
+      "position": [
+        104,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HSMMTUBE_Promoter.bed.gz",
+      "position": [
+        104,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HSMMTUBE_Quiescent.bed.gz",
+      "position": [
+        104,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HSMMTUBE_RegPermissive.bed.gz",
+      "position": [
+        104,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HSMMTUBE_Transcribed.bed.gz",
+      "position": [
+        104,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES48_CELL_LINE_Bivalent.bed.gz",
+      "position": [
+        105,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES48_CELL_LINE_ConstitutiveHet.bed.gz",
+      "position": [
+        105,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES48_CELL_LINE_Enhancer.bed.gz",
+      "position": [
+        105,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES48_CELL_LINE_FacultativeHet.bed.gz",
+      "position": [
+        105,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES48_CELL_LINE_Quiescent.bed.gz",
+      "position": [
+        105,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES48_CELL_LINE_RegPermissive.bed.gz",
+      "position": [
+        105,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES48_CELL_LINE_Transcribed.bed.gz",
+      "position": [
+        105,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES64_CELL_LINE_Bivalent.bed.gz",
+      "position": [
+        106,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES64_CELL_LINE_ConstitutiveHet.bed.gz",
+      "position": [
+        106,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES64_CELL_LINE_Enhancer.bed.gz",
+      "position": [
+        106,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES64_CELL_LINE_Quiescent.bed.gz",
+      "position": [
+        106,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES64_CELL_LINE_Transcribed.bed.gz",
+      "position": [
+        106,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES6_CELL_LINE_Bivalent.bed.gz",
+      "position": [
+        107,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES6_CELL_LINE_ConstitutiveHet.bed.gz",
+      "position": [
+        107,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES6_CELL_LINE_Enhancer.bed.gz",
+      "position": [
+        107,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES6_CELL_LINE_FacultativeHet.bed.gz",
+      "position": [
+        107,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES6_CELL_LINE_Promoter.bed.gz",
+      "position": [
+        107,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES6_CELL_LINE_Quiescent.bed.gz",
+      "position": [
+        107,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUES6_CELL_LINE_Transcribed.bed.gz",
+      "position": [
+        107,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUVEC_ConstitutiveHet.bed.gz",
+      "position": [
+        108,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUVEC_Enhancer.bed.gz",
+      "position": [
+        108,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUVEC_Promoter.bed.gz",
+      "position": [
+        108,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUVEC_Quiescent.bed.gz",
+      "position": [
+        108,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "HUVEC_Transcribed.bed.gz",
+      "position": [
+        108,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IMR90_ConstitutiveHet.bed.gz",
+      "position": [
+        109,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IMR90_FacultativeHet.bed.gz",
+      "position": [
+        109,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IMR90_Promoter.bed.gz",
+      "position": [
+        109,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IMR90_Quiescent.bed.gz",
+      "position": [
+        109,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IMR90_RegPermissive.bed.gz",
+      "position": [
+        109,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IMR90_Transcribed.bed.gz",
+      "position": [
+        109,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-15B_CELL_LINE_Bivalent.bed.gz",
+      "position": [
+        110,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-15B_CELL_LINE_ConstitutiveHet.bed.gz",
+      "position": [
+        110,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-15B_CELL_LINE_FacultativeHet.bed.gz",
+      "position": [
+        110,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-15B_CELL_LINE_Quiescent.bed.gz",
+      "position": [
+        110,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-15B_CELL_LINE_RegPermissive.bed.gz",
+      "position": [
+        110,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-15B_CELL_LINE_Transcribed.bed.gz",
+      "position": [
+        110,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-18_CELL_LINE_Bivalent.bed.gz",
+      "position": [
+        111,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-18_CELL_LINE_ConstitutiveHet.bed.gz",
+      "position": [
+        111,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-18_CELL_LINE_Enhancer.bed.gz",
+      "position": [
+        111,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-18_CELL_LINE_FacultativeHet.bed.gz",
+      "position": [
+        111,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-18_CELL_LINE_Quiescent.bed.gz",
+      "position": [
+        111,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-18_CELL_LINE_Transcribed.bed.gz",
+      "position": [
+        111,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-20B_CELL_LINE_Bivalent.bed.gz",
+      "position": [
+        112,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-20B_CELL_LINE_ConstitutiveHet.bed.gz",
+      "position": [
+        112,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-20B_CELL_LINE_FacultativeHet.bed.gz",
+      "position": [
+        112,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-20B_CELL_LINE_LowConfidence.bed.gz",
+      "position": [
+        112,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-20B_CELL_LINE_Promoter.bed.gz",
+      "position": [
+        112,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-20B_CELL_LINE_Quiescent.bed.gz",
+      "position": [
+        112,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS-20B_CELL_LINE_Transcribed.bed.gz",
+      "position": [
+        112,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_19_Bivalent.bed.gz",
+      "position": [
+        113,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_19_Enhancer.bed.gz",
+      "position": [
+        113,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_19_LowConfidence.bed.gz",
+      "position": [
+        113,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_19_Promoter.bed.gz",
+      "position": [
+        113,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_19_Quiescent.bed.gz",
+      "position": [
+        113,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_19_RegPermissive.bed.gz",
+      "position": [
+        113,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_19_Transcribed.bed.gz",
+      "position": [
+        113,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_6_Bivalent.bed.gz",
+      "position": [
+        114,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_6_ConstitutiveHet.bed.gz",
+      "position": [
+        114,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_6_Enhancer.bed.gz",
+      "position": [
+        114,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_6_FacultativeHet.bed.gz",
+      "position": [
+        114,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_6_LowConfidence.bed.gz",
+      "position": [
+        114,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_6_Promoter.bed.gz",
+      "position": [
+        114,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_6_Quiescent.bed.gz",
+      "position": [
+        114,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_6_RegPermissive.bed.gz",
+      "position": [
+        114,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "IPS_DF_6_Transcribed.bed.gz",
+      "position": [
+        114,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "K562_Bivalent.bed.gz",
+      "position": [
+        115,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "K562_ConstitutiveHet.bed.gz",
+      "position": [
+        115,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "K562_FacultativeHet.bed.gz",
+      "position": [
+        115,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "K562_LowConfidence.bed.gz",
+      "position": [
+        115,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "K562_Promoter.bed.gz",
+      "position": [
+        115,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "K562_Quiescent.bed.gz",
+      "position": [
+        115,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "K562_RegPermissive.bed.gz",
+      "position": [
+        115,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "K562_Transcribed.bed.gz",
+      "position": [
+        115,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "LEFT_VENTRICLE_Bivalent.bed.gz",
+      "position": [
+        116,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "LEFT_VENTRICLE_ConstitutiveHet.bed.gz",
+      "position": [
+        116,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "LEFT_VENTRICLE_Enhancer.bed.gz",
+      "position": [
+        116,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "LEFT_VENTRICLE_FacultativeHet.bed.gz",
+      "position": [
+        116,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "LEFT_VENTRICLE_Promoter.bed.gz",
+      "position": [
+        116,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "LEFT_VENTRICLE_Quiescent.bed.gz",
+      "position": [
+        116,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "LEFT_VENTRICLE_RegPermissive.bed.gz",
+      "position": [
+        116,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "LEFT_VENTRICLE_Transcribed.bed.gz",
+      "position": [
+        116,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "LHCN-M2_ConstitutiveHet.bed.gz",
+      "position": [
+        117,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "LHCN-M2_Enhancer.bed.gz",
+      "position": [
+        117,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "LHCN-M2_FacultativeHet.bed.gz",
+      "position": [
+        117,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "LHCN-M2_Quiescent.bed.gz",
+      "position": [
+        117,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "LHCN-M2_RegPermissive.bed.gz",
+      "position": [
+        117,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "LHCN-M2_Transcribed.bed.gz",
+      "position": [
+        117,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MCF-7_Promoter.bed.gz",
+      "position": [
+        118,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MCF-7_Quiescent.bed.gz",
+      "position": [
+        118,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MCF-7_RegPermissive.bed.gz",
+      "position": [
+        118,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MCF-7_Transcribed.bed.gz",
+      "position": [
+        118,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MESENCHYMAL_STEM_CELL_DERIVED_ADIPOCYTE_CULTURED_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        119,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MESENCHYMAL_STEM_CELL_DERIVED_ADIPOCYTE_CULTURED_CELLS_FacultativeHet.bed.gz",
+      "position": [
+        119,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MESENCHYMAL_STEM_CELL_DERIVED_ADIPOCYTE_CULTURED_CELLS_Promoter.bed.gz",
+      "position": [
+        119,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MESENCHYMAL_STEM_CELL_DERIVED_ADIPOCYTE_CULTURED_CELLS_Quiescent.bed.gz",
+      "position": [
+        119,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MESENCHYMAL_STEM_CELL_DERIVED_ADIPOCYTE_CULTURED_CELLS_RegPermissive.bed.gz",
+      "position": [
+        119,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MESENCHYMAL_STEM_CELL_DERIVED_ADIPOCYTE_CULTURED_CELLS_Transcribed.bed.gz",
+      "position": [
+        119,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MOBILIZED_CD34_PRIMARY_CELLS_FEMALE_Bivalent.bed.gz",
+      "position": [
+        120,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MOBILIZED_CD34_PRIMARY_CELLS_FEMALE_ConstitutiveHet.bed.gz",
+      "position": [
+        120,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MOBILIZED_CD34_PRIMARY_CELLS_FEMALE_Enhancer.bed.gz",
+      "position": [
+        120,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MOBILIZED_CD34_PRIMARY_CELLS_FEMALE_FacultativeHet.bed.gz",
+      "position": [
+        120,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MOBILIZED_CD34_PRIMARY_CELLS_FEMALE_Promoter.bed.gz",
+      "position": [
+        120,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MOBILIZED_CD34_PRIMARY_CELLS_FEMALE_Quiescent.bed.gz",
+      "position": [
+        120,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MOBILIZED_CD34_PRIMARY_CELLS_FEMALE_Transcribed.bed.gz",
+      "position": [
+        120,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MOBILIZED_CD34_PRIMARY_CELLS_MALE_Bivalent.bed.gz",
+      "position": [
+        121,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MOBILIZED_CD34_PRIMARY_CELLS_MALE_ConstitutiveHet.bed.gz",
+      "position": [
+        121,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MOBILIZED_CD34_PRIMARY_CELLS_MALE_Enhancer.bed.gz",
+      "position": [
+        121,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MOBILIZED_CD34_PRIMARY_CELLS_MALE_FacultativeHet.bed.gz",
+      "position": [
+        121,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MOBILIZED_CD34_PRIMARY_CELLS_MALE_Promoter.bed.gz",
+      "position": [
+        121,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MOBILIZED_CD34_PRIMARY_CELLS_MALE_Quiescent.bed.gz",
+      "position": [
+        121,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MOBILIZED_CD34_PRIMARY_CELLS_MALE_RegPermissive.bed.gz",
+      "position": [
+        121,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MOBILIZED_CD34_PRIMARY_CELLS_MALE_Transcribed.bed.gz",
+      "position": [
+        121,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MONOCYTES-CD14+_RO01746_Bivalent.bed.gz",
+      "position": [
+        122,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MONOCYTES-CD14+_RO01746_Enhancer.bed.gz",
+      "position": [
+        122,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MONOCYTES-CD14+_RO01746_FacultativeHet.bed.gz",
+      "position": [
+        122,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MONOCYTES-CD14+_RO01746_Promoter.bed.gz",
+      "position": [
+        122,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MONOCYTES-CD14+_RO01746_Quiescent.bed.gz",
+      "position": [
+        122,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MONOCYTES-CD14+_RO01746_RegPermissive.bed.gz",
+      "position": [
+        122,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "MONOCYTES-CD14+_RO01746_Transcribed.bed.gz",
+      "position": [
+        122,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NB4_Enhancer.bed.gz",
+      "position": [
+        123,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NB4_LowConfidence.bed.gz",
+      "position": [
+        123,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NB4_Promoter.bed.gz",
+      "position": [
+        123,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NB4_Quiescent.bed.gz",
+      "position": [
+        123,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NB4_Transcribed.bed.gz",
+      "position": [
+        123,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NH-A_Bivalent.bed.gz",
+      "position": [
+        124,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NH-A_ConstitutiveHet.bed.gz",
+      "position": [
+        124,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NH-A_Enhancer.bed.gz",
+      "position": [
+        124,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NH-A_FacultativeHet.bed.gz",
+      "position": [
+        124,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NH-A_Promoter.bed.gz",
+      "position": [
+        124,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NH-A_Quiescent.bed.gz",
+      "position": [
+        124,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NH-A_RegPermissive.bed.gz",
+      "position": [
+        124,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NH-A_Transcribed.bed.gz",
+      "position": [
+        124,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHDF-AD_Bivalent.bed.gz",
+      "position": [
+        125,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHDF-AD_ConstitutiveHet.bed.gz",
+      "position": [
+        125,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHDF-AD_Enhancer.bed.gz",
+      "position": [
+        125,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHDF-AD_FacultativeHet.bed.gz",
+      "position": [
+        125,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHDF-AD_LowConfidence.bed.gz",
+      "position": [
+        125,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHDF-AD_Quiescent.bed.gz",
+      "position": [
+        125,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHDF-AD_RegPermissive.bed.gz",
+      "position": [
+        125,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHDF-AD_Transcribed.bed.gz",
+      "position": [
+        125,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHDF-NEO_Enhancer.bed.gz",
+      "position": [
+        126,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHDF-NEO_FacultativeHet.bed.gz",
+      "position": [
+        126,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHDF-NEO_LowConfidence.bed.gz",
+      "position": [
+        126,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHDF-NEO_Promoter.bed.gz",
+      "position": [
+        126,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHDF-NEO_Quiescent.bed.gz",
+      "position": [
+        126,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHDF-NEO_Transcribed.bed.gz",
+      "position": [
+        126,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHEK_Enhancer.bed.gz",
+      "position": [
+        127,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHEK_Promoter.bed.gz",
+      "position": [
+        127,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHEK_Quiescent.bed.gz",
+      "position": [
+        127,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHEK_Transcribed.bed.gz",
+      "position": [
+        127,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHLF_Bivalent.bed.gz",
+      "position": [
+        128,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHLF_ConstitutiveHet.bed.gz",
+      "position": [
+        128,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHLF_Enhancer.bed.gz",
+      "position": [
+        128,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHLF_FacultativeHet.bed.gz",
+      "position": [
+        128,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHLF_Promoter.bed.gz",
+      "position": [
+        128,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHLF_Quiescent.bed.gz",
+      "position": [
+        128,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHLF_RegPermissive.bed.gz",
+      "position": [
+        128,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NHLF_Transcribed.bed.gz",
+      "position": [
+        128,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NT2-D1_Bivalent.bed.gz",
+      "position": [
+        129,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NT2-D1_LowConfidence.bed.gz",
+      "position": [
+        129,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NT2-D1_Promoter.bed.gz",
+      "position": [
+        129,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NT2-D1_Quiescent.bed.gz",
+      "position": [
+        129,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "NT2-D1_RegPermissive.bed.gz",
+      "position": [
+        129,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "OSTEOBL_Bivalent.bed.gz",
+      "position": [
+        130,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "OSTEOBL_ConstitutiveHet.bed.gz",
+      "position": [
+        130,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "OSTEOBL_Enhancer.bed.gz",
+      "position": [
+        130,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "OSTEOBL_FacultativeHet.bed.gz",
+      "position": [
+        130,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "OSTEOBL_Quiescent.bed.gz",
+      "position": [
+        130,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "OSTEOBL_Transcribed.bed.gz",
+      "position": [
+        130,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "OVARY_Bivalent.bed.gz",
+      "position": [
+        131,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "OVARY_ConstitutiveHet.bed.gz",
+      "position": [
+        131,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "OVARY_Enhancer.bed.gz",
+      "position": [
+        131,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "OVARY_FacultativeHet.bed.gz",
+      "position": [
+        131,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "OVARY_LowConfidence.bed.gz",
+      "position": [
+        131,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "OVARY_Quiescent.bed.gz",
+      "position": [
+        131,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "OVARY_RegPermissive.bed.gz",
+      "position": [
+        131,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "OVARY_Transcribed.bed.gz",
+      "position": [
+        131,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PANC-1_Enhancer.bed.gz",
+      "position": [
+        132,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PANC-1_FacultativeHet.bed.gz",
+      "position": [
+        132,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PANC-1_LowConfidence.bed.gz",
+      "position": [
+        132,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PANC-1_Promoter.bed.gz",
+      "position": [
+        132,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PANC-1_Quiescent.bed.gz",
+      "position": [
+        132,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PANC-1_RegPermissive.bed.gz",
+      "position": [
+        132,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PANC-1_Transcribed.bed.gz",
+      "position": [
+        132,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PANISLETS_Bivalent.bed.gz",
+      "position": [
+        133,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PANISLETS_ConstitutiveHet.bed.gz",
+      "position": [
+        133,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PANISLETS_Enhancer.bed.gz",
+      "position": [
+        133,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PANISLETS_FacultativeHet.bed.gz",
+      "position": [
+        133,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PANISLETS_Promoter.bed.gz",
+      "position": [
+        133,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PANISLETS_Quiescent.bed.gz",
+      "position": [
+        133,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PANISLETS_RegPermissive.bed.gz",
+      "position": [
+        133,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PANISLETS_Transcribed.bed.gz",
+      "position": [
+        133,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN01_Bivalent.bed.gz",
+      "position": [
+        134,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN01_ConstitutiveHet.bed.gz",
+      "position": [
+        134,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN01_Enhancer.bed.gz",
+      "position": [
+        134,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN01_FacultativeHet.bed.gz",
+      "position": [
+        134,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN01_Quiescent.bed.gz",
+      "position": [
+        134,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN01_RegPermissive.bed.gz",
+      "position": [
+        134,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN01_Transcribed.bed.gz",
+      "position": [
+        134,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN02_Bivalent.bed.gz",
+      "position": [
+        135,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN02_ConstitutiveHet.bed.gz",
+      "position": [
+        135,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN02_Enhancer.bed.gz",
+      "position": [
+        135,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN02_FacultativeHet.bed.gz",
+      "position": [
+        135,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN02_LowConfidence.bed.gz",
+      "position": [
+        135,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN02_Promoter.bed.gz",
+      "position": [
+        135,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN02_Quiescent.bed.gz",
+      "position": [
+        135,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN02_RegPermissive.bed.gz",
+      "position": [
+        135,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_FIBROBLAST_PRIMARY_CELLS_SKIN02_Transcribed.bed.gz",
+      "position": [
+        135,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN02_Bivalent.bed.gz",
+      "position": [
+        136,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN02_ConstitutiveHet.bed.gz",
+      "position": [
+        136,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN02_Enhancer.bed.gz",
+      "position": [
+        136,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN02_FacultativeHet.bed.gz",
+      "position": [
+        136,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN02_LowConfidence.bed.gz",
+      "position": [
+        136,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN02_Quiescent.bed.gz",
+      "position": [
+        136,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN02_RegPermissive.bed.gz",
+      "position": [
+        136,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN02_Transcribed.bed.gz",
+      "position": [
+        136,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN03_Bivalent.bed.gz",
+      "position": [
+        137,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN03_ConstitutiveHet.bed.gz",
+      "position": [
+        137,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN03_Enhancer.bed.gz",
+      "position": [
+        137,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN03_FacultativeHet.bed.gz",
+      "position": [
+        137,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN03_Quiescent.bed.gz",
+      "position": [
+        137,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN03_RegPermissive.bed.gz",
+      "position": [
+        137,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_KERATINOCYTE_PRIMARY_CELLS_SKIN03_Transcribed.bed.gz",
+      "position": [
+        137,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN01_Bivalent.bed.gz",
+      "position": [
+        138,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN01_ConstitutiveHet.bed.gz",
+      "position": [
+        138,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN01_Enhancer.bed.gz",
+      "position": [
+        138,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN01_FacultativeHet.bed.gz",
+      "position": [
+        138,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN01_Quiescent.bed.gz",
+      "position": [
+        138,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN01_RegPermissive.bed.gz",
+      "position": [
+        138,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN01_Transcribed.bed.gz",
+      "position": [
+        138,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN03_Bivalent.bed.gz",
+      "position": [
+        139,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN03_ConstitutiveHet.bed.gz",
+      "position": [
+        139,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN03_Enhancer.bed.gz",
+      "position": [
+        139,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN03_FacultativeHet.bed.gz",
+      "position": [
+        139,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN03_Quiescent.bed.gz",
+      "position": [
+        139,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN03_RegPermissive.bed.gz",
+      "position": [
+        139,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PENIS_FORESKIN_MELANOCYTE_PRIMARY_CELLS_SKIN03_Transcribed.bed.gz",
+      "position": [
+        139,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PERIPHERAL_BLOOD_MONONUCLEAR_PRIMARY_CELLS_Bivalent.bed.gz",
+      "position": [
+        140,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PERIPHERAL_BLOOD_MONONUCLEAR_PRIMARY_CELLS_ConstitutiveHet.bed.gz",
+      "position": [
+        140,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PERIPHERAL_BLOOD_MONONUCLEAR_PRIMARY_CELLS_Promoter.bed.gz",
+      "position": [
+        140,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PERIPHERAL_BLOOD_MONONUCLEAR_PRIMARY_CELLS_Quiescent.bed.gz",
+      "position": [
+        140,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PERIPHERAL_BLOOD_MONONUCLEAR_PRIMARY_CELLS_RegPermissive.bed.gz",
+      "position": [
+        140,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PERIPHERAL_BLOOD_MONONUCLEAR_PRIMARY_CELLS_Transcribed.bed.gz",
+      "position": [
+        140,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PLACENTA_AMNION_ConstitutiveHet.bed.gz",
+      "position": [
+        141,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PLACENTA_AMNION_Enhancer.bed.gz",
+      "position": [
+        141,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PLACENTA_AMNION_FacultativeHet.bed.gz",
+      "position": [
+        141,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PLACENTA_AMNION_Promoter.bed.gz",
+      "position": [
+        141,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PLACENTA_AMNION_Quiescent.bed.gz",
+      "position": [
+        141,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PLACENTA_AMNION_Transcribed.bed.gz",
+      "position": [
+        141,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PROGFIB_Bivalent.bed.gz",
+      "position": [
+        142,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PROGFIB_LowConfidence.bed.gz",
+      "position": [
+        142,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PROGFIB_Promoter.bed.gz",
+      "position": [
+        142,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PROGFIB_Quiescent.bed.gz",
+      "position": [
+        142,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PROGFIB_Transcribed.bed.gz",
+      "position": [
+        142,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PSOAS_MUSCLE_OC_Bivalent.bed.gz",
+      "position": [
+        143,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PSOAS_MUSCLE_OC_ConstitutiveHet.bed.gz",
+      "position": [
+        143,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PSOAS_MUSCLE_OC_Enhancer.bed.gz",
+      "position": [
+        143,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PSOAS_MUSCLE_OC_FacultativeHet.bed.gz",
+      "position": [
+        143,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PSOAS_MUSCLE_OC_Promoter.bed.gz",
+      "position": [
+        143,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PSOAS_MUSCLE_OC_Quiescent.bed.gz",
+      "position": [
+        143,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "PSOAS_MUSCLE_OC_Transcribed.bed.gz",
+      "position": [
+        143,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RECTAL_MUCOSA_Bivalent.bed.gz",
+      "position": [
+        144,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RECTAL_MUCOSA_ConstitutiveHet.bed.gz",
+      "position": [
+        144,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RECTAL_MUCOSA_Enhancer.bed.gz",
+      "position": [
+        144,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RECTAL_MUCOSA_FacultativeHet.bed.gz",
+      "position": [
+        144,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RECTAL_MUCOSA_Promoter.bed.gz",
+      "position": [
+        144,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RECTAL_MUCOSA_Quiescent.bed.gz",
+      "position": [
+        144,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RECTAL_MUCOSA_RegPermissive.bed.gz",
+      "position": [
+        144,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RECTAL_MUCOSA_Transcribed.bed.gz",
+      "position": [
+        144,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RECTAL_SMOOTH_MUSCLE_ConstitutiveHet.bed.gz",
+      "position": [
+        145,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RECTAL_SMOOTH_MUSCLE_Enhancer.bed.gz",
+      "position": [
+        145,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RECTAL_SMOOTH_MUSCLE_FacultativeHet.bed.gz",
+      "position": [
+        145,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RECTAL_SMOOTH_MUSCLE_Quiescent.bed.gz",
+      "position": [
+        145,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RECTAL_SMOOTH_MUSCLE_RegPermissive.bed.gz",
+      "position": [
+        145,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RECTAL_SMOOTH_MUSCLE_Transcribed.bed.gz",
+      "position": [
+        145,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RIGHT_ATRIUM_ConstitutiveHet.bed.gz",
+      "position": [
+        146,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RIGHT_ATRIUM_Enhancer.bed.gz",
+      "position": [
+        146,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RIGHT_ATRIUM_FacultativeHet.bed.gz",
+      "position": [
+        146,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RIGHT_ATRIUM_LowConfidence.bed.gz",
+      "position": [
+        146,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RIGHT_ATRIUM_Quiescent.bed.gz",
+      "position": [
+        146,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RIGHT_ATRIUM_RegPermissive.bed.gz",
+      "position": [
+        146,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RIGHT_ATRIUM_Transcribed.bed.gz",
+      "position": [
+        146,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RIGHT_VENTRICLE_Bivalent.bed.gz",
+      "position": [
+        147,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RIGHT_VENTRICLE_ConstitutiveHet.bed.gz",
+      "position": [
+        147,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RIGHT_VENTRICLE_Promoter.bed.gz",
+      "position": [
+        147,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RIGHT_VENTRICLE_Quiescent.bed.gz",
+      "position": [
+        147,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RIGHT_VENTRICLE_RegPermissive.bed.gz",
+      "position": [
+        147,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RIGHT_VENTRICLE_Transcribed.bed.gz",
+      "position": [
+        147,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RPTEC_FacultativeHet.bed.gz",
+      "position": [
+        148,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RPTEC_LowConfidence.bed.gz",
+      "position": [
+        148,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RPTEC_Promoter.bed.gz",
+      "position": [
+        148,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RPTEC_Quiescent.bed.gz",
+      "position": [
+        148,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "RPTEC_RegPermissive.bed.gz",
+      "position": [
+        148,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SAEC_Bivalent.bed.gz",
+      "position": [
+        149,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SAEC_Enhancer.bed.gz",
+      "position": [
+        149,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SAEC_FacultativeHet.bed.gz",
+      "position": [
+        149,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SAEC_Quiescent.bed.gz",
+      "position": [
+        149,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SAEC_RegPermissive.bed.gz",
+      "position": [
+        149,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SAEC_Transcribed.bed.gz",
+      "position": [
+        149,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SIGMOID_COLON_ConstitutiveHet.bed.gz",
+      "position": [
+        150,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SIGMOID_COLON_Enhancer.bed.gz",
+      "position": [
+        150,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SIGMOID_COLON_FacultativeHet.bed.gz",
+      "position": [
+        150,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SIGMOID_COLON_LowConfidence.bed.gz",
+      "position": [
+        150,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SIGMOID_COLON_Promoter.bed.gz",
+      "position": [
+        150,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SIGMOID_COLON_Quiescent.bed.gz",
+      "position": [
+        150,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SIGMOID_COLON_RegPermissive.bed.gz",
+      "position": [
+        150,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SIGMOID_COLON_Transcribed.bed.gz",
+      "position": [
+        150,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SKELETAL_MUSCLE_FEMALE_Bivalent.bed.gz",
+      "position": [
+        151,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SKELETAL_MUSCLE_FEMALE_ConstitutiveHet.bed.gz",
+      "position": [
+        151,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SKELETAL_MUSCLE_FEMALE_Enhancer.bed.gz",
+      "position": [
+        151,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SKELETAL_MUSCLE_FEMALE_FacultativeHet.bed.gz",
+      "position": [
+        151,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SKELETAL_MUSCLE_FEMALE_Promoter.bed.gz",
+      "position": [
+        151,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SKELETAL_MUSCLE_FEMALE_Quiescent.bed.gz",
+      "position": [
+        151,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SKELETAL_MUSCLE_FEMALE_Transcribed.bed.gz",
+      "position": [
+        151,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SKELETAL_MUSCLE_MALE_Bivalent.bed.gz",
+      "position": [
+        152,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SKELETAL_MUSCLE_MALE_ConstitutiveHet.bed.gz",
+      "position": [
+        152,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SKELETAL_MUSCLE_MALE_FacultativeHet.bed.gz",
+      "position": [
+        152,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SKELETAL_MUSCLE_MALE_Promoter.bed.gz",
+      "position": [
+        152,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SKELETAL_MUSCLE_MALE_Quiescent.bed.gz",
+      "position": [
+        152,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SKELETAL_MUSCLE_MALE_RegPermissive.bed.gz",
+      "position": [
+        152,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SKELETAL_MUSCLE_MALE_Transcribed.bed.gz",
+      "position": [
+        152,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-MC_LowConfidence.bed.gz",
+      "position": [
+        153,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-MC_Promoter.bed.gz",
+      "position": [
+        153,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-MC_Quiescent.bed.gz",
+      "position": [
+        153,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-MC_RegPermissive.bed.gz",
+      "position": [
+        153,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-MC_Transcribed.bed.gz",
+      "position": [
+        153,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-SH_ConstitutiveHet.bed.gz",
+      "position": [
+        154,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-SH_LowConfidence.bed.gz",
+      "position": [
+        154,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-SH_Promoter.bed.gz",
+      "position": [
+        154,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-SH_Quiescent.bed.gz",
+      "position": [
+        154,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-SH_RA_Bivalent.bed.gz",
+      "position": [
+        155,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-SH_RA_FacultativeHet.bed.gz",
+      "position": [
+        155,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-SH_RA_Promoter.bed.gz",
+      "position": [
+        155,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-SH_RA_Quiescent.bed.gz",
+      "position": [
+        155,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-SH_RA_RegPermissive.bed.gz",
+      "position": [
+        155,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-SH_RA_Transcribed.bed.gz",
+      "position": [
+        155,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-SH_RegPermissive.bed.gz",
+      "position": [
+        154,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SK-N-SH_Transcribed.bed.gz",
+      "position": [
+        154,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SMALL_INTESTINE_OC_Bivalent.bed.gz",
+      "position": [
+        156,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SMALL_INTESTINE_OC_ConstitutiveHet.bed.gz",
+      "position": [
+        156,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SMALL_INTESTINE_OC_Enhancer.bed.gz",
+      "position": [
+        156,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SMALL_INTESTINE_OC_LowConfidence.bed.gz",
+      "position": [
+        156,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SMALL_INTESTINE_OC_Promoter.bed.gz",
+      "position": [
+        156,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SMALL_INTESTINE_OC_Quiescent.bed.gz",
+      "position": [
+        156,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SMALL_INTESTINE_OC_RegPermissive.bed.gz",
+      "position": [
+        156,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "SMALL_INTESTINE_OC_Transcribed.bed.gz",
+      "position": [
+        156,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "STOMACH_MUCOSA_ConstitutiveHet.bed.gz",
+      "position": [
+        157,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "STOMACH_MUCOSA_Enhancer.bed.gz",
+      "position": [
+        157,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "STOMACH_MUCOSA_FacultativeHet.bed.gz",
+      "position": [
+        157,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "STOMACH_MUCOSA_Promoter.bed.gz",
+      "position": [
+        157,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "STOMACH_MUCOSA_Quiescent.bed.gz",
+      "position": [
+        157,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "STOMACH_MUCOSA_Transcribed.bed.gz",
+      "position": [
+        157,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "STOMACH_SMOOTH_MUSCLE_Bivalent.bed.gz",
+      "position": [
+        158,
+        0
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "STOMACH_SMOOTH_MUSCLE_ConstitutiveHet.bed.gz",
+      "position": [
+        158,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "STOMACH_SMOOTH_MUSCLE_Enhancer.bed.gz",
+      "position": [
+        158,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "STOMACH_SMOOTH_MUSCLE_FacultativeHet.bed.gz",
+      "position": [
+        158,
+        3
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "STOMACH_SMOOTH_MUSCLE_Quiescent.bed.gz",
+      "position": [
+        158,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "STOMACH_SMOOTH_MUSCLE_RegPermissive.bed.gz",
+      "position": [
+        158,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "STOMACH_SMOOTH_MUSCLE_Transcribed.bed.gz",
+      "position": [
+        158,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "T-47D_LowConfidence.bed.gz",
+      "position": [
+        159,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "T-47D_Promoter.bed.gz",
+      "position": [
+        159,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "T-47D_Quiescent.bed.gz",
+      "position": [
+        159,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "T-47D_RegPermissive.bed.gz",
+      "position": [
+        159,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "T-47D_Transcribed.bed.gz",
+      "position": [
+        159,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "THYMUS_ConstitutiveHet.bed.gz",
+      "position": [
+        160,
+        1
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "THYMUS_Enhancer.bed.gz",
+      "position": [
+        160,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "THYMUS_LowConfidence.bed.gz",
+      "position": [
+        160,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "THYMUS_Promoter.bed.gz",
+      "position": [
+        160,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "THYMUS_Quiescent.bed.gz",
+      "position": [
+        160,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "THYMUS_RegPermissive.bed.gz",
+      "position": [
+        160,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "THYMUS_Transcribed.bed.gz",
+      "position": [
+        160,
+        8
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "WERI-RB-1_LowConfidence.bed.gz",
+      "position": [
+        161,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "WERI-RB-1_Promoter.bed.gz",
+      "position": [
+        161,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "WERI-RB-1_Quiescent.bed.gz",
+      "position": [
+        161,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "WERI-RB-1_RegPermissive.bed.gz",
+      "position": [
+        161,
+        7
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "WI-38_Enhancer.bed.gz",
+      "position": [
+        162,
+        2
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "WI-38_LowConfidence.bed.gz",
+      "position": [
+        162,
+        4
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "WI-38_Promoter.bed.gz",
+      "position": [
+        162,
+        5
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "WI-38_Quiescent.bed.gz",
+      "position": [
+        162,
+        6
+      ],
+      "type": "bed"
+    },
+
+    {
+      "name": "WI-38_RegPermissive.bed.gz",
+      "position": [
+        162,
+        7
+      ],
+      "type": "bed"
+    }
+  ]
+}

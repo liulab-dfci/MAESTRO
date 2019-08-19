@@ -12,7 +12,6 @@
 #' gene symbol. Check the immune signatures from CIBERSORT (Newman et al., Nature Method, 2015) in example for details.
 #' @param min.score Minimum score required. For one cluster, if the score for all celltypes are less than 
 #' \code{min.score}, the cluster will be annotated as "Others". Default is 0.05.
-#' @param orig.ident Orignal identity. If given, will use the original identity to annotate the celltypes. Default is NULL.
 #'
 #' @author Chenfei Wang
 #'
@@ -28,39 +27,41 @@
 #'
 #' @export
 
-RNAAnnotateCelltype <- function(RNA, genes, signatures, min.score = 0.1, orig.ident = NULL){
-    require(Seurat)
-    if(is.null(orig.ident)){
-        celltypes <- as.character(unique(signatures[,1]))
-        signature_list <- sapply(1:length(celltypes),function(x){
-                          return(toupper(as.character(signatures[which(signatures[,1]==celltypes[x]),2])))})
-        names(signature_list) <- celltypes
-            
-        cluster_celltypes = sapply(as.integer(unique(genes$cluster))-1, function(x){
-        idx = genes$cluster==x
-        avglogFC = genes$avg_logFC[idx]
-        names(avglogFC) = toupper(genes$gene[idx])
-        score_cluster = sapply(signature_list, function(y){
-                        score = sum(avglogFC[y], na.rm = TRUE) / log2(length(y))
-                        return(score)
-        })
-        if(max(score_cluster, na.rm = TRUE)>=min.score)
-          cluster_celltypes = names(score_cluster)[which.max(score_cluster)]
-        else
-          cluster_celltypes = "Others"
-        })
-        
-        current.cluster.ids = as.integer(unique(genes$cluster))-1
-        new.cluster.ids = cluster_celltypes
-        RNA@meta.data$assign.ident = Idents(RNA)[rownames(RNA@meta.data)]
-        RNA@meta.data$assign.ident = plyr::mapvalues(x = RNA@meta.data$assign.ident,
-                                                           from = current.cluster.ids, to = new.cluster.ids)
-        p = DimPlot(object = RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3)
-        ggsave(paste0(RNA@project.name, ".annotated.pdf"), p, width=6, height=4)}
+RNAAnnotateCelltype <- function(RNA, genes, signatures, min.score = 0.1){
+    celltypes <- as.character(unique(signatures[,1]))
+    signature_list <- sapply(1:length(celltypes),function(x){
+                      return(toupper(as.character(signatures[which(signatures[,1]==celltypes[x]),2])))})
+    names(signature_list) <- celltypes
+    
+    if(nrow(genes) == 0){
+      message("No DE genes identified.")
+      message("All the cells are annotated as others.")
+      RNA@meta.data$assign.ident = "Others"
+    }
     else{
-        RNA$assign.ident <- orig.ident
-        p = DimPlot(object = RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3)
-        ggsave(file.path(paste0(RNA@project.name, ".original.pdf")), p,  width=5, height=4)}
+      cluster_celltypes = sapply(as.integer(unique(genes$cluster))-1, function(x){
+      idx = genes$cluster==x
+      avglogFC = genes$avg_logFC[idx]
+      names(avglogFC) = toupper(genes$gene[idx])
+      score_cluster = sapply(signature_list, function(y){
+                      score = sum(avglogFC[y], na.rm = TRUE) / log2(length(y))
+                      return(score)
+      })
+      if(max(score_cluster, na.rm = TRUE)>=min.score)
+        cluster_celltypes = names(score_cluster)[which.max(score_cluster)]
+      else
+        cluster_celltypes = "Others"
+      })
+        
+      current.cluster.ids = as.integer(unique(genes$cluster))-1
+      new.cluster.ids = cluster_celltypes
+      RNA@meta.data$assign.ident = Idents(RNA)[rownames(RNA@meta.data)]
+      RNA@meta.data$assign.ident = plyr::mapvalues(x = RNA@meta.data$assign.ident,
+                                                           from = current.cluster.ids, to = new.cluster.ids)
+    }
+
+    p = DimPlot(object = RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3)
+    ggsave(paste0(RNA@project.name, "_annotated.png"), p, width=6, height=4)
     
     return(RNA)    
 }

@@ -5,7 +5,7 @@
 \alias{RNAFilteringPlot}
 \title{Cell filtering plot for scRNA-seq analysis}
 \usage{
-RNAFilteringPlot(filepath, UMI.cutoff = 500, gene.number.cutoff = 200,
+RNAFilteringPlot(filepath, UMI.cutoff = 1000, gene.number.cutoff = 500,
   name)
 }
 \arguments{

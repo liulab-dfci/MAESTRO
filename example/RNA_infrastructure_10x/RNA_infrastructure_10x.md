@@ -63,7 +63,8 @@ fastq:
   # barcode fastq file
   barcode: 
   # transcript fastq file
-  transcript: ```
+  transcript: 
+```
 
 **Step 2. Run MAESTRO**      
 Once configured, you can use snakemake to run the workflow. 

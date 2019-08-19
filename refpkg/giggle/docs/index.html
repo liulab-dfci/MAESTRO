@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+  <head>
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href="assets/css/bootstrap-material-design.min.css" rel='stylesheet' type='text/css'>
+    <link href="assets/css/ripples.min.css" rel='stylesheet' type='text/css'>
+    <link href="assets/css/tetronimos.css" rel='stylesheet' type='text/css'>
+    <link href="assets/css/site.css" rel='stylesheet' type='text/css'>
+
+  </head>
+  <body>
+    <div class="container">
+      <h3>Giggle</h3>
+
+      <div id="control-panel">
+        <div style="display:inline-block">
+          <div id="region-panel" class="input-panel">
+            <label>Enter Region</label>
+            <input id="overlaps" value="chr1:1-5000000"></input>
+            <button id="go-button" onclick="loadHeatmapForRegion()" style="margin-left:32px;" class="btn btn-default btn-raised">Run</button>
+            <div id="no-region-warning" class="hide alert alert-dismissible alert-info">
+              <button type="button" class="close" data-dismiss="alert">×</button>
+              <strong></strong>
+               Enter a region first
+            </div>          
+
+          </div>
+          <div ><label>OR</label></div>
+          <div id="upload-panel" class="input-panel" style="margin-top:0px;clear:both">
+            <label>Upload file</label>
+            <form id="bed-upload-form" style="display:inline-block"  method="post" enctype="multipart/form-data">
+              <div class="form-group" style="padding:0px;display:inline-block;width:230px;margin-top:0px">
+                 <input style="display:inline-block;"  name="file" type="file">
+                 <input type="text" style="display:inline-block" readonly="" class="form-control" placeholder="choose file...">
+              </div>
+             <input id="upload-button" style="clear:both;display:inline-block;" class="btn btn-default btn-raised" type="submit" value="Run">
+            </form>
+          </div>
+
+          <div id="no-file-warning" class="hide alert alert-dismissible alert-info">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong></strong>
+             Choose a .bed.gz or vcf.gz file to upload.
+          </div>
+          <div id="bad-file-warning" class="hide alert alert-dismissible alert-info">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong></strong>
+             Invalid query file. Choose a .bed.gz or vcf.gz file to upload.
+          </div>
+        </div>
+
+        <div class="" style="vertical-align:top;display:inline-block;margin-left:40px;width:120px;">
+          <span  class="radio-value-field radio radio-primary">
+            <label>
+              <input type="radio" class="radio-value-field" name="radio-value-field" id="radio-value-overlaps" onclick="loadHeatmapChart()" checked="true" value="overlaps">
+             Overlaps
+            </label>
+          </span>
+
+          <span id="radio-value-combo-span" class="radio-value-field radio radio-primary">
+            <label>
+              <input type="radio" class="radio-value-field" name="radio-value-field" onclick="loadHeatmapChart()" id="radio-value-combo" value="combo" >
+              Score
+            </label>
+          </span>
+
+        </div>
+
+        <div class="" style="vertical-align:top;display:inline-block;margin-left:40px;">
+          <div>
+            <label style="width:100px !important" >Primary Index</label>
+            <input id="giggle-url"/>
+          </div>
+          <div style="margin-top:10px;">
+            <label style="width:100px !important;">UCSC Index</label>
+            <input id="giggle-tracks-url"/>
+          </div>
+        </div>
+    </div>
+
+
+    <div class="loader hide"  style="margin-top:160px;text-align:center;">                   
+        <div class="cssload-tetrominos">
+          <div class="cssload-tetromino cssload-box1"></div>
+          <div class="cssload-tetromino cssload-box2"></div>
+          <div class="cssload-tetromino cssload-box3"></div>
+          <div class="cssload-tetromino cssload-box4"></div>
+        </div>
+    </div>    
+
+    <div id="chart"></div>
+    </div>
+
+
+<div class="modal fade" id="overlaps-modal" tabindex="-1" role="dialog">
+  <div  class="modal-dialog" style="width:350px" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="padding-top:10px;">
+       <h3>Overlaps</h3>
+      </div>
+      <div class="modal-body" style="height: 450px;overflow-y: scroll;margin-top: 0px;padding-top: 0px;">
+     
+      </div>
+      <div class="modal-footer" style="clear-both">
+          <button type="button" class="btn btn-default icon-button-sm btn btn-default btn-raised" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>    
+
+    <!-- Latest compiled and minified CSS -->
+    <script   src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="assets/js/material.min.js"></script>
+    <script src="assets/js/ripples.min.js"></script>
+    <script src="assets/js/colorbrewer.js"></script>
+    <script src="http://d3js.org/d3.v3.js"></script>
+    <script src="heatmapD3.js"></script>
+    <script src="app.js"></script>
+  
+  </body>
+</html>

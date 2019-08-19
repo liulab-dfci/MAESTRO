@@ -32,8 +32,6 @@
 
 ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@project.name, giggle.path, organism = "GRCh38", top.tf = 10)
 {
-  require(Seurat)
-  require(ggplot2)
   if(organism == "GRCh38"){
       data(GRCh38.CistromeDB.genescore)
       data(human.tf.family)
@@ -45,12 +43,25 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@projec
       geneScore <- GRCm38.CistromeDB.genescore
       tf_family_list <- MOUSE.TFFamily}
 
-  targetList <- list()
-  tfList <- list()
-  antFile <- read.csv(paste0(giggle.path,"/CistromeDB.sample.annotation.txt"), sep="\t", row.names=1, stringsAsFactors = FALSE)  
-  outputDir <- paste0(project, ".GIGGLE")
-  if (!file.exists(outputDir)) dir.create(path=outputDir)    
-  for (icluster in unique(peaks$cluster)) {
+  if(nrow(peaks)==0){
+    message("No differential peaks identified.")
+    message("No driver TFs identified.")
+    
+    reg_table = data.frame(Cluster=Idents(ATAC), CelltypeAnnotation=ATAC@meta.data$assign.ident)
+    row.names(reg_table) = NULL
+    reg_table_unique = unique.data.frame(reg_table)
+    reg_df = reg_table_unique
+    reg_df$TF = "No TFs identified."
+    write.table(reg_df,paste0(project, ".PredictedTFTop", top.tf, ".txt"), col.names = TRUE, row.names = FALSE, sep = "\t", quote = FALSE)
+    
+    return(list())
+  }else{
+    targetList <- list()
+    tfList <- list()
+    antFile <- read.csv(paste0(giggle.path,"/CistromeDB.sample.annotation.txt"), sep="\t", row.names=1, stringsAsFactors = FALSE)  
+    outputDir <- paste0(project, ".GIGGLE")
+    if (!file.exists(outputDir)) dir.create(path=outputDir)    
+    for (icluster in unique(peaks$cluster)) {
       targetList[[icluster]] = list()
       ipeaks <- peaks[peaks$cluster == icluster, "gene"]
       ipeaks <- strsplit(ipeaks, "-")
@@ -82,74 +93,75 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@projec
       system(cmd)
       cmd <- paste0("rm ", outputBed, ".result.xls")
       system(cmd)
-  }
-  message("Identification of enriched TFs is done.")
-  
-  cluster_cell_list = split(names(Idents(ATAC)), Idents(ATAC))
-  cluster_avg_rp = sapply(names(cluster_cell_list), function(x){
-    return(apply(GetAssayData(object = ATAC)[, cluster_cell_list[[x]]], 1, mean))
-  })
-  
-  cluster_tf_list_filter = sapply(names(tfList), function(x){
-    tf_family_filter = sapply(tfList[[x]], function(y){
-      if(y %in% names(tf_family_list) & length(intersect(tf_family_list[[y]], rownames(cluster_avg_rp))) > 1){
-        tf_family_expr = cluster_avg_rp[intersect(tf_family_list[[y]], rownames(cluster_avg_rp)),x]
-        tf_family_expr = tf_family_expr[which(tf_family_expr != 0.00)]
-        tf_family = names(tf_family_expr)[order(tf_family_expr, decreasing=T)]
-        return(tf_family)
-      }else{
-        if(!(y %in% rownames(cluster_avg_rp)) || cluster_avg_rp[y,x] == 0.00){
-          return(NULL)
+    }
+    message("Identification of enriched TFs is done.")
+    
+    cluster_cell_list = split(names(Idents(ATAC)), Idents(ATAC))
+    cluster_avg_rp = sapply(names(cluster_cell_list), function(x){
+      return(apply(GetAssayData(object = ATAC)[, cluster_cell_list[[x]]], 1, mean))
+    })
+    
+    cluster_tf_list_filter = sapply(names(tfList), function(x){
+      tf_family_filter = sapply(tfList[[x]], function(y){
+        if(y %in% names(tf_family_list) & length(intersect(tf_family_list[[y]], rownames(cluster_avg_rp))) > 1){
+          tf_family_expr = cluster_avg_rp[intersect(tf_family_list[[y]], rownames(cluster_avg_rp)),x]
+          tf_family_expr = tf_family_expr[which(tf_family_expr != 0.00)]
+          tf_family = names(tf_family_expr)[order(tf_family_expr, decreasing=T)]
+          return(tf_family)
         }else{
-          return(y)
+          if(!(y %in% rownames(cluster_avg_rp)) || cluster_avg_rp[y,x] == 0.00){
+            return(NULL)
+          }else{
+            return(y)
+          }
+        }
+      })
+      tf_family_filter_dedup = unique(tf_family_filter)
+      listlen = sapply(tf_family_filter_dedup, function(xx){
+        length(xx)
+      })
+      tf_family_filter_desubset = sapply(tf_family_filter_dedup,function(xx){
+        ifsubset = sapply(tf_family_filter_dedup, function(yy){
+          all(xx %in% yy)
+        })
+        return(tf_family_filter_dedup[ifsubset][[which.max(listlen[ifsubset])]])
+      })
+      tf_family_filter_desubset = unique(tf_family_filter_desubset)
+      tf_family_filter_desubset_str = lapply(tf_family_filter_desubset, function(xx){
+        return(paste(xx, collapse = " | "))
+      })
+      return(unlist(tf_family_filter_desubset_str)[1:top.tf])
+    })
+    cluster_tf_df = reshape2::melt(cluster_tf_list_filter)[,2:3]
+    cluster_tf_df[,1] = as.character(cluster_tf_df[,1])
+    colnames(cluster_tf_df) = c("Cluster","TF")
+    
+    reg_table = data.frame(Cluster=Idents(ATAC), CelltypeAnnotation=ATAC@meta.data$assign.ident)
+    row.names(reg_table) = NULL
+    reg_table_unique = unique.data.frame(reg_table)
+    
+    reg_df = merge(reg_table_unique, cluster_tf_df)
+    write.table(reg_df,paste0(project, ".PredictedTFTop", top.tf, ".txt"), col.names = TRUE, row.names = FALSE, sep = "\t", quote = FALSE)
+    
+    for(icluster in colnames(cluster_tf_list_filter)){
+      message(paste("Identify target genes for the top ", top.tf, " TFs for cluster ", icluster, "..."))
+      targetDf <- read.table(paste0(project, ".GIGGLE/", icluster, ".peaks.bed.giggle.res.tfs.txt"), sep="\t", header = TRUE, stringsAsFactors = FALSE, quote = "")
+      tfs = cluster_tf_list_filter[,icluster]
+      tfs = sapply(tfs, function(x){
+        tf = unlist(strsplit(x, split = " | ", fixed = TRUE))[1]
+        return(tf)
+      })
+      names(tfs) = NULL
+      for (tf in tfs) {
+        if(tf %in% targetDf$factor){
+          dcid <- as.character(targetDf[targetDf$factor==tf, "sample_id"])
+          tfTarget <- geneScore[["genes"]][geneScore[["indices"]][[dcid]]]
+          write.table(data.frame(tfTarget), paste0(project, ".GIGGLE/", icluster, ".", tf, ".", dcid, ".target.genes.top500.txt"), sep="\t", quote=FALSE, row.names=FALSE, col.names=FALSE)
         }
       }
-    })
-    tf_family_filter_dedup = unique(tf_family_filter)
-    listlen = sapply(tf_family_filter_dedup, function(xx){
-      length(xx)
-    })
-    tf_family_filter_desubset = sapply(tf_family_filter_dedup,function(xx){
-      ifsubset = sapply(tf_family_filter_dedup, function(yy){
-        all(xx %in% yy)
-      })
-      return(tf_family_filter_dedup[ifsubset][[which.max(listlen[ifsubset])]])
-    })
-    tf_family_filter_desubset = unique(tf_family_filter_desubset)
-    tf_family_filter_desubset_str = lapply(tf_family_filter_desubset, function(xx){
-      return(paste(xx, collapse = " | "))
-    })
-    return(unlist(tf_family_filter_desubset_str)[1:top.tf])
-  })
-  cluster_tf_df = reshape2::melt(cluster_tf_list_filter)[,2:3]
-  cluster_tf_df[,1] = as.character(cluster_tf_df[,1])
-  colnames(cluster_tf_df) = c("Cluster","TF")
-  
-  reg_table = data.frame(Cluster=Idents(ATAC), CelltypeAnnotation=ATAC@meta.data$assign.ident)
-  row.names(reg_table) = NULL
-  reg_table_unique = unique.data.frame(reg_table)
-  
-  reg_df = merge(reg_table_unique, cluster_tf_df)
-  write.table(reg_df,paste0(project, ".PredictedTFTop", top.tf, ".txt"), col.names = TRUE, row.names = FALSE, sep = "\t", quote = FALSE)
-  
-  for(icluster in colnames(cluster_tf_list_filter)){
-    message(paste("Identify target genes for the top ", top.tf, " TFs for cluster ", icluster, "..."))
-    targetDf <- read.table(paste0(project, ".GIGGLE/", icluster, ".peaks.bed.giggle.res.tfs.txt"), sep="\t", header = TRUE, stringsAsFactors = FALSE, quote = "")
-    tfs = cluster_tf_list_filter[,icluster]
-    tfs = sapply(tfs, function(x){
-      tf = unlist(strsplit(x, split = " | ", fixed = TRUE))[1]
-      return(tf)
-    })
-    names(tfs) = NULL
-    for (tf in tfs) {
-      if(tf %in% targetDf$factor){
-        dcid <- as.character(targetDf[targetDf$factor==tf, "sample_id"])
-        tfTarget <- geneScore[["genes"]][geneScore[["indices"]][[dcid]]]
-        write.table(data.frame(tfTarget), paste0(project, ".GIGGLE/", icluster, ".", tf, ".", dcid, ".target.genes.top500.txt"), sep="\t", quote=FALSE, row.names=FALSE, col.names=FALSE)
-      }
     }
+    tfListExpand = as.list(as.data.frame(cluster_tf_list_filter, stringsAsFactors = FALSE))
+    return(tfListExpand)
   }
-  tfListExpand = as.list(as.data.frame(cluster_tf_list_filter, stringsAsFactors = FALSE))
-  return(tfListExpand)
 }
 

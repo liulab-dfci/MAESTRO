@@ -15,21 +15,21 @@ except ImportError:
 
 def install_drseq():
     curdir = os.getcwd()
-    os.chdir("pkg/Dr.seq.1.2.0")
+    os.chdir("refpkg/Dr.seq.1.2.0")
     os.system("python setup.py install")
     os.chdir(curdir)
     print("Installation of Dr.seq is DONE")
 
 def install_giggle():
     curdir = os.getcwd()
-    os.chdir("pkg/giggle")
+    os.chdir("refpkg/giggle")
     os.system("make")
     os.chdir(curdir)
     print("Installation of GIGGLE is DONE")
 
 def install_rabit():
     curdir = os.getcwd()
-    os.chdir("pkg/Rabit")
+    os.chdir("refpkg/Rabit")
     os.system("./configure --prefix=" + curdir)
     os.system("make")
     os.system("make install")

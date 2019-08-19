@@ -1,9 +1,0 @@
-Bivalent
-ConstitutiveHet
-Enhancer
-FacultativeHet
-LowConfidence
-Promoter
-Quiescent
-RegPermissive
-Transcribed

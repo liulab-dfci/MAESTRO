@@ -1,0 +1,82 @@
+body {
+  font-family: 'Open Sans';
+  background-color: white;
+  color:  #757474;
+  font-size: 13px;
+}
+h3 {
+  margin-top: 5px;
+  margin-bottom: 3px;  
+}
+h4 {
+  text-align: center;
+  margin-bottom: 0px;  
+}
+.rowLabel, .colLabel, .legendLabel {
+  font-size:11px;
+  fill: #757474;
+}
+rect.bordered {
+  stroke: #E6E6E6;
+  stroke-width:2px;   
+}
+.checkbox label, .radio label, label {
+  color: #757474;
+  font-size: 13px;
+}
+.radio-value-field.radio label span {
+  left: 25px;
+}
+#go-button {
+  font-size: 13px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  margin-top: 0px;        
+}
+#upload-button {
+  font-size: 13px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  margin-top: 0px;        
+}
+#control-panel {
+  margin-top:0px;
+}
+#overlaps {
+  width: 200px;
+}
+label {
+  width: 80px !important;
+}
+.radio-value-field label {
+  width: 100% !important;
+}
+.form-control {
+  font-size: 13px !important;
+}
+::-webkit-input-placeholder {
+   font-size: 13px !important;
+} 
+.checkbox, .radio {
+  margin-top: 0px;
+}
+input#giggle-url {
+  width: 300px !important;
+}
+input#giggle-tracks-url {
+  width: 300px !important;
+}
+#region-panel {
+  padding: 3px;
+}
+#upload-panel {
+  padding: 3px;
+}
+.selected {
+  background-color: #fffad5;
+}
+.alert.alert-info {
+    background-color: #569ca0;
+    color: white;
+    margin-top: 3px;
+}

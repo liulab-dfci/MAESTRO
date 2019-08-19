@@ -16,7 +16,6 @@
 #' @param genes.test.use Denotes which test to use to identify genes. Default is "wilcox". 
 #' @param genes.cutoff Identify differential expressed genes with adjusted p.value less than \code{genes.cutoff} as cluster speficic genes
 #' for each cluster. Default cutoff is 1E-5.
-#' @param orig.ident Orignal identity. If given, will use the original identity to annotate the celltypes. Default is NULL.
 #'
 #' @author Chenfei Wang, Dongqing Sun
 #'
@@ -33,10 +32,8 @@
 #'
 #' @export
 
-ATACAnnotateCelltype <- function(ATAC, RPmatrix, signatures, min.score = 0.1, genes.test.use = "wilcox", genes.cutoff = 1E-5, orig.ident = NULL)
+ATACAnnotateCelltype <- function(ATAC, RPmatrix, signatures, min.score = 0.1, genes.test.use = "wilcox", genes.cutoff = 1E-5)
 {
-  require(Seurat)
-  require(ggplot2)
   RPmatrix <- RPmatrix[,colnames(ATAC)]
   ATAC[["ACTIVITY"]] <- CreateAssayObject(counts = RPmatrix)
   DefaultAssay(ATAC) <- "ACTIVITY"
@@ -44,13 +41,12 @@ ATACAnnotateCelltype <- function(ATAC, RPmatrix, signatures, min.score = 0.1, ge
   ATAC <- NormalizeData(ATAC)
   ATAC <- ScaleData(ATAC)
 
-  if(is.null(orig.ident)){
-     message("Identify cluster specific genes based on RP score ...")
-     cluster.genes <- NULL
-     cluster.genes <- FindAllMarkers(object = ATAC, only.pos = TRUE, min.pct = 0.1, test.use = genes.test.use)
-     cluster.genes <- cluster.genes[cluster.genes$p_val_adj<genes.cutoff, ]
-     write.table(cluster.genes, paste0(ATAC@project.name, ".RPDiffGenes.tsv"), quote = F, sep = "\t")}
+  message("Identify cluster specific genes based on RP score ...")
+  cluster.genes <- NULL
+  cluster.genes <- FindAllMarkers(object = ATAC, only.pos = TRUE, min.pct = 0.1, test.use = genes.test.use)
+  cluster.genes <- cluster.genes[cluster.genes$p_val_adj<genes.cutoff, ]
+  write.table(cluster.genes, paste0(ATAC@project.name, "_RPDiffGenes.tsv"), quote = F, sep = "\t")
   
-  ATAC <- RNAAnnotateCelltype(ATAC, cluster.genes, signatures, min.score = min.score, orig.ident = orig.ident)
+  ATAC <- RNAAnnotateCelltype(ATAC, cluster.genes, signatures, min.score = min.score)
   return(ATAC)
 }
