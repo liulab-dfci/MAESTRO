@@ -1,6 +1,6 @@
 # The path of scRNA Seurat object
-rnaobject: /home1/wangchenfei/Project/SingleCell/scRNA/Analysis/10X_PBMC_5k/Result/Analysis/10X_PBMC_5k_SeuratObj.rds
+rnaobject: /home/cw254/projects/MAESTRO/snakemake/RNA/10X/pbmc8k/Result/Analysis/10X_PBMC_8K_SeuratObj.rds
 # The path of scATAC RP Seurat object 
-atacobject: /home1/wangchenfei/Project/SingleCell/scATAC/Analysis/10X_PBMC_5k/Result/Analysis/10X_PBMC_5k_RP_SeuratObj.rds
+atacobject: /home/cw254/projects/MAESTRO/snakemake/ATAC/10X/atac_v1_pbmc_10k_fastqs/Result/Analysis/10X_PBMC_10K_SeuratObj.rds
 # The prefix of output files
-outprefix: 10X_PBMC_5k
+outprefix: 10X_PBMC

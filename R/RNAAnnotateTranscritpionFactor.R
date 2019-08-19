@@ -32,6 +32,7 @@
 RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, organism = "GRCh38", top.tf = 10)
 {
   require(Seurat)
+  require(MAGeCKFlute)
   if(organism == "GRCh38"){
     org = "hsa"
     data(human.tf.family)
@@ -40,9 +41,9 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, orga
     org = "mmu"
     data(mouse.tf.family)
     tf_family_list <- MOUSE.TFFamily}
-  genes$entrezid = RNAEnsemblToEntrez(genes$gene, fromType = "Symbol", toType = "Entrez",
-                                         organism = org, useBiomart = FALSE,
-                                         ensemblHost = "www.ensembl.org")
+  genes$entrezid = TransGeneID(genes$gene, fromType = "Symbol", toType = "Entrez",
+                               organism = org, useBiomart = FALSE,
+                               ensemblHost = "www.ensembl.org")
   genes = na.omit(genes)
   cluster_markers_list <- split(genes, genes$cluster)
   
