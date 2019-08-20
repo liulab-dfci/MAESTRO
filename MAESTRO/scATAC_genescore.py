@@ -8,18 +8,17 @@ Created on Tue Jun 1 10:24:36 2019
 
 import os, sys
 import time
-import json
 import numpy as np
 import pandas as pd
 import scipy.sparse as sparse
 from MAESTRO.scATAC_utility import *
 
-def normMinMax(vector):
-    c_min = min(vector)
-    c_max = max(vector)
-    c_gap = c_max - c_min
-    res_vec = list(map(lambda x: (x-c_min)/c_gap, vector))
-    return(res_vec)
+# def normMinMax(vector):
+#     c_min = min(vector)
+#     c_max = max(vector)
+#     c_gap = c_max - c_min
+#     res_vec = list(map(lambda x: (x-c_min)/c_gap, vector))
+#     return(res_vec)
 
 def RP(peaks_info, genes_info, decay):
     """Multiple processing function to calculate regulation potential."""
@@ -67,7 +66,7 @@ def RP(peaks_info, genes_info, decay):
     return(genes_peaks_score_array)
 
 
-def calculate_RP_score(peak_file, gene_bed, decay, score_file, bgrp_dict):
+def calculate_RP_score(peak_file, gene_bed, decay, score_file):
     """Calculate regulatery potential for each gene based on the single-cell peaks."""
 
     genes_info = []
@@ -99,16 +98,17 @@ def calculate_RP_score(peak_file, gene_bed, decay, score_file, bgrp_dict):
 
     genes_peaks_score_dok = RP(peaks_info, genes_info, decay)
     genes_peaks_score_csc = genes_peaks_score_dok.tocsc()
-    genes_cells_score_lil = genes_peaks_score_csc.dot(cell_peaks).tolil()
+    genes_cells_score_csr = genes_peaks_score_csc.dot(cell_peaks).tocsr()
     # genes_cells_score_lil = genes_cells_score_csc.tolil()
 
     score_cells_dict = {}
     score_cells_sum_dict = {}
-    for icell in range(len(cells_list)):
-        genes_cells_score_lil[:, icell] = np.array(normMinMax(genes_cells_score_lil[:, icell].toarray().ravel().tolist())).reshape((len(genes_list), 1))
-    genes_cells_score_csr = genes_cells_score_lil.tocsr()
+    # for icell in range(len(cells_list)):
+    #     genes_cells_score_lil[:, icell] = np.array(normMinMax(genes_cells_score_lil[:, icell].toarray().ravel().tolist())).reshape((len(genes_list), 1))
+    # genes_cells_score_csr = genes_cells_score_lil.tocsr()
     for igene, gene in enumerate(genes_list):
-        score_cells_dict[gene] = list(map(lambda x: x - bgrp_dict[gene], genes_cells_score_csr[igene, :].toarray().ravel().tolist()))
+        # score_cells_dict[gene] = list(map(lambda x: x - bgrp_dict[gene], genes_cells_score_csr[igene, :].toarray().ravel().tolist()))
+        score_cells_dict[gene] = genes_cells_score_csr[igene, :].toarray().ravel().tolist()
         score_cells_sum_dict[gene] = sum(score_cells_dict[gene])
 
     score_cells_dict_dedup = {}
@@ -134,10 +134,10 @@ def main():
     score_file = sys.argv[2]
     decay = float(sys.argv[3])
     gene_bed = sys.argv[4]
-    bgrp_dict = json.load(open(sys.argv[5], "r"))
+    # bgrp_dict = json.load(open(sys.argv[5], "r"))
 
     start = time.time()
-    calculate_RP_score(peak_file, gene_bed, decay, score_file, bgrp_dict)
+    calculate_RP_score(peak_file, gene_bed, decay, score_file)
     end = time.time()
     print("GeneScore Time:", end - start)
 
