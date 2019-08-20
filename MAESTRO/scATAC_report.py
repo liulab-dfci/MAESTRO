@@ -28,8 +28,8 @@ td_list = []
 for line in open(cluster_regulator_file,"r").readlines():
     if not line.startswith("Cluster"):
         items = line.strip().split("\t")
-        items_str_list = ["                        <td>" + i + "</td>" for i in items]
-        items_str = "                      <tr>\n" + "\n".join(items_str_list) + "\n                      </tr>"
+        items_str_list = ["                                                            <td>" + i + "</td>" for i in items]
+        items_str = "                                                        <tr>\n" + "\n".join(items_str_list) + "\n                                                        </tr>"
         td_list.append(items_str)
 td_str = "\n".join(td_list)
 
