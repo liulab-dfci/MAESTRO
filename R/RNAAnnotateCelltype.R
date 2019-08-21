@@ -30,6 +30,7 @@
 
 RNAAnnotateCelltype <- function(RNA, genes, signatures, min.score = 0.1, orig.ident = NULL){
     require(Seurat)
+    require(ggplot2)
     if(is.null(orig.ident)){
         celltypes <- as.character(unique(signatures[,1]))
         signature_list <- sapply(1:length(celltypes),function(x){
