@@ -99,7 +99,13 @@ def main():
         raw_matrix = get_matrix_from_h5(raw_matrix_file)
         FilterCell(raw_matrix, 1000, 500, os.path.join(outdir, outpre), platform)
     elif platform == "Smartseq2":
-        raw_matrix_df = pd.read_csv(raw_matrix_file, sep = ",", header = 0, index_col = 0)
+        raw_matrix_df = pd.read_csv(raw_matrix_file, sep = "\t", header = 0, index_col = 0)
+        df_rownames = list(raw_matrix_df.index)
+        df_rownames = [i.split('_')[1] for i in df_rownames]
+        raw_matrix_df.index = df_rownames
+        df_colnames = list(raw_matrix_df.columns)
+        df_colnames = [i.split('/')[-1].split('.genes.results')[0] for i in df_colnames]
+        raw_matrix_df.columns = df_colnames
         FilterCell(raw_matrix_df, 1000, 500, os.path.join(outdir, outpre), platform)
     else:
         raw_matrix_df = pd.read_csv(raw_matrix_file, sep = "\t", header = 0, index_col = 0)

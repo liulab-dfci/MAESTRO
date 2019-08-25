@@ -591,9 +591,9 @@ rule scatac_analysis:
         outpre = config["outprefix"],
         count = config["outprefix"] + "_peak_count.txt",
         giggleannotation = config["giggleannotation"],
-        organism = config["organism"]
+        species = config["species"]
     shell:
-        "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R {params.count} {params.genescore} {params.organism} {params.giggleannotation} {params.outpre} {params.outdir}"
+        "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R {params.count} {params.genescore} {params.species} {params.giggleannotation} {params.outpre} {params.outdir}"
 
 rule scatac_report:
     input:

@@ -22,6 +22,8 @@ genome:
   gtf: /home1/wangchenfei/annotations/refdata-cellranger-GRCh38-3.0.0/genes/genes.gtf
   # genome annotation file from 10x-genomics required for Cell Ranger
   cellranger: /home1/wangchenfei/annotations/refdata-cellranger-GRCh38-3.0.0
+  # the prefix of transcript references for RSEM used by rsem-prepare-reference
+  rsem: /home1/wangchenfei/annotations/hg38/RSEM_ref/GRCh38
 
 # Information about barcode (only for platform of "Dropseq")
 barcode:

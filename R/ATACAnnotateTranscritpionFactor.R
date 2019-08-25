@@ -87,8 +87,9 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@projec
       targetDf <- targetDf[order(-targetDf$giggle_score), ]
       targetDf <- targetDf[!duplicated(targetDf$factor), ]
       
-      tfList[[icluster]] <- as.character(targetDf[,"factor"])
-      write.table(targetDf, paste0(outputBed, ".giggle.res.tfs.txt"), sep="\t", quote=FALSE, row.names=FALSE) 
+      write.table(targetDf, paste0(outputBed, ".giggle.res.tfs.txt"), sep="\t", quote=FALSE, row.names=FALSE)
+      rownames(targetDf) = targetDf$factor
+      tfList[[icluster]] <- targetDf[,c("factor","giggle_score")]
       cmd <- paste0("rm ", outputBed, ".gz")
       system(cmd)
       cmd <- paste0("rm ", outputBed, ".result.xls")
@@ -102,39 +103,62 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@projec
     })
     
     cluster_tf_list_filter = sapply(names(tfList), function(x){
-      tf_family_filter = sapply(tfList[[x]], function(y){
+      tf_family_filter = sapply(tfList[[x]][,1], function(y){
         if(y %in% names(tf_family_list) & length(intersect(tf_family_list[[y]], rownames(cluster_avg_rp))) > 1){
           tf_family_expr = cluster_avg_rp[intersect(tf_family_list[[y]], rownames(cluster_avg_rp)),x]
           tf_family_expr = tf_family_expr[which(tf_family_expr != 0.00)]
           tf_family = names(tf_family_expr)[order(tf_family_expr, decreasing=T)]
-          return(tf_family)
+          return(list(tf_family,tfList[[x]][y,2]))
         }else{
           if(!(y %in% rownames(cluster_avg_rp)) || cluster_avg_rp[y,x] == 0.00){
             return(NULL)
           }else{
-            return(y)
+            return(list(y,tfList[[x]][y,2]))
           }
         }
       })
-      tf_family_filter_dedup = unique(tf_family_filter)
-      listlen = sapply(tf_family_filter_dedup, function(xx){
+      tf_family_filter = tf_family_filter[-which(sapply(tf_family_filter,is.null))]
+      tf_family_filter_tf = sapply(tf_family_filter,function(xx){
+        return(xx[[1]])
+      })
+      tf_family_filter_score = unlist(sapply(tf_family_filter,function(xx){
+        return(xx[[2]])
+      }))
+
+      tf_family_filter_dedup_tf = tf_family_filter_tf[!duplicated(tf_family_filter_tf)]
+      tf_family_filter_dedup_score = tf_family_filter_score[!duplicated(tf_family_filter_tf)]
+      listlen = sapply(tf_family_filter_dedup_tf, function(xx){
         length(xx)
       })
-      tf_family_filter_desubset = sapply(tf_family_filter_dedup,function(xx){
-        ifsubset = sapply(tf_family_filter_dedup, function(yy){
+
+      tf_family_filter_desubset_tf = sapply(tf_family_filter_dedup_tf,function(xx){
+        ifsubset = sapply(tf_family_filter_dedup_tf, function(yy){
           all(xx %in% yy)
         })
-        return(tf_family_filter_dedup[ifsubset][[which.max(listlen[ifsubset])]])
+        return(tf_family_filter_dedup_tf[ifsubset][[which.max(listlen[ifsubset])]])
       })
-      tf_family_filter_desubset = unique(tf_family_filter_desubset)
-      tf_family_filter_desubset_str = lapply(tf_family_filter_desubset, function(xx){
+      tf_family_filter_desubset_score = sapply(tf_family_filter_dedup_tf,function(xx){
+        ifsubset = sapply(tf_family_filter_dedup_tf, function(yy){
+          all(xx %in% yy)
+        })
+        return(max(tf_family_filter_dedup_score[ifsubset]))
+      })
+
+      tf_family_filter_desubset_dedup_tf = tf_family_filter_desubset_tf[!duplicated(tf_family_filter_desubset_tf)]
+      tf_family_filter_desubset_dedup_score = tf_family_filter_desubset_score[!duplicated(tf_family_filter_desubset_tf)]
+      tf_family_filter_desubset_dedup_tf_str = lapply(tf_family_filter_desubset_dedup_tf, function(xx){
         return(paste(xx, collapse = " | "))
       })
-      return(unlist(tf_family_filter_desubset_str)[1:top.tf])
+      return(list(tf = unlist(tf_family_filter_desubset_dedup_tf_str)[1:top.tf], score = tf_family_filter_desubset_dedup_score[1:top.tf]))
     })
-    cluster_tf_df = reshape2::melt(cluster_tf_list_filter)[,2:3]
-    cluster_tf_df[,1] = as.character(cluster_tf_df[,1])
+
+    cluster_tf_list_filter_tf = cluster_tf_list_filter["tf",]
+    cluster_tf_list_filter_score = cluster_tf_list_filter["score",]
+    cluster_tf_df = reshape2::melt(cluster_tf_list_filter_tf)[,c(2,1)]
     colnames(cluster_tf_df) = c("Cluster","TF")
+    cluster_score_df = reshape2::melt(cluster_tf_list_filter_score)[,c(2,1)]
+    colnames(cluster_score_df) = c("Cluster","Gigglescore")
+    cluster_tf_df[,"log(Gigglescore)"] = log10(cluster_score_df$Gigglescore)
     
     reg_table = data.frame(Cluster=Idents(ATAC), CelltypeAnnotation=ATAC@meta.data$assign.ident)
     row.names(reg_table) = NULL
@@ -146,7 +170,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@projec
     for(icluster in colnames(cluster_tf_list_filter)){
       message(paste("Identify target genes for the top ", top.tf, " TFs for cluster ", icluster, "..."))
       targetDf <- read.table(paste0(project, ".GIGGLE/", icluster, ".peaks.bed.giggle.res.tfs.txt"), sep="\t", header = TRUE, stringsAsFactors = FALSE, quote = "")
-      tfs = cluster_tf_list_filter[,icluster]
+      tfs = cluster_tf_list_filter_tf[[icluster]]
       tfs = sapply(tfs, function(x){
         tf = unlist(strsplit(x, split = " | ", fixed = TRUE))[1]
         return(tf)
@@ -160,7 +184,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@projec
         }
       }
     }
-    tfListExpand = as.list(as.data.frame(cluster_tf_list_filter, stringsAsFactors = FALSE))
+    tfListExpand = as.list(as.data.frame(cluster_tf_list_filter_tf, stringsAsFactors = FALSE))
     return(tfListExpand)
   }
 }

@@ -6,8 +6,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
-    <link href="http://cistrome.org/~dsun/MAESTRO/css/bootstrap4.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="http://cistrome.org/~dsun/MAESTRO/css/bootstrap4.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="http://cistrome.org/~dsun/MAESTRO/css/mFilter.css">
     <title>MAESTRO</title>
 </head>
 
@@ -166,18 +167,12 @@
                                                             <th scope="col" style="vertical-align: middle">Cluster</th>
                                                             <th scope="col" style="vertical-align: middle">Celltype Annotation</th>
                                                             <th scope="col" style="vertical-align: middle">Transcription Factor</th>
+                                                            <th scope="col" style="vertical-align: middle">log10(Giggle score)</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody style="font-size: 0.9rem">
 %(regtable)s
                                                     </tbody>
-                                                    <tfoot class="tfoot">
-                                                        <tr>
-                                                            <th scope="col" style="vertical-align: middle;">Cluster</th>
-                                                            <th scope="col" style="vertical-align: middle;">Celltype Annotation</th>
-                                                            <th scope="col" style="vertical-align: middle;">Transcription Factor</th>
-                                                        </tr>
-                                                    </tfoot>
                                                 </table>
                                             </div>
                                         </div>
@@ -208,37 +203,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="http://cistrome.org/~dsun/MAESTRO/js/mFilter.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
-        $('#myTable').DataTable({
-            initComplete: function() {
-                var api = this.api();
-                api.columns([0, 1]).indexes().flatten().each(function(i) {
-                    var column = api.column(i);
-                    var select = $('<select><option value=""></option></select>')
-                        .appendTo($(column.footer()).empty())
-                        .on('change', function() {
-                            var val = $.fn.dataTable.util.escapeRegex(
-                                $(this).val()
-                            );
-                            column
-                                .search(val ? '^' + val + '$' : '', true, false)
-                                .draw();
-                        });
-                    column.data().unique().sort().each(function(d, j) {
-                        select.append('<option value="' + d + '">' + d + '</option>');
-                    });
-                });
+        $('a[data-toggle="pill"]').on('shown.bs.tab', function(e) {
+            if (!$.fn.dataTable.isDataTable("#myTable")){
+                $('#myTable').DataTable({
+                autoWidth: false,
+                dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+                     "<'row'<'col-sm-12'tr>>" + "F" +
+                     "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                columnDefs: [
+                    { "targets": 0, "width": "15%" },
+                    { "targets": 1, "width": "25%" }
+                ],
+            });
             }
         });
-    });
-    </script>
-    <script type="text/javascript">
-    $(document).ready(function() {
-        $('.js-example-basic-single').select2({
-            theme: "bootstrap"
-        });
-    });
+    }); 
     </script>
 </body>
 
