@@ -32,6 +32,7 @@
 
 ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@project.name, giggle.path, organism = "GRCh38", top.tf = 10)
 {
+  require(Seurat)
   if(organism == "GRCh38"){
       data(GRCh38.CistromeDB.genescore)
       data(human.tf.family)
@@ -185,6 +186,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@projec
       }
     }
     tfListExpand = as.list(as.data.frame(cluster_tf_list_filter_tf, stringsAsFactors = FALSE))
+    names(tfListExpand) = names(cluster_tf_list_filter_tf)
     return(tfListExpand)
   }
 }

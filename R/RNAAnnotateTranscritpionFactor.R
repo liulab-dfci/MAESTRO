@@ -119,7 +119,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, orga
     }
 
     cluster_drivertf_list <- lapply(colnames(out_fdr_max_log), function(x){
-      return(rownames(out_fdr_max_log)[order(out_fdr_max_log[,x],decreasing=T)])
+      return(data.frame(row.names = rownames(out_fdr_max_log)[order(out_fdr_max_log[,x],decreasing=T)], factor = rownames(out_fdr_max_log)[order(out_fdr_max_log[,x],decreasing=T)], score = sort(out_fdr_max_log[,x],decreasing=T), stringsAsFactors = FALSE))
     })
     names(cluster_drivertf_list) <- colnames(out_fdr_max_log)
 
@@ -128,40 +128,63 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, orga
       return(apply(GetAssayData(object = RNA)[, cluster_cell_list[[x]]], 1, mean))
     })
 
-    cluster_tf_list_filter <- sapply(names(cluster_drivertf_list), function(x){
-      tf_family_filter <- sapply(cluster_drivertf_list[[x]], function(y){
+    cluster_tf_list_filter = sapply(names(cluster_drivertf_list), function(x){
+      tf_family_filter = sapply(cluster_drivertf_list[[x]][,1], function(y){
         if(y %in% names(tf_family_list) & length(intersect(tf_family_list[[y]], rownames(cluster_avg_expr))) > 1){
-          tf_family_expr <- cluster_avg_expr[intersect(tf_family_list[[y]], rownames(cluster_avg_expr)),x]
-          tf_family_expr <- tf_family_expr[which(tf_family_expr != 0.00)]
-          tf_family <- names(tf_family_expr)[order(tf_family_expr, decreasing=T)]
-          return(tf_family)
+          tf_family_expr = cluster_avg_expr[intersect(tf_family_list[[y]], rownames(cluster_avg_expr)),x]
+          tf_family_expr = tf_family_expr[which(tf_family_expr != 0.00)]
+          tf_family = names(tf_family_expr)[order(tf_family_expr, decreasing=T)]
+          return(list(tf_family,cluster_drivertf_list[[x]][y,2]))
         }else{
           if(!(y %in% rownames(cluster_avg_expr)) || cluster_avg_expr[y,x] == 0.00){
             return(NULL)
           }else{
-            return(y)
+            return(list(y,cluster_drivertf_list[[x]][y,2]))
           }
         }
       })
-      tf_family_filter_dedup = unique(tf_family_filter)
-      listlen = sapply(tf_family_filter_dedup, function(xx){
+      tf_family_filter = tf_family_filter[-which(sapply(tf_family_filter,is.null))]
+      tf_family_filter_tf = sapply(tf_family_filter,function(xx){
+        return(xx[[1]])
+      })
+      tf_family_filter_score = unlist(sapply(tf_family_filter,function(xx){
+        return(xx[[2]])
+      }))
+
+      tf_family_filter_dedup_tf = tf_family_filter_tf[!duplicated(tf_family_filter_tf)]
+      tf_family_filter_dedup_score = tf_family_filter_score[!duplicated(tf_family_filter_tf)]
+      listlen = sapply(tf_family_filter_dedup_tf, function(xx){
         length(xx)
       })
-      tf_family_filter_desubset = sapply(tf_family_filter_dedup,function(xx){
-        ifsubset = sapply(tf_family_filter_dedup, function(yy){
+
+      tf_family_filter_desubset_tf = sapply(tf_family_filter_dedup_tf,function(xx){
+        ifsubset = sapply(tf_family_filter_dedup_tf, function(yy){
           all(xx %in% yy)
         })
-        return(tf_family_filter_dedup[ifsubset][[which.max(listlen[ifsubset])]])
+        return(tf_family_filter_dedup_tf[ifsubset][[which.max(listlen[ifsubset])]])
       })
-      tf_family_filter_desubset = unique(tf_family_filter_desubset)
-      tf_family_filter_desubset_str = lapply(tf_family_filter_desubset, function(xx){
+      tf_family_filter_desubset_score = sapply(tf_family_filter_dedup_tf,function(xx){
+        ifsubset = sapply(tf_family_filter_dedup_tf, function(yy){
+          all(xx %in% yy)
+        })
+        return(max(tf_family_filter_dedup_score[ifsubset]))
+      })
+
+      tf_family_filter_desubset_dedup_tf = tf_family_filter_desubset_tf[!duplicated(tf_family_filter_desubset_tf)]
+      tf_family_filter_desubset_dedup_score = tf_family_filter_desubset_score[!duplicated(tf_family_filter_desubset_tf)]
+      tf_family_filter_desubset_dedup_tf_str = lapply(tf_family_filter_desubset_dedup_tf, function(xx){
         return(paste(xx, collapse = " | "))
       })
-      return(unlist(tf_family_filter_desubset_str)[1:top.tf])
+      return(list(tf = unlist(tf_family_filter_desubset_dedup_tf_str)[1:top.tf], score = tf_family_filter_desubset_dedup_score[1:top.tf]))
     })
-    cluster_tf_df <- reshape2::melt(cluster_tf_list_filter)[,2:3]
-    cluster_tf_df[,1] <- as.character(cluster_tf_df[,1])
-    colnames(cluster_tf_df) <- c("Cluster","TF")
+
+    cluster_tf_list_filter_tf = cluster_tf_list_filter["tf",]
+    cluster_tf_list_filter_score = cluster_tf_list_filter["score",]
+    cluster_tf_df = reshape2::melt(cluster_tf_list_filter_tf)[,c(2,1)]
+    colnames(cluster_tf_df) = c("Cluster","TF")
+    cluster_score_df = reshape2::melt(cluster_tf_list_filter_score)[,c(2,1)]
+    colnames(cluster_score_df) = c("Cluster","log(Rabitscore)")
+    cluster_tf_df[,"log(Rabitscore)"] = cluster_score_df[, "log(Rabitscore)"]
 
     reg_table <- data.frame(Cluster=Idents(RNA), CelltypeAnnotation=RNA@meta.data$assign.ident)
     row.names(reg_table) <- NULL
@@ -170,8 +193,8 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, orga
     reg_df <- merge(reg_table_unique, cluster_tf_df)
     write.table(reg_df,paste0(project, ".PredictedTFTop", top.tf, ".txt"), col.names = TRUE, row.names = FALSE, sep = "\t", quote = FALSE)
   
-    tfList <- as.list(as.data.frame(cluster_tf_list_filter, stringsAsFactors = FALSE))
-
+    tfList <- as.list(as.data.frame(cluster_tf_list_filter_tf, stringsAsFactors = FALSE))
+    names(tfList) = names(cluster_tf_list_filter_tf)
   }else{
     message("There are no significant TFs for each cluster.")
     tfList <- NULL
