@@ -18,6 +18,9 @@ platform = sys.argv[4]
 report_html_tempfile = os.path.join(SCRIPT_PATH, "html", "scRNA_template.html")
 report_html_temp = open(report_html_tempfile, "r").read()
 
+readqualplot_link = '''"Plot/%s_scRNA_read_quality.png"'''%outpre
+nvcplot_link = '''"Plot/%s_scRNA_NVC.png"'''%outpre
+gcplot_link = '''"Plot/%s_scRNA_GCcontent.png"'''%outpre
 genecovplot_link = '''"Plot/%s_scRNA_genebody_cov.png"'''%outpre
 countgeneplot_link = '''"Plot/%s_scRNA_cell_filtering.png"'''%outpre
 genecluster_link = '''"Plot/%s_cluster.png"'''%outpre
@@ -81,7 +84,7 @@ for line in open(cluster_regulator_file,"r").readlines():
         td_list.append(items_str)
 td_str = "\n".join(td_list)
 
-report_html_instance = report_html_temp % {"totalreads":stat_list[0],"dupreads":stat_list[1],"mapreads":stat_list[2],"maptags":stat_list[3],"exontags":stat_list[4],"introntags":stat_list[5],"outprefix":outpre, "fastqdir":fastqdir, "species":species,"platform":platform, "genecov":genecovplot_link, "countgene":countgeneplot_link, "genecluster":genecluster_link, "geneannotate":geneannotate_link, "regtable":td_str}
+report_html_instance = report_html_temp % {"totalreads":stat_list[0],"dupreads":stat_list[1],"mapreads":stat_list[2],"maptags":stat_list[3],"exontags":stat_list[4],"introntags":stat_list[5],"outprefix":outpre, "fastqdir":fastqdir, "species":species,"platform":platform, "readqual":readqualplot_link, "nvc":nvcplot_link, "gc":gcplot_link, "genecov":genecovplot_link, "countgene":countgeneplot_link, "genecluster":genecluster_link, "geneannotate":geneannotate_link, "regtable":td_str}
 
 report_html_instancefile = "Result/Summary/" + outpre + "_scRNA_report.html"
 outf = open(report_html_instancefile,"w")
