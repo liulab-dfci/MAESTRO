@@ -184,7 +184,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, orga
     colnames(cluster_tf_df) = c("Cluster","TF")
     cluster_score_df = reshape2::melt(cluster_tf_list_filter_score)[,c(2,1)]
     colnames(cluster_score_df) = c("Cluster","log(Rabitscore)")
-    cluster_tf_df[,"log(Rabitscore)"] = cluster_score_df[, "log(Rabitscore)"]
+    cluster_tf_df[,"log(Rabitscore)"] = round(cluster_score_df[, "log(Rabitscore)"], 2)
 
     reg_table <- data.frame(Cluster=Idents(RNA), CelltypeAnnotation=RNA@meta.data$assign.ident)
     row.names(reg_table) <- NULL

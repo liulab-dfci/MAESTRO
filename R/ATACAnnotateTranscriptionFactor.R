@@ -159,7 +159,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@projec
     colnames(cluster_tf_df) = c("Cluster","TF")
     cluster_score_df = reshape2::melt(cluster_tf_list_filter_score)[,c(2,1)]
     colnames(cluster_score_df) = c("Cluster","Gigglescore")
-    cluster_tf_df[,"log(Gigglescore)"] = log10(cluster_score_df$Gigglescore)
+    cluster_tf_df[,"log(Gigglescore)"] = round(log10(cluster_score_df$Gigglescore), 2)
     
     reg_table = data.frame(Cluster=Idents(ATAC), CelltypeAnnotation=ATAC@meta.data$assign.ident)
     row.names(reg_table) = NULL
