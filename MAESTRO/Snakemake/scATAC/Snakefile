@@ -45,34 +45,39 @@ if config["platform"] == "microfluidic":
             "picard MarkDuplicates INPUT={input.bam} OUTPUT={output.bam} METRICS_FILE={output.metric};"
             "rm {input.bam}"
 
-    rule scatac_bamindex:
-        input:
-            bam = "Result/BWA/{fastqid}.sortedByPos.rmdp.bam"
-        output:
-            bai = "Result/BWA/{fastqid}.sortedByPos.rmdp.bam.bai"
-        shell:
-            "samtools index {input.bam}"
+    # rule scatac_bamindex:
+    #     input:
+    #         bam = "Result/BWA/{fastqid}.sortedByPos.rmdp.bam"
+    #     output:
+    #         bai = "Result/BWA/{fastqid}.sortedByPos.rmdp.bam.bai"
+    #     shell:
+    #         "samtools index {input.bam}"
 
     rule scatac_bammerge:
         input:
-            bam = expand("Result/BWA/{fastqid}.sortedByPos.rmdp.bam", fastqid = get_fastqlist(config["fastqdir"])),
-            bai = expand("Result/BWA/{fastqid}.sortedByPos.rmdp.bam.bai", fastqid = get_fastqlist(config["fastqdir"]))
+            bam = expand("Result/BWA/{fastqid}.sortedByPos.rmdp.bam", fastqid = get_fastqlist(config["fastqdir"]))
         output:
             bam = "Result/BWA/" + config["outprefix"] + ".merged.sortedByPos.rmdp.bam",
             bamlist = "Result/BWA/" + config["outprefix"] + "_bamlist.txt",
             fragbed = "Result/QC/" + config["outprefix"] + "_frag.bed"
         params:
-            sam = "Result/BWA/" + config["outprefix"] + ".merged.sortedByPos.rmdp.sam"
+            sam = "Result/BWA/" + config["outprefix"] + ".merged.sortedByPos.rmdp.sam",
+            bamprefix = "Result/BWA/" + config["outprefix"] + "_bamlist_",
+            subprefix = "Result/BWA/" + config["outprefix"]
         threads:
             config["cores"]
         shell:
             "ls Result/BWA/*.sortedByPos.rmdp.bam > {output.bamlist};"
-            "samtools merge --threads {threads} {output.bam} -b {output.bamlist};"
+            "split -1000 -d {output.bamlist} {params.bamprefix};"
+            "for file in $(ls {params.bamprefix}*); do sub=${{file#{params.bamprefix}}};"
+            "samtools merge --threads {threads} {params.subprefix}.${{sub}}.sortedByPos.rmdp.bam -b ${{file}}; done;"
+            "samtools merge --threads {threads} {output.bam} {params.subprefix}.*.sortedByPos.rmdp.bam;"
+            "rm {params.subprefix}.[0-9]*.sortedByPos.rmdp.bam;"
             "samtools view {output.bam} > {params.sam};"
             "head -n 10000000 {params.sam} | awk '{{if ($9>0) print $9}}' > {output.fragbed};"
             "rm {params.sam};"
 
-    rule scatac_qcstat:
+    rule scatac_single_qcstat:
         input:
             bam = "Result/BWA/{fastqid}.sortedByPos.rmdp.bam",
             promoter = SCRIPT_PATH + "/annotations/" + config["species"] + "_promoter.bed",
@@ -87,12 +92,28 @@ if config["platform"] == "microfluidic":
             "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | wc -l >> {output.log};"
             "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.log}"
 
+    rule scatac_bulk_qcstat:
+        input:
+            bam = "Result/BWA/" + config["outprefix"] + ".merged.sortedByPos.rmdp.bam",
+            promoter = SCRIPT_PATH + "/annotations/" + config["species"] + "_promoter.bed",
+            chrM = SCRIPT_PATH + "/annotations/" + config["species"] + "_chrM.bed"
+        output:
+            bulkqc = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
+            bed = "Result/BWA/" + config["outprefix"] + ".merged.sortedByPos.rmdp.bed",
+        shell:
+            "samtools flagstat {input.bam} > {output.bulkqc};"
+            "bamToBed -i {input.bam} > {output.bed};"
+            "intersectBed -wa -a {output.bed} -b {input.chrM} -u | wc -l >> {output.bulkqc};"
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | wc -l >> {output.bulkqc};"
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.bulkqc}"
+
     rule scatac_qcplot:
         input:
             log = expand("Result/Log/bamLog/{fastqid}.mapping.log", fastqid = get_fastqlist(config["fastqdir"])),
-            fragbed = "Result/QC/" + config["outprefix"] + "_frag.bed"
+            fragbed = "Result/QC/" + config["outprefix"] + "_frag.bed",
         output:
             stat = "Result/QC/singlecell.txt",
+            qcmapall = "Result/QC/" + config["outprefix"] + "_scATAC_mapping_summary.txt",
             qcfrag = "Result/QC/" + config["outprefix"] + "_scATAC_fragment_size.png",
             qcmap = "Result/QC/" + config["outprefix"] + "_scATAC_mapping_summary.png",
             qcfrip = "Result/QC/" + config["outprefix"] + "_scATAC_cell_filtering.png",
@@ -214,36 +235,6 @@ if config["platform"] == "microfluidic":
             bamdir = "Result/BWA"
         shell:
             "python " + SCRIPT_PATH + "/scATAC_microfluidic_count.py {input.finalpeak} {input.validbarcode} {params.bamdir} {output.count} {threads}"
-
-    rule scatac_genescore:
-        input:
-            count = "Result/Analysis/" + config["outprefix"] + "_peak_count.txt"
-        output:
-            genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.txt"
-        params:
-            genedistance = config["genedistance"],
-            genebed = SCRIPT_PATH + "/annotations/" + config["species"] +"_ensembl.bed",
-        threads:
-            config["cores"]
-        shell:
-            "python " + SCRIPT_PATH + "/scATAC_genescore.py {input.count} {output.genescore} {params.genedistance} {params.genebed} {threads}"
-
-    rule scatac_analysis:
-        input:
-            count = "Result/Analysis/" + config["outprefix"] + "_peak_count.txt",
-            genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.txt"
-        output:
-            specificpeak = "Result/Analysis/" + config["outprefix"] + "_DiffPeaks.tsv",
-            clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
-            annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
-        params:
-            count = config["outprefix"] + "_peak_count.txt",
-            outdir = "Result/Analysis",
-            genescore = config["outprefix"] + "_genescore.txt",
-            outpre = config["outprefix"],
-            giggleannotation = config["giggleannotation"]
-        shell:
-            "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R {params.count} {params.genescore} {params.giggleannotation} {params.outpre} {params.outdir}"
             
 if config["platform"] == "10x-genomics":
     rule scatac_cellranger:
@@ -269,6 +260,21 @@ if config["platform"] == "10x-genomics":
             ">> {log};"
             "cp -fr {params.sourceoutdir} {params.destoutdir};"
             "rm -r {params.sourceoutdir};"
+
+    rule scatac_bulk_qcstat:
+        input:
+            bam = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_bam.bam",
+            promoter = SCRIPT_PATH + "/annotations/" + config["species"] + "_promoter.bed",
+            chrM = SCRIPT_PATH + "/annotations/" + config["species"] + "_chrM.bed"
+        output:
+            bulkqc = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
+            bed = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_bam.bed",
+        shell:
+            "samtools flagstat {input.bam} > {output.bulkqc};"
+            "bamToBed -i {input.bam} > {output.bed};"
+            "intersectBed -wa -a {output.bed} -b {input.chrM} -u | wc -l >> {output.bulkqc};"
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | wc -l >> {output.bulkqc};"
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.bulkqc}"
    
     rule scatac_qcplot:
         input:
@@ -402,36 +408,6 @@ if config["platform"] == "10x-genomics":
             "gzip -d {input.frag};"
             "python " + SCRIPT_PATH + "/scATAC_cellranger_count.py {input.finalpeak} {input.validbarcode} {params.frag} {output.count} {threads}"
 
-    rule scatac_genescore:
-        input:
-            count = "Result/Analysis/" + config["outprefix"] + "_peak_count.txt"
-        output:
-            genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.txt"
-        params:
-            genedistance = config["genedistance"],
-            genebed = SCRIPT_PATH + "/annotations/" + config["species"] +"_ensembl.bed",
-        threads:
-            config["cores"]
-        shell:
-            "python " + SCRIPT_PATH + "/scATAC_genescore.py {input.count} {output.genescore} {params.genedistance} {params.genebed} {threads}"
-
-    rule scatac_analysis:
-        input:
-            count = "Result/Analysis/" + config["outprefix"] + "_peak_count.txt",
-            genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.txt"
-        output:
-            specificpeak = "Result/Analysis/" + config["outprefix"] + "_DiffPeaks.tsv",
-            clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
-            annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
-        params:
-            outdir = "Result/Analysis",
-            genescore = config["outprefix"] + "_genescore.txt",
-            outpre = config["outprefix"],
-            count = config["outprefix"] + "_peak_count.txt",
-            giggleannotation = config["giggleannotation"]
-        shell:
-            "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R {params.count} {params.genescore} {params.giggleannotation} {params.outpre} {params.outdir}"
-
 if config["platform"] == "sci-ATAC-seq":
     rule scatac_map:
         input:
@@ -474,7 +450,7 @@ if config["platform"] == "sci-ATAC-seq":
         shell:
             "python " + SCRIPT_PATH + "/scATAC_sci_split.py -S {input.bam} -P {threads} -B {input.barcodelib}"
 
-    rule scatac_qcstat:
+    rule scatac_single_qcstat:
         input:
             sam = "Result/BWA/Split/{barcodeid}.sam",
             promoter = SCRIPT_PATH + "/annotations/" + config["species"] + "_promoter.bed",
@@ -491,10 +467,25 @@ if config["platform"] == "sci-ATAC-seq":
             "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | wc -l >> {output.log};"
             "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.log}"
 
+    rule scatac_bulk_qcstat:
+        input:
+            bam = "Result/BWA/" + config["outprefix"] + ".sortedByPos.rmdp.bam",
+            promoter = SCRIPT_PATH + "/annotations/" + config["species"] + "_promoter.bed",
+            chrM = SCRIPT_PATH + "/annotations/" + config["species"] + "_chrM.bed"
+        output:
+            bulkqc = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
+            bed = "Result/BWA/" + config["outprefix"] + ".sortedByPos.rmdp.ced",
+        shell:
+            "samtools flagstat {input.bam} > {output.bulkqc};"
+            "bamToBed -i {input.bam} > {output.bed};"
+            "intersectBed -wa -a {output.bed} -b {input.chrM} -u | wc -l >> {output.bulkqc};"
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | wc -l >> {output.bulkqc};"
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.bulkqc}"
+
     rule scatac_qcplot:
         input:
             log = qcplot_input,
-            fragbed = "Result/QC/" + config["outprefix"] + "_frag.bed"
+            fragbed = "Result/QC/" + config["outprefix"] + "_frag.bed",
         output:
             stat = "Result/QC/singlecell.txt",
             qcfrag = "Result/QC/" + config["outprefix"] + "_scATAC_fragment_size.png",
@@ -619,38 +610,40 @@ if config["platform"] == "sci-ATAC-seq":
         shell:
             "python " + SCRIPT_PATH + "/scATAC_microfluidic_count.py {input.finalpeak} {input.validbarcode} {params.bamdir} {output.count} {threads}"
 
-    rule scatac_genescore:
-        input:
-            count = "Result/Analysis/" + config["outprefix"] + "_peak_count.txt"
-        output:
-            genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.txt"
-        params:
-            genedistance = config["genedistance"],
-            genebed = SCRIPT_PATH + "/annotations/" + config["species"] +"_ensembl.bed",
-        threads:
-            config["cores"]
-        shell:
-            "python " + SCRIPT_PATH + "/scATAC_genescore.py {input.count} {output.genescore} {params.genedistance} {params.genebed} {threads}"
+rule scatac_genescore:
+    input:
+        count = "Result/Analysis/" + config["outprefix"] + "_peak_count.txt"
+    output:
+        genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.txt"
+    params:
+        genedistance = config["genedistance"],
+        genebed = SCRIPT_PATH + "/annotations/" + config["species"] +"_ensembl.bed",
+    threads:
+        config["cores"]
+    shell:
+        "python " + SCRIPT_PATH + "/scATAC_genescore.py {input.count} {output.genescore} {params.genedistance} {params.genebed} {threads}"
 
-    rule scatac_analysis:
-        input:
-            count = "Result/Analysis/" + config["outprefix"] + "_peak_count.txt",
-            genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.txt"
-        output:
-            specificpeak = "Result/Analysis/" + config["outprefix"] + "_DiffPeaks.tsv",
-            clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
-            annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
-        params:
-            count = config["outprefix"] + "_peak_count.txt",
-            outdir = "Result/Analysis",
-            genescore = config["outprefix"] + "_genescore.txt",
-            outpre = config["outprefix"],
-            giggleannotation = config["giggleannotation"]
-        shell:
-            "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R {params.count} {params.genescore} {params.giggleannotation} {params.outpre} {params.outdir}"
+rule scatac_analysis:
+    input:
+        count = "Result/Analysis/" + config["outprefix"] + "_peak_count.txt",
+        genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.txt"
+    output:
+        specificpeak = "Result/Analysis/" + config["outprefix"] + "_DiffPeaks.tsv",
+        clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
+        annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
+    params:
+        outdir = "Result/Analysis",
+        genescore = config["outprefix"] + "_genescore.txt",
+        outpre = config["outprefix"],
+        count = config["outprefix"] + "_peak_count.txt",
+        giggleannotation = config["giggleannotation"],
+        species = config["species"]
+    shell:
+        "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R {params.count} {params.genescore} {params.species} {params.giggleannotation} {params.outpre} {params.outdir}"
 
 rule scatac_report:
     input:
+        bulkqc = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
         qcmap = "Result/QC/" + config["outprefix"] + "_scATAC_mapping_summary.png",
         qcfrag = "Result/QC/" + config["outprefix"] + "_scATAC_fragment_size.png",
         qcfrip = "Result/QC/" + config["outprefix"] + "_scATAC_cell_filtering.png",

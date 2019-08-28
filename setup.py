@@ -50,7 +50,7 @@ def main():
         version = "0.0.1",
         package_dir = {'MAESTRO':'MAESTRO'},
         packages = ['MAESTRO'],
-        package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'R/*', 'env/*', 'annotations/*', '']},
+        package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'R/*', 'env/*', 'annotations/*', 'html/*', '']},
         scripts = ['MAESTRO/MAESTRO'],
         include_package_data = True,
         

@@ -53,35 +53,98 @@ if config["platform"] == "10x-genomics":
         shell:
             "python " + SCRIPT_PATH + "/scRNA_qc.py {input.rawh5} {params.platform} {params.outpre} {params.outdir}"
 
-    rule scrna_rseqc:
+    rule scrna_samplebam:
+        input:
+            bam = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_genome_bam.bam",
+        output:
+            bamsample = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_genome_bam_sample.bam"
+        threads:
+            config["cores"]
+        shell:
+            "samtools view -@ {threads} -s 0.1 -b -o {output.bamsample} {input.bam};"
+            "samtools index -@ {threads} {output.bamsample}"
+
+    rule scrna_rseqc_readqual:
+        input:
+            bamsample = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_genome_bam_sample.bam"
+        output:
+            qual = "Result/QC/" + config["outprefix"] + ".qual.r"
+        params:
+            outdirpre = "Result/QC/" + config["outprefix"]
+        shell:
+            "read_quality.py -i {input.bamsample} -o {params.outdirpre}"
+
+    rule scrna_rseqc_nvc:
+        input:
+            bamsample = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_genome_bam_sample.bam"
+        output:
+            nvc = "Result/QC/" + config["outprefix"] + ".NVC.xls"
+        params:
+            outdirpre = "Result/QC/" + config["outprefix"]
+        shell:
+            "read_NVC.py -i {input.bamsample} -o {params.outdirpre}"
+
+    rule scrna_rseqc_gc:
+        input:
+            bam = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_genome_bam.bam"
+        output:
+            gc = "Result/QC/" + config["outprefix"] + ".GC.xls"
+        params:
+            outdirpre = "Result/QC/" + config["outprefix"]
+        shell:
+            "read_GC.py -i {input.bam} -o {params.outdirpre}"
+
+    rule scrna_rseqc_bamstat:
+        input:
+            bam = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_genome_bam.bam"
+        output:
+            stat = "Result/QC/" + config["outprefix"] + "_bam_stat.txt"
+        shell:
+            "bam_stat.py -i {input.bam} > {output.stat};"
+
+    rule scrna_rseqc_distr:
         input:
             bam = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_genome_bam.bam",
             genome = SCRIPT_PATH + "/annotations/" + config["species"] + "_RefSeq.bed",
+        output:
+            distr = "Result/QC/" + config["outprefix"] + "_read_distribution.txt"
+        shell:
+            "read_distribution.py -i {input.bam} -r {input.genome} > {output.distr}"
+
+    rule scrna_rseqc_genecov:
+        input:
+            bamsample = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_genome_bam_sample.bam",
             hkgene = SCRIPT_PATH + "/annotations/" + config["species"] + "_HouseKeepingGenes.bed",
+        output:
+            genecov = "Result/QC/" + config["outprefix"] + ".geneBodyCoverage.txt"
+        params:
+            outdirpre = "Result/QC/" + config["outprefix"]
+        shell:
+            "geneBody_coverage.py -r {input.hkgene} -i {input.bamsample} -o {params.outdirpre}"
+
+    rule scrna_rseqc_plot:
+        input:
+            qual = "Result/QC/" + config["outprefix"] + ".qual.r",
+            nvc = "Result/QC/" + config["outprefix"] + ".NVC.xls",
+            gc = "Result/QC/" + config["outprefix"] + ".GC.xls",
+            genecov = "Result/QC/" + config["outprefix"] + ".geneBodyCoverage.txt",
             countgene = "Result/QC/" + config["outprefix"] + "_count_gene_stat.txt"
         output:
-            stat = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
-            distr = "Result/QC/" + config["outprefix"] + "_read_distribution.txt",
-            genecov = "Result/QC/" + config["outprefix"] + ".geneBodyCoverage.txt",
+            qualplot = "Result/QC/" + config["outprefix"] + "_scRNA_read_quality.png",
+            nvcplot = "Result/QC/" + config["outprefix"] + "_scRNA_NVC.png",
+            gcplot = "Result/QC/" + config["outprefix"] + "_scRNA_GCcontent.png",
             genecovplot = "Result/QC/" + config["outprefix"] + "_scRNA_genebody_cov.png",
             rnafilterplot = "Result/QC/" + config["outprefix"] + "_scRNA_cell_filtering.png",
         params:
-            # dup = "Result/QC/" + config["outprefix"] + "_dup",
-            # qual = "Result/QC/" + config["outprefix"] + "_qual",
-            outdirpre = "Result/QC/" + config["outprefix"],
             outpre = config["outprefix"],
             outdir = "Result/QC",
-            stat = config["outprefix"] + "_bam_stat.txt",
-            distr = config["outprefix"] + "_read_distribution.txt",
+            qual = config["outprefix"] + ".qual.r",
+            nvc = config["outprefix"] + ".NVC.xls",
+            gc = config["outprefix"] + ".GC.xls",
             genecov = config["outprefix"] + ".geneBodyCoverage.txt",
             countgene = config["outprefix"] + "_count_gene_stat.txt"
         shell:
-            "bam_stat.py -i {input.bam} > {output.stat};"
-            # "read_duplication.py -i {input.bam} -o {params.dup};"
-            # "read_quality.py -i {input.bam} -o {params.qual};"
-            "read_distribution.py -i {input.bam} -r {input.genome} > {output.distr};"
-            "geneBody_coverage.py -r {input.hkgene} -i {input.bam} -o {params.outdirpre};"
-            "Rscript " + RSCRIPT_PATH + "/scRNAseq_qc.R {params.genecov} {params.countgene} {params.outpre} {params.outdir}"
+            "Rscript " + RSCRIPT_PATH + "/scRNAseq_qc.R {params.qual} {params.nvc} {params.gc} {params.genecov} {params.countgene} {params.outpre} {params.outdir}"
 
     rule scrna_analysis:
         input:
@@ -166,36 +229,101 @@ if config["platform"] == "Dropseq":
         shell:
             "python " + SCRIPT_PATH + "/scRNA_qc.py {input.expression} {params.platform} {params.outpre} {params.outdir}"
 
-    rule scrna_rseqc:
+    rule scrna_samplebam:
+        input:
+            bam = "Result/Drseq/" + config["outprefix"] + "/mapping/" + config["outprefix"] + "_possorted.bam",
+        output:
+            bamsample = "Result/Drseq/" + config["outprefix"] + "/mapping/" + config["outprefix"] + "_possorted_sample.bam",
+        threads:
+            config["cores"]
+        shell:
+            "samtools view -@ {threads} -s 0.1 -b -o {output.bamsample} {input.bam};"
+            "samtools index -@ {threads} {output.bamsample}"
+
+    rule scrna_rseqc_readqual:
+        input:
+            bamsample = "Result/Drseq/" + config["outprefix"] + "/mapping/" + config["outprefix"] + "_possorted_sample.bam",
+        output:
+            qual = "Result/QC/" + config["outprefix"] + ".qual.r"
+        params:
+            outdirpre = "Result/QC/" + config["outprefix"]
+        shell:
+            "read_quality.py -i {input.bamsample} -o {params.outdirpre}"
+
+    rule scrna_rseqc_nvc:
+        input:
+            bamsample = "Result/Drseq/" + config["outprefix"] + "/mapping/" + config["outprefix"] + "_possorted_sample.bam",
+        output:
+            nvc = "Result/QC/" + config["outprefix"] + ".NVC.xls"
+        params:
+            outdirpre = "Result/QC/" + config["outprefix"]
+        shell:
+            "read_NVC.py -i {input.bamsample} -o {params.outdirpre}"
+
+    rule scrna_rseqc_gc:
+        input:
+            bam = "Result/Drseq/" + config["outprefix"] + "/mapping/" + config["outprefix"] + "_possorted.bam",
+            bai = "Result/Drseq/" + config["outprefix"] + "/mapping/" + config["outprefix"] + "_possorted.bam.bai",
+        output:
+            gc = "Result/QC/" + config["outprefix"] + ".GC.xls"
+        params:
+            outdirpre = "Result/QC/" + config["outprefix"]
+        shell:
+            "read_GC.py -i {input.bam} -o {params.outdirpre}"
+
+    rule scrna_rseqc_bamstat:
+        input:
+            bam = "Result/Drseq/" + config["outprefix"] + "/mapping/" + config["outprefix"] + "_possorted.bam",
+            bai = "Result/Drseq/" + config["outprefix"] + "/mapping/" + config["outprefix"] + "_possorted.bam.bai",
+        output:
+            stat = "Result/QC/" + config["outprefix"] + "_bam_stat.txt"
+        shell:
+            "bam_stat.py -i {input.bam} > {output.stat};"
+
+    rule scrna_rseqc_distr:
         input:
             bam = "Result/Drseq/" + config["outprefix"] + "/mapping/" + config["outprefix"] + "_possorted.bam",
             bai = "Result/Drseq/" + config["outprefix"] + "/mapping/" + config["outprefix"] + "_possorted.bam.bai",
             genome = SCRIPT_PATH + "/annotations/" + config["species"] + "_RefSeq.bed",
+        output:
+            distr = "Result/QC/" + config["outprefix"] + "_read_distribution.txt"
+        shell:
+            "read_distribution.py -i {input.bam} -r {input.genome} > {output.distr}"
+
+    rule scrna_rseqc_genecov:
+        input:
+            bamsample = "Result/Drseq/" + config["outprefix"] + "/mapping/" + config["outprefix"] + "_possorted_sample.bam",
             hkgene = SCRIPT_PATH + "/annotations/" + config["species"] + "_HouseKeepingGenes.bed",
+        output:
+            genecov = "Result/QC/" + config["outprefix"] + ".geneBodyCoverage.txt"
+        params:
+            outdirpre = "Result/QC/" + config["outprefix"]
+        shell:
+            "geneBody_coverage.py -r {input.hkgene} -i {input.bamsample} -o {params.outdirpre}"
+
+    rule scrna_rseqc_plot:
+        input:
+            qual = "Result/QC/" + config["outprefix"] + ".qual.r",
+            nvc = "Result/QC/" + config["outprefix"] + ".NVC.xls",
+            gc = "Result/QC/" + config["outprefix"] + ".GC.xls",
+            genecov = "Result/QC/" + config["outprefix"] + ".geneBodyCoverage.txt",
             countgene = "Result/QC/" + config["outprefix"] + "_count_gene_stat.txt"
         output:
-            stat = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
-            distr = "Result/QC/" + config["outprefix"] + "_read_distribution.txt",
-            genecov = "Result/QC/" + config["outprefix"] + ".geneBodyCoverage.txt",
+            qualplot = "Result/QC/" + config["outprefix"] + "_scRNA_read_quality.png",
+            nvcplot = "Result/QC/" + config["outprefix"] + "_scRNA_NVC.png",
+            gcplot = "Result/QC/" + config["outprefix"] + "_scRNA_GCcontent.png",
             genecovplot = "Result/QC/" + config["outprefix"] + "_scRNA_genebody_cov.png",
             rnafilterplot = "Result/QC/" + config["outprefix"] + "_scRNA_cell_filtering.png",
         params:
-            # dup = "Result/QC/" + config["outprefix"] + "_dup",
-            # qual = "Result/QC/" + config["outprefix"] + "_qual",
             outpre = config["outprefix"],
-            outdirpre = "Result/QC/" + config["outprefix"],
             outdir = "Result/QC",
-            stat = config["outprefix"] + "_bam_stat.txt",
-            distr = config["outprefix"] + "_read_distribution.txt",
+            qual = config["outprefix"] + ".qual.r",
+            nvc = config["outprefix"] + ".NVC.xls",
+            gc = config["outprefix"] + ".GC.xls",
             genecov = config["outprefix"] + ".geneBodyCoverage.txt",
             countgene = config["outprefix"] + "_count_gene_stat.txt"
         shell:
-            "bam_stat.py -i {input.bam} > {output.stat};"
-            # "read_duplication.py -i {input.bam} -o {params.dup};"
-            # "read_quality.py -i {input.bam} -o {params.qual};"
-            "read_distribution.py -i {input.bam} -r {input.genome} > {output.distr};"
-            "geneBody_coverage.py -r {input.hkgene} -i {input.bam} -o {params.outdirpre};"
-            "Rscript " + RSCRIPT_PATH + "/scRNAseq_qc.R {params.genecov} {params.countgene} {params.outpre} {params.outdir}"
+            "Rscript " + RSCRIPT_PATH + "/scRNAseq_qc.R {params.qual} {params.nvc} {params.gc} {params.genecov} {params.countgene} {params.outpre} {params.outdir}"
     
     rule scrna_analysis:
         input:
@@ -220,7 +348,8 @@ if config["platform"] == "Smartseq2":
             fastq1 = config["fastqdir"] + "/{fastqid}_1.fastq",
             fastq2 = config["fastqdir"] + "/{fastqid}_2.fastq"
         output:
-            "Result/Mapping/{fastqid}Aligned.sortedByCoord.out.bam"
+            genomebam = "Result/Mapping/{fastqid}Aligned.sortedByCoord.out.bam",
+            transbam = "Result/Mapping/{fastqid}Aligned.toTranscriptome.out.bam"
         params:
             outdir = "Result/Mapping/{fastqid}"
         log:
@@ -229,7 +358,7 @@ if config["platform"] == "Smartseq2":
             config["cores"]
         shell:
             "STAR --genomeDir {input.mapindex} --runThreadN {threads} "
-            "--outFilterMultimapNmax 500 --outFilterMismatchNmax 3 "
+            "--outFilterMultimapNmax 500 --outFilterMismatchNmax 3 --quantMode TranscriptomeSAM "
             "--outFileNamePrefix {params.outdir} --outSAMtype BAM SortedByCoordinate "
             "--readFilesIn {input.fastq1} {input.fastq2} "
             ">> {log}"
@@ -244,33 +373,59 @@ if config["platform"] == "Smartseq2":
     #     shell:
     #         "samtools sort {input.bam} -o {output.bam} --threads {threads}"
 
-    rule scrna_assambly:
+    rule scrna_rsem_expre:
         input:
-            genome = config["genome"]["gtf"],
-            bam = "Result/Mapping/{fastqid}Aligned.sortedByCoord.out.bam"
+            transbam = "Result/Mapping/{fastqid}Aligned.toTranscriptome.out.bam"
         output:
-            gtf = "Result/Count/{fastqid}/{fastqid}.gtf"
+            generesult = "Result/Mapping/{fastqid}.genes.results"
+        params:
+            reference = config["genome"]["rsem"],
+            sample = "Result/Mapping/{fastqid}"
         log:
-            "Result/Log/{fastqid}_StringTie_assembly.log"
+            "Result/Log/{fastqid}_RSEM_map.log"
+        threads:
+            config["cores"]
         shell:
-            "stringtie {input.bam} -e -B -p 8 "
-            "-G {input.genome} -o {output.gtf} "
+            "rsem-calculate-expression -p {threads} --paired-end --bam "
+            "--estimate-rspd --append-names {input.transbam} "
+            "{params.reference} {params.sample} "
             ">> {log}"
 
-    rule scrna_gtf2matrix:
+    rule scrna_rsem_count:
         input:
-            gtfdir = expand("Result/Count/{fastqid}/{fastqid}.gtf", fastqid = get_fastqlist(config["fastqdir"]))
-        params:
-            gtfdir = "Result/Count/"
+            generesult = expand("Result/Mapping/{fastqid}.genes.results", fastqid = get_fastqlist(config["fastqdir"]))
         output:
-            gene = "Result/Count/" + config["outprefix"] + "_gene_count_matrix.csv",
-            transcript = "Result/Count/" + config["outprefix"] + "_transcript_count_matrix.csv"
+            expression = "Result/Count/" + config["outprefix"] + "_gene_count_matrix.txt"
         shell:
-            "prepDE.py -i {params.gtfdir} -g {output.gene} -t {output.transcript}"
+            "rsem-generate-data-matrix {input.generesult} > {output.expression}"
+
+    # rule scrna_assambly:
+    #     input:
+    #         genome = config["genome"]["gtf"],
+    #         bam = "Result/Mapping/{fastqid}Aligned.sortedByCoord.out.bam"
+    #     output:
+    #         gtf = "Result/Count/{fastqid}/{fastqid}.gtf"
+    #     log:
+    #         "Result/Log/{fastqid}_StringTie_assembly.log"
+    #     shell:
+    #         "stringtie {input.bam} -e -B -p 8 "
+    #         "-G {input.genome} -o {output.gtf} "
+    #         ">> {log}"
+
+    # rule scrna_gtf2matrix:
+    #     input:
+    #         gtfdir = expand("Result/Count/{fastqid}/{fastqid}.gtf", fastqid = get_fastqlist(config["fastqdir"]))
+    #     params:
+    #         gtfdir = "Result/Count/"
+    #     output:
+    #         gene = "Result/Count/" + config["outprefix"] + "_gene_count_matrix.csv",
+    #         transcript = "Result/Count/" + config["outprefix"] + "_transcript_count_matrix.csv"
+    #     shell:
+    #         "prepDE.py -i {params.gtfdir} -g {output.gene} -t {output.transcript}"
 
     rule scrna_qc:
         input:
-            expression = "Result/Count/" + config["outprefix"] + "_gene_count_matrix.csv",
+            expression = "Result/Count/" + config["outprefix"] + "_gene_count_matrix.txt",
         output:
             countgene = "Result/QC/" + config["outprefix"] + "_count_gene_stat.txt",
             filtermatrix = "Result/QC/" + config["outprefix"] + "_filtered_gene_count_matrix.txt"
@@ -293,53 +448,151 @@ if config["platform"] == "Smartseq2":
 
     rule scrna_bammerge:
         input:
-            bam = expand("Result/Mapping/{fastqid}Aligned.sortedByCoord.out.bam", fastqid = get_fastqlist(config["fastqdir"]))
-        params:
-            bam_dir = "Result/Mapping/",
-            bam = expand("Result/Mapping/{fastqid}Aligned.sortedByCoord.out.bam", fastqid = get_fastqlist(config["fastqdir"]))
+            genomebam = expand("Result/Mapping/{fastqid}Aligned.sortedByCoord.out.bam", fastqid = get_fastqlist(config["fastqdir"]))
         output:
             bam = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.bam",
-            bai = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.bam.bai"
+            bai = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.bam.bai",
+            bamlist = "Result/Mapping/" + config["outprefix"] + "_bamlist.txt",
+        params:
+            bamprefix = "Result/Mapping/" + config["outprefix"] + "_bamlist_",
+            subprefix = "Result/Mapping/" + config["outprefix"]
         threads:
             config["cores"]
         shell:
-            "ls {params.bam_dir}*Aligned.sortedByCoord.out.bam > {params.bam_dir}bam_list.txt;"
-            "bam=$(cat {params.bam_dir}bam_list.txt);"
-            "bam_num=$(ls {params.bam_dir}*Aligned.sortedByCoord.out.bam | wc -l);"
-            "ulimit -n $(($bam_num+20));"
-            "samtools merge --threads {threads} {output.bam} $bam;"
+            "ls Result/Mapping/*Aligned.sortedByCoord.out.bam > {output.bamlist};"
+            "split -1000 -d {output.bamlist} {params.bamprefix};"
+            "for file in $(ls {params.bamprefix}*); do sub=${{file#{params.bamprefix}}};"
+            "samtools merge --threads {threads} {params.subprefix}.${{sub}}.Aligned.sortedByCoord.out.bam -b ${{file}}; done;"
+            "samtools merge --threads {threads} {output.bam} {params.subprefix}.*.Aligned.sortedByCoord.out.bam;"
+            "rm {params.subprefix}.[0-9]*.Aligned.sortedByCoord.out.bam;"
             "samtools index -b -@ {threads} {output.bam}"
    
-    rule scrna_rseqc:
+    # rule scrna_rseqc:
+    #     input:
+    #         bam = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.bam",
+    #         bai = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.bam.bai",
+    #         genome = SCRIPT_PATH + "/annotations/" + config["species"] + "_RefSeq.bed",
+    #         hkgene = SCRIPT_PATH + "/annotations/" + config["species"] + "_HouseKeepingGenes.bed",
+    #         countgene = "Result/QC/" + config["outprefix"] + "_count_gene_stat.txt"
+    #     output:
+    #         stat = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
+    #         distr = "Result/QC/" + config["outprefix"] + "_read_distribution.txt",
+    #         genecov = "Result/QC/" + config["outprefix"] + ".geneBodyCoverage.txt",
+    #         genecovplot = "Result/QC/" + config["outprefix"] + "_scRNA_genebody_cov.png",
+    #         rnafilterplot = "Result/QC/" + config["outprefix"] + "_scRNA_cell_filtering.png",
+    #     params:
+    #         # dup = "Result/QC/" + config["outprefix"] + "_dup",
+    #         # qual = "Result/QC/" + config["outprefix"] + "_qual",
+    #         outdirpre = "Result/QC/" + config["outprefix"],
+    #         outpre = config["outprefix"],
+    #         outdir = "Result/QC",
+    #         stat = config["outprefix"] + "_bam_stat.txt",
+    #         distr = config["outprefix"] + "_read_distribution.txt",
+    #         genecov = config["outprefix"] + ".geneBodyCoverage.txt",
+    #         countgene = config["outprefix"] + "_count_gene_stat.txt"
+    #     shell:
+    #         "bam_stat.py -i {input.bam} > {output.stat};"
+    #         # "read_duplication.py -i {input.bam} -o {params.dup};"
+    #         # "read_quality.py -i {input.bam} -o {params.qual};"
+    #         "read_distribution.py -i {input.bam} -r {input.genome} > {output.distr};"
+    #         "geneBody_coverage.py -r {input.hkgene} -i {input.bam} -o {params.outdirpre};"
+    #         "Rscript " + RSCRIPT_PATH + "/scRNAseq_qc.R {params.genecov} {params.countgene} {params.outpre} {params.outdir}"
+
+    rule scrna_samplebam:
+        input:
+            bam = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.bam",
+        output:
+            bamsample = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.sample.bam",
+        threads:
+            config["cores"]
+        shell:
+            "samtools view -@ {threads} -s 0.1 -b -o {output.bamsample} {input.bam};"
+            "samtools index -@ {threads} {output.bamsample}"
+
+    rule scrna_rseqc_readqual:
+        input:
+            bamsample = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.sample.bam",
+        output:
+            qual = "Result/QC/" + config["outprefix"] + ".qual.r"
+        params:
+            outdirpre = "Result/QC/" + config["outprefix"]
+        shell:
+            "read_quality.py -i {input.bamsample} -o {params.outdirpre}"
+
+    rule scrna_rseqc_nvc:
+        input:
+            bamsample = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.sample.bam",
+        output:
+            nvc = "Result/QC/" + config["outprefix"] + ".NVC.xls"
+        params:
+            outdirpre = "Result/QC/" + config["outprefix"]
+        shell:
+            "read_NVC.py -i {input.bamsample} -o {params.outdirpre}"
+
+    rule scrna_rseqc_gc:
+        input:
+            bam = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.bam",
+            bai = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.bam.bai",
+        output:
+            gc = "Result/QC/" + config["outprefix"] + ".GC.xls"
+        params:
+            outdirpre = "Result/QC/" + config["outprefix"]
+        shell:
+            "read_GC.py -i {input.bam} -o {params.outdirpre}"
+
+    rule scrna_rseqc_bamstat:
+        input:
+            bam = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.bam",
+            bai = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.bam.bai",
+        output:
+            stat = "Result/QC/" + config["outprefix"] + "_bam_stat.txt"
+        shell:
+            "bam_stat.py -i {input.bam} > {output.stat};"
+
+    rule scrna_rseqc_distr:
         input:
             bam = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.bam",
             bai = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.bam.bai",
             genome = SCRIPT_PATH + "/annotations/" + config["species"] + "_RefSeq.bed",
+        output:
+            distr = "Result/QC/" + config["outprefix"] + "_read_distribution.txt"
+        shell:
+            "read_distribution.py -i {input.bam} -r {input.genome} > {output.distr}"
+
+    rule scrna_rseqc_genecov:
+        input:
+            bamsample = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.sample.bam",
             hkgene = SCRIPT_PATH + "/annotations/" + config["species"] + "_HouseKeepingGenes.bed",
+        output:
+            genecov = "Result/QC/" + config["outprefix"] + ".geneBodyCoverage.txt"
+        params:
+            outdirpre = "Result/QC/" + config["outprefix"]
+        shell:
+            "geneBody_coverage.py -r {input.hkgene} -i {input.bamsample} -o {params.outdirpre}"
+
+    rule scrna_rseqc_plot:
+        input:
+            qual = "Result/QC/" + config["outprefix"] + ".qual.r",
+            nvc = "Result/QC/" + config["outprefix"] + ".NVC.xls",
+            gc = "Result/QC/" + config["outprefix"] + ".GC.xls",
+            genecov = "Result/QC/" + config["outprefix"] + ".geneBodyCoverage.txt",
             countgene = "Result/QC/" + config["outprefix"] + "_count_gene_stat.txt"
         output:
-            stat = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
-            distr = "Result/QC/" + config["outprefix"] + "_read_distribution.txt",
-            genecov = "Result/QC/" + config["outprefix"] + ".geneBodyCoverage.txt",
+            qualplot = "Result/QC/" + config["outprefix"] + "_scRNA_read_quality.png",
+            nvcplot = "Result/QC/" + config["outprefix"] + "_scRNA_NVC.png",
+            gcplot = "Result/QC/" + config["outprefix"] + "_scRNA_GCcontent.png",
             genecovplot = "Result/QC/" + config["outprefix"] + "_scRNA_genebody_cov.png",
             rnafilterplot = "Result/QC/" + config["outprefix"] + "_scRNA_cell_filtering.png",
         params:
-            # dup = "Result/QC/" + config["outprefix"] + "_dup",
-            # qual = "Result/QC/" + config["outprefix"] + "_qual",
-            outdirpre = "Result/QC/" + config["outprefix"],
             outpre = config["outprefix"],
             outdir = "Result/QC",
-            stat = config["outprefix"] + "_bam_stat.txt",
-            distr = config["outprefix"] + "_read_distribution.txt",
+            qual = config["outprefix"] + ".qual.r",
+            nvc = config["outprefix"] + ".NVC.xls",
+            gc = config["outprefix"] + ".GC.xls",
             genecov = config["outprefix"] + ".geneBodyCoverage.txt",
             countgene = config["outprefix"] + "_count_gene_stat.txt"
         shell:
-            "bam_stat.py -i {input.bam} > {output.stat};"
-            # "read_duplication.py -i {input.bam} -o {params.dup};"
-            # "read_quality.py -i {input.bam} -o {params.qual};"
-            "read_distribution.py -i {input.bam} -r {input.genome} > {output.distr};"
-            "geneBody_coverage.py -r {input.hkgene} -i {input.bam} -o {params.outdirpre};"
-            "Rscript " + RSCRIPT_PATH + "/scRNAseq_qc.R {params.genecov} {params.countgene} {params.outpre} {params.outdir}"
+            "Rscript " + RSCRIPT_PATH + "/scRNAseq_qc.R {params.qual} {params.nvc} {params.gc} {params.genecov} {params.countgene} {params.outpre} {params.outdir}"
 
     rule scrna_analysis:
         input:
@@ -359,7 +612,13 @@ if config["platform"] == "Smartseq2":
 rule scrna_report:
     input:
         analysis = "Result/Analysis",
-        qcstat = "Result/QC/" + config["outprefix"] + "_bam_stat.txt"
+        qcstat = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
+        qualplot = "Result/QC/" + config["outprefix"] + "_scRNA_read_quality.png",
+        nvcplot = "Result/QC/" + config["outprefix"] + "_scRNA_NVC.png",
+        gcplot = "Result/QC/" + config["outprefix"] + "_scRNA_GCcontent.png",
+        genecovplot = "Result/QC/" + config["outprefix"] + "_scRNA_genebody_cov.png",
+        rnafilterplot = "Result/QC/" + config["outprefix"] + "_scRNA_cell_filtering.png",
+        distr = "Result/QC/" + config["outprefix"] + "_read_distribution.txt"
     output:
         summaryreport = "Result/Summary/" + config["outprefix"] + "_scRNA_report.html",
         outdir = directory("Result/Summary/Plot/")
@@ -368,12 +627,15 @@ rule scrna_report:
         fastqdir = config["fastqdir"],
         species = config["species"],
         platform = config["platform"],
+        qualplot = "Result/QC/" + config["outprefix"] + "_scRNA_read_quality.png",
+        nvcplot = "Result/QC/" + config["outprefix"] + "_scRNA_NVC.png",
+        gcplot = "Result/QC/" + config["outprefix"] + "_scRNA_GCcontent.png",
         genecovplot = "Result/QC/" + config["outprefix"] + "_scRNA_genebody_cov.png",
         rnafilterplot = "Result/QC/" + config["outprefix"] + "_scRNA_cell_filtering.png",
         clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
         annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
     shell:
-        "cp {params.genecovplot} {params.rnafilterplot} {params.clusterplot} {params.annotateplot} {output.outdir};"
+        "cp {params.qualplot} {params.nvcplot} {params.gcplot} {params.genecovplot} {params.rnafilterplot} {params.clusterplot} {params.annotateplot} {output.outdir};"
         "python " + SCRIPT_PATH + "/scRNA_report.py {params.outpre} {params.fastqdir} {params.species} {params.platform}" 
 
         

@@ -1,288 +1,248 @@
-  <!doctype html>
+<!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="http://cistrome.org/~dsun/MAESTRO/dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="http://cistrome.org/~dsun/MAESTRO/css/bootstrap4.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="http://cistrome.org/~dsun/MAESTRO/css/mFilter.css">
     <title>MAESTRO</title>
-  </head>
+</head>
 
-  <body>
+<body>
     <nav class="navbar navbar-dark fixed-top navbar-expand-lg flex-md-nowrap p-0" style="background-color:#1E284A">
-      
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://github.com/chenfeiwang/MAESTRO">MAESTRO</a>
-      <div class="container-fluid">
-        <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
-          <li class="nav-item">
-            <a class="nav-link nav-a" href="scRNA_template.html" style="font-size: 1rem">scRNA-seq module</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link nav-a" href="scATAC_template.html" style="font-size: 1rem">scATAC-seq module</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link nav-a" href="Integration_template.html" style="font-size: 1rem">Integration module</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
-    <div class="container-fluid">
-      <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar collapse bd-links">
-          <div class="sidebar-sticky" style="padding-top: 1rem">
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link" href="#sample" style="font-size: 1rem">Sample Information</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#QC" style="font-size: 1rem">Quality Control</a>
-                <ul>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#bulk" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Bulk level</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#single" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Single-cell level</a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#clustering" style="font-size: 1rem">Cell Clustering</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#annotation" style="font-size: 1rem">Annotation</a>
-                <ul>
-                  <li>
-                    <a class="nav-link" href="#celltype" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Celltype annotation</a>
-                  </li>
-                  <li>
-                    <a class="nav-link" href="#regulator" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Regulator annotation</a>
-                  </li>
-                </ul>
-              </li>
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://github.com/chenfeiwang/MAESTRO">MAESTRO</a>
+        <div class="container-fluid" style="padding-top:5px; padding-bottom:5px">
+            <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+                <li class="nav-item">
+                    <a class="nav-link nav-a" href="#" style="font-size: 1rem">scRNA-seq module</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link nav-a" href="" style="font-size: 1rem">scATAC-seq module</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-a" href="#" style="font-size: 1rem">Integration module</a>
+                </li>
             </ul>
-
-          </div>
-        </nav>
-
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" style="margin-bottom: 6rem;">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-            <h1 class="h2" id="sample">Sample Information</h1>
-          </div>
-          <table class="table" style="font-size: 15px">
-            <tbody>
-              <tr>
-                <th scope="row">Sample ID</th>
-                <td>%(outprefix)s</td>
-              </tr>
-              <tr>
-                <th scope="row">FASTQ Path</th>
-                <td>%(fastqdir)s</td>
-              </tr>
-              <tr>
-                <th scope="row">Species</th>
-                <td>%(species)s</td>
-              </tr>
-              <tr>
-                <th scope="row">Platform</th>
-                <td>%(platform)s</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2" id="QC">Quality Control</h1>
-          </div>
-          <div class="row">
-            <div class="container-fluid">
-              <h2 class="h3" id="bulk">Bulk level</h2>
-              <div class="row">
-                <div class="col-6">
-                  <h3 class="h5">Fragment size distribution</h3>
-                  <a href=%(fragment)s><img src=%(fragment)s width="450" height="450" class="float-left"></a>
+        </div>
+    </nav>
+    <div class="container-fluid" style="margin-top: 90px;margin-bottom: 90px">
+        <div class="card text-left" style="margin-right: 30px; margin-left: 30px">
+            <div class="row" style="margin-right: 0px; margin-left: 0px">
+                <div class="col-2" style="background-color: rgba(0, 0, 0, 0.03); border-right: 1px solid rgba(0, 0, 0, 0.125)">
+                    <ul class="nav nav-pills flex-column" aria-orientation="vertical" style="padding-top: 20px; padding-bottom: 20px">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="pill" href="#sample" style="font-size: 1rem" aria-selected="true">Sample Information</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="pill" href="#QC" style="font-size: 1rem">Quality Control</a>
+                            <ul>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#bulk" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Bulk level</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#single" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Single-cell level</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="pill" href="#clustering" style="font-size: 1rem">Cell Clustering</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="pill" href="#annotation" style="font-size: 1rem">Annotation</a>
+                            <ul>
+                                <li>
+                                    <a class="nav-link" href="#celltype" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Celltype annotation</a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" href="#regulator" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Regulator annotation</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
-              </div>
-            </div> 
-          </div>
-          
-          <div class="row">
-            <div class="container-fluid">
-              <h2 class="h3" id="single">Single-cell level</h2>
-              <div class="row">
-                <div class="col-6">
-                  <h3 class="h5">Mappability</h3>
-                  <a href=%(map)s><img src=%(map)s width="450" height="450" class="float-left"></a>
-                </div>
-                
-                <div class="col-6">
-                  <h3 class="h5">Cell filtering based on valid fragments and FRIP</h3>
-                  <a href=%(frip)s><img src=%(frip)s width="450" height="450" class="float-left"></a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2" id="clustering">Cell Clustering</h1>
-          </div>
-
-          <div class="row">
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-6">
-                  <h3 class="h5">Cell clustering based on peaks</h3>
-                  <a href=%(peakcluster)s><img src=%(peakcluster)s width="562.5" height="450" class="float-left"></a>
-                </div>
-              </div>
-            </div> 
-          </div> 
-
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2" id="annotation">Annotation</h1>
-          </div>
-
-          <div class="row">
-            <div class="container-fluid">
-              <h2 class="h3" id="celltype">Celltype annotation</h2>
-              <div class="row">
-                <div class="col-6">
-                  <h3 class="h5">Celltype annotation based on RP and DE genes</h3>
-                  <a href=%(rpannotate)s><img src=%(rpannotate)s width="652.5" height="450" class="float-left"></a>
-                </div>
-              </div>
-            </div> 
-          </div>
-          
-          <div class="row">
-            <div class="container-fluid">
-              <h2 class="h3" id="regulator">Regulator annotation</h2>
-              <div class="row">
-                <div class="col-12">
-                  <h3 class="h5">Cluster-specific regulator identified by GIGGLE</h3>
-                  <table class="table table-striped table-bordered" id="myTable">
-                    <thead class="thead">
-                      <tr>
-                        <th scope="col" style="vertical-align: middle">Cluster</th>
-                        <th scope="col" style="vertical-align: middle">Celltype Annotation</th>
-                        <th scope="col" style="vertical-align: middle">Transcription Factor</th>
-                      </tr>
-                    </thead>
-                    <tbody style="font-size: 0.9rem">
+                <div class="col-10">
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="container-fluid tab-pane fade show active" id="sample">
+                                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                                    <h1 class="h2" id="sample">Sample Information</h1>
+                                </div>
+                                <table class="table" style="font-size: 15px">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Sample ID</th>
+                                            <td>%(outprefix)s</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">FASTQ Path</th>
+                                            <td>%(fastqdir)s</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Species</th>
+                                            <td>%(species)s</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Platform</th>
+                                            <td>%(platform)s</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="container-fluid tab-pane fade" id="QC">
+                                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                    <h1 class="h2">Quality Control</h1>
+                                </div>
+                                <div class="row">
+                                    <div class="container-fluid">
+                                        <h2 class="h3" id="bulk">Bulk level</h2>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h3 class="h5">Mappability</h3>
+                                                <br>
+                                                <table class="table table-bordered table-striped" style="font-size: 15px">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">Total reads</th>
+                                                            <td>%(totalreads)s</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Duplicate reads</th>
+                                                            <td>%(dupreads)s</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Mapped reads</th>
+                                                            <td>%(mapreads)s</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Uniquely mapped reads</th>
+                                                            <td>%(uniquereads)s</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Mitochondrial reads</th>
+                                                            <td>%(mitoreads)s</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Reads in promoter</th>
+                                                            <td>%(promoterreads)s</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-6">
+                                                <h3 class="h5">Fragment size distribution</h3>
+                                                <a href=%(fragment)s><img src=%(fragment)s width="400" height="400" class="float-left"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="container-fluid">
+                                        <h2 class="h3" id="single">Single-cell level</h2>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h3 class="h5">Cell filtering based on valid fragments and FRIP</h3>
+                                                <a href=%(frip)s><img src=%(frip)s width="400" height="400" class="float-left"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid tab-pane fade" id="clustering">
+                                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                    <h1 class="h2" id="clustering">Cell Clustering</h1>
+                                </div>
+                                <div class="row">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h3 class="h5">Cell clustering based on peaks</h3>
+                                                <a href=%(peakcluster)s><img src=%(peakcluster)s width="500" height="400" class="float-left"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid tab-pane fade" id="annotation">
+                                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                    <h1 class="h2">Annotation</h1>
+                                </div>
+                                <div class="row">
+                                    <div class="container-fluid">
+                                        <h2 class="h3" id="celltype">Celltype annotation</h2>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h3 class="h5">Celltype annotation based on RP and DE genes</h3>
+                                                <a href=%(rpannotate)s><img src=%(rpannotate)s width="580" height="400" class="float-left"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-top: 15px">
+                                </div>
+                                <div class="row">
+                                    <div class="container-fluid">
+                                        <h2 class="h3" id="regulator">Regulator annotation</h2>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3 class="h5">Cluster-specific regulator identified by GIGGLE</h3>
+                                                <table class="table table-striped table-bordered" id="myTable">
+                                                    <thead class="thead">
+                                                        <tr>
+                                                            <th scope="col" style="vertical-align: middle">Cluster</th>
+                                                            <th scope="col" style="vertical-align: middle">Celltype Annotation</th>
+                                                            <th scope="col" style="vertical-align: middle">Transcription Factor</th>
+                                                            <th scope="col" style="vertical-align: middle">log10(Giggle score)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody style="font-size: 0.9rem">
 %(regtable)s
-                    </tbody>
-                    <tfoot class="tfoot">
-                      <tr>
-                        <th scope="col" style="vertical-align: middle;">Cluster</th>
-                        <th scope="col" style="vertical-align: middle;">Celltype Annotation</th>
-                        <th scope="col" style="vertical-align: middle;">Transcription Factor</th>
-                      </tr>
-                    </tfoot>
-                  </table>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-              </div>
             </div>
-          </div>
-
-        </main>
-      </div>
+        </div>
     </div>
-    
     <nav class="navbar flex-md-nowrap fixed-bottom navbar-dark" style="background-color:#1E284A">
         <a href="http://liulab.dfci.harvard.edu/" class="navbar-brand" style="background-color: rgba(0, 0, 0, 0);height: 46px; width: 58px; padding-top: 0px;padding-bottom: 0px;margin-right: 0px">
-          <img src="http://liulab.dfci.harvard.edu/WEBSITE/images/Global/logofinal.png" height="46" width="58">
+            <img src="http://liulab.dfci.harvard.edu/WEBSITE/images/Global/logofinal.png" height="46" width="58">
         </a>
         <span class="navbar-text" style="font-size: 13px">Copyright @2019 Liu lab</span>
     </nav>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script><script src="/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="http://cistrome.org/~dsun/MAESTRO/js/mFilter.js"></script>
     <script type="text/javascript">
-      $(document).ready(function() {
-          $('#myTable').DataTable( {
-              initComplete: function () {
-                  var api = this.api();
-                  api.columns().indexes().flatten().each( function ( i ) {
-                      var column = api.column( i );
-                      var select = $('<select><option value=""></option></select>')
-                          .appendTo( $(column.footer()).empty() )
-                          .on( 'change', function () {
-                              var val = $.fn.dataTable.util.escapeRegex(
-                                  $(this).val()
-                              );
-                              column
-                                  .search( val ? '^'+val+'$' : '', true, false )
-                                  .draw();
-                          } );
-                      column.data().unique().sort().each( function ( d, j ) {
-                          select.append( '<option value="'+d+'">'+d+'</option>' )
-                      } );
-                  } );
-              }
-          } );
-      } );
-    </script>
-    <script type="text/javascript">
-      $(document).ready(function() {
-        $('.js-example-basic-single').select2({
-          theme: "bootstrap"
+    $(document).ready(function() {
+        $('a[data-toggle="pill"]').on('shown.bs.tab', function(e) {
+            if (!$.fn.dataTable.isDataTable("#myTable")){
+                $('#myTable').DataTable({
+                autoWidth: false,
+                dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+                     "<'row'<'col-sm-12'tr>>" + "F" +
+                     "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                columnDefs: [
+                    { "targets": 0, "width": "15%%" },
+                    { "targets": 1, "width": "25%%" }
+                ],
+            });
+            }
         });
-      });
+    }); 
     </script>
-    <script type="text/javascript">
-      function clean_formatted_data(str) {
-        return parseFloat(str.replace(/([%%,$,\,])+/g,''));
-      }
+</body>
 
-      function col_to_array(tbl_col,target) {
-      // Returns column `n` (zero indexed) in table id `target` as an array 
-
-        var colArray = $('#'+target+' td:nth-child('+tbl_col+')').map(function(){
-          return clean_formatted_data( $(this).text() );
-        }).get();
-
-        return colArray;
-      }
-
-      //------ new schtuff ------------------------//
-
-      function get_pos_of_max(col_data) {
-        return $.inArray( Math.max.apply(Math,col_data), col_data) 
-      }
-
-      function generate_opacities(col_data, max) {
-        var opacity_array = [];
-        var increment = max/(col_data.length);
-
-        for(i=col_data.length; i >= 1; i--) {
-          opacity_array.push(i*increment/100);
-        }
-
-        return opacity_array;
-      }
-
-
-      function process_col_best_performing(tbl_col, target) {
-        var col_data = col_to_array(tbl_col,target);
-        var opacity_array = generate_opacities(col_data, 50);
-        var row_count = col_data.length; 
-       
-        for (var i=1; i <= row_count; i++) {    
-          $('#'+target+' tr:nth-child('+(get_pos_of_max(col_data)+1)+') td:nth-child('+tbl_col+')').css('background','rgba(65,105,255,'+opacity_array[0]+')');
-          col_data[get_pos_of_max(col_data)] = null;
-          opacity_array.splice(0,1);
-        }
-      }
-
-      process_col_best_performing(5,'myTable');
-    </script>
-  </body>
-
-</html>
+</html>ƒ

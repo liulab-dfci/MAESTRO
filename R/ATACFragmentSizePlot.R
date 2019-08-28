@@ -16,8 +16,9 @@
 ATACFragmentSizePlot <- function(filepath, name)
 {
   fragment_matrix <- read.table(filepath)
-  png(paste0(name,"_scATAC_fragment_size.png"),width=6,height=6, res = 300, units = "in")
+  png(paste0(name,"_scATAC_fragment_size.png"),width=4.8,height=4.8, res = 300, units = "in")
+  par(mai = c(0.85,0.85,0.25,0.25))
   D <- density(abs(fragment_matrix[abs(fragment_matrix)<=1000&abs(fragment_matrix)>0]))
-  plot(D$x,D$y*D$n/1000,col="blue",lwd=2,type="l",main=name,xlab="Fragment size",ylab="Fragment numbers (K)")
+  plot(D$x,D$y*D$n/1000,col="blue",lwd=2,type="l",xlab="Fragment size",ylab="Fragment numbers (K)")
   dev.off()
 }
