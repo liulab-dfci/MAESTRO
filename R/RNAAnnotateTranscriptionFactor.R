@@ -51,6 +51,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, orga
   if (!file.exists(outputDir)) dir.create(path=outputDir)  
   for(i in names(cluster_markers_list)){    
     cluster_marker_logfc <- cluster_markers_list[[i]][,c(2,8)]
+    cluster_marker_logfc <- cluster_marker_logfc[which(!duplicated(cluster_marker_logfc$entrezid)),]
     row.names(cluster_marker_logfc) <- cluster_marker_logfc[,'entrezid']
     cluster_marker_logfc <- data.frame(logfc = cluster_marker_logfc[,1], row.names = cluster_marker_logfc[,2])
     write.table(cluster_marker_logfc, paste0(project, ".RABIT/", i, ".txt"), sep = "\t", col.names = TRUE, row.names = TRUE, quote = FALSE)
