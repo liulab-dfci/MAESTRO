@@ -142,15 +142,16 @@
     <script type="text/javascript">
     $(document).ready(function() {
         $('a[data-toggle="pill"]').on('shown.bs.tab', function(e) {
-            if (!$.fn.dataTable.isDataTable("#myTable")){
+            if (($(this).attr('href')) == "#annotation" && !$.fn.dataTable.isDataTable("#myTable")){
                 $('#myTable').DataTable({
                 autoWidth: false,
                 dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
                      "<'row'<'col-sm-12'tr>>" + "F" +
                      "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
                 columnDefs: [
-                    { "targets": 0, "width": "15%%" },
-                    { "targets": 1, "width": "25%%" }
+                    { "targets": 0, "width": "12%%" },
+                    { "targets": 1, "width": "23%%" },
+                    { "targets": 3, "width": "20%%" },
                 ],
             });
             }

@@ -81,7 +81,8 @@ if config["platform"] == "microfluidic":
         input:
             bam = "Result/BWA/{fastqid}.sortedByPos.rmdp.bam",
             promoter = SCRIPT_PATH + "/annotations/" + config["species"] + "_promoter.bed",
-            chrM = SCRIPT_PATH + "/annotations/" + config["species"] + "_chrM.bed"
+            chrM = SCRIPT_PATH + "/annotations/" + config["species"] + "_chrM.bed",
+            peak = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak"
         output:
             log = "Result/Log/bamLog/{fastqid}.mapping.log",
             bed = "Result/BWA/{fastqid}.sortedByPos.rmdp.bed",
@@ -90,13 +91,15 @@ if config["platform"] == "microfluidic":
             "bamToBed -i {input.bam} > {output.bed};"
             "intersectBed -wa -a {output.bed} -b {input.chrM} -u | wc -l >> {output.log};"
             "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | wc -l >> {output.log};"
-            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.log}"
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.log};"
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.peak} -u | wc -l >> {output.log};"
 
     rule scatac_bulk_qcstat:
         input:
             bam = "Result/BWA/" + config["outprefix"] + ".merged.sortedByPos.rmdp.bam",
             promoter = SCRIPT_PATH + "/annotations/" + config["species"] + "_promoter.bed",
-            chrM = SCRIPT_PATH + "/annotations/" + config["species"] + "_chrM.bed"
+            chrM = SCRIPT_PATH + "/annotations/" + config["species"] + "_chrM.bed",
+            peak = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak"
         output:
             bulkqc = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
             bed = "Result/BWA/" + config["outprefix"] + ".merged.sortedByPos.rmdp.bed",
@@ -105,7 +108,8 @@ if config["platform"] == "microfluidic":
             "bamToBed -i {input.bam} > {output.bed};"
             "intersectBed -wa -a {output.bed} -b {input.chrM} -u | wc -l >> {output.bulkqc};"
             "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | wc -l >> {output.bulkqc};"
-            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.bulkqc}"
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.bulkqc};"
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.peak} -u | wc -l >> {output.bulkqc};"
 
     rule scatac_qcplot:
         input:
@@ -133,7 +137,8 @@ if config["platform"] == "microfluidic":
         input:
             bam = "Result/BWA/" + config["outprefix"] + ".merged.sortedByPos.rmdp.bam"
         output:
-            bed = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak"
+            peak = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak",
+            bdg = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg",
         params:
             name = "Result/Analysis/" + config["outprefix"] + "_all"
         log:
@@ -142,6 +147,26 @@ if config["platform"] == "microfluidic":
             ENV_PATH + "/environment_py2.yaml"
         shell:
             "macs2 callpeak -g hs -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.bam}"
+
+    rule scatac_ceas:
+        input:
+            bdg = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg",
+            finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed",
+            chrlimit = SCRIPT_PATH + "/annotations/" + config["species"] + "_chr_limit.bed",
+            chrlen = SCRIPT_PATH + "/annotations/" + config["species"] + "_chr.len",
+            refgene = SCRIPT_PATH + "/annotations/" + config["species"] + ".refGene"
+        output:
+            tmp = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg.tmp",
+            bigwig = "Result/Analysis/" + config["outprefix"] + "_all.bw"
+        params:
+            outdir = "Result/Analysis/" + config["outprefix"]
+        conda:
+            ENV_PATH + "/environment_py2.yaml"
+        shell:
+            "bedtools intersect -a {input.bdg} -b {input.chrlimit} -wa -f 1.00 > {output.tmp};"
+            "bedSort {output.tmp} {input.bdg};"
+            "bedGraphToBigWig {input.bdg} {input.chrlen} {output.bigwig};"
+            "ceasBW -b {input.finalpeak} -w {output.bigwig} -g {input.refgene} -l {input.chrlen} --name {params.outdir}"
     
     if config["shortpeaks"]:
         rule scatac_shortfragment:
@@ -265,7 +290,8 @@ if config["platform"] == "10x-genomics":
         input:
             bam = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_bam.bam",
             promoter = SCRIPT_PATH + "/annotations/" + config["species"] + "_promoter.bed",
-            chrM = SCRIPT_PATH + "/annotations/" + config["species"] + "_chrM.bed"
+            chrM = SCRIPT_PATH + "/annotations/" + config["species"] + "_chrM.bed",
+            peak = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak"
         output:
             bulkqc = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
             bed = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_bam.bed",
@@ -274,8 +300,9 @@ if config["platform"] == "10x-genomics":
             "bamToBed -i {input.bam} > {output.bed};"
             "intersectBed -wa -a {output.bed} -b {input.chrM} -u | wc -l >> {output.bulkqc};"
             "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | wc -l >> {output.bulkqc};"
-            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.bulkqc}"
-   
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.bulkqc};"
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.peak} -u | wc -l >> {output.bulkqc};"
+
     rule scatac_qcplot:
         input:
             bam = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_bam.bam",
@@ -303,7 +330,8 @@ if config["platform"] == "10x-genomics":
         input:
             bam = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_bam.bam"
         output:
-            bed = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak"
+            peak = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak",
+            bdg = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg",
         params:
             name = "Result/Analysis/" + config["outprefix"] + "_all"
         log:
@@ -312,6 +340,26 @@ if config["platform"] == "10x-genomics":
             ENV_PATH + "/environment_py2.yaml"
         shell:
             "macs2 callpeak -g hs -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.bam}"
+
+    rule scatac_ceas:
+        input:
+            bdg = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg",
+            finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed",
+            chrlimit = SCRIPT_PATH + "/annotations/" + config["species"] + "_chr_limit.bed",
+            chrlen = SCRIPT_PATH + "/annotations/" + config["species"] + "_chr.len",
+            refgene = SCRIPT_PATH + "/annotations/" + config["species"] + ".refGene"
+        output:
+            tmp = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg.tmp",
+            bigwig = "Result/Analysis/" + config["outprefix"] + "_all.bw"
+        params:
+            outdir = "Result/Analysis/" + config["outprefix"]
+        conda:
+            ENV_PATH + "/environment_py2.yaml"
+        shell:
+            "bedtools intersect -a {input.bdg} -b {input.chrlimit} -wa -f 1.00 > {output.tmp};"
+            "bedSort {output.tmp} {input.bdg};"
+            "bedGraphToBigWig {input.bdg} {input.chrlen} {output.bigwig};"
+            "ceasBW -b {input.finalpeak} -w {output.bigwig} -g {input.refgene} -l {input.chrlen} --name {params.outdir}"
 
     if config["shortpeaks"]:
         rule scatac_shortfragment:
@@ -454,7 +502,8 @@ if config["platform"] == "sci-ATAC-seq":
         input:
             sam = "Result/BWA/Split/{barcodeid}.sam",
             promoter = SCRIPT_PATH + "/annotations/" + config["species"] + "_promoter.bed",
-            chrM = SCRIPT_PATH + "/annotations/" + config["species"] + "_chrM.bed"
+            chrM = SCRIPT_PATH + "/annotations/" + config["species"] + "_chrM.bed",
+            peak = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak"
         output:
             log = "Result/Log/bamLog/{barcodeid}.mapping.log",
             bed = "Result/BWA/Split/{barcodeid}.sortedByPos.rmdp.bed",
@@ -465,13 +514,15 @@ if config["platform"] == "sci-ATAC-seq":
             "samtools view --threads {threads} -b {input.sam} | bamToBed -i > {output.bed};"
             "intersectBed -wa -a {output.bed} -b {input.chrM} -u | wc -l >> {output.log};"
             "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | wc -l >> {output.log};"
-            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.log}"
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.log};"
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.peak} -u | wc -l >> {output.log};"
 
     rule scatac_bulk_qcstat:
         input:
             bam = "Result/BWA/" + config["outprefix"] + ".sortedByPos.rmdp.bam",
             promoter = SCRIPT_PATH + "/annotations/" + config["species"] + "_promoter.bed",
-            chrM = SCRIPT_PATH + "/annotations/" + config["species"] + "_chrM.bed"
+            chrM = SCRIPT_PATH + "/annotations/" + config["species"] + "_chrM.bed",
+            peak = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak"
         output:
             bulkqc = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
             bed = "Result/BWA/" + config["outprefix"] + ".sortedByPos.rmdp.ced",
@@ -480,7 +531,8 @@ if config["platform"] == "sci-ATAC-seq":
             "bamToBed -i {input.bam} > {output.bed};"
             "intersectBed -wa -a {output.bed} -b {input.chrM} -u | wc -l >> {output.bulkqc};"
             "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | wc -l >> {output.bulkqc};"
-            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.bulkqc}"
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.bulkqc};"
+            "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.peak} -u | wc -l >> {output.bulkqc};"
 
     rule scatac_qcplot:
         input:
@@ -507,7 +559,8 @@ if config["platform"] == "sci-ATAC-seq":
         input:
             bam = "Result/BWA/" + config["outprefix"] + ".sortedByPos.rmdp.bam"
         output:
-            bed = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak"
+            peak = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak",
+            bdg = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg"
         params:
             name = "Result/Analysis/" + config["outprefix"] + "_all"
         log:
@@ -517,6 +570,26 @@ if config["platform"] == "sci-ATAC-seq":
         shell:
             "macs2 callpeak -g hs -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.bam}"
     
+    rule scatac_ceas:
+        input:
+            bdg = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg",
+            finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed",
+            chrlimit = SCRIPT_PATH + "/annotations/" + config["species"] + "_chr_limit.bed",
+            chrlen = SCRIPT_PATH + "/annotations/" + config["species"] + "_chr.len",
+            refgene = SCRIPT_PATH + "/annotations/" + config["species"] + ".refGene"
+        output:
+            tmp = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg.tmp",
+            bigwig = "Result/Analysis/" + config["outprefix"] + "_all.bw"
+        params:
+            outdir = "Result/Analysis/" + config["outprefix"]
+        conda:
+            ENV_PATH + "/environment_py2.yaml"
+        shell:
+            "bedtools intersect -a {input.bdg} -b {input.chrlimit} -wa -f 1.00 > {output.tmp};"
+            "bedSort {output.tmp} {input.bdg};"
+            "bedGraphToBigWig {input.bdg} {input.chrlen} {output.bigwig};"
+            "ceasBW -b {input.finalpeak} -w {output.bigwig} -g {input.refgene} -l {input.chrlen} --name {params.outdir}"
+
     if config["shortpeaks"]:
         rule scatac_shortfragment:
             input:
@@ -651,6 +724,7 @@ rule scatac_report:
         clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
         annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
         genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.txt",
+        bigwig = "Result/Analysis/" + config["outprefix"] + "_all.bw"
     output:
         summaryreport = "Result/Summary/" + config["outprefix"] + "_scATAC_report.html",
         outdir = directory("Result/Summary/Plot/")
@@ -662,6 +736,3 @@ rule scatac_report:
     shell:
         "cp {input.qcmap} {input.qcfrag} {input.qcfrip} {input.clusterplot} {input.annotateplot} {output.outdir};"
         "python " + SCRIPT_PATH + "/scATAC_report.py {params.outpre} {params.fastqdir} {params.species} {params.platform}"
-
-
-        

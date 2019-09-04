@@ -4,3 +4,4 @@ channels:
 dependencies:
   - python = 2.7
   - macs2
+  - cistrome-ceas
