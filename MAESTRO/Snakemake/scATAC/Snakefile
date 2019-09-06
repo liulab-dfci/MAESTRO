@@ -147,26 +147,6 @@ if config["platform"] == "microfluidic":
             ENV_PATH + "/environment_py2.yaml"
         shell:
             "macs2 callpeak -g hs -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.bam}"
-
-    rule scatac_ceas:
-        input:
-            bdg = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg",
-            finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed",
-            chrlimit = SCRIPT_PATH + "/annotations/" + config["species"] + "_chr_limit.bed",
-            chrlen = SCRIPT_PATH + "/annotations/" + config["species"] + "_chr.len",
-            refgene = SCRIPT_PATH + "/annotations/" + config["species"] + ".refGene"
-        output:
-            tmp = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg.tmp",
-            bigwig = "Result/Analysis/" + config["outprefix"] + "_all.bw"
-        params:
-            outdir = "Result/Analysis/" + config["outprefix"]
-        conda:
-            ENV_PATH + "/environment_py2.yaml"
-        shell:
-            "bedtools intersect -a {input.bdg} -b {input.chrlimit} -wa -f 1.00 > {output.tmp};"
-            "bedSort {output.tmp} {input.bdg};"
-            "bedGraphToBigWig {input.bdg} {input.chrlen} {output.bigwig};"
-            "ceasBW -b {input.finalpeak} -w {output.bigwig} -g {input.refgene} -l {input.chrlen} --name {params.outdir}"
     
     if config["shortpeaks"]:
         rule scatac_shortfragment:
@@ -340,26 +320,6 @@ if config["platform"] == "10x-genomics":
             ENV_PATH + "/environment_py2.yaml"
         shell:
             "macs2 callpeak -g hs -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.bam}"
-
-    rule scatac_ceas:
-        input:
-            bdg = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg",
-            finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed",
-            chrlimit = SCRIPT_PATH + "/annotations/" + config["species"] + "_chr_limit.bed",
-            chrlen = SCRIPT_PATH + "/annotations/" + config["species"] + "_chr.len",
-            refgene = SCRIPT_PATH + "/annotations/" + config["species"] + ".refGene"
-        output:
-            tmp = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg.tmp",
-            bigwig = "Result/Analysis/" + config["outprefix"] + "_all.bw"
-        params:
-            outdir = "Result/Analysis/" + config["outprefix"]
-        conda:
-            ENV_PATH + "/environment_py2.yaml"
-        shell:
-            "bedtools intersect -a {input.bdg} -b {input.chrlimit} -wa -f 1.00 > {output.tmp};"
-            "bedSort {output.tmp} {input.bdg};"
-            "bedGraphToBigWig {input.bdg} {input.chrlen} {output.bigwig};"
-            "ceasBW -b {input.finalpeak} -w {output.bigwig} -g {input.refgene} -l {input.chrlen} --name {params.outdir}"
 
     if config["shortpeaks"]:
         rule scatac_shortfragment:
@@ -569,26 +529,6 @@ if config["platform"] == "sci-ATAC-seq":
             ENV_PATH + "/environment_py2.yaml"
         shell:
             "macs2 callpeak -g hs -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.bam}"
-    
-    rule scatac_ceas:
-        input:
-            bdg = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg",
-            finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed",
-            chrlimit = SCRIPT_PATH + "/annotations/" + config["species"] + "_chr_limit.bed",
-            chrlen = SCRIPT_PATH + "/annotations/" + config["species"] + "_chr.len",
-            refgene = SCRIPT_PATH + "/annotations/" + config["species"] + ".refGene"
-        output:
-            tmp = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg.tmp",
-            bigwig = "Result/Analysis/" + config["outprefix"] + "_all.bw"
-        params:
-            outdir = "Result/Analysis/" + config["outprefix"]
-        conda:
-            ENV_PATH + "/environment_py2.yaml"
-        shell:
-            "bedtools intersect -a {input.bdg} -b {input.chrlimit} -wa -f 1.00 > {output.tmp};"
-            "bedSort {output.tmp} {input.bdg};"
-            "bedGraphToBigWig {input.bdg} {input.chrlen} {output.bigwig};"
-            "ceasBW -b {input.finalpeak} -w {output.bigwig} -g {input.refgene} -l {input.chrlen} --name {params.outdir}"
 
     if config["shortpeaks"]:
         rule scatac_shortfragment:
@@ -683,6 +623,36 @@ if config["platform"] == "sci-ATAC-seq":
         shell:
             "python " + SCRIPT_PATH + "/scATAC_microfluidic_count.py {input.finalpeak} {input.validbarcode} {params.bamdir} {output.count} {threads}"
 
+rule scatac_bdg2bw:
+    input:
+        bdg = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg",
+        chrlimit = SCRIPT_PATH + "/annotations/" + config["species"] + "_chr_limit.bed",
+        chrlen = SCRIPT_PATH + "/annotations/" + config["species"] + "_chr.len",
+    output:
+        tmp = "Result/Analysis/" + config["outprefix"] + "_all_treat_pileup.bdg.tmp",
+        bigwig = "Result/Analysis/" + config["outprefix"] + "_all.bw"
+    params:
+        outdir = "Result/Analysis/" + config["outprefix"]
+    shell:
+        "bedtools intersect -a {input.bdg} -b {input.chrlimit} -wa -f 1.00 > {output.tmp};"
+        "bedSort {output.tmp} {input.bdg};"
+        "bedGraphToBigWig {input.bdg} {input.chrlen} {output.bigwig};"
+
+rule scatac_ceas:
+    input:
+        finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed",
+        bigwig = "Result/Analysis/" + config["outprefix"] + "_all.bw",
+        refgene = SCRIPT_PATH + "/annotations/" + config["species"] + ".refGene",
+        chrlen = SCRIPT_PATH + "/annotations/" + config["species"] + "_chr.len",
+    output:
+        ceas = "Result/QC/" + config["outprefix"] + "_scATAC_CEAS.pdf"
+    params:
+        outdir = "Result/QC/" + config["outprefix"] + "_scATAC_CEAS"
+    conda:
+        ENV_PATH + "/environment_py2.yaml"
+    shell:
+        "ceasBW -b {input.finalpeak} -w {input.bigwig} -g {input.refgene} -l {input.chrlen} --name {params.outdir}"
+
 rule scatac_genescore:
     input:
         count = "Result/Analysis/" + config["outprefix"] + "_peak_count.txt"
@@ -724,7 +694,7 @@ rule scatac_report:
         clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
         annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
         genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.txt",
-        bigwig = "Result/Analysis/" + config["outprefix"] + "_all.bw"
+        ceas = "Result/QC/" + config["outprefix"] + "_scATAC_CEAS.pdf"
     output:
         summaryreport = "Result/Summary/" + config["outprefix"] + "_scATAC_report.html",
         outdir = directory("Result/Summary/Plot/")
