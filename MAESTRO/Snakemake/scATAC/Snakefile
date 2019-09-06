@@ -153,17 +153,17 @@ if config["platform"] == "microfluidic":
             input:
                 bam = "Result/BWA/" + config["outprefix"] + ".merged.sortedByPos.rmdp.bam"
             output:
-                shortsam = "Result/BWA/" + config["outprefix"] + ".merged.sortedByPos.rmdp.50bp.sam"
+                shortsam = "Result/BWA/" + config["outprefix"] + ".merged.sortedByPos.rmdp.150bp.sam"
             shell:
-                "samtools view {input.bam} | awk -F'\\t' 'function abs(x){{return ((x < 0.0) ? -x : x)}} {{if (abs($9)<=50) print}}' > {output.shortsam}"
+                "samtools view {input.bam} | awk -F'\\t' 'function abs(x){{return ((x < 0.0) ? -x : x)}} {{if (abs($9)<=150) print}}' > {output.shortsam}"
         
         rule scatac_shortpeakcall:
             input:
-                sam = "Result/BWA/" + config["outprefix"] + ".merged.sortedByPos.rmdp.50bp.sam"            
+                sam = "Result/BWA/" + config["outprefix"] + ".merged.sortedByPos.rmdp.150bp.sam"            
             output:
-                bed = "Result/Analysis/" + config["outprefix"] + "_50bp_peaks.narrowPeak"
+                bed = "Result/Analysis/" + config["outprefix"] + "_150bp_peaks.narrowPeak"
             params:
-                name = "Result/Analysis/" + config["outprefix"] + "_50bp"
+                name = "Result/Analysis/" + config["outprefix"] + "_150bp"
             log:
                 "Result/Log/" + config["outprefix"] + "_macs2_shortpeak.log"
             conda:
@@ -175,7 +175,7 @@ if config["platform"] == "microfluidic":
         rule scatac_mergepeak:
             input:
                 allpeak = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak",
-                shortpeak = "Result/Analysis/" + config["outprefix"] + "_50bp_peaks.narrowPeak",
+                shortpeak = "Result/Analysis/" + config["outprefix"] + "_150bp_peaks.narrowPeak",
                 custompeak = config["custompeaksloc"]
             output:
                 finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed"
@@ -204,7 +204,7 @@ if config["platform"] == "microfluidic":
         rule scatac_mergepeak:
             input:
                 allpeak = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak",
-                shortpeak = "Result/Analysis/" + config["outprefix"] + "_50bp_peaks.narrowPeak"
+                shortpeak = "Result/Analysis/" + config["outprefix"] + "_150bp_peaks.narrowPeak"
             output:
                 finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed"
             params:
@@ -326,17 +326,17 @@ if config["platform"] == "10x-genomics":
             input:
                 bam = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_bam.bam"
             output:
-                shortsam = "Result/Cellranger/" + config["outprefix"] + "possorted_50bp.sam"
+                shortsam = "Result/Cellranger/" + config["outprefix"] + "possorted_150bp.sam"
             shell:
-                "samtools view {input.bam} | awk -F'\\t' 'function abs(x){{return ((x < 0.0) ? -x : x)}} {{if (abs($9)<=50) print}}' > {output.shortsam}"
+                "samtools view {input.bam} | awk -F'\\t' 'function abs(x){{return ((x < 0.0) ? -x : x)}} {{if (abs($9)<=150) print}}' > {output.shortsam}"
         
         rule scatac_shortpeakcall:
             input:
-                shortsam = "Result/Cellranger/" + config["outprefix"] + "possorted_50bp.sam"
+                shortsam = "Result/Cellranger/" + config["outprefix"] + "possorted_150bp.sam"
             output:
-                bed = "Result/Analysis/" + config["outprefix"] + "_50bp_peaks.narrowPeak"
+                bed = "Result/Analysis/" + config["outprefix"] + "_150bp_peaks.narrowPeak"
             params:
-                name = "Result/Analysis/" + config["outprefix"] + "_50bp"
+                name = "Result/Analysis/" + config["outprefix"] + "_150bp"
             log:
                 "Result/Log/" + config["outprefix"] + "_macs2_shortpeak.log"
             conda:
@@ -348,7 +348,7 @@ if config["platform"] == "10x-genomics":
         rule scatac_mergepeak:
             input:
                 allpeak = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak",
-                shortpeak = "Result/Analysis/" + config["outprefix"] + "_50bp_peaks.narrowPeak",
+                shortpeak = "Result/Analysis/" + config["outprefix"] + "_150bp_peaks.narrowPeak",
                 custompeak = config["custompeaksloc"]
             output:
                 finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed"
@@ -377,7 +377,7 @@ if config["platform"] == "10x-genomics":
         rule scatac_mergepeak:
             input:
                 allpeak = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak",
-                shortpeak = "Result/Analysis/" + config["outprefix"]  + "_50bp_peaks.narrowPeak"
+                shortpeak = "Result/Analysis/" + config["outprefix"]  + "_150bp_peaks.narrowPeak"
             output:
                 finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed"
             params:
@@ -535,17 +535,17 @@ if config["platform"] == "sci-ATAC-seq":
             input:
                 bam = "Result/BWA/" + config["outprefix"] + ".sortedByPos.rmdp.bam"
             output:
-                shortsam = "Result/BWA/" + config["outprefix"] + ".sortedByPos.rmdp.50bp.sam"
+                shortsam = "Result/BWA/" + config["outprefix"] + ".sortedByPos.rmdp.150bp.sam"
             shell:
-                "samtools view {input.bam} | awk -F'\\t' 'function abs(x){{return ((x < 0.0) ? -x : x)}} {{if (abs($9)<=50) print}}' > {output.shortsam}"
+                "samtools view {input.bam} | awk -F'\\t' 'function abs(x){{return ((x < 0.0) ? -x : x)}} {{if (abs($9)<=150) print}}' > {output.shortsam}"
         
         rule scatac_shortpeakcall:
             input:
-                sam = "Result/BWA/" + config["outprefix"] + ".sortedByPos.rmdp.50bp.sam"
+                sam = "Result/BWA/" + config["outprefix"] + ".sortedByPos.rmdp.150bp.sam"
             output:
-                bed = "Result/Analysis/" + config["outprefix"] + "_50bp_peaks.narrowPeak"
+                bed = "Result/Analysis/" + config["outprefix"] + "_150bp_peaks.narrowPeak"
             params:
-                name = "Result/Analysis/" + config["outprefix"] + "_50bp"
+                name = "Result/Analysis/" + config["outprefix"] + "_150bp"
             log:
                 "Result/Log/" + config["outprefix"] + "_macs2_shortpeak.log"
             conda:
@@ -557,7 +557,7 @@ if config["platform"] == "sci-ATAC-seq":
         rule scatac_mergepeak:
             input:
                 allpeak = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak",
-                shortpeak = "Result/Analysis/" + config["outprefix"] + "_50bp_peaks.narrowPeak",
+                shortpeak = "Result/Analysis/" + config["outprefix"] + "_150bp_peaks.narrowPeak",
                 custompeak = config["custompeaksloc"]
             output:
                 finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed"
@@ -586,7 +586,7 @@ if config["platform"] == "sci-ATAC-seq":
         rule scatac_mergepeak:
             input:
                 allpeak = "Result/Analysis/" + config["outprefix"] + "_all_peaks.narrowPeak",
-                shortpeak = "Result/Analysis/" + config["outprefix"] + "_50bp_peaks.narrowPeak"
+                shortpeak = "Result/Analysis/" + config["outprefix"] + "_150bp_peaks.narrowPeak"
             output:
                 finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed"
             params:
