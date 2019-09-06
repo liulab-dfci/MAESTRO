@@ -1,25 +1,17 @@
 library(MAESTRO)
 argue = commandArgs(T)
 
-setwd(argue[4])
+setwd(argue[7])
 
-genecov_file = argue[1]
-countgene_file = argue[2]
-prefix = argue[3]
+qualcode_file = argue[1]
+nvc_file = argue[2]
+gc_file = argue[3]
+genecov_file = argue[4]
+countgene_file = argue[5]
+prefix = argue[6]
 
+RNAReadQualityPlot(filepath = qualcode_file, name = prefix)
+RNANucleotidePlot(filepath = nvc_file, name = prefix)
+RNAGCcontentPlot(filepath = gc_file, name = prefix)
 RNAGenebodyCoveragePlot(filepath = genecov_file, name = prefix)
 RNAFilteringPlot(filepath = countgene_file, UMI.cutoff = 1000, gene.number.cutoff = 500, name = prefix)
-
-
-# argue = commandArgs(T)
-# cwd = getwd()
-# setwd(argue[5])
-# source("scRNAseq_function.R")
-# setwd(file.path(cwd,argue[4]))
-
-# gene_cov_file = argue[1]
-# count_gene_file = argue[2]
-# prefix = argue[3]
-# #ReadPlot(read_distr_file, prefix)
-# GenebodyCoverPlot(gene_cov_file, prefix)
-# CountGenePlot(count_gene_file, count_cutoff = 500, gene_cutoff = 200, prefix)

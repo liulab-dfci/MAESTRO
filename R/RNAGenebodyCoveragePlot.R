@@ -16,7 +16,7 @@
 RNAGenebodyCoveragePlot <- function(filepath, name){
   gene_cov = as.data.frame(t(read.table(filepath, header = FALSE, row.names = 1, sep = "\t")))
   row.names(gene_cov) = NULL
-  gene_cov$Coverage = (gene_cov$possorted_genome_bam-min(gene_cov$possorted_genome_bam))/(max(gene_cov$possorted_genome_bam)-min(gene_cov$possorted_genome_bam))
+  gene_cov$Coverage = (gene_cov[,2]-min(gene_cov[,2]))/(max(gene_cov[,2])-min(gene_cov[,2]))
   png(paste0(name, "_scRNA_genebody_cov.png"), width = 4.8,height = 4.8, res = 300, units = "in")
   par(mai = c(0.9,0.9,0.25,0.25))
   plot(gene_cov$Percentile,gene_cov$Coverage,type='l',xlab="Gene body percentile (5'->3')", ylab="Coverage",lwd=2,col="blue")
