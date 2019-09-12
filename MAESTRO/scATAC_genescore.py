@@ -89,6 +89,7 @@ def calculate_RP_score(peak_file, gene_bed, decay, score_file):
 
     peaks_info = []
     cell_peaks = pd.read_csv(peak_file, sep="\t", header=0, index_col=0)
+    cell_peaks[cell_peaks>1] = 1
     cells_list = list(cell_peaks.columns)
     peaks_list = [peak for peak in cell_peaks.index if peak.split("_")[1].isdigit()]
     cell_peaks = sparse.csc_matrix(cell_peaks.loc[peaks_list, :].values)
