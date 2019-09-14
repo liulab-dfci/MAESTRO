@@ -43,10 +43,10 @@ RNAReadDistrPlot <- function(bamstat.filepath, readdistr.filepath, name){
   png(paste0(name ,"_scRNA_read_distr.png"), width=4.5,height=4.8, res = 300, units = "in")
   p = ggplot(map_df, aes(x = Group, y = ReadCount))+ theme_cowplot() + 
     geom_bar(stat="identity", fill = RCB_blue) + 
-    theme(axis.title = element_text(size = 13), axis.text.y = element_text(size = 12, angle = 90), 
-          axis.text.x = element_text(angle = 45, size = 12, hjust = 1),axis.ticks.x = element_blank(),
-          legend.position="none") + 
     xlab(NULL) + ylab("Read counts (M)") + 
+    theme(axis.title = element_text(size = 13), axis.text.y = element_text(size = 12, angle = 90, hjust = 0.5), 
+          axis.text.x = element_text(angle = 45, size = 12, hjust = 1),axis.ticks.x = element_blank(),
+          legend.position="none", axis.title.y = element_text(margin = margin(r = 20, unit = "pt"))) + 
     geom_text(aes(label = map_ratio_list, y = ReadCount + 50), size = 4.8) 
   print(p)
   dev.off()
