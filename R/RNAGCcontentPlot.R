@@ -14,10 +14,12 @@
 #' @export
 
 RNAGCcontentPlot <- function(filepath, name){
+  RCB_blue = "#2166AC"
+
   GC_content = read.table(filepath, header = TRUE, sep = "\t")
   gc=rep(GC_content[,1],times = GC_content[,2])
   png(paste0(name, "_scRNA_GCcontent.png"), width = 4.8,height = 4.8, res = 300, units = "in")
   par(mai = c(0.85,0.85,0.25,0.25))
-  hist(gc,probability=T,breaks=100,xlab="GC content (%)",ylab="Density of Reads",border="blue",main="")
+  hist(gc,probability=T,breaks=100,xlab="GC content (%)",ylab="Density of Reads",border=RCB_blue,main="")
   dev.off()
 }
