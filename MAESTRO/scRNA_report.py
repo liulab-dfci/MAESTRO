@@ -7,6 +7,7 @@ Created on Thu Jul 18 15:59:29 2019
 """
 
 import os,sys
+import snakemake.report
 
 SCRIPT_PATH = os.path.dirname(__file__)
 outpre = sys.argv[1]
@@ -18,16 +19,27 @@ platform = sys.argv[4]
 report_html_tempfile = os.path.join(SCRIPT_PATH, "html", "scRNA_template.html")
 report_html_temp = open(report_html_tempfile, "r").read()
 
-readqualplot_link = '''"Plot/%s_scRNA_read_quality.png"'''%outpre
-nvcplot_link = '''"Plot/%s_scRNA_NVC.png"'''%outpre
-gcplot_link = '''"Plot/%s_scRNA_GCcontent.png"'''%outpre
-genecovplot_link = '''"Plot/%s_scRNA_genebody_cov.png"'''%outpre
-countgeneplot_link = '''"Plot/%s_scRNA_cell_filtering.png"'''%outpre
-genecluster_link = '''"Plot/%s_cluster.png"'''%outpre
-geneannotate_link = '''"Plot/%s_annotated.png"'''%outpre
+# readdistrplot_link = '''"Plot/%s_scRNA_read_distr.png"'''%outpre
+# readqualplot_link = '''"Plot/%s_scRNA_read_quality.png"'''%outpre
+# nvcplot_link = '''"Plot/%s_scRNA_NVC.png"'''%outpre
+# gcplot_link = '''"Plot/%s_scRNA_GCcontent.png"'''%outpre
+# genecovplot_link = '''"Plot/%s_scRNA_genebody_cov.png"'''%outpre
+# countgeneplot_link = '''"Plot/%s_scRNA_cell_filtering.png"'''%outpre
+# genecluster_link = '''"Plot/%s_cluster.png"'''%outpre
+# geneannotate_link = '''"Plot/%s_annotated.png"'''%outpre
 bamstat_file = "Result/QC/%s_bam_stat.txt"%outpre
 readdistr_file = "Result/QC/%s_read_distribution.txt"%outpre
 cluster_regulator_file = "Result/Analysis/%s.PredictedTFTop10.txt"%outpre
+
+
+readdistrplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_read_distr.png"%outpre)[0]
+readqualplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_read_quality.png"%outpre)[0]
+nvcplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_NVC.png"%outpre)[0]
+gcplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_GCcontent.png"%outpre)[0]
+genecovplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_genebody_cov.png"%outpre)[0]
+countgeneplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_cell_filtering.png"%outpre)[0]
+genecluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_cluster.png"%outpre)[0]
+geneannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_annotated.png"%outpre)[0]
 
 stat_list = []
 for line in open(bamstat_file, "r").readlines():
@@ -84,9 +96,10 @@ for line in open(cluster_regulator_file,"r").readlines():
         td_list.append(items_str)
 td_str = "\n".join(td_list)
 
-report_html_instance = report_html_temp % {"totalreads":stat_list[0],"dupreads":stat_list[1],"mapreads":stat_list[2],"maptags":stat_list[3],"exontags":stat_list[4],"introntags":stat_list[5],"outprefix":outpre, "fastqdir":fastqdir, "species":species,"platform":platform, "readqual":readqualplot_link, "nvc":nvcplot_link, "gc":gcplot_link, "genecov":genecovplot_link, "countgene":countgeneplot_link, "genecluster":genecluster_link, "geneannotate":geneannotate_link, "regtable":td_str}
+#"totalreads":stat_list[0],"dupreads":stat_list[1],"mapreads":stat_list[2],"maptags":stat_list[3],"exontags":stat_list[4],"introntags":stat_list[5],
+report_html_instance = report_html_temp % {"outprefix":outpre, "fastqdir":fastqdir, "species":species,"platform":platform, "readdistr":readdistrplot_link,"readqual":readqualplot_link, "nvc":nvcplot_link, "gc":gcplot_link, "genecov":genecovplot_link, "countgene":countgeneplot_link, "genecluster":genecluster_link, "geneannotate":geneannotate_link, "regtable":td_str}
 
-report_html_instancefile = "Result/Summary/" + outpre + "_scRNA_report.html"
+report_html_instancefile = "Result/" + outpre + "_scRNA_report.html"
 outf = open(report_html_instancefile,"w")
 outf.write(report_html_instance)
 outf.close()

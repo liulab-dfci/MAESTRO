@@ -44,6 +44,7 @@ RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident 
 {
   require(Seurat)
   require(ggplot2)
+  require(Matrix)
   SeuratObj <- CreateSeuratObject(inputMat, project = project, min.cells = min.c, min.features = min.g)
 
   #=========Mitochondria and Spike-in========  
@@ -55,8 +56,8 @@ RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident 
     else{
        mito.genes <- grep("^mt-", rownames(GetAssayData(object = SeuratObj)), value = TRUE)
        ercc.genes <- grep("^ercc", rownames(GetAssayData(object = SeuratObj)), value = TRUE)}   
-    percent.mito <- colSums(as.matrix(GetAssayData(object = SeuratObj)[mito.genes, ]))/colSums(as.matrix(GetAssayData(object = SeuratObj)))
-    percent.ercc <- colSums(as.matrix(GetAssayData(object = SeuratObj)[ercc.genes, ]))/colSums(as.matrix(GetAssayData(object = SeuratObj)))
+    percent.mito <- Matrix::colSums(GetAssayData(object = SeuratObj)[mito.genes, ])/Matrix::colSums(GetAssayData(object = SeuratObj))
+    percent.ercc <- Matrix::colSums(GetAssayData(object = SeuratObj)[ercc.genes, ])/Matrix::colSums(GetAssayData(object = SeuratObj))
     SeuratObj$percent.mito <- percent.mito
     SeuratObj$percent.ercc <- percent.ercc
     p1 = VlnPlot(SeuratObj, c("percent.mito","percent.ercc"), ncol = 2)
@@ -93,7 +94,7 @@ RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident 
 
   #=========DE analysis===========
   message("Identify cluster specific genes ...")
-  cluster.genes <- FindAllMarkers(object = SeuratObj, only.pos = TRUE, min.pct = 0.1, test.use = genes.test.use)
+  cluster.genes <- FindAllMarkersMAESTRO(object = SeuratObj, only.pos = TRUE, min.pct = 0.1, test.use = genes.test.use)
   cluster.genes <- cluster.genes[cluster.genes$p_val_adj<genes.cutoff, ]
   write.table(cluster.genes, paste0(SeuratObj@project.name, "_DiffGenes.tsv"), quote = F, sep = "\t")
 

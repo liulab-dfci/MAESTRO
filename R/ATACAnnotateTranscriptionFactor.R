@@ -33,6 +33,7 @@
 ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@project.name, giggle.path, organism = "GRCh38", top.tf = 10)
 {
   require(Seurat)
+  require(Matrix)
   if(organism == "GRCh38"){
       data(GRCh38.CistromeDB.genescore)
       data(human.tf.family)
@@ -100,7 +101,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@projec
     
     cluster_cell_list = split(names(Idents(ATAC)), Idents(ATAC))
     cluster_avg_rp = sapply(names(cluster_cell_list), function(x){
-      return(apply(GetAssayData(object = ATAC)[, cluster_cell_list[[x]]], 1, mean))
+      return(Matrix::rowMeans(GetAssayData(object = ATAC)[, cluster_cell_list[[x]]]))
     })
     
     cluster_tf_list_filter = sapply(names(tfList), function(x){

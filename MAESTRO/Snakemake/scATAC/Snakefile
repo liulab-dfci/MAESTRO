@@ -17,7 +17,7 @@ def qcplot_input(wildcards):
 
 rule all:
     input:
-        summaryreport = "Result/Summary/" + config["outprefix"] + "_scATAC_report.html"
+        summaryreport = "Result/" + config["outprefix"] + "_scATAC_report.html"
         # tfscore = "Result/Analysis/" + config["outprefix"] + "_tfscore.txt"
 
 if config["platform"] == "microfluidic":
@@ -115,9 +115,10 @@ if config["platform"] == "microfluidic":
         input:
             log = expand("Result/Log/bamLog/{fastqid}.mapping.log", fastqid = get_fastqlist(config["fastqdir"])),
             fragbed = "Result/QC/" + config["outprefix"] + "_frag.bed",
+            bulkqc = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
         output:
             stat = "Result/QC/singlecell.txt",
-            qcmapall = "Result/QC/" + config["outprefix"] + "_scATAC_mapping_summary.txt",
+            readdistr = "Result/QC/" + config["outprefix"] + "_scATAC_read_distr.png",
             qcfrag = "Result/QC/" + config["outprefix"] + "_scATAC_fragment_size.png",
             qcmap = "Result/QC/" + config["outprefix"] + "_scATAC_mapping_summary.png",
             qcfrip = "Result/QC/" + config["outprefix"] + "_scATAC_cell_filtering.png",
@@ -129,9 +130,10 @@ if config["platform"] == "microfluidic":
             outpre = config["outprefix"],
             stat = "singlecell.txt",
             fragbed = config["outprefix"] + "_frag.bed",
+            bulkqc = config["outprefix"] + "_bam_stat.txt",
         shell:
             "python " + SCRIPT_PATH + "/scATAC_microfluidic_qc.py {params.log} {output.stat};"
-            "Rscript " + RSCRIPT_PATH + "/scATACseq_qc.R {params.stat} {params.fragbed} {params.platform} {params.outpre} {params.outdir}"
+            "Rscript " + RSCRIPT_PATH + "/scATACseq_qc.R {params.stat} {params.bulkqc} {params.fragbed} {params.platform} {params.outpre} {params.outdir}"
 
     rule scatac_allpeakcall:
         input:
@@ -233,13 +235,14 @@ if config["platform"] == "microfluidic":
             finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed",
             validbarcode = "Result/QC/" + config["outprefix"] + "_scATAC_validcells.txt"
         output:
-            count = "Result/Analysis/" + config["outprefix"] + "_peak_count.txt"
+            count = "Result/Analysis/" + config["outprefix"] + "_peak_count.h5"
         threads:
             config["cores"]
         params:
-            bamdir = "Result/BWA"
+            bamdir = "Result/BWA",
+            species = config["species"]
         shell:
-            "python " + SCRIPT_PATH + "/scATAC_microfluidic_count.py {input.finalpeak} {input.validbarcode} {params.bamdir} {output.count} {threads}"
+            "python " + SCRIPT_PATH + "/scATAC_microfluidic_count.py {input.finalpeak} {input.validbarcode} {params.bamdir} {output.count} {threads} {params.species}"
             
 if config["platform"] == "10x-genomics":
     rule scatac_cellranger:
@@ -287,7 +290,9 @@ if config["platform"] == "10x-genomics":
         input:
             bam = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_bam.bam",
             stat = "Result/Cellranger/" + config["outprefix"] + "/outs/singlecell.csv",
+            bulkqc = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
         output:
+            readdistr = "Result/QC/" + config["outprefix"] + "_scATAC_read_distr.png",
             fragbed = "Result/QC/" + config["outprefix"] + "_frag.bed",
             qcfrag = "Result/QC/" + config["outprefix"] + "_scATAC_fragment_size.png",
             qcmap = "Result/QC/" + config["outprefix"] + "_scATAC_mapping_summary.png",
@@ -299,12 +304,13 @@ if config["platform"] == "10x-genomics":
             outpre = config["outprefix"],
             stat = "../Cellranger/" + config["outprefix"] + "/outs/singlecell.csv",
             fragbed = config["outprefix"] + "_frag.bed",
-            sam = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_bam.sam"
+            sam = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_bam.sam",
+            bulkqc = config["outprefix"] + "_bam_stat.txt",
         shell:
             "samtools view {input.bam} > {params.sam};"
             "head -n 10000000 {params.sam} | awk '{{if ($9>0) print $9}}' > {output.fragbed};"
             "rm {params.sam};"
-            "Rscript " + RSCRIPT_PATH + "/scATACseq_qc.R {params.stat} {params.fragbed} {params.platform} {params.outpre} {params.outdir}"
+            "Rscript " + RSCRIPT_PATH + "/scATACseq_qc.R {params.stat} {params.bulkqc} {params.fragbed} {params.platform} {params.outpre} {params.outdir}"
 
     rule scatac_allpeakcall:
         input:
@@ -407,14 +413,15 @@ if config["platform"] == "10x-genomics":
             validbarcode = "Result/QC/" + config["outprefix"] + "_scATAC_validcells.txt",
             frag = "Result/Cellranger/" + config["outprefix"] + "/outs/fragments.tsv.gz"
         output:
-            count = "Result/Analysis/" + config["outprefix"] + "_peak_count.txt"
+            count = "Result/Analysis/" + config["outprefix"] + "_peak_count.h5"
         params:
-            frag = "Result/Cellranger/" + config["outprefix"] + "/outs/fragments.tsv"
+            frag = "Result/Cellranger/" + config["outprefix"] + "/outs/fragments.tsv",
+            species = config["species"]
         threads:
             config["cores"]
         shell:
             "gzip -d {input.frag};"
-            "python " + SCRIPT_PATH + "/scATAC_cellranger_count.py {input.finalpeak} {input.validbarcode} {params.frag} {output.count} {threads}"
+            "python " + SCRIPT_PATH + "/scATAC_cellranger_count.py {input.finalpeak} {input.validbarcode} {params.frag} {output.count} {threads} {params.species}"
 
 if config["platform"] == "sci-ATAC-seq":
     rule scatac_map:
@@ -498,8 +505,10 @@ if config["platform"] == "sci-ATAC-seq":
         input:
             log = qcplot_input,
             fragbed = "Result/QC/" + config["outprefix"] + "_frag.bed",
+            bulkqc = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
         output:
             stat = "Result/QC/singlecell.txt",
+            readdistr = "Result/QC/" + config["outprefix"] + "_scATAC_read_distr.png",
             qcfrag = "Result/QC/" + config["outprefix"] + "_scATAC_fragment_size.png",
             qcmap = "Result/QC/" + config["outprefix"] + "_scATAC_mapping_summary.png",
             qcfrip = "Result/QC/" + config["outprefix"] + "_scATAC_cell_filtering.png",
@@ -510,10 +519,11 @@ if config["platform"] == "sci-ATAC-seq":
             outdir = "Result/QC",
             outpre = config["outprefix"],
             stat = "singlecell.txt",
-            fragbed = config["outprefix"] + "_frag.bed"
+            fragbed = config["outprefix"] + "_frag.bed",
+            bulkqc = config["outprefix"] + "_bam_stat.txt",
         shell:
             "python " + SCRIPT_PATH + "/scATAC_microfluidic_qc.py {params.log} {output.stat};"
-            "Rscript " + RSCRIPT_PATH + "/scATACseq_qc.R {params.stat} {params.fragbed} {params.platform} {params.outpre} {params.outdir}"
+            "Rscript " + RSCRIPT_PATH + "/scATACseq_qc.R {params.stat} {params.bulkqc} {params.fragbed} {params.platform} {params.outpre} {params.outdir}"
 
     rule scatac_allpeakcall:
         input:
@@ -615,13 +625,14 @@ if config["platform"] == "sci-ATAC-seq":
             finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed",
             validbarcode = "Result/QC/" + config["outprefix"] + "_scATAC_validcells.txt"
         output:
-            count = "Result/Analysis/" + config["outprefix"] + "_peak_count.txt"
+            count = "Result/Analysis/" + config["outprefix"] + "_peak_count.h5"
         threads:
             config["cores"]
         params:
-            bamdir = "Result/BWA/Split"
+            bamdir = "Result/BWA/Split",
+            species = config["species"]
         shell:
-            "python " + SCRIPT_PATH + "/scATAC_microfluidic_count.py {input.finalpeak} {input.validbarcode} {params.bamdir} {output.count} {threads}"
+            "python " + SCRIPT_PATH + "/scATAC_microfluidic_count.py {input.finalpeak} {input.validbarcode} {params.bamdir} {output.count} {threads} {params.species}"
 
 rule scatac_bdg2bw:
     input:
@@ -655,54 +666,54 @@ rule scatac_ceas:
 
 rule scatac_genescore:
     input:
-        count = "Result/Analysis/" + config["outprefix"] + "_peak_count.txt"
+        count = "Result/Analysis/" + config["outprefix"] + "_peak_count.h5"
     output:
-        genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.txt"
+        genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.h5"
     params:
         genedistance = config["genedistance"],
         genebed = SCRIPT_PATH + "/annotations/" + config["species"] +"_ensembl.bed",
-    threads:
-        config["cores"]
     shell:
-        "python " + SCRIPT_PATH + "/scATAC_genescore.py {input.count} {output.genescore} {params.genedistance} {params.genebed} {threads}"
+        "python " + SCRIPT_PATH + "/scATAC_genescore.py {input.count} {output.genescore} {params.genedistance} {params.genebed}"
 
 rule scatac_analysis:
     input:
-        count = "Result/Analysis/" + config["outprefix"] + "_peak_count.txt",
-        genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.txt"
+        count = "Result/Analysis/" + config["outprefix"] + "_peak_count.h5",
+        genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.h5"
     output:
         specificpeak = "Result/Analysis/" + config["outprefix"] + "_DiffPeaks.tsv",
         clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
         annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
     params:
         outdir = "Result/Analysis",
-        genescore = config["outprefix"] + "_genescore.txt",
+        genescore = config["outprefix"] + "_genescore.h5",
         outpre = config["outprefix"],
-        count = config["outprefix"] + "_peak_count.txt",
+        count = config["outprefix"] + "_peak_count.h5",
         giggleannotation = config["giggleannotation"],
-        species = config["species"]
+        species = config["species"],
+    threads:
+        config["cores"]
     shell:
-        "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R {params.count} {params.genescore} {params.species} {params.giggleannotation} {params.outpre} {params.outdir}"
+        "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R {params.count} {params.genescore} {params.species} {params.giggleannotation} {params.outpre} {params.outdir} {threads}"
 
 rule scatac_report:
     input:
         bulkqc = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
+        readdistr = "Result/QC/" + config["outprefix"] + "_scATAC_read_distr.png",
         qcmap = "Result/QC/" + config["outprefix"] + "_scATAC_mapping_summary.png",
         qcfrag = "Result/QC/" + config["outprefix"] + "_scATAC_fragment_size.png",
         qcfrip = "Result/QC/" + config["outprefix"] + "_scATAC_cell_filtering.png",
-        count = "Result/Analysis/" + config["outprefix"] + "_peak_count.txt",
+        count = "Result/Analysis/" + config["outprefix"] + "_peak_count.h5",
         clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
         annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
-        genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.txt",
+        genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.h5",
         ceas = "Result/QC/" + config["outprefix"] + "_scATAC_CEAS.pdf"
     output:
-        summaryreport = "Result/Summary/" + config["outprefix"] + "_scATAC_report.html",
-        outdir = directory("Result/Summary/Plot/")
+        summaryreport = "Result/" + config["outprefix"] + "_scATAC_report.html",
     params:
         outpre = config["outprefix"],
         fastqdir = config["fastqdir"],
         species = config["species"],
         platform = config["platform"]
     shell:
-        "cp {input.qcmap} {input.qcfrag} {input.qcfrip} {input.clusterplot} {input.annotateplot} {output.outdir};"
+        # "cp {input.readdistr} {input.qcmap} {input.qcfrag} {input.qcfrip} {input.clusterplot} {input.annotateplot} {output.outdir};"
         "python " + SCRIPT_PATH + "/scATAC_report.py {params.outpre} {params.fastqdir} {params.species} {params.platform}"

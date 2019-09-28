@@ -33,6 +33,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, orga
 {
   require(Seurat)
   require(MAGeCKFlute)
+  require(Matrix)
   if(organism == "GRCh38"){
     org = "hsa"
     data(human.tf.family)
@@ -126,7 +127,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, rabit.path, orga
 
     cluster_cell_list <- split(names(Idents(RNA)), Idents(RNA))
     cluster_avg_expr <- sapply(names(cluster_cell_list), function(x){
-      return(apply(GetAssayData(object = RNA)[, cluster_cell_list[[x]]], 1, mean))
+      return(Matrix::rowMeans(GetAssayData(object = RNA)[, cluster_cell_list[[x]]]))
     })
 
     cluster_tf_list_filter = sapply(names(cluster_drivertf_list), function(x){
