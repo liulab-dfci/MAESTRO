@@ -82,6 +82,9 @@ $ Analysis CellRanger Log QC Summary
 
 Outputfiles: 1)The CellRanger directory contains all the mapping and analysis files from CellRanger pipeline. 2) The QC directory contains qualtiy control analysis of scRNA-seq data, including the barcodes filtering table. 3) The Analysis directory contains the gene count table, clustering result, annotated result, driver transcription factor identification result, for which we will introduce in the step-by-step analysis. 4) The Log directory contains the log files generated in the pipeline analysis. 5) The Summary directroy contains the 10X_PBMC_8K_report.html, which summarized all the results in a html based document. The summary html for the 10X_PBMC_8K example can be found [here](http://cistrome.org/~chenfei/MAESTRO/10X_PBMC_12k_MAESTRO_scRNA_report.html).
 
+Mappability plot for scRNA-seq QC analysis:     
+<img src="./10X_PBMC_8K_mapping_summary.png" width="500" height="500" /> 
+
 Gene-body coverage plot for scRNA-seq QC analysis:      
 <img src="./10X_PBMC_8K_genebody_cov.png" width="500" height="500" /> 
 
