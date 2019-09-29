@@ -72,7 +72,7 @@ $ Analysis CellRangerATAC Log QC Summary
 Outputfiles: 1) The CellRangerATAC directory contains all the mapping and analysis files fron CellRangerATAC pipeline. 2) The QC directory contains qualtiy control analysis of scATAC-seq data, including the barcodes filtering table. 3) The Analysis directory contains the MACS peak calling result, peak count table, clustering result, annotated result, driver transcription factor identification result, for which we will introduce in the step-by-step analysis. 4) The Log directory contains the log files generated in the pipeline analysis. 5) The Summary directroy contains the 10X_PBMC_10K_report.html, which summarized all the results in a html based document. The summary html for the 10X_PBMC_10K example can be found [here](http://cistrome.org/~chenfei/MAESTRO/10X_PBMC_10k_MAESTRO_scATAC_report.html).
 
 Mappability plot for scATAC-seq QC analysis:     
-<img src="./10X_PBMC_10K_mapping_summary.png" width="500" height="500" /> 
+<img src="./10X_PBMC_10K_mapping_summary.png" width="500" height="600" /> 
 
 Fragment size distribution for scATAC-seq QC analysis:      
 <img src="./10X_PBMC_10K_fragment_size.png" width="500" height="500" /> 
