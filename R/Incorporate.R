@@ -42,13 +42,22 @@ Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembeddi
   RNA$tech <- "RNA"
   
   if(is.null(ATAC[["ACTIVITY"]])){
-     RPmatrix <- RPmatrix[,colnames(ATAC)]
+     RPmatrix <- RPmatrix[,intersect(colnames(ATAC), colnames(RPmatrix))]
+     ATAC <- subset(ATAC, cells = intersect(colnames(ATAC), colnames(RPmatrix)))
      ATAC[["ACTIVITY"]] <- CreateAssayObject(counts = RPmatrix)
      DefaultAssay(ATAC) <- "ACTIVITY"
      ATAC <- FindVariableFeatures(ATAC)
      ATAC <- NormalizeData(ATAC)
      ATAC <- ScaleData(ATAC)}
-
+#  activity.matrix <- CreateGeneActivityMatrix(peak.matrix = RPmatrix, annotation.file = "/homes/cwang/annotations/hg38/Homo_sapiens.GRCh37.82.gtf",  seq.levels = c(1:22, "X", "Y"), upstream = 2000, verbose = TRUE)
+#  activity.matrix <- activity.matrix[,intersect(colnames(ATAC), colnames(activity.matrix))]
+#  ATAC <- subset(ATAC, cells = intersect(colnames(ATAC), colnames(activity.matrix)))
+#  ATAC[["ACTIVITY"]] <- CreateAssayObject(counts = activity.matrix)
+#  DefaultAssay(ATAC) <- "ACTIVITY"
+#  ATAC <- FindVariableFeatures(ATAC)
+#  ATAC <- NormalizeData(ATAC)
+#  ATAC <- ScaleData(ATAC)
+  
   transfer.anchors <- FindTransferAnchors(reference = RNA, query = ATAC, features = VariableFeatures(object = RNA), 
                       reference.assay = "RNA", query.assay = "ACTIVITY", reduction = "cca")
   celltype.predictions <- TransferData(anchorset = transfer.anchors, refdata = RNA$assign.ident, weight.reduction = ATAC[["lsi"]])

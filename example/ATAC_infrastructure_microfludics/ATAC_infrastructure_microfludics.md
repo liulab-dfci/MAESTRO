@@ -6,10 +6,10 @@ In this example, we will be analyzing datasets of 7 celllines using the microflu
 We will start from the processed dataset and demonstrate the step-by-step analysis using MAESTRO R package. First you can download the data from Cistrome website.
 
 ```bash
-$ wget http://cistrome.org/~chenfei/MAESTRO/GSE65360_cellline_merged_count.txt.gz
-$ wget http://cistrome.org/~chenfei/MAESTRO/GSE65360_cellline_gene_score.txt.gz
-$ gunzip GSE65360_cellline_merged_count.txt.gz
-$ gunzip GSE65360_cellline_gene_score.txt.gz
+$ wget http://cistrome.org/~chenfei/MAESTRO/GSE65360_cellline_peak_count.h5.gz
+$ wget http://cistrome.org/~chenfei/MAESTRO/GSE65360_cellline_gene_score.h5.gz
+$ gunzip GSE65360_cellline_peak_count.h5.gz
+$ gunzip GSE65360_cellline_gene_score.h5.gz
 ```
 
 **Step 1. Read the data into R environment**     
@@ -17,8 +17,9 @@ To use the MAESTRO R function, following the instructions in MAESTRO [README](ht
 
 ```R
 > library(MAESTRO)
-> cellline.peak <- read.table('GSE65360_cellline_merged_count.txt')
-> cellline.gene <- read.table('GSE65360_cellline_gene_score.txt')
+> library(Seurat)
+> cellline.peak <- Read10X_h5('GSE65360_cellline_peak_count.h5')
+> cellline.gene <- Read10X_h5('GSE65360_cellline_gene_score.h5')
 ```
 
 **Step 2. Clustering and differential peak calling**      
@@ -26,7 +27,7 @@ We next create an Seurat object using the peak count matrix, and perform the clu
 
 ```R
 > cellline.ATAC.res <- ATACRunSeurat(inputMat = cellline.peak, 
->                                    project = "cellline.scATAC.cluster", 
+>                                    project = "cellline.scATAC", 
 >                                    method = "LSI",
 >                                    min.c = 50,
 >                                    min.p = 500,
@@ -52,7 +53,7 @@ chr8-72000304-72000895   chr8-72000304-72000895
 chr21-42078065-42078756 chr21-42078065-42078756
 ```
 
-<img src="./cellline.scATAC.Seurat.cluster.png" width="500" height="400" /> 
+<img src="./cellline.scATAC.cluster.png" width="500" height="400" /> 
 
 **Step 3. Annotate celltypes**     
 The cell identity for the microfludics based scATACs-seq are known before clustering. To visualize the cell type annotation of the clusters, we need to pass the original identity to the clustering result.
@@ -68,7 +69,7 @@ The cell identity for the microfludics based scATACs-seq are known before cluste
 >                                                orig.ident = cellline.ATAC.orig)
 ```
 
-<img src="./cellline.scATAC.Seurat.original.png" width="530" height="400" /> 
+<img src="./cellline.scATAC.original.png" width="530" height="400" /> 
 
 **Step 4. Identify driver transcription factors**     
 Identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilize giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster specific peaks. To run this function, you need to first install [giggle](https://github.com/ryanlayer/giggle), download the giggle index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz), and provide the file location of the index to MAESTRO. 
@@ -164,7 +165,7 @@ saveRDS(cellline.ATAC.res, "cellline.ATAC.res.rds")
 The differential peaks, TFs and target genes have already been saved in the current directory by MAESTRO.
 
 ```bash
-$ ls cellline.scATAC.Seurat.DiffPeaks.tsv cellline.scATAC.TF.GIGGLE 
+$ ls cellline.scATAC.DiffPeaks.tsv cellline.scATAC.TF.GIGGLE 
 ```
 
 

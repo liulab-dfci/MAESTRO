@@ -6,9 +6,9 @@ In this example, we will be analyzing datasets from head and neck cancers (HNSCC
 We will start from the processed dataset and demonstrate the step-by-step analysis using MAESTRO R package. First you can download the data from Cistrome website.
 
 ```bash
-$ wget http://cistrome.org/~chenfei/MAESTRO/GSE103322_HNSCC_logTPM.txt.gz
+$ wget http://cistrome.org/~chenfei/MAESTRO/GSE103322_HNSCC_logTPM.h5.gz
 $ wget http://cistrome.org/~chenfei/MAESTRO/GSE103322_HNSCC_Infor.txt.gz
-$ gunzip GSE103322_HNSCC_logTPM.txt.gz
+$ gunzip GSE103322_HNSCC_logTPM.h5.gz
 $ gunzip GSE103322_HNSCC_Infor.txt.gz
 ```
 
@@ -17,7 +17,8 @@ To use the MAESTRO R function, following the instructions in MAESTRO [README](ht
 
 ```R
 > library(MAESTRO)
-> HNSCC.gene <- read.delim('GSE103322_HNSCC_logTPM.txt')
+> library(Seurat)
+> HNSCC.gene <- Read10X_h5('GSE103322_HNSCC_logTPM.h5')
 > HNSCC.Infor <- read.delim('GSE103322_HNSCC_Infor.txt')
 > HNSCC.normal <- HNSCC.gene[,colnames(HNSCC.Infor[,which(HNSCC.Infor[4,]==1)])]
 ```
@@ -27,7 +28,7 @@ We next create an Seurat object using the gene expression matrix, and perform th
 
 ```R
 > HNSCC.RNA.res <- RNARunSeurat(inputMat = HNSCC.normal, 
->                               project = "HNSCC.scRNA.Seurat", 
+>                               project = "HNSCC.scRNA", 
 >                               min.c = 10,
 >                               min.g = 200,
 >                               mito = TRUE,
@@ -48,9 +49,9 @@ MYL9   0.000000e+00  1.418340 0.970 0.260  0.000000e+00       0  MYL9
 LMOD1 6.154863e-281  1.312901 0.674 0.070 1.113415e-276       0 LMOD1
 ```
 
-<img src="./HNSCC.scRNA.Seurat.spikein.png" width="520" height="400" /> 
-<img src="./HNSCC.scRNA.Seurat.PCElbowPlot.png" width="500" height="400" /> 
-<img src="./HNSCC.scRNA.Seurat.cluster.png" width="500" height="400" /> 
+<img src="./HNSCC.scRNA.spikein.png" width="520" height="400" /> 
+<img src="./HNSCC.scRNA.PCElbowPlot.png" width="500" height="400" /> 
+<img src="./HNSCC.scRNA.cluster.png" width="500" height="400" /> 
 
 **Step 3. Annotate celltypes**     
 We next try to annotate different clusters based on their marker genes. We use public immune signatures like [CIBERSORT](https://www.nature.com/articles/nmeth.3337) to annotate the clusters. However, the CIBERSORT signatures do not contains some of the stromal populations, we further add the signatures for the stromal polulations. You can also use your own signatures to annotate the clusters.
@@ -67,7 +68,7 @@ We next try to annotate different clusters based on their marker genes. We use p
 >                                          min.score = 0.1)
 ```
 
-<img src="./HNSCC.scRNA.Seurat.annotated.png" width="600" height="400" /> 
+<img src="./HNSCC.scRNA.annotated.png" width="600" height="400" /> 
 
 **Step 4. Identify driver transcription factors**     
 Identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilize rabit to predict the potential upstream transcription factors based on the marker genes in each cluster. For our analysis, we used the TF ChIP-seq peaks from CistromeDB to identify potential TFs that could shaping the gene expression patterns. To run this function, you need to first install [rabit](http://rabit.dfci.harvard.edu/), download the rabit index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz), and provide the file location of the index to MAESTRO.
@@ -160,6 +161,6 @@ saveRDS(HNSCC.RNA.res, "HNSCC.RNA.res.rds")
 The differential genes, predicted TFs for each cluster have already been saved in the current directory by MAESTRO.
 
 ```bash
-$ ls HNSCC.scRNA.Seurat.DiffGenes.tsv HNSCC.scRNA.TF 
+$ ls HNSCC.scRNA.DiffGenes.tsv HNSCC.scRNA.TF 
 ```
 
