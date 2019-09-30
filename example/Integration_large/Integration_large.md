@@ -131,10 +131,10 @@ Next, we can integrate the BCC scATAC-seq clusters with scRNA-seq clusters, co-e
 > bcc.coembedded.res <- Incorporate(RNA = bcc.RNA.res$RNA, ATAC = bcc.ATAC.res$ATAC, project = "BCC.coembedded")
 ```
 Co-embedding visualization:     
-<img src="./GSE129785_BCC_coembedded_source.png" width="480" height="400" /> 
+<img src="./GSE129785_BCC_coembedded_source.png" width="460" height="400" /> 
 
 Co-embedding and annotated visualization:     
-<img src="./GSE129785_BCC_coembedded_annotated.png" width="480" height="400" /> 
+<img src="./GSE129785_BCC_coembedded_annotated.png" width="460" height="400" /> 
 
 scRNA-only visualization:       
 <img src="./GSE129785_BCC_coembedded_RNAonly.png" width="530" height="400" /> 
