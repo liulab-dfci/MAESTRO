@@ -51,10 +51,10 @@ MAESTRO utilize rabit to predict the potential transcription factors based on th
 
 [<img src="./image/RNA.10x.png" width="280" height="318" />](./example/RNA_infrastructure_10x/RNA_infrastructure_10x.md)
 [<img src="./image/ATAC.10x.png" width="280" height="318" />](./example/ATAC_infrastructure_10x/ATAC_infrastructure_10x.md)
-[<img src="./image/intergration.10x.png" width="280" height="318" />](./example/Integration/Integration.md)
+[<img src="./image/integration.10x.png" width="280" height="318" />](./example/Integration/Integration.md)
 [<img src="./image/RNA.Smartseq2.png" width="280" height="318" />](./example/RNA_infrastructure_smartseq/RNA_infrastructure_smartseq.md)
 [<img src="./image/ATAC.microfludics.png" width="280" height="318" />](./example/ATAC_infrastructure_microfludics/ATAC_infrastructure_microfludics.md)
-
+[<img src="./image/integration.large.png" width="280" height="318" />](./example/Integration_large/Integration_large.md)
 
 ## Citation
 
