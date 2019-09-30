@@ -18,10 +18,10 @@ To visualize all the scRNA-seq and scATAC-seq cells together, we can co-embedded
 ```
 
 Co-embedding visualization:     
-<img src="./PBMC.coembedded_source.png" width="510" height="400" /> 
+<img src="./PBMC.coembedded_source.png" width="500" height="400" /> 
 
 Co-embedding and annotated visualization:     
-<img src="./PBMC.coembedded_annotated.png" width="510" height="400" /> 
+<img src="./PBMC.coembedded_annotated.png" width="500" height="400" /> 
 
 scRNA-only visualization:       
 <img src="./PBMC.coembedded_RNAonly.png" width="530" height="400" /> 
