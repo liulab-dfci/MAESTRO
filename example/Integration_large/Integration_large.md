@@ -28,7 +28,7 @@ To use the MAESTRO R function, following the instructions in MAESTRO [README](ht
 [1] 531055  37818
 ```
 
-**Step 2. Claim the process and memory usage in R**
+**Step 2. Claim the process and memory usage in R**  
 There are still ~0.5 million peaks after filtering. To accelerate the computing process, you can use the multiple processing function in R, and claim the process and memory usage using the flowing commands.
 
 ```R
@@ -115,7 +115,6 @@ Then you can read the bcc scRNA-seq dataseq into R, clustering like the [previou
                               cluster.res = 0.6,
                               genes.test.use = "wilcox",
                               genes.cutoff = 1e-05)
->                              
 > bcc.RNA.anno <- read.delim("GSE123813_BCC_scRNA_metadata.txt")
 > bcc.RNA.res$RNA@meta.data = cbind(bcc.RNA.res$RNA@meta.data, bcc.RNA.anno[match(colnames(bcc.RNA.res$RNA), bcc.RNA.anno[,1]),c(2,3,5)])
 > bcc.RNA.res$RNA@meta.data$assign.ident = bcc.RNA.res$RNA@meta.data$cluster
