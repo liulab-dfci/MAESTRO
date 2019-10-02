@@ -11,6 +11,16 @@ $ wget http://cistrome.org/~chenfei/MAESTRO/GSE129785_BCC_scATAC_gene_score.h5.g
 $ gunzip GSE129785_BCC_scATAC_peak_count.h5.gz
 $ gunzip GSE129785_BCC_scATAC_gene_score.h5.gz 
 ```
+If you have your own count matrix of mtx files from 10-x genomics, you can convert it to hdf5 format using the functions provided in MAESTRO under python environment.
+
+```bash
+$ source activate MAESTRO
+$ python
+>>> from MAESTRO.scATAC_H5Process import *
+>>> count_2_h5("GSE129785_BCC_scATAC_peak_count.h5", "GSE129785_BCC_scATAC_peak_count.txt", genome="GRCh38", type="Peaks")
+>>> mtx_2_h5("GSE123813_BCC_scRNA_counts.h5", "matrix.mtx", "genes.tsv", "barcodes.tsv", genome="GRCh38", type="Gene Expression")
+```
+Then you can use the hdf5 files for the downstream analysis.
 
 **Step 1. Read the data into R environment**     
 To use the MAESTRO R function, following the instructions in MAESTRO [README](https://github.com/chenfeiwang/MAESTRO/blob/master/README.md) page and install the R package. Then read the peak count matrix and gene score matrix into R. We could first filter the peaks with occurrence less than 50 to reduce the computing time and save some memory.
