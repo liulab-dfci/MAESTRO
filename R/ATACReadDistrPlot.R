@@ -19,13 +19,13 @@ ATACReadDistrPlot <- function(filepath, name)
   require(cowplot)
   RCB_blue = "#2166AC"
   
-  bam_stat_list = readLines(filepath)[c(1,4,15,14,17)]
+  bam_stat_list = readLines(filepath)[c(1,4,15,14,17,16)]
   total_reads = unlist(strsplit(bam_stat_list[1], split = " "))[1]
   dup_reads = unlist(strsplit(bam_stat_list[2], split = " "))[1]
-  map_list = as.integer(c(total_reads, dup_reads, bam_stat_list[3:5]))/1000000
+  map_list = as.integer(c(total_reads, dup_reads, bam_stat_list[3:6]))/1000000
   map_ratio_list = round(map_list*100/map_list[1],2)
   map_ratio_list = paste0(map_ratio_list, "%")
-  Group = c("Total reads", "Duplicate reads", "Unique mapped reads","Mitochondria reads", "Peak reads")
+  Group = c("Total reads", "Duplicate reads", "Unique mapped reads","Mitochondria reads", "Peak reads", "Promoter reads")
   map_df = data.frame(ReadCount = map_list, Group, stringsAsFactors = FALSE)
   map_df$Group = factor(map_df$Group, levels = Group)
   
