@@ -10,6 +10,7 @@ import os,sys
 import time
 import multiprocessing as mp
 from MAESTRO.scATAC_utility import *
+from MAESTRO.scATAC_H5Process import *
 
 tmp = randomString()
 
@@ -39,27 +40,27 @@ def bedtools_intersect(barcode):
     os.system("bedtools intersect -wa -a " + sys.argv[1] + " -b " + tmp + "/" + barcode + " -u > " + tmp + "/" + barcode + ".bed")
     return(tmp + "/" + barcode + ".bed")
 
-def merge_binary_file(peak_file, count_list, count_file):
+def merge_binary_file(peak_file, count_list, count_file, genome = 'GRCh38'):
     """Merge the intersectBed result into binary count table."""
 
     binary_count = {}
     for line in open(peak_file, 'r'):
         line = line.strip().split('\t')
-        binary_count[line[0]+'_'+line[1]+'_'+line[2]] = ['0']*len(count_list)
+        binary_count[line[0]+'_'+line[1]+'_'+line[2]] = [0]*len(count_list)
     
-    header = []
+    barcodes = []
     for i in range(0,len(count_list)):
-        header.append(count_list[i].split("/")[-1][:-4])
+        barcodes.append(count_list[i].split("/")[-1][:-4])
         for line in open(count_list[i], 'r'):
             line = line.strip().split('\t')
             if line[0]+'_'+line[1]+'_'+line[2] in binary_count:
-               binary_count[line[0]+'_'+line[1]+'_'+line[2]][i] = '1'
+               binary_count[line[0]+'_'+line[1]+'_'+line[2]][i] = 1
 
-    outf = open(count_file, 'w')
-    print("\t".join(header), file=outf)
-    for k in sorted(binary_count.keys()):
-        print(k+"\t"+"\t".join(binary_count[k]), file=outf)
-    outf.close()
+    features = list(sorted(binary_count.keys()))
+    matrix = []
+    for k in features:
+        matrix.append(binary_count[k])
+    write_10X_h5(count_file, matrix, features, barcodes, genome = genome, type = 'Peaks')
 
 def main():
 
@@ -68,6 +69,7 @@ def main():
     frag_file = sys.argv[3]
     count_file = sys.argv[4]
     cores = int(sys.argv[5])
+    genome = sys.argv[6]
     
     start = time.time()
     os.system("mkdir " + tmp)
@@ -77,7 +79,7 @@ def main():
     pool.close()
     pool.join()
     count_list = result.get()
-    merge_binary_file(peak_file, count_list, count_file)
+    merge_binary_file(peak_file, count_list, count_file, genome)
     os.system("rm -rf " + tmp)
     end = time.time()
     print("Peakcount Time:", end-start)    

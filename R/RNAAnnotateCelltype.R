@@ -37,7 +37,7 @@ RNAAnnotateCelltype <- function(RNA, genes, signatures, min.score = 0.1, orig.id
                           return(toupper(as.character(signatures[which(signatures[,1]==celltypes[x]),2])))})
         names(signature_list) <- celltypes
             
-        cluster_celltypes = sapply(as.integer(unique(genes$cluster))-1, function(x){
+        cluster_celltypes = sapply(as.integer(unique(RNA@meta.data$seurat_clusters))-1, function(x){
         idx = genes$cluster==x
         avglogFC = genes$avg_logFC[idx]
         names(avglogFC) = toupper(genes$gene[idx])
@@ -51,7 +51,7 @@ RNAAnnotateCelltype <- function(RNA, genes, signatures, min.score = 0.1, orig.id
           cluster_celltypes = "Others"
         })
         
-        current.cluster.ids = as.integer(unique(genes$cluster))-1
+        current.cluster.ids = as.integer(unique(RNA@meta.data$seurat_clusters))-1
         new.cluster.ids = cluster_celltypes
         RNA@meta.data$assign.ident = Idents(RNA)[rownames(RNA@meta.data)]
         RNA@meta.data$assign.ident = plyr::mapvalues(x = RNA@meta.data$assign.ident,

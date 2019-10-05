@@ -30,9 +30,10 @@
 #'
 #' @export
 
-ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@project.name, giggle.path, organism = "GRCh38", top.tf = 10)
+ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATAC@project.name, giggle.path, organism = "GRCh38", top.tf = 10)
 {
   require(Seurat)
+  require(Matrix)
   if(organism == "GRCh38"){
       data(GRCh38.CistromeDB.genescore)
       data(human.tf.family)
@@ -87,10 +88,12 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@projec
       targetDf <- targetDf[, c("sample_id", "species", "factor", "biological_resource", "giggle_score", "sample_peak_number", "overlap_peak_number")]
       targetDf <- targetDf[order(-targetDf$giggle_score), ]
       targetDf <- targetDf[!duplicated(targetDf$factor), ]
-      
+
       write.table(targetDf, paste0(outputBed, ".giggle.res.tfs.txt"), sep="\t", quote=FALSE, row.names=FALSE)
-      rownames(targetDf) = targetDf$factor
-      tfList[[icluster]] <- targetDf[,c("factor","giggle_score")]
+      if(nrow(targetDf) > 0){
+        rownames(targetDf) = targetDf$factor
+        tfList[[icluster]] <- targetDf[,c("factor","giggle_score")]
+      }
       cmd <- paste0("rm ", outputBed, ".gz")
       system(cmd)
       cmd <- paste0("rm ", outputBed, ".result.xls")
@@ -100,7 +103,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATACRP@projec
     
     cluster_cell_list = split(names(Idents(ATAC)), Idents(ATAC))
     cluster_avg_rp = sapply(names(cluster_cell_list), function(x){
-      return(apply(GetAssayData(object = ATAC)[, cluster_cell_list[[x]]], 1, mean))
+      return(Matrix::rowMeans(GetAssayData(object = ATAC)[, cluster_cell_list[[x]]]))
     })
     
     cluster_tf_list_filter = sapply(names(tfList), function(x){

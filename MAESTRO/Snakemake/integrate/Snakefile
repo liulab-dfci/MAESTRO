@@ -13,7 +13,7 @@ from MAESTRO.scATAC_utility import SCRIPT_PATH, RSCRIPT_PATH
 
 rule all:
     input:
-        summaryreport = "Result/Summary/" + config["outprefix"] + "_integrate_report.html"
+        summaryreport = "Result/" + config["outprefix"] + "_integrate_report.html"
 
 rule integrate_merge:
     input:
@@ -39,12 +39,10 @@ rule integrate_report:
         atacplot = "Result/Analysis/" + config["outprefix"] + "_ATAConly.png",
         annoplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
     output:
-        summaryreport = "Result/Summary/" + config["outprefix"] + "_integrate_report.html",
-        outdir = directory("Result/Summary/Plot/")
+        summaryreport = "Result/" + config["outprefix"] + "_integrate_report.html"
     params:
         outpre = config["outprefix"],
         rnaobj = config["rnaobject"],
         atacobj = config["atacobject"],
     shell:
-        "cp {input.sourceplot} {input.rnaplot} {input.atacplot} {input.annoplot} {output.outdir};"
         "python " + SCRIPT_PATH + "/integrate_report.py {params.outpre} {params.rnaobj} {params.atacobj}"

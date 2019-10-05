@@ -7,6 +7,7 @@ Created on Mon Jul  1 20:33:03 2019
 """
 
 import os,sys
+import snakemake.report
 
 SCRIPT_PATH = os.path.dirname(__file__)
 outpre = sys.argv[1]
@@ -17,13 +18,23 @@ platform = sys.argv[4]
 report_html_tempfile = os.path.join(SCRIPT_PATH, "html", "scATAC_template.html")
 report_html_temp = open(report_html_tempfile, "r").read()
 
-fragplot_link = '''"Plot/%s_scATAC_fragment_size.png"'''%outpre
-mapplot_link = '''"Plot/%s_scATAC_mapping_summary.png"'''%outpre
-fripplot_link = '''"Plot/%s_scATAC_cell_filtering.png"'''%outpre
-peakcluster_link = '''"Plot/%s_cluster.png"'''%outpre
-rpannotate_link = '''"Plot/%s_annotated.png"'''%outpre
+# readdistrplot_link = '''"Plot/%s_scATAC_read_distr.png"'''%outpre
+# fragplot_link = '''"Plot/%s_scATAC_fragment_size.png"'''%outpre
+# mapplot_link = '''"Plot/%s_scATAC_mapping_summary.png"'''%outpre
+# fripplot_link = '''"Plot/%s_scATAC_cell_filtering.png"'''%outpre
+# peakcluster_link = '''"Plot/%s_cluster.png"'''%outpre
+# rpannotate_link = '''"Plot/%s_annotated.png"'''%outpre
 bulkqc_file = "Result/QC/%s_bam_stat.txt"%outpre
 cluster_regulator_file = "Result/Analysis/%s.PredictedTFTop10.txt"%outpre
+
+
+
+fragplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scATAC_fragment_size.png"%outpre)[0]
+mapplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scATAC_mapping_summary.png"%outpre)[0]
+fripplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scATAC_cell_filtering.png"%outpre)[0]
+peakcluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_cluster.png"%outpre)[0]
+rpannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_annotated.png"%outpre)[0]
+readdistrplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scATAC_read_distr.png"%outpre)[0]
 
 line_id = 0
 total,mapped,duplicate,mito,uniq,promoters = 0,0,0,0,0,0
@@ -59,9 +70,9 @@ for line in open(cluster_regulator_file,"r").readlines():
         td_list.append(items_str)
 td_str = "\n".join(td_list)
 
-report_html_instance = report_html_temp % {"totalreads":stat_list[0],"dupreads":stat_list[2],"mapreads":stat_list[1],"uniquereads":stat_list[4],"mitoreads":stat_list[3],"promoterreads":stat_list[5],"outprefix":outpre, "fastqdir":fastqdir, "species":species, "platform":platform, "fragment":fragplot_link, "frip":fripplot_link, "peakcluster":peakcluster_link, "rpannotate":rpannotate_link, "regtable":td_str}
+report_html_instance = report_html_temp % {"outprefix":outpre, "fastqdir":fastqdir, "species":species, "platform":platform, "readdistr":readdistrplot_link, "fragment":fragplot_link, "frip":fripplot_link, "peakcluster":peakcluster_link, "rpannotate":rpannotate_link, "regtable":td_str}
 
-report_html_instancefile = "Result/Summary/" + outpre + "_scATAC_report.html"
+report_html_instancefile = "Result/" + outpre + "_scATAC_report.html"
 outf = open(report_html_instancefile,"w")
 outf.write(report_html_instance)
 outf.close()

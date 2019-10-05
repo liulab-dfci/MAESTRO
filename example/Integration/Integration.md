@@ -13,15 +13,15 @@ Our analysis are based on the clustering result from previous examples. The step
 To visualize all the scRNA-seq and scATAC-seq cells together, we can co-embedded the scRNA-seq and scATAC-seq cells in the same low dimensional space. MAESTRO co-embedding are largely based on canonical correlation analysis (CCA) from [Seurat](https://satijalab.org/seurat/v3.0/atacseq_integration_vignette.html). 1) We first calculated the gene regulatory potential matrix using MAESTRO, which could represent the predicted gene expression level from ATAC-seq reads. 2) Then we identify 'anchors' between scRNA-seq and scATAC-seq datasets. 3) Finally, we transfer the cell type labels from scRNA-seq and also co-embedded the scRNA-seq and scATAC-seq cells using CCA. 
 
 ```R
-> Incorporate(RNA = pbmc.RNA.res$RNA, ATAC = pbmc.ATAC.res$ATAC, project = "PBMC.coembedded")
+> pbmc.coembedded.res <- Incorporate(RNA = pbmc.RNA.res$RNA, ATAC = pbmc.ATAC.res$ATAC, project = "PBMC.coembedded")
 > saveRDS(pbmc.coembedded.res, "pbmc.coembedded.Seurat.rds")
 ```
 
 Co-embedding visualization:     
-<img src="./PBMC.coembedded_source.png" width="530" height="400" /> 
+<img src="./PBMC.coembedded_source.png" width="460" height="400" /> 
 
 Co-embedding and annotated visualization:     
-<img src="./PBMC.coembedded_annotated.png" width="600" height="400" /> 
+<img src="./PBMC.coembedded_annotated.png" width="460" height="400" /> 
 
 scRNA-only visualization:       
 <img src="./PBMC.coembedded_RNAonly.png" width="530" height="400" /> 

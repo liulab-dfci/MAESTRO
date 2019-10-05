@@ -9,23 +9,19 @@ Created on Tue Jun 1 10:24:36 2019
 import os, sys
 import time
 import numpy as np
-import pandas as pd
-import scipy.sparse as sparse
+import scipy.sparse as sp_sparse
+import tables
+import h5py
+import collections
 from MAESTRO.scATAC_utility import *
-
-# def normMinMax(vector):
-#     c_min = min(vector)
-#     c_max = max(vector)
-#     c_gap = c_max - c_min
-#     res_vec = list(map(lambda x: (x-c_min)/c_gap, vector))
-#     return(res_vec)
+from MAESTRO.scATAC_H5Process import *
 
 def RP(peaks_info, genes_info, decay):
     """Multiple processing function to calculate regulation potential."""
 
     Sg = lambda x: 2**(-x)
     gene_distance = 15 * decay
-    genes_peaks_score_array = sparse.dok_matrix((len(genes_info), len(peaks_info)), dtype=np.float64)
+    genes_peaks_score_array = sp_sparse.dok_matrix((len(genes_info), len(peaks_info)), dtype=np.float64)
 
     w = genes_info + peaks_info
 
@@ -88,12 +84,17 @@ def calculate_RP_score(peak_file, gene_bed, decay, score_file):
     genes = list(set([i.split("@")[0] for i in genes_list]))
 
     peaks_info = []
-    cell_peaks = pd.read_csv(peak_file, sep="\t", header=0, index_col=0)
-    cells_list = list(cell_peaks.columns)
-    peaks_list = list(cell_peaks.index)
-    cell_peaks = sparse.csc_matrix(cell_peaks.values)
+    scatac_count = read_10X_h5(peak_file)
+    cell_peaks = scatac_count.matrix
+    peaks_list = scatac_count.names.tolist()
+    cells_list = scatac_count.barcodes.tolist()
+    # cell_peaks = pd.read_csv(peak_file, sep="\t", header=0, index_col=0)
+    # cell_peaks[cell_peaks>1] = 1
+    # cells_list = list(cell_peaks.columns)
+    # peaks_list = [peak for peak in cell_peaks.index if peak.split("_")[1].isdigit()]
+    # cell_peaks = sp_sparse.csc_matrix(cell_peaks.loc[peaks_list, :].values)
     for ipeak, peak in enumerate(peaks_list):
-        peaks_tmp = peak.split("_")
+        peaks_tmp = peak.decode().split("_")
         peaks_info.append([peaks_tmp[0], (int(peaks_tmp[1]) + int(peaks_tmp[2])) / 2.0, 0, ipeak])
 
     genes_peaks_score_dok = RP(peaks_info, genes_info, decay)
@@ -121,12 +122,18 @@ def calculate_RP_score(peak_file, gene_bed, decay, score_file):
         if score_cells_sum_dict[gene] > score_cells_dict_max[symbol]:
             score_cells_dict_dedup[symbol] = score_cells_dict[gene]
             score_cells_dict_max[symbol] = score_cells_sum_dict[gene]
+    gene_symbol = sorted(score_cells_dict_dedup.keys())
+    score_cells_matrix = []
+    for gene in gene_symbol:
+        score_cells_matrix.append(score_cells_dict_dedup[gene])
 
-    outf = open(score_file, 'w')
-    outf.write("\t".join(cells_list) + "\n")
-    for symbol in score_cells_dict_dedup.keys():
-        outf.write(symbol + "\t" + "\t".join(map(str, score_cells_dict_dedup[symbol])) + "\n")
-    outf.close()
+    write_10X_h5(score_file, score_cells_matrix, gene_symbol, cells_list, genome=gene_bed.split("/")[-1].split("_")[0], type="Gene score")
+
+    # outf = open(score_file, 'w')
+    # outf.write("\t".join(cells_list) + "\n")
+    # for symbol in score_cells_dict_dedup.keys():
+    #     outf.write(symbol + "\t" + "\t".join(map(str, score_cells_dict_dedup[symbol])) + "\n")
+    # outf.close()
 
 def main():
 

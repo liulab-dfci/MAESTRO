@@ -1,15 +1,18 @@
 library(MAESTRO)
 argue = commandArgs(T)
 
-setwd(argue[7])
+setwd(argue[9])
 
-qualcode_file = argue[1]
-nvc_file = argue[2]
-gc_file = argue[3]
-genecov_file = argue[4]
-countgene_file = argue[5]
-prefix = argue[6]
+bamstat_file = argue[1]
+readdistr_file = argue[2]
+qualcode_file = argue[3]
+nvc_file = argue[4]
+gc_file = argue[5]
+genecov_file = argue[6]
+countgene_file = argue[7]
+prefix = argue[8]
 
+RNAReadDistrPlot(bamstat.filepath = bamstat_file, readdistr.filepath = readdistr_file, name = prefix)
 RNAReadQualityPlot(filepath = qualcode_file, name = prefix)
 RNANucleotidePlot(filepath = nvc_file, name = prefix)
 RNAGCcontentPlot(filepath = gc_file, name = prefix)

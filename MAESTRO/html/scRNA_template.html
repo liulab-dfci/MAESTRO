@@ -102,35 +102,7 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <h3 class="h5">Mappability</h3>
-                                                <br>
-                                                <table class="table table-bordered table-striped" style="font-size: 15px">
-                                                    <tbody>
-                                                        <tr>
-                                                            <th scope="row">Total reads</th>
-                                                            <td>%(totalreads)s</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">Duplicate reads</th>
-                                                            <td>%(dupreads)s</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">Mapped reads</th>
-                                                            <td>%(mapreads)s</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">Mapped tags</th>
-                                                            <td>%(maptags)s</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">Exon tags</th>
-                                                            <td>%(exontags)s</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">Intron tags</th>
-                                                            <td>%(introntags)s</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                                <a href=%(readdistr)s><img src=%(readdistr)s width="375" height="400" class="float-left"></a>
                                             </div>
                                         </div>
                                         <div class="row">

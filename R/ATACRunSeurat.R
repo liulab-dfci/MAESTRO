@@ -55,9 +55,9 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
  
   #============ DE analysis ============
   message("Identify cluster specific peaks ...")
-  SeuratObj <- ScaleData(object = SeuratObj, var.to.regress="nCount_RNA")
+  SeuratObj <- NormalizeData(SeuratObj, normalization.method = "LogNormalize", scale.factor = 10000)
   cluster.peaks <- NULL
-  cluster.peaks <- FindAllMarkers(object = SeuratObj, only.pos = TRUE, min.pct = 0.01, logfc.threshold = 0.1, test.use = peaks.test.use)
+  cluster.peaks <- FindAllMarkersMAESTRO(object = SeuratObj, only.pos = TRUE, min.pct = 0.01, logfc.threshold = 0.1, test.use = peaks.test.use)
   cluster.peaks <- cluster.peaks[cluster.peaks$p_val_adj<peaks.cutoff, ]
   write.table(cluster.peaks, paste0(project, "_DiffPeaks.tsv"), quote=F, sep="\t")}
   
@@ -81,7 +81,7 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   #============ DE analysis ============
   message("Identify cluster specific peaks ...")
   cluster.peaks <- NULL
-  cluster.peaks <- FindAllMarkers(object = SeuratObj, only.pos = TRUE, min.pct = 0.01, logfc.threshold = 0.1, test.use = peaks.test.use)
+  cluster.peaks <- FindAllMarkersMAESTRO(object = SeuratObj, only.pos = TRUE, min.pct = 0.01, logfc.threshold = 0.1, test.use = peaks.test.use)
   cluster.peaks <- cluster.peaks[cluster.peaks$p_val_adj<peaks.cutoff, ]
   write.table(cluster.peaks, paste0(proj, "_DiffPeaks.tsv"), quote=F, sep="\t")   
   }
