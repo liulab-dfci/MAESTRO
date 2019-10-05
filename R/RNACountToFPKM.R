@@ -51,7 +51,7 @@ RNACountToFPKM <- function(countMat, idType = "Ensembl", organism = "GRCh38")
      len = len[!is.na(len)]
    }
    tmp <- countMat / len
-   FPKM <- 1e6 * t(t(tmp) / Matrix::colSums(countMat))
+   FPKM <- 1e6 * Matrix::t(Matrix::t(tmp) / Matrix::colSums(countMat))
    FPKM = FPKM[!duplicated(rownames(FPKM)),]
    return(FPKM)
 }

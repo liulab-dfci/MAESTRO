@@ -51,7 +51,7 @@ RNACountToTPM <- function(countMat, idType = "Ensembl", organism = "GRCh38")
      len = len[!is.na(len)]
    }
    tmp <- countMat / len
-   TPM <- 1e6 * t(t(tmp) / Matrix::colSums(tmp))
+   TPM <- 1e6 * Matrix::t(Matrix::t(tmp) / Matrix::colSums(tmp))
    TPM = TPM[!duplicated(rownames(TPM)),]
    return(TPM)
 }
