@@ -9,7 +9,7 @@ Description: MAESTRO is an intergrative analysis pipeline to support downstream 
 URL: https://github.com/LiuLab-dfci/MAESTRO
 Depends: R (>= 3.5.1)
 Imports: Seurat (>= 3.0.1), ggplot2 (>= 3.0.0), ggrepel, cowplot, Matrix (>= 
-         1.2.14), dplyr, png, RColorBrewer, scales, grid, pheatmap
+         1.2.14), dplyr, png, RColorBrewer, scales, grid, pheatmap, MAGeCKFlute
 Suggests: knitr, pagoda2, RCA, MAST, DESeq2, scABC, devtools, uwot, cisTopic, chromVAR, motifmatchr,
           SummarizedExperiment, BSgenome.Hsapiens.UCSC.hg38, BSgenome.Mmusculus.UCSC.mm10,
           chromVARmotifs
