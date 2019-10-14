@@ -29,7 +29,7 @@ RNAEnsemblToSymbol <- function(countMat, organism = "GRCh38")
   else{
     data(GRCm38.ensembl)
     ensembl <- GRCm38.ensembl}
-  count_rowname = ensembl[match(rownames(countMat),ensembl$`Gene stable ID`), "Gene name"]
+  count_rowname = ensembl[match(rownames(countMat),ensembl$Gene.stable.ID), "Gene.name"]
   count_index = which(!duplicated(count_rowname) & !is.na(count_rowname))
   countMat = countMat[count_index,]
   rownames(countMat) = count_rowname[count_index]

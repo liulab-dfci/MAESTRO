@@ -23,7 +23,7 @@ And now you are ready to install MAESTRO or create an isolated environment throu
 $ conda config --add channels defaults
 $ conda config --add channels bioconda
 $ conda config --add channels conda-forge
-$ conda create -n MAESTRO maestro -c dongqingsun
+$ conda create -n MAESTRO maestro -c liulab-dfci
 ```
 
 **Installing the MAESTRO R package** 

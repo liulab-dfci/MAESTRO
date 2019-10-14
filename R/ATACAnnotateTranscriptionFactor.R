@@ -120,8 +120,10 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATAC@project.
             return(list(y,tfList[[x]][y,2]))
           }
         }
-      })
-      tf_family_filter = tf_family_filter[-which(sapply(tf_family_filter,is.null))]
+      }, simplify = FALSE)
+      if(length(which(sapply(tf_family_filter,is.null))) > 0){
+        tf_family_filter = tf_family_filter[-which(sapply(tf_family_filter,is.null))]
+      }
       tf_family_filter_tf = sapply(tf_family_filter,function(xx){
         return(xx[[1]])
       })

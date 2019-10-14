@@ -35,8 +35,8 @@ from MAESTRO.scATAC_H5Process import *
 def FilterCell(rawmatrix, count_cutoff, gene_cutoff, outprefix, platform, genome):
     if platform == "10x-genomics":
         expmatrix = rawmatrix.matrix
-        raw_feature_ids = rawmatrix.feature_ids
-        raw_feature_names = rawmatrix.feature_names
+        raw_feature_ids = rawmatrix.ids
+        raw_feature_names = rawmatrix.names
         raw_barcodes = rawmatrix.barcodes
 
         count_per_cell = np.asarray(expmatrix.sum(axis=0))
@@ -106,8 +106,8 @@ def main():
     genome = sys.argv[5]
     
     if platform == "10x-genomics":
-        raw_matrix = get_matrix_from_h5(raw_matrix_file)
-        FilterCell(raw_matrix, 1000, 500, os.path.join(outdir, outpre), platform)
+        raw_matrix = read_10X_h5(raw_matrix_file)
+        FilterCell(raw_matrix, 1000, 500, os.path.join(outdir, outpre), platform, genome)
     elif platform == "Smartseq2":
         raw_matrix_df = pd.read_csv(raw_matrix_file, sep = "\t", header = 0, index_col = 0)
         df_rownames = list(raw_matrix_df.index)
