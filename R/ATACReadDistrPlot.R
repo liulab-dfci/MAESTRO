@@ -17,6 +17,7 @@ ATACReadDistrPlot <- function(filepath, name)
 {
   require(ggplot2)
   require(cowplot)
+  theme_set(theme_cowplot())
   RCB_blue = "#2166AC"
   
   bam_stat_list = readLines(filepath)[c(1,4,15,14,17,16)]
