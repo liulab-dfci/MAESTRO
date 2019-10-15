@@ -28,24 +28,24 @@ $ conda create -n MAESTRO maestro -c liulab-dfci
 
 **Installing the MAESTRO R package** 
 
-We next need to install the MAESTRO R package. The R package support analyzing the scRNA-seq and scATAC-seq from processed datasets.
+If you already have the processed datasets, like cell by gene or cell by peak matrix generate by Cell Ranger. You can install the MAESTRO R package alone to perform the analysis from processed datasets.
 ``` bash
 $ R
 > library(devtools)
-> install_github("chenfeiwang/MAESTRO")
+> install_github("liulab-dfci/MAESTRO")
 ```
 
 **Installing Cell Ranger**
 
-MAESTRO depent on the Cell Ranger and Cell Ranger ATAC for the mapping of the data genertaed by 10X genomics. Please install [Cell Ranger](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/installation) and [Cell Ranger ATAC](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/installation) before using MAESTRO.
+MAESTRO depent on the Cell Ranger and Cell Ranger ATAC for the mapping of the data genertaed by 10X genomics. Please install [Cell Ranger](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/installation) and [Cell Ranger ATAC](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/installation) before using MAESTRO. If you have already installed Cell Ranger, please specify the path of Cell Ranger in your YAML configuration file.
 
 **Installing giggle**
 
-MAESTRO utilize giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster specific peaks. To run this function, you need to first install [giggle](https://github.com/ryanlayer/giggle), download the giggle index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz), and provide the file location of the index to MAESTRO.       
+MAESTRO utilize giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster specific peaks. To run this function, you need to first install [giggle](https://github.com/ryanlayer/giggle), download the giggle index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz), and provide the file location of the index to MAESTRO in the YAML configuration file.       
 
 **Installing RABIT**       
 
-MAESTRO utilize rabit to predict the potential transcription factors based on the marker genes from scRNA-seq clusters. To run this function, you need to first install [rabit](http://rabit.dfci.harvard.edu/), download the rabit index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz), and provide the file location of the index to MAESTRO.
+MAESTRO utilize rabit to predict the potential transcription factors based on the marker genes from scRNA-seq clusters. To run this function, you need to first install [rabit](http://rabit.dfci.harvard.edu/), download the rabit index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz), and provide the file location of the index to MAESTRO in the YAML configuration file.
 
 ## Galleries & Tutorials (click on the image for details)
 
