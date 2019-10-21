@@ -83,6 +83,7 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   cluster.peaks <- NULL
   cluster.peaks <- FindAllMarkersMAESTRO(object = SeuratObj, only.pos = TRUE, min.pct = 0.01, logfc.threshold = 0.1, test.use = peaks.test.use)
   cluster.peaks <- cluster.peaks[cluster.peaks$p_val_adj<peaks.cutoff, ]
+  colnames(cluster.peaks)[7] <- "peak"
   write.table(cluster.peaks, paste0(proj, "_DiffPeaks.tsv"), quote=F, sep="\t")   
   }
   return(list(ATAC=SeuratObj, peaks=cluster.peaks))
