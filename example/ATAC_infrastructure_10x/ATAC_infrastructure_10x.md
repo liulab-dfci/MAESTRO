@@ -206,7 +206,7 @@ $`0`
 **Step 8. Visualize driver transcription factors for each cluster**     
 According to the annotation of the clusters, we know that cluster 8 is B-cells. Next we want to visualize the enriched regulators in B-cells from Step 7. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors, here we used the gene regulatory potential score (RPscore) as the predicted gene expression level. 
 
-The output TFs from MAESTRO have already been ajusted using expression level. Here is the visulazation of egulatory potential score filtered candidates. 
+The output TFs from MAESTRO have already been ajusted using regulatory potential level. Here is the visulazation of egulatory potential score filtered candidates. 
 ```R
 > tfs = sapply(pbmc.ATAC.tfs[[9]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
 > VisualizeTFenrichment(TFs = tfs, 
@@ -218,7 +218,7 @@ The output TFs from MAESTRO have already been ajusted using expression level. He
 >                       name = "10X_PBMC_10K_TF_Bcell_filtered")  
 ```
 
-<img src="./10X_PBMC_10K_TF_Bcell_filtered.png" width="500" height="400" /> 
+<img src="./10X_PBMC_10K_TF_Bcell_filtered.png" width="500" height="500" /> 
 
 If you want to visualize the top factors without filtering using regulatory potential. You can leave the TFs to blank. 
 ```R
@@ -231,7 +231,7 @@ If you want to visualize the top factors without filtering using regulatory pote
 >                       name = "10X_PBMC_10K_TF_Bcell_top")  
 ```
 
-<img src="./10X_PBMC_10K_TF_Bcell_adjust.png" width="500" height="400" /> 
+<img src="./10X_PBMC_10K_TF_Bcell_top.png" width="500" height="500" /> 
 
 And we also provide the function for visualize TF/genes regulatory potential using Vlnplot and Umap.
 ```R
@@ -254,9 +254,9 @@ And we also provide the function for visualize TF/genes regulatory potential usi
 >               height = 3, 
 >               name = "10X_PBMC_10K_TF_Bcell_umap")
 ```
-<img src="./10X_PBMC_10K_TF_Bcell_umap.png" width="900" height="300" /> 
+<img src="./10X_PBMC_10K_TF_Bcell_umap.png" width="900" height="350" /> 
 
-Based on the predicted expression level of TFs, we can see that PAX5 is highly expressed in the B-cells from PBMC. We will next visualize the predicted expression of PAX5 target genes.
+Based on the predicted expression level of TFs, we can see that PAX5 is highly expressed in the B-cells from PBMC, while FOXO3 is genearally distributed. We will next visualize the predicted expression of PAX5 target genes.
 
 ```R
 > PAX5_target <- as.character(read.table('10X_PBMC_10K_TF.GIGGLE/8.PAX5.34475.target.genes.top500.txt')[1:200,1])
