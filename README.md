@@ -39,13 +39,13 @@ $ R
 
 MAESTRO depent on the Cell Ranger and Cell Ranger ATAC for the mapping of the data genertaed by 10X genomics. Please install [Cell Ranger](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/installation) and [Cell Ranger ATAC](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/installation) before using MAESTRO. If you have already installed Cell Ranger, please specify the path of Cell Ranger in your YAML configuration file.
 
+**Installing RABIT/LISA**       
+
+MAESTRO utilize rabit and LISA to evaluate the enrichment of transcription factors based on the marker genes from scRNA-seq clusters. To run this function, you need to first install [rabit](http://rabit.dfci.harvard.edu/), download the rabit index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz), and provide the file location of the index to MAESTRO in the YAML configuration file. Alternatively, you can also use LISA to predict the potential transcription factors regulate the marker genes from scRNA-seq clusters. Please follow the description at lisa website[https://github.com/qinqian/lisa] to install and use this function.
+
 **Installing giggle**
 
 MAESTRO utilize giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster specific peaks. To run this function, you need to first install [giggle](https://github.com/ryanlayer/giggle), download the giggle index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz), and provide the file location of the index to MAESTRO in the YAML configuration file.       
-
-**Installing RABIT**       
-
-MAESTRO utilize rabit to predict the potential transcription factors based on the marker genes from scRNA-seq clusters. To run this function, you need to first install [rabit](http://rabit.dfci.harvard.edu/), download the rabit index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz), and provide the file location of the index to MAESTRO in the YAML configuration file.
 
 ## Galleries & Tutorials (click on the image for details)
 

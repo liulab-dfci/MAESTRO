@@ -45,9 +45,9 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATAC@project.
       geneScore <- GRCm38.CistromeDB.genescore
       tf_family_list <- MOUSE.TFFamily}
 
+  peaks$cluster <- as.factor(peaks$cluster)
   if(nrow(peaks)==0){
-    message("No differential peaks identified.")
-    message("No driver TFs identified.")
+    message("No differential peaks input and no driver TFs identified.")
     
     reg_table = data.frame(Cluster=Idents(ATAC), CelltypeAnnotation=ATAC@meta.data$assign.ident)
     row.names(reg_table) = NULL
@@ -99,6 +99,21 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATAC@project.
       cmd <- paste0("rm ", outputBed, ".result.xls")
       system(cmd)
     }
+    tf_all=NULL
+    for (icluster in unique(peaks$cluster))
+    {
+    fileName=paste0(outputDir,"/", icluster, ".peaks.bed.giggle.res.tfs.txt")
+    if (file.exists(fileName))
+    {
+      tf_p=read.delim(fileName)
+      tf_temp=data.frame(tf_p$giggle)
+      rownames(tf_temp)=tf_p$factor
+      colnames(tf_temp)=icluster
+      if (is.null(tf_all)){tf_all = tf_temp}
+      else {tf_all=multimerge(list(tf_all, tf_temp))}
+    }
+    }
+    write.table(tf_all,paste0(project,'_giggle.txt'),sep='\t',quote = F)
     message("Identification of enriched TFs is done.")
     
     cluster_cell_list = split(names(Idents(ATAC)), Idents(ATAC))
@@ -196,3 +211,26 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, project = ATAC@project.
   }
 }
 
+multimerge <- function (mylist) {
+  ## mimics a recursive merge or full outer join
+ 
+  unames <- unique(unlist(lapply(mylist, rownames)))
+ 
+  n <- length(unames)
+ 
+  out <- lapply(mylist, function(df) {
+ 
+    tmp <- matrix(nr = n, nc = ncol(df), dimnames = list(unames,colnames(df)))
+    tmp[rownames(df), ] <- as.matrix(df)
+    rm(df); gc()
+ 
+    return(tmp)
+  })
+ 
+  stopifnot( all( sapply(out, function(x) identical(rownames(x), unames)) ) )
+ 
+  bigout <- do.call(cbind, out)
+  colnames(bigout) <- paste0(rep(names(mylist), sapply(mylist, ncol)), unlist(sapply(mylist, colnames)))
+  return(bigout)
+}
+ 
