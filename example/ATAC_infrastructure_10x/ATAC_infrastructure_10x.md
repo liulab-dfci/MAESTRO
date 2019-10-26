@@ -218,7 +218,7 @@ The output TFs from MAESTRO have already been ajusted using expression level. He
 >                       name = "10X_PBMC_10K_TF_Bcell_filtered")  
 ```
 
-<img src="./10X_PBMC_10K_TF_Bcell_adjust.png" width="600" height="400" /> 
+<img src="./10X_PBMC_10K_TF_Bcell_filtered.png" width="500" height="400" /> 
 
 If you want to visualize the top factors without filtering using regulatory potential. You can leave the TFs to blank. 
 ```R
@@ -231,6 +231,8 @@ If you want to visualize the top factors without filtering using regulatory pote
 >                       name = "10X_PBMC_10K_TF_Bcell_top")  
 ```
 
+<img src="./10X_PBMC_10K_TF_Bcell_adjust.png" width="500" height="400" /> 
+
 And we also provide the function for visualize TF/genes regulatory potential using Vlnplot and Umap.
 ```R
 > VisualizeVlnplot(genes = c("PAX5","FOXO3"), 
@@ -241,7 +243,7 @@ And we also provide the function for visualize TF/genes regulatory potential usi
 >                  height = 3, 
 >                  name = "10X_PBMC_10K_TF_Bcell_vlnplot")
 ```
-<img src="./10X_PBMC_10K_TF_Bcell_vlnplot.png" width="600" height="400" />   
+<img src="./10X_PBMC_10K_TF_Bcell_vlnplot.png" width="600" height="350" />   
 
 ```R
 > VisualizeUmap(genes = c("PAX5","FOXO3"),
@@ -252,7 +254,7 @@ And we also provide the function for visualize TF/genes regulatory potential usi
 >               height = 3, 
 >               name = "10X_PBMC_10K_TF_Bcell_umap")
 ```
-<img src="./10X_PBMC_10K_TF_Bcell_umap.png" width="900" height="400" /> 
+<img src="./10X_PBMC_10K_TF_Bcell_umap.png" width="900" height="300" /> 
 
 Based on the predicted expression level of TFs, we can see that PAX5 is highly expressed in the B-cells from PBMC. We will next visualize the predicted expression of PAX5 target genes.
 
