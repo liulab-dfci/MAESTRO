@@ -39,7 +39,7 @@ To use the MAESTRO R function, following the instructions in MAESTRO [README](ht
 ```
 
 **Step 2. Claim the process and memory usage in R**  
-There are still ~0.5 million peaks after filtering. To accelerate the computing process, you can use the multiple processing function in R, and claim the process and memory usage using the flowing commands.
+There are still ~0.5 million peaks after filtering. To accelerate the computing process, you can use the multiple processing function in R, and claim the process and memory usage using the flowing commands. 
 
 ```R
 > library(future)
@@ -134,7 +134,7 @@ Then you can read the bcc scRNA-seq dataseq into R, clustering like the [previou
 <img src="./GSE129785_BCC_scRNA_annotated.png" width="600" height="400" /> 
 
 **Step 7. Integrated analysis of BCC scATAC-seq with scRNA-seq**     
-Next, we can integrate the BCC scATAC-seq clusters with scRNA-seq clusters, co-embedded the scRNA-seq and scATAC-seq cells in the same low dimensional space, and transfer the cell type labels from scRNA-seq to scATAC-seq.
+Next, we can integrate the BCC scATAC-seq clusters with scRNA-seq clusters, co-embedded the scRNA-seq and scATAC-seq cells in the same low dimensional space, and transfer the cell type labels from scRNA-seq to scATAC-seq. MAESTRO will automatically generate the scATAC and scRNA co-aligned visualizations, cell-type annotated visualizations using scRNA-seq labels, RNA-only visualizations and ATAC-only visualizations.
 
 ```R
 > bcc.coembedded.res <- Incorporate(RNA = bcc.RNA.res$RNA, ATAC = bcc.ATAC.res$ATAC, project = "BCC.coembedded")

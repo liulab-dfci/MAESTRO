@@ -207,32 +207,66 @@ $`0`
 [10] "KLF6 | KLF4 | KLF13 | KLF3 | SP3 | ZNF148 | ZNF281 | EGR1 | SP1 | KLF9 | SP2 | EGR2 | ZBTB17 | KLF12 | SP4 | KLF5 | KLF1"
 ```
 
-**Step 8. Visualize driver transcription factors for each cluster**     
-According to the annotation of the clusters, we know that cluster 0 is Monocyte cells. Next we want to visualize the expression level of the enriched TFs, we only want to focused on the TFs that are expressed in the Monocyte cluster as its potential driver transcriptional regulators.
-
+Alternatively, you can also use LISA to identify the driver regulators, using the following commands. 
 ```R
-> VisualizeVlnplot(genes = pbmc.RNA.tfs, 
->                  cluster = "0", 
+> pbmc.RNA.tfs <- RNAAnnotateTranscriptionFactor(RNA = pbmc.RNA.res$RNA, 
+>                                                genes = pbmc.RNA.res$genes, 
+>                                                project = "10X_PBMC_8K_TF", 
+>                                                method = "LISA")
+```
+
+**Step 8. Visualize driver transcription factors for each cluster**     
+According to the annotation of the clusters, we know that cluster 0 is Monocyte. Next we want to visualize the enriched regulators in Monocyte from Step 7. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors. Currently for scRNA-seq, the VisualizeTFenrichment function only support LISA result. 
+
+The output TFs from MAESTRO have already been pre-filtered using TF expression level. 
+```R
+> tfs = sapply(pbmc.ATAC.tfs[[0]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
+> VisualizeTFenrichment(TFs = tfs, 
+>                       cluster.1 = 0, 
+>                       type = "RNA", 
+>                       SeuratObj = pbmc.RNA.res$RNA, 
+>                       LISA.table = "10X_PBMC_8K_TF_lisa.txt",
+>                       visual.totalnumber = 100, 
+>                       name = "10X_PBMC_8K_TF_Monocyte_filtered")    
+```
+
+<img src="./10X_PBMC_8K_TF_Monocyte_filtered.png" width="500" height="480" /> 
+
+If you want to visualize the top factors without filtering using expression level. You can leave the TFs to blank, then the top 10 regulators will be visualized.
+```R
+> VisualizeTFenrichment(cluster.1 = 0, 
+>                       type = "RNA", 
+>                       SeuratObj = pbmc.RNA.res$RNA, 
+>                       LISA.table = "10X_PBMC_8K_TF_lisa.txt",
+>                       visual.topnumber = 10,
+>                       visual.totalnumber = 100, 
+>                       name = "10X_PBMC_8K_TF_Monocyte_top")  
+```
+
+<img src="./10X_PBMC_8K_TF_Monocyte_top.png" width="500" height="480" /> 
+
+And we also provide the function for visualize TF/genes regulatory potential using Vlnplot and Umap.
+```R
+> VisualizeVlnplot(genes = c("SPI1","CEBPB"), 
 >                  type = "RNA", 
 >                  SeuratObj = pbmc.RNA.res$RNA, 
->                  ncol = 5, 
->                  width = 10, 
->                  height = 4, 
->                  name = "10X_PBMC_8K_TF_Monocyte")
+>                  ncol = 2, 
+>                  width = 6, 
+>                  height = 3, 
+>                  name = "10X_PBMC_8K_TF_Monocyte_vlnplot")
 ```
-<img src="./10X_PBMC_8K_TF_Monocyte_vlnplot.png" width="850" height="350" />   
+<img src="./10X_PBMC_8K_TF_Monocyte_vlnplot.png" width="600" height="330" />   
 
 ```R
-> VisualizeUmap(genes = pbmc.RNA.tfs, 
->               cluster = "0", 
+> VisualizeUmap(genes = c("SPI1","CEBPB"), 
 >               type = "RNA", 
 >               SeuratObj = pbmc.RNA.res$RNA, 
->               ncol = 3, 
->               width = 12, 
->               height = 7.5, 
->               name = "10X_PBMC_8K_TF_Monocyte")
+>               ncol = 2, 
+>               width = 8, 
+>               height = 3, 
+>               name = "10X_PBMC_8K_TF_Monocyte_umap")
 ```
-<img src="./10X_PBMC_8K_TF_Monocyte_umap.png" width="900" height="620" /> 
+<img src="./10X_PBMC_8K_TF_Monocyte_umap.png" width="900" height="350" /> 
 
 **Step 9. Save the project for future analysis**     
 Finally, you can save the R project including the raw data, normalized data, clustering result and meta informations for future analysis.

@@ -49,9 +49,9 @@ MYL9   0.000000e+00  1.418340 0.970 0.260  0.000000e+00       0  MYL9
 LMOD1 6.154863e-281  1.312901 0.674 0.070 1.113415e-276       0 LMOD1
 ```
 
-<img src="./HNSCC.scRNA.spikein.png" width="520" height="400" /> 
-<img src="./HNSCC.scRNA.PCElbowPlot.png" width="500" height="400" /> 
-<img src="./HNSCC.scRNA.cluster.png" width="500" height="400" /> 
+<img src="./HNSCC_scRNA_spikein.png" width="520" height="400" /> 
+<img src="./HNSCC_scRNA_PCElbowPlot.png" width="500" height="400" /> 
+<img src="./HNSCC_scRNA_cluster.png" width="500" height="400" /> 
 
 **Step 3. Annotate celltypes**     
 We next try to annotate different clusters based on their marker genes. We use public immune signatures like [CIBERSORT](https://www.nature.com/articles/nmeth.3337) to annotate the clusters. However, the CIBERSORT signatures do not contains some of the stromal populations, we further add the signatures for the stromal polulations. You can also use your own signatures to annotate the clusters.
@@ -68,7 +68,7 @@ We next try to annotate different clusters based on their marker genes. We use p
 >                                          min.score = 0.1)
 ```
 
-<img src="./HNSCC.scRNA.annotated.png" width="600" height="400" /> 
+<img src="./HNSCC_scRNA_annotated.png" width="600" height="400" /> 
 
 **Step 4. Identify driver transcription factors**     
 Identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilize rabit to predict the potential upstream transcription factors based on the marker genes in each cluster. For our analysis, we used the TF ChIP-seq peaks from CistromeDB to identify potential TFs that could shaping the gene expression patterns. To run this function, you need to first install [rabit](http://rabit.dfci.harvard.edu/), download the rabit index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz), and provide the file location of the index to MAESTRO.
@@ -124,32 +124,53 @@ $`0`
  [9] "KDM5B"                    "TP53 | TP73 | TP63"
 ```
 
-**Step 5. Visualize driver transcription factors for each cluster**     
-According to the annotation of the clusters, we know that cluster 7 is Treg cells. Next we want to visualize the expression level of the enriched TFs, we only want to focused on the TFs that are expressed in the Treg cluster as its potential driver transcriptional regulators.
-
+Alternatively, you can also use LISA to identify the driver regulators, using the following commands. 
 ```R
-> VisualizeVlnplot(genes = HNSCC.RNA.tfs, 
->                  cluster = "7", 
+> HNSCC.RNA.tfs <- RNAAnnotateTranscriptionFactor(RNA = HNSCC.RNA.res$RNA, 
+>                                                 genes = HNSCC.RNA.res$genes, 
+>                                                 project = "HNSCC_scRNA_TF", 
+>                                                 method = "LISA")
+```
+
+**Step 5. Visualize driver transcription factors for each cluster**     
+According to the annotation of the clusters, we know that cluster 7 is Treg. Next we want to visualize the enriched regulators in Treg from Step 7. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors. Currently for scRNA-seq, the VisualizeTFenrichment function only support LISA result. 
+
+The output TFs from MAESTRO have already been pre-filtered using TF expression level. 
+```R
+> tfs = sapply(HNSCC.RNA.tfs[[8]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
+> VisualizeTFenrichment(TFs = tfs, 
+>                       cluster.1 = 7, 
+>                       type = "RNA", 
+>                       SeuratObj = HNSCC.RNA.res$RNA, 
+>                       LISA.table = "HNSCC_scRNA_TF_lisa.txt",
+>                       visual.totalnumber = 100, 
+>                       name = "HNSCC_scRNA_TF_Treg") 
+```
+
+<img src="./HNSCC_scRNA_TF_Treg.png" width="500" height="480" /> 
+
+And we also provide the function for visualize TF/genes regulatory potential using Vlnplot and Umap.
+```R
+> VisualizeVlnplot(genes = c("GATA3","BATF"), 
 >                  type = "RNA", 
 >                  SeuratObj = HNSCC.RNA.res$RNA, 
->                  ncol = 5, 
->                  width = 10, 
->                  height = 4, 
->                  name = "HNSCC.RNA.tfs.Treg")
+>                  ncol = 2, 
+>                  width = 6, 
+>                  height = 3, 
+>                  name = "HNSCC_scRNA_TF_Treg_vlnplot")
 ```
-<img src="./HNSCC.RNA.tfs.Treg.vlnplot.png" width="850" height="350" />   
+<img src="./HNSCC_scRNA_TF_Treg_vlnplot.png" width="600" height="330" />   
 
 ```R
-> VisualizeUmap(genes = HNSCC.RNA.tfs, 
->               cluster = "7", 
+> VisualizeUmap(genes = c("GATA3","BATF"), 
 >               type = "RNA", 
 >               SeuratObj = HNSCC.RNA.res$RNA, 
->               ncol = 3, 
->               width = 12, 
->               height = 7.5, 
->               name = "HNSCC.RNA.tfs.Treg")
+>               ncol = 2, 
+>               width = 8, 
+>               height = 3, 
+>               name = "HNSCC_scRNA_TF_Treg_umap")
 ```
-<img src="./HNSCC.RNA.tfs.Treg.umap.png" width="900" height="620" /> 
+<img src="./HNSCC_scRNA_TF_Treg_umap.png" width="900" height="350" /> 
 
 **Step 6. Save the project for future analysis**     
 Finally, you can save the R project including the raw data, normalized data, clustering result and meta informations for future analysis.

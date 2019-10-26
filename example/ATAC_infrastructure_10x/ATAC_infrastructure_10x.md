@@ -151,9 +151,9 @@ After identify enriched transcription regulators, MAESTRO also provide the poten
 
 ```R
 > pbmc.ATAC.tfs <- ATACAnnotateTranscriptionFactor(ATAC = pbmc.ATAC.res$ATAC, 
->                                                      peaks = pbmc.ATAC.res$peaks, 
->                                                      project = "10X_PBMC_10K.TF", 
->                                                      giggle.path = "/homes/cwang/annotations/giggle")
+>                                                  peaks = pbmc.ATAC.res$peaks, 
+>                                                  project = "10X_PBMC_10K_TF", 
+>                                                  giggle.path = "/homes/cwang/annotations/giggle")
 Identify enriched TFs for cluster  0 ...
 Identify enriched TFs for cluster  1 ...
 Identify enriched TFs for cluster  2 ...
@@ -204,45 +204,68 @@ $`0`
 ```
 
 **Step 8. Visualize driver transcription factors for each cluster**     
-According to the annotation of the clusters, we know that cluster 0 is Monocyte. Next we want to visualize the expression level of the enriched transcription factors, here we used the gene regulatory potential score (RPscoe) as the predicted gene expression level, and we only want to focused on the TFs that are expressed in the Monocyte cluster as its potential driver transcriptional regulators.
+According to the annotation of the clusters, we know that cluster 8 is B-cells. Next we want to visualize the enriched regulators in B-cells from Step 7. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors, here we used the gene regulatory potential score as the predicted gene expression level. 
 
+The output TFs from MAESTRO have already been pre-filtered using TF regulatory potential score. 
 ```R
-> VisualizeVlnplot(genes = pbmc.ATAC.tfs, 
->                  cluster = "0", 
+> tfs = sapply(pbmc.ATAC.tfs[[9]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
+> VisualizeTFenrichment(TFs = tfs, 
+>                       cluster.1 = 8, 
+>                       type = "ATAC", 
+>                       SeuratObj = pbmc.ATAC.res$ATAC, 
+>                       GIGGLE.table = "10X_PBMC_10K_TF_giggle.txt",
+>                       visual.totalnumber = 100, 
+>                       name = "10X_PBMC_10K_TF_Bcell_filtered")  
+```
+
+<img src="./10X_PBMC_10K_TF_Bcell_filtered.png" width="500" height="480" /> 
+
+If you want to visualize the top factors without filtering using regulatory potential. You can leave the TFs to blank, then the top 10 regulators will be visualized.
+```R
+> VisualizeTFenrichment(cluster.1 = 8, 
+>                       type = "ATAC", 
+>                       SeuratObj = pbmc.ATAC.res$ATAC, 
+>                       GIGGLE.table = "10X_PBMC_10K_TF_giggle.txt",
+>                       visual.topnumber = 10,
+>                       visual.totalnumber = 100, 
+>                       name = "10X_PBMC_10K_TF_Bcell_top")  
+```
+
+<img src="./10X_PBMC_10K_TF_Bcell_top.png" width="500" height="480" /> 
+
+And we also provide the function for visualize TF/genes regulatory potential using Vlnplot and Umap.
+```R
+> VisualizeVlnplot(genes = c("PAX5","FOXO3"), 
 >                  type = "ATAC", 
 >                  SeuratObj = pbmc.ATAC.res$ATAC, 
->                  ncol = 5, 
->                  width = 10, 
->                  height = 4, 
->                  name = "10X_PBMC_10K_TF_Monocyte")
+>                  ncol = 2, 
+>                  width = 6, 
+>                  height = 3, 
+>                  name = "10X_PBMC_10K_TF_Bcell_vlnplot")
 ```
-<img src="./10X_PBMC_10K_TF_Monocyte_vlnplot.png" width="850" height="350" />   
+<img src="./10X_PBMC_10K_TF_Bcell_vlnplot.png" width="600" height="330" />   
 
 ```R
-> VisualizeUmap(genes = pbmc.ATAC.tfs, 
->              cluster = "0", 
->              type = "ATAC", 
->              SeuratObj = pbmc.ATAC.res$ATAC, 
->              ncol = 3, 
->              width = 9, 
->              height = 7.5, 
->              name = "10X_PBMC_10K_TF_Monocyte")
+> VisualizeUmap(genes = c("PAX5","FOXO3"),
+>               type = "ATAC", 
+>               SeuratObj = pbmc.ATAC.res$ATAC, 
+>               ncol = 2, 
+>               width = 8, 
+>               height = 3, 
+>               name = "10X_PBMC_10K_TF_Bcell_umap")
 ```
-<img src="./10X_PBMC_10K_TF_Monocyte_umap.png" width="650" height="620" /> 
+<img src="./10X_PBMC_10K_TF_Bcell_umap.png" width="900" height="350" /> 
 
-Based on the predicted expression level of TFs, we can see that IRF1 is highly expressed in the monocytes from PBMC. We will next visualize the predicted expression of IRF1 target genes.
+Based on the regulatory potential of TFs, we can see that PAX5 is highly expressed in the B-cells from PBMC, while FOXO3 is genearally distributed. We will next visualize the regulatory potential of PAX5 target genes.
 
 ```R
-> IRF1_target <- as.character(read.table('10X_PBMC_10K.TF.GIGGLE/0.IRF1.41302.target.genes.top500.txt')[,1])
-> IRF1_target <- intersect(IRF1_target, rownames(pbmc.ATAC.res$ATAC))
-> head(IRF1_target)
-[1] "A1BG"         "A4GNT"        "ABHD13"       "ABHD14A"      "ABHD14A-ACY1"
-[6] "ACVRL1"
-> pbmc.ATAC.res$ATAC@meta.data$IRF1_target <- colMeans(x = as.matrix(GetAssayData(pbmc.ATAC.res$ATAC))[IRF1_target, ], na.rm = TRUE)
-> p <- FeaturePlot(pbmc.ATAC.res$ATAC,  features = "IRF1_target", cols = c("grey", "blue"))
-> ggsave(file.path("10X_PBMC_10K_TF_Monocyte_IRF1.pdf"), p, width = 5, height = 4)
-```
-<img src="./10X_PBMC_10K_TF_Monocyte_IRF1.png" width="500" height="400" />  
+> PAX5_target <- as.character(read.table('10X_PBMC_10K_TF.GIGGLE/8.PAX5.34475.target.genes.top500.txt')[1:200,1])
+> PAX5_target <- intersect(PAX5_target, rownames(pbmc.ATAC.res$ATAC))
+> pbmc.ATAC.res$ATAC@meta.data$PAX5_target <- colMeans(x = as.matrix(GetAssayData(pbmc.ATAC.res$ATAC))[PAX5_target, ], na.rm = TRUE)
+> p <- FeaturePlot(pbmc.ATAC.res$ATAC,  features = "PAX5_target", cols = c("grey", "blue"))
+> ggsave(file.path("10X_PBMC_10K_Bcell_PAX5.pdf"), p, width = 5, height = 4)
+ ```
+<img src="./10X_PBMC_10K_TF_Bcell_PAX5.png" width="500" height="400" />  
 
 **Step 9. Save the project for future analysis**     
 Finally, you can save the R project including the raw data, normalized data, clustering result and meta informations for future analysis.
@@ -254,6 +277,6 @@ saveRDS(pbmc.ATAC.res, "pbmc.ATAC.res.rds")
 The differential peaks, TFs and target genes have already been saved in the current directory by MAESTRO.
 
 ```bash
-$ ls 10X_PBMC_10K.DiffPeak.tsv 10X_PBMC_10K.TF.GIGGLE 
+$ ls 10X_PBMC_10K.DiffPeak.tsv 10X_PBMC_10K_TF.GIGGLE 
 ```
 

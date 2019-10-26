@@ -27,7 +27,7 @@ We next create an Seurat object using the peak count matrix, and perform the clu
 
 ```R
 > cellline.ATAC.res <- ATACRunSeurat(inputMat = cellline.peak, 
->                                    project = "cellline.scATAC", 
+>                                    project = "cellline_scATAC", 
 >                                    method = "LSI",
 >                                    min.c = 50,
 >                                    min.p = 500,
@@ -53,7 +53,7 @@ chr8-72000304-72000895   chr8-72000304-72000895
 chr21-42078065-42078756 chr21-42078065-42078756
 ```
 
-<img src="./cellline.scATAC.cluster.png" width="500" height="400" /> 
+<img src="./cellline_scATAC_cluster.png" width="500" height="400" /> 
 
 **Step 3. Annotate celltypes**     
 The cell identity for the microfludics based scATACs-seq are known before clustering. To visualize the cell type annotation of the clusters, we need to pass the original identity to the clustering result.
@@ -69,16 +69,16 @@ The cell identity for the microfludics based scATACs-seq are known before cluste
 >                                                orig.ident = cellline.ATAC.orig)
 ```
 
-<img src="./cellline.scATAC.original.png" width="530" height="400" /> 
+<img src="./cellline_scATAC_original.png" width="530" height="400" /> 
 
 **Step 4. Identify driver transcription factors**     
 Identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilize giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster specific peaks. To run this function, you need to first install [giggle](https://github.com/ryanlayer/giggle), download the giggle index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz), and provide the file location of the index to MAESTRO. 
-After identify enriched transcription regulators, MAESTRO also provide the potential target gene list of the top 10 transcription factors for each cluster, which are based on the ChIP-seq peaks from [CistromeDB](http://cistrome.org/db/#/). The target genes will be generated in the "cellline.scATAC.TF.GIGGLE" directory.
+After identify enriched transcription regulators, MAESTRO also provide the potential target gene list of the top 10 transcription factors for each cluster, which are based on the ChIP-seq peaks from [CistromeDB](http://cistrome.org/db/#/). The target genes will be generated in the "cellline_scATAC_TF.GIGGLE" directory.
 
 ```R
 > cellline.ATAC.tfs <- ATACAnnotateTranscriptionFactor(ATAC = cellline.ATAC.res$ATAC, 
 >                                                      peaks = cellline.ATAC.res$peaks, 
->                                                      project = "cellline.scATAC.TF", 
+>                                                      project = "cellline_scATAC_TF", 
 >                                                      giggle.path = "/homes/cwang/annotations/giggle")
 Identify enriched TFs for cluster  0 ...
 Identify enriched TFs for cluster  1 ...
@@ -116,44 +116,56 @@ $`0`
 ```
 
 **Step 5. Visualize driver transcription factors for each cluster**     
-According to the annotation of the clusters, we know that cluster 0 is GM12878 cellline. Next we want to visualize the expression level of the enriched transcription factors, here we used the gene regulatory potential score (RPscoe) as the predicted gene expression level, and we only want to focused on the TFs that are expressed in the GM12878 cluster as its potential driver transcriptional regulators.
-
+According to the annotation of the clusters, we know that cluster 0 is GM12878 cells. Next we want to visualize the enriched regulators in GM12878 from Step 4. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors, here we used the gene regulatory potential score as the predicted gene expression level. The output TFs from MAESTRO have already been pre-filtered using TF regulatory potential score. 
 ```R
-> VisualizeVlnplot(genes = cellline.ATAC.tfs, 
->                  cluster = "0", 
+> tfs = sapply(pbmc.ATAC.tfs[[9]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
+> VisualizeTFenrichment(TFs = tfs, 
+>                       cluster.1 = 0, 
+>                       type = "ATAC", 
+>                       SeuratObj = pbmc.ATAC.res$ATAC, 
+>                       GIGGLE.table = "cellline_scATAC_TF_giggle.txt",
+>                       visual.totalnumber = 100, 
+>                       name = "cellline_scATAC_TF_GM12878")  
+```
+
+<img src="./cellline_scATAC_TF_GM12878.png" width="500" height="480" />   
+
+And we also provide the function for visualize TF/genes regulatory potential using Vlnplot and Umap.
+```R
+> VisualizeVlnplot(genes = c("JUNB","NFKB2","CD74"), 
 >                  type = "ATAC", 
->                  SeuratObj = cellline.ATAC.res$ATAC, 
->                  ncol = 5, 
->                  width = 10, 
->                  height = 4, 
->                  name = "cellline.scATAC.tfs.GM12878")
+>                  SeuratObj = pbmc.ATAC.res$ATAC, 
+>                  ncol = 2, 
+>                  width = 6, 
+>                  height = 3, 
+>                  name = "cellline_scATAC_TF_GM12878_vlnplot")
 ```
-<img src="./cellline.scATAC.tfs.GM12878.vlnplot.png" width="850" height="350" />   
+	
+<img src="./cellline_scATAC_TF_GM12878_vlnplot.png" width="600" height="280" />   
+
 
 ```R
-> VisualizeUmap(genes = cellline.ATAC.tfs, 
->              cluster = "0", 
->              type = "ATAC", 
->              SeuratObj = cellline.ATAC.res$ATAC, 
->              ncol = 3, 
->              width = 9, 
->              height = 7.5, 
->              name = "cellline.scATAC.tfs.GM12878")
+> VisualizeUmap(genes = c("JUNB","NFKB2","CD74"),
+>               type = "ATAC", 
+>               SeuratObj = pbmc.ATAC.res$ATAC, 
+>               ncol = 2, 
+>               width = 8, 
+>               height = 3, 
+>               name = "cellline_scATAC_TF_GM12878_umap")
 ```
-<img src="./cellline.scATAC.tfs.GM12878.umap.png" width="650" height="620" /> 
 
-Based on the predicted expression level of TFs, we can see that JUNB is highly expressed in the GM12878 cellline. We will next visualize the predicted expression of JUNB target genes.
+<img src="./cellline_scATAC_TF_GM12878_umap.png" width="900" height="280" /> 
+
+Based on the regulatory potential of TFs, we can see that JUNB is highly expressed in the GM12878 cellline. We will next visualize the regulatory potential of JUNB target genes.
 
 ```R
-> JUNB_target <- as.character(read.table('cellline.scATAC.TF.GIGGLE/0.JUNB.64780.target.genes.top500.txt')[,1])
+> JUNB_target <- as.character(read.table('cellline_scATAC_TF.GIGGLE/0.JUNB.64780.target.genes.top500.txt')[,1])
 > JUNB_target <- intersect(JUNB_target, rownames(cellline.ATAC.res$ATAC))
-> head(JUNB_target)
-[1] "ACSF3"  "ACTN3"  "ACTR1A" "ADARB1" "ADNP2"  "ADPGK"
 > cellline.ATAC.res$ATAC@meta.data$JUNB_target <- colMeans(x = as.matrix(GetAssayData(cellline.ATAC.res$ATAC))[JUNB_target, ], na.rm = TRUE)
 > p <- FeaturePlot(cellline.ATAC.res$ATAC,  features = "JUNB_target", cols = c("grey", "blue"))
-> ggsave(file.path("cellline.scATAC.tfs.GM12878.JUNB.pdf"), p, width = 5, height = 4)
+> ggsave(file.path("cellline_scATAC_TF_GM12878_JUNB.pdf"), p, width = 5, height = 4)
 ```
-<img src="./cellline.scATAC.tfs.GM12878.JUNB.png" width="500" height="400" />  
+<img src="./cellline_scATAC_TF_GM12878_JUNB.png" width="500" height="400" />  
 
 **Step 6. Save the project for future analysis**     
 Finally, you can save the R project including the raw data, normalized data, clustering result and meta informations for future analysis.
@@ -165,7 +177,7 @@ saveRDS(cellline.ATAC.res, "cellline.ATAC.res.rds")
 The differential peaks, TFs and target genes have already been saved in the current directory by MAESTRO.
 
 ```bash
-$ ls cellline.scATAC.DiffPeaks.tsv cellline.scATAC.TF.GIGGLE 
+$ ls cellline_scATAC.DiffPeaks.tsv cellline_scATAC_TF.GIGGLE 
 ```
 
 

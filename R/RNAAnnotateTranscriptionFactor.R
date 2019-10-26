@@ -55,7 +55,6 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, project, method = "RABIT"
     out_fdr_max_log = RunLISA(genes = genes, project = project, organism = organism)
   }
 
-
   if(class(out_fdr_max_log) == "character"){
     message(out_fdr_max_log)
     tfList <- NULL
@@ -170,7 +169,7 @@ RunLISA <- function(genes, project, organism = "GRCh38")
   message("Start to run Lisa.")
   for(i in names(cluster_markers_list))
   {
-    system(paste0("lisa model --method='all' --web=False --new_rp_h5=None --new_count_h5=None --species ",species, " --epigenome '['DNase']' --cluster=False --covariates=False --random=True --prefix ",i,".txt"," --background=None --stat_background_number=500 --threads 8 ",outputDir,'/', i,'/',i,".txt"))
+    system(paste0("lisa model --method='all' --web=False --new_rp_h5=None --new_count_h5=None --species ",species, " --epigenome '['DNase','H3K27ac']' --cluster=False --covariates=False --random=True --prefix ",i,".txt"," --background=None --stat_background_number=500 --threads 8 ",outputDir,'/', i,'/',i,".txt"))
     message(paste0("Lisa in cluster ", i, " is done!"))
   }
   message("Lisa is done.")
@@ -178,7 +177,7 @@ RunLISA <- function(genes, project, organism = "GRCh38")
   tf_all=NULL
   for(i in names(cluster_markers_list))
   {
-    fileName=paste0(outputDir,'/', i,'/',i, '.txt.DNase.chipseq.p_value_dedup.csv')
+    fileName=paste0(outputDir,'/', i,'/',i, '.txt_chipseq_cauchy_combine_dedup.csv')
     if (file.exists(fileName))
     {
       tf_p=read.csv(fileName)
@@ -193,7 +192,7 @@ RunLISA <- function(genes, project, organism = "GRCh38")
   tf_all <- do.call(cbind, tf_all)
   tf_all_log10=-log10(tf_all)
   rownames(tf_all_log10)=tf
-  write.table(tf_all_log10,paste0(outputDir,'/',project,'_lisa.txt'),sep='\t',quote = F)
+  write.table(tf_all_log10,paste0(project,'_lisa.txt'),sep='\t',quote = F)
   return(tf_all_log10)
 }
 
@@ -276,9 +275,10 @@ RunRABIT <- function(genes, project, rabit.path, organism = "GRCh38"){
       colnames(out_fdr_max) = tf_cluster
       out_fdr_max_log <- -log10(out_fdr_max)
     }
+    write.table(out_fdr_max_log,paste0(project,'_rabbit.txt'),sep='\t',quote = F)
     return(out_fdr_max_log)
   }else{
-    stop("There are no significant TFs for each cluster.")
+    stop("There are no significant TFs for all the clusters.")
     tfList <- NULL
   }
 }
