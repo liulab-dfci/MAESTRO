@@ -105,7 +105,7 @@ VisualizeTFenrichment <- function(TFs = NULL, cluster.1, cluster.2 = NULL, type 
     p <- ggplot(TFplot, aes(x=LISA, y=GIGGLE)) +
     geom_point(aes(color = expr, size = GIGGLE), shape = 19) +
     scale_colour_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
-    labs(title=paste0("Cluster ",cluster," Enriched Regulators"),x="LISA -log10(pvalue)",y="GIGGLE log10(score)") +
+    labs(title=paste0("RNA cluster ",cluster.1," and ATAC cluster ",cluster.2," Enriched Regulators"),x="LISA -log10(pvalue)",y="GIGGLE log10(score)") +
     geom_text_repel(data = TFplot[TFplot$plot==1,], aes(label = rownames(TFplot[TFplot$plot==1,])), size = 3.5, point.padding = NA, segment.color = "grey50",  segment.size  = 0.1) +
     theme_classic(base_size = 10) + theme(legend.position = "top", plot.title = element_text(size = 12, face = "bold")) 
     ggsave(paste0(name,".pdf"),p, width=width, height=height,useDingbats=FALSE)

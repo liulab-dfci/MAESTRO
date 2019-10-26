@@ -218,7 +218,7 @@ Alternatively, you can also use LISA to identify the driver regulators, using th
 **Step 8. Visualize driver transcription factors for each cluster**     
 According to the annotation of the clusters, we know that cluster 0 is Monocyte. Next we want to visualize the enriched regulators in Monocyte from Step 7. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors. Currently for scRNA-seq, the VisualizeTFenrichment function only support LISA result. 
 
-The output TFs from MAESTRO have already been ajusted using regulatory potential score. 
+The output TFs from MAESTRO have already been pre-filtered using TF expression level. 
 ```R
 > tfs = sapply(pbmc.ATAC.tfs[[0]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
 > VisualizeTFenrichment(TFs = tfs, 

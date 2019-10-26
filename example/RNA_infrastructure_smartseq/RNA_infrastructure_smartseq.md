@@ -49,9 +49,9 @@ MYL9   0.000000e+00  1.418340 0.970 0.260  0.000000e+00       0  MYL9
 LMOD1 6.154863e-281  1.312901 0.674 0.070 1.113415e-276       0 LMOD1
 ```
 
-<img src="./HNSCC.scRNA.spikein.png" width="520" height="400" /> 
-<img src="./HNSCC.scRNA.PCElbowPlot.png" width="500" height="400" /> 
-<img src="./HNSCC.scRNA.cluster.png" width="500" height="400" /> 
+<img src="./HNSCC_scRNA_spikein.png" width="520" height="400" /> 
+<img src="./HNSCC_scRNA_PCElbowPlot.png" width="500" height="400" /> 
+<img src="./HNSCC_scRNA_cluster.png" width="500" height="400" /> 
 
 **Step 3. Annotate celltypes**     
 We next try to annotate different clusters based on their marker genes. We use public immune signatures like [CIBERSORT](https://www.nature.com/articles/nmeth.3337) to annotate the clusters. However, the CIBERSORT signatures do not contains some of the stromal populations, we further add the signatures for the stromal polulations. You can also use your own signatures to annotate the clusters.
@@ -68,7 +68,7 @@ We next try to annotate different clusters based on their marker genes. We use p
 >                                          min.score = 0.1)
 ```
 
-<img src="./HNSCC.scRNA.annotated.png" width="600" height="400" /> 
+<img src="./HNSCC_scRNA_annotated.png" width="600" height="400" /> 
 
 **Step 4. Identify driver transcription factors**     
 Identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilize rabit to predict the potential upstream transcription factors based on the marker genes in each cluster. For our analysis, we used the TF ChIP-seq peaks from CistromeDB to identify potential TFs that could shaping the gene expression patterns. To run this function, you need to first install [rabit](http://rabit.dfci.harvard.edu/), download the rabit index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz), and provide the file location of the index to MAESTRO.
@@ -135,7 +135,7 @@ Alternatively, you can also use LISA to identify the driver regulators, using th
 **Step 5. Visualize driver transcription factors for each cluster**     
 According to the annotation of the clusters, we know that cluster 7 is Treg. Next we want to visualize the enriched regulators in Treg from Step 7. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors. Currently for scRNA-seq, the VisualizeTFenrichment function only support LISA result. 
 
-The output TFs from MAESTRO have already been ajusted using regulatory potential score. 
+The output TFs from MAESTRO have already been pre-filtered using TF expression level. 
 ```R
 > tfs = sapply(HNSCC.RNA.tfs[[8]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
 > VisualizeTFenrichment(TFs = tfs, 

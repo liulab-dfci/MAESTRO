@@ -206,7 +206,7 @@ $`0`
 **Step 8. Visualize driver transcription factors for each cluster**     
 According to the annotation of the clusters, we know that cluster 8 is B-cells. Next we want to visualize the enriched regulators in B-cells from Step 7. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors, here we used the gene regulatory potential score as the predicted gene expression level. 
 
-The output TFs from MAESTRO have already been ajusted using regulatory potential score. 
+The output TFs from MAESTRO have already been pre-filtered using TF regulatory potential score. 
 ```R
 > tfs = sapply(pbmc.ATAC.tfs[[9]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
 > VisualizeTFenrichment(TFs = tfs, 
