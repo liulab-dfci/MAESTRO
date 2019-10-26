@@ -218,7 +218,7 @@ The output TFs from MAESTRO have already been ajusted using regulatory potential
 >                       name = "10X_PBMC_10K_TF_Bcell_filtered")  
 ```
 
-<img src="./10X_PBMC_10K_TF_Bcell_filtered.png" width="500" height="500" /> 
+<img src="./10X_PBMC_10K_TF_Bcell_filtered.png" width="500" height="480" /> 
 
 If you want to visualize the top factors without filtering using regulatory potential. You can leave the TFs to blank. 
 ```R
@@ -231,7 +231,7 @@ If you want to visualize the top factors without filtering using regulatory pote
 >                       name = "10X_PBMC_10K_TF_Bcell_top")  
 ```
 
-<img src="./10X_PBMC_10K_TF_Bcell_top.png" width="500" height="500" /> 
+<img src="./10X_PBMC_10K_TF_Bcell_top.png" width="500" height="480" /> 
 
 And we also provide the function for visualize TF/genes regulatory potential using Vlnplot and Umap.
 ```R
@@ -243,7 +243,7 @@ And we also provide the function for visualize TF/genes regulatory potential usi
 >                  height = 3, 
 >                  name = "10X_PBMC_10K_TF_Bcell_vlnplot")
 ```
-<img src="./10X_PBMC_10K_TF_Bcell_vlnplot.png" width="600" height="350" />   
+<img src="./10X_PBMC_10K_TF_Bcell_vlnplot.png" width="600" height="330" />   
 
 ```R
 > VisualizeUmap(genes = c("PAX5","FOXO3"),
