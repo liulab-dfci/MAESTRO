@@ -141,7 +141,7 @@ And we also provide the function for visualize TF/genes regulatory potential usi
 >                  name = "cellline_scATAC_TF_GM12878_vlnplot")
 ```
 
-<img src="./cellline_scATAC_TF_GM12878_vlnplot.png" width="600" height="330" />   
+<img src="./cellline_scATAC_TF_GM12878_vlnplot.png" width="600" height="300" />   
 
 
 ```R
@@ -154,7 +154,7 @@ And we also provide the function for visualize TF/genes regulatory potential usi
 >               name = "cellline_scATAC_TF_GM12878_umap")
 ```
 
-<img src="./cellline_scATAC_TF_GM12878_umap.png" width="900" height="350" /> 
+<img src="./cellline_scATAC_TF_GM12878_umap.png" width="900" height="300" /> 
 
 Based on the regulatory potential of TFs, we can see that JUNB is highly expressed in the GM12878 cellline. We will next visualize the regulatory potential of JUNB target genes.
 
