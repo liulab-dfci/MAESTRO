@@ -39,7 +39,7 @@ To use the MAESTRO R function, following the instructions in MAESTRO [README](ht
 ```
 
 **Step 2. Claim the process and memory usage in R**  
-There are still ~0.5 million peaks after filtering. To accelerate the computing process, you can use the multiple processing function in R, and claim the process and memory usage using the flowing commands.
+There are still ~0.5 million peaks after filtering. To accelerate the computing process, you can use the multiple processing function in R, and claim the process and memory usage using the flowing commands. 
 
 ```R
 > library(future)

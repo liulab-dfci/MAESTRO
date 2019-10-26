@@ -124,32 +124,53 @@ $`0`
  [9] "KDM5B"                    "TP53 | TP73 | TP63"
 ```
 
-**Step 5. Visualize driver transcription factors for each cluster**     
-According to the annotation of the clusters, we know that cluster 7 is Treg cells. Next we want to visualize the expression level of the enriched TFs, we only want to focused on the TFs that are expressed in the Treg cluster as its potential driver transcriptional regulators.
-
+Alternatively, you can also use LISA to identify the driver regulators, using the following commands. 
 ```R
-> VisualizeVlnplot(genes = HNSCC.RNA.tfs, 
->                  cluster = "7", 
+> HNSCC.RNA.tfs <- RNAAnnotateTranscriptionFactor(RNA = HNSCC.RNA.res$RNA, 
+>                                                 genes = HNSCC.RNA.res$genes, 
+>                                                 project = "HNSCC_scRNA_TF", 
+>                                                 method = "LISA")
+```
+
+**Step 5. Visualize driver transcription factors for each cluster**     
+According to the annotation of the clusters, we know that cluster 7 is Treg. Next we want to visualize the enriched regulators in Treg from Step 7. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors. Currently for scRNA-seq, the VisualizeTFenrichment function only support LISA result. 
+
+The output TFs from MAESTRO have already been ajusted using regulatory potential score. 
+```R
+> tfs = sapply(HNSCC.RNA.tfs[[8]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
+> VisualizeTFenrichment(TFs = tfs, 
+>                       cluster.1 = 7, 
+>                       type = "RNA", 
+>                       SeuratObj = HNSCC.RNA.res$RNA, 
+>                       LISA.table = "HNSCC_scRNA_TF_lisa.txt",
+>                       visual.totalnumber = 100, 
+>                       name = "HNSCC_scRNA_TF_Treg") 
+```
+
+<img src="./HNSCC_scRNA_TF_Treg.png" width="500" height="480" /> 
+
+And we also provide the function for visualize TF/genes regulatory potential using Vlnplot and Umap.
+```R
+> VisualizeVlnplot(genes = c("GATA3","BATF"), 
 >                  type = "RNA", 
 >                  SeuratObj = HNSCC.RNA.res$RNA, 
->                  ncol = 5, 
->                  width = 10, 
->                  height = 4, 
->                  name = "HNSCC.RNA.tfs.Treg")
+>                  ncol = 2, 
+>                  width = 6, 
+>                  height = 3, 
+>                  name = "HNSCC_scRNA_TF_Treg_vlnplot")
 ```
-<img src="./HNSCC.RNA.tfs.Treg.vlnplot.png" width="850" height="350" />   
+<img src="./HNSCC_scRNA_TF_Treg_vlnplot.png" width="600" height="330" />   
 
 ```R
-> VisualizeUmap(genes = HNSCC.RNA.tfs, 
->               cluster = "7", 
+> VisualizeUmap(genes = c("GATA3","BATF"), 
 >               type = "RNA", 
 >               SeuratObj = HNSCC.RNA.res$RNA, 
->               ncol = 3, 
->               width = 12, 
->               height = 7.5, 
->               name = "HNSCC.RNA.tfs.Treg")
+>               ncol = 2, 
+>               width = 8, 
+>               height = 3, 
+>               name = "HNSCC_scRNA_TF_Treg_umap")
 ```
-<img src="./HNSCC.RNA.tfs.Treg.umap.png" width="900" height="620" /> 
+<img src="./HNSCC_scRNA_TF_Treg_umap.png" width="900" height="350" /> 
 
 **Step 6. Save the project for future analysis**     
 Finally, you can save the R project including the raw data, normalized data, clustering result and meta informations for future analysis.

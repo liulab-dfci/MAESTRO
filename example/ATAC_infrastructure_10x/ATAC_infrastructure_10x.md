@@ -204,13 +204,13 @@ $`0`
 ```
 
 **Step 8. Visualize driver transcription factors for each cluster**     
-According to the annotation of the clusters, we know that cluster 8 is B-cells. Next we want to visualize the enriched regulators in B-cells from Step 7. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors, here we used the gene regulatory potential score (RPscore) as the predicted gene expression level. 
+According to the annotation of the clusters, we know that cluster 8 is B-cells. Next we want to visualize the enriched regulators in B-cells from Step 7. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors, here we used the gene regulatory potential score as the predicted gene expression level. 
 
-The output TFs from MAESTRO have already been ajusted using regulatory potential level. Here is the visulazation of regulatory potential score filtered candidates. 
+The output TFs from MAESTRO have already been ajusted using regulatory potential score. 
 ```R
 > tfs = sapply(pbmc.ATAC.tfs[[9]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
 > VisualizeTFenrichment(TFs = tfs, 
->                       cluster.1 = 0, 
+>                       cluster.1 = 8, 
 >                       type = "ATAC", 
 >                       SeuratObj = pbmc.ATAC.res$ATAC, 
 >                       GIGGLE.table = "10X_PBMC_10K_TF_giggle.txt",
@@ -220,13 +220,13 @@ The output TFs from MAESTRO have already been ajusted using regulatory potential
 
 <img src="./10X_PBMC_10K_TF_Bcell_filtered.png" width="500" height="480" /> 
 
-If you want to visualize the top factors without filtering using regulatory potential. You can leave the TFs to blank. 
+If you want to visualize the top factors without filtering using regulatory potential. You can leave the TFs to blank, then the top 10 regulators will be visualized.
 ```R
-> tfs = sapply(pbmc.ATAC.tfs[[9]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
 > VisualizeTFenrichment(cluster.1 = 8, 
 >                       type = "ATAC", 
 >                       SeuratObj = pbmc.ATAC.res$ATAC, 
 >                       GIGGLE.table = "10X_PBMC_10K_TF_giggle.txt",
+>                       visual.topnumber = 10,
 >                       visual.totalnumber = 100, 
 >                       name = "10X_PBMC_10K_TF_Bcell_top")  
 ```

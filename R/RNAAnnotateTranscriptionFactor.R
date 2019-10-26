@@ -167,11 +167,11 @@ RunLISA <- function(genes, project, organism = "GRCh38")
   }
   
   message("Start to run Lisa.")
-  # for(i in names(cluster_markers_list))
-  # {
-  #   system(paste0("lisa model --method='all' --web=False --new_rp_h5=None --new_count_h5=None --species ",species, " --epigenome '['DNase','H3K27ac']' --cluster=False --covariates=False --random=True --prefix ",i,".txt"," --background=None --stat_background_number=500 --threads 8 ",outputDir,'/', i,'/',i,".txt"))
-  #   message(paste0("Lisa in cluster ", i, " is done!"))
-  # }
+  for(i in names(cluster_markers_list))
+  {
+    system(paste0("lisa model --method='all' --web=False --new_rp_h5=None --new_count_h5=None --species ",species, " --epigenome '['DNase','H3K27ac']' --cluster=False --covariates=False --random=True --prefix ",i,".txt"," --background=None --stat_background_number=500 --threads 8 ",outputDir,'/', i,'/',i,".txt"))
+    message(paste0("Lisa in cluster ", i, " is done!"))
+  }
   message("Lisa is done.")
   
   tf_all=NULL

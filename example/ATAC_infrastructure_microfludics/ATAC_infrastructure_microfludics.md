@@ -116,11 +116,11 @@ $`0`
 ```
 
 **Step 5. Visualize driver transcription factors for each cluster**     
-According to the annotation of the clusters, we know that cluster 0 is GM12878 cells. Next we want to visualize the enriched regulators in GM12878 from Step 4. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors, here we used the gene regulatory potential score (RPscore) as the predicted gene expression level. The output TFs from MAESTRO have already been ajusted using regulatory potential level. 
+According to the annotation of the clusters, we know that cluster 0 is GM12878 cells. Next we want to visualize the enriched regulators in GM12878 from Step 4. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors, here we used the gene regulatory potential score as the predicted gene expression level. The output TFs from MAESTRO have already been ajusted using regulatory potential score. 
 ```R
 > tfs = sapply(pbmc.ATAC.tfs[[9]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
 > VisualizeTFenrichment(TFs = tfs, 
->                       cluster.1 = 8, 
+>                       cluster.1 = 0, 
 >                       type = "ATAC", 
 >                       SeuratObj = pbmc.ATAC.res$ATAC, 
 >                       GIGGLE.table = "cellline_scATAC_TF_giggle.txt",
@@ -140,8 +140,8 @@ And we also provide the function for visualize TF/genes regulatory potential usi
 >                  height = 3, 
 >                  name = "cellline_scATAC_TF_GM12878_vlnplot")
 ```
-
-<img src="./cellline_scATAC_TF_GM12878_vlnplot.png" width="600" height="300" />   
+	
+<img src="./cellline_scATAC_TF_GM12878_vlnplot.png" width="600" height="280" />   
 
 
 ```R
@@ -154,7 +154,7 @@ And we also provide the function for visualize TF/genes regulatory potential usi
 >               name = "cellline_scATAC_TF_GM12878_umap")
 ```
 
-<img src="./cellline_scATAC_TF_GM12878_umap.png" width="900" height="300" /> 
+<img src="./cellline_scATAC_TF_GM12878_umap.png" width="900" height="280" /> 
 
 Based on the regulatory potential of TFs, we can see that JUNB is highly expressed in the GM12878 cellline. We will next visualize the regulatory potential of JUNB target genes.
 
