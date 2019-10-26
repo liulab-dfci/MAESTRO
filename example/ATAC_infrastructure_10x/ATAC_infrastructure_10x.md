@@ -206,11 +206,11 @@ $`0`
 **Step 8. Visualize driver transcription factors for each cluster**     
 According to the annotation of the clusters, we know that cluster 8 is B-cells. Next we want to visualize the enriched regulators in B-cells from Step 7. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors, here we used the gene regulatory potential score (RPscore) as the predicted gene expression level. 
 
-The output TFs from MAESTRO have already been ajusted using regulatory potential level. Here is the visulazation of egulatory potential score filtered candidates. 
+The output TFs from MAESTRO have already been ajusted using regulatory potential level. Here is the visulazation of regulatory potential score filtered candidates. 
 ```R
 > tfs = sapply(pbmc.ATAC.tfs[[9]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
 > VisualizeTFenrichment(TFs = tfs, 
->                       cluster.1 = 8, 
+>                       cluster.1 = 0, 
 >                       type = "ATAC", 
 >                       SeuratObj = pbmc.ATAC.res$ATAC, 
 >                       GIGGLE.table = "10X_PBMC_10K_TF_giggle.txt",
@@ -256,7 +256,7 @@ And we also provide the function for visualize TF/genes regulatory potential usi
 ```
 <img src="./10X_PBMC_10K_TF_Bcell_umap.png" width="900" height="350" /> 
 
-Based on the predicted expression level of TFs, we can see that PAX5 is highly expressed in the B-cells from PBMC, while FOXO3 is genearally distributed. We will next visualize the predicted expression of PAX5 target genes.
+Based on the regulatory potential of TFs, we can see that PAX5 is highly expressed in the B-cells from PBMC, while FOXO3 is genearally distributed. We will next visualize the regulatory potential of PAX5 target genes.
 
 ```R
 > PAX5_target <- as.character(read.table('10X_PBMC_10K_TF.GIGGLE/8.PAX5.34475.target.genes.top500.txt')[1:200,1])
