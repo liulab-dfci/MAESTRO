@@ -1,16 +1,16 @@
 ## 10x PBMC 10k scATAC-seq
 
-In this example, we will be analyzing a scATAC-seq dataset of 10K human peripheral blood mononuclear cells (PBMCs) freely available from 10X-genomics. The raw dataset can be downloaded from 10x-genomic website. We will show you how to run through the whole MAESTRO pipeline from the raw sequencing fastq files to the final results. 
+In this example, we will be analyzing a scATAC-seq dataset of 10K human peripheral blood mononuclear cells (PBMCs) freely available from 10X Genomics. The raw dataset can be downloaded from the 10X Genomics website. We will demonstrate how to run through the whole MAESTRO pipeline from the raw sequencing fastq files to the final results. 
 
 **Step 0. Download the data and prepare your working directory**     
-Before you run MAESTRO, you need to activate the MAESTRO environment and prepare your working directory.
+Before running MAESTRO, users need to activate the MAESTRO environment and prepare the working directory.
 ```bash
 source activate MAESTRO
 MAESTRO init --help
 MAESTRO init -d 10X_PBMC_10K -m scATAC
 ```
 
-The raw data can be downloaded from 10X genomics:
+The raw data can be downloaded from 10X Genomics:
 ```bash
 $ cd 10X_PBMC_10K
 $ wget http://s3-us-west-2.amazonaws.com/10x.files/samples/cell-atac/1.1.0/atac_v1_pbmc_10k/atac_v1_pbmc_10k_fastqs.tar
@@ -18,7 +18,7 @@ $ tar xvf atac_v1_pbmc_10k_fastqs
 ```               
 
 **Step 1. Configure the MAESTRO workflow**                           
-Open the `config.yaml` file in you working directory and edit it to your needs. Currently, for scATAC-seq analysis, MAESTRO support microfludics-based, 10x-genomics and sci-ATAC-seq based protocols, here is an example config file for 10x-genomis scATAC-seq. 
+Open the `config.yaml` file in the working directory, add the sample information and software annotations. Currently, for scATAC-seq analysis, MAESTRO support microfluidics-based, 10X Genomics, and sci-ATAC-seq based protocols, here is an example config file for 10X Genomics scATAC-seq. 
 
 ```bash
 $ vi config.yaml
@@ -28,8 +28,8 @@ fastqdir: /home/cw254/projects/MAESTRO/snakemake/ATAC/10X/atac_v1_pbmc_10k_fastq
 fastqprefix: atac_v1_pbmc_10k
 # Species to use [GRCh38, GRCm38] (GRCh38 for human and GRCm38 for mouse)
 species: GRCh38
-# Platform of single cell ATAC-seq [10x-genomics, sci-ATAC-seq, microfluidic]
-platform: 10x-genomics
+# Platform of single cell ATAC-seq [10X Genomics, sci-ATAC-seq, microfluidic]
+platform: 10X Genomics
 # The prefix of output files
 outprefix: 10X_PBMC_10K
 # Please specify the barcode library if the platform is sci-ATAC-seq, or the pipeline will automatically output the barcodes with enough reads count (>1000).
@@ -51,25 +51,25 @@ giggleannotation: /home/cw254/annotation/giggle
 genome:
   # Genome index directory for BWA
   fasta: /home/cw254/annotation/refdata-cellranger-atac-GRCh38-1.1.0/fasta/genome.fa
-  # genome annotation file from 10x-genomics required for Cell Ranger ATAC
+  # genome annotation file from 10X Genomics required for Cell Ranger ATAC
   cellranger: /home/cw254/annotation/refdata-cellranger-atac-GRCh38-1.1.0
 ```
 
 **Step 2. Run MAESTRO**     
-Once configured, you can use snakemake to run the workflow. 
+Once configured, users can use snakemake to run the workflow. 
 ```bash
 snakemake -np
 nohup snakemake --cores 8 --use-conda > 10X_PBMC_8K.out &
 ```
 
 **Step 3. Understanding the final output files**     
-Here, we assume you've run MAESTRO successfully. An output directory is specified in the run call, and will contain several useful outputs as described below.
+Here, we assume users have ran MAESTRO successfully. An output directory is specified in the run call, and will contain several useful outputs as described below.
 ```bash
 $ ls 10X_PBMC_10K/Result
 $ Analysis CellRangerATAC Log QC Summary
 ```
 
-Outputfiles: 1) The CellRangerATAC directory contains all the mapping and analysis files fron CellRangerATAC pipeline. 2) The QC directory contains qualtiy control analysis of scATAC-seq data, including the barcodes filtering table. 3) The Analysis directory contains the MACS peak calling result, peak count table, clustering result, annotated result, driver transcription factor identification result, for which we will introduce in the step-by-step analysis. 4) The Log directory contains the log files generated in the pipeline analysis. 5) The Summary directroy contains the 10X_PBMC_10K_report.html, which summarized all the results in a html based document. The summary html for the 10X_PBMC_10K example can be found [here](http://cistrome.org/~chenfei/MAESTRO/10X_PBMC_10k_MAESTRO_scATAC_report.html).
+Output files: 1) The CellRangerATAC directory contains all the mapping and analysis files from the CellRangerATAC pipeline. 2) The QC directory contains quality control analysis of scATAC-seq data, including the barcodes filtering table. 3) The Analysis directory contains the MACS peak calling result, peak count table, clustering result, annotated result, driver transcription factor identification result, for which we will introduce in the step-by-step analysis. 4) The Log directory contains the log files generated in the pipeline analysis. 5) The Summary directory contains the 10X_PBMC_10K_report.html, which summarized all the results in an HTML based document. The summary HTML for the 10X_PBMC_10K example can be found [here](http://cistrome.org/~chenfei/MAESTRO/10X_PBMC_10k_MAESTRO_scATAC_report.html).
 
 Mappability plot for scATAC-seq QC analysis:     
 <img src="./10X_PBMC_10K_mapping_summary.png" width="500" height="600" /> 
@@ -81,9 +81,9 @@ Cell filtering plot for scATAC-seq QC analysis, cells with less than 1000 unique
 <img src="./10X_PBMC_10K_cell_filtering.png" width="500" height="500" /> 
 
 **Step 4. Custom analysis starting from the processed dataset**    
-Although MAESTRO will generate all the analysis result through the snakemake based workflow, in most cases, you might want to analysis the result from the processed dataset(count matrix of a cell by peak table), tune the parameters, focused on specific clusters or sub-clusters, and learn transcription regulation in those clusters. Considering this, we build a stand alone MAESTRO R package for downstream analysis. We will show you how to run though the MAESTRO analysis using the R package step by step.
+Although MAESTRO will generate all the analysis result through the snakemake based workflow, in most cases, users might want to analysis the result from the processed dataset(count matrix of a cell by peak table), tune the parameters, focused on specific clusters or sub-clusters, and learn transcription regulation in those clusters. Considering this, we build a stand-alone MAESTRO R package for downstream analysis. We will demonstrate how to run through the MAESTRO analysis using the R package step by step.
 
-First you need to read the peak count matrix as well as the gene regulatory potential matrix generated by MAESTRO into the R enviroment. To support the processing of large dataset, in MAESTRO we use [HDF5 format](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/advanced/h5_matrices) for all the expression, atac-seq peak count and RP tables. 
+First users need to read the peak count matrix as well as the gene regulatory potential matrix generated by MAESTRO into the R enviroment. To support the processing of large dataset, in MAESTRO we use [HDF5 format](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/advanced/h5_matrices) for all the expression, atac-seq peak count and RP tables. 
 ```R
 > library(MAESTRO)
 > library(Seurat)
@@ -91,14 +91,14 @@ First you need to read the peak count matrix as well as the gene regulatory pote
 > pbmc.gene <- Read10X_h5('Result/Analysis/10X_PBMC_10K_gene_score.h5')
 ```
 
-We also support the processed dataset from 10x Cell Ranger pipelines, you can load the gene matrix into R through Seurat package.
+We also support the processed dataset from 10x Cell Ranger pipelines, users can load the gene matrix into R through Seurat package.
 ```R
 > library(Seurat)
 > pbmc.peaks <- Read10X_h5("Result/Cellranger/10X_PBMC_10K/outs/filtered_peak_bc_matrix.h5")
 ```
 
 **Step 5. Clustering and differential peak calling**      
-We next create an Seurat object using the peak count matrix, and perform the clustering analysis as well as differential peak calling for different clusters. 1) We first run dimension reduction on the input matrix. As we and others reported [Cusanovich et al, Science 2015](https://science.sciencemag.org/content/348/6237/910/tab-pdf), the Latent Semantic Index (LSI) have been widely used in learning the structure of scATAC-seq data. We use LSI as the default dimension reduction method, which has the best performance according to our benchmark. You can also use "PCA" as an optional dimension reduction method. 2) We apply UMAP to further reduce the dimensions and identify the clusters using graph-based clustering approach implemented in [Seurat](https://www.cell.com/cell/pdf/S0092-8674(19)30559-8.pdf). 3) We used a [wilcox-test](https://www.tandfonline.com/doi/abs/10.1080/01621459.1972.10481279) based method to identify the differential peaks for each clusters. The original peak count matrix is scaled and weighed by the total peaks present in each cell to overcome the potential ties in wilcox-test. It will take 10-20mins to calculate the differential peaks for all the clusters.
+We next create a Seurat object using the peak count matrix and perform the clustering analysis as well as differential peak calling for different clusters. 1) We first run dimension reduction on the input matrix. As we and others reported [Cusanovich et al, Science 2015](https://science.sciencemag.org/content/348/6237/910/tab-pdf), the Latent Semantic Index (LSI) has been widely used in learning the structure of scATAC-seq data. We use LSI as the default dimension reduction method, which has the best performance according to our benchmark. Users can also use "PCA" as an optional dimension reduction method. 2) We apply UMAP to reduce the dimensions further and identify the clusters using a graph-based clustering approach implemented in [Seurat](https://www.cell.com/cell/pdf/S0092-8674(19)30559-8.pdf). 3) We used a [wilcox-test](https://www.tandfonline.com/doi/abs/10.1080/01621459.1972.10481279) based method to identify the differential peaks for each cluster. The original peak count matrix is scaled and weighed by the total peaks present in each cell to overcome the potential ties in Wilcox-test. It will take 10-20mins to calculate the differential peaks for all the clusters.
 
 ```R
 > pbmc.ATAC.res <- ATACRunSeurat(inputMat = pbmc.peaks, 
@@ -130,8 +130,8 @@ chr2-112839364-112840014 chr2-112839364-112840014
 
 <img src="./10X_PBMC_10K_cluster.png" width="500" height="400" /> 
 
-**Step 6. Annotate celltypes**     
-We next try to annotate different clusters based on their marker genes. For scATAC, we first need to pass the gene regulatory potential matrix to the clustering result, then perform differential gene analysis for each cluster on the gene RPscore matrix, and identify the marker genes. We use public immune signatures like [CIBERSORT](https://www.nature.com/articles/nmeth.3337) to annotate the clusters. You can also use your own signatures to annotate the clusters.
+**Step 6. Annotate cell types**     
+We next try to annotate different clusters based on their marker genes. For scATAC, we first need to pass the gene regulatory potential matrix to the clustering result, then perform differential gene analysis for each cluster on the gene RPscore matrix, and identify the marker genes. We use public immune signatures like [CIBERSORT](https://www.nature.com/articles/nmeth.3337) to annotate the clusters. Users can also use their signatures to annotate the clusters.
 
 ```R
 > data(human.immune.CIBERSORT)
@@ -146,8 +146,8 @@ We next try to annotate different clusters based on their marker genes. For scAT
 <img src="./10X_PBMC_10K_annotated.png" width="600" height="400" /> 
 
 **Step 7. Identify driver transcription factors**     
-Identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilize giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster specific peaks. To run this function, you need to first install [giggle](https://github.com/ryanlayer/giggle), download the giggle index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz), and provide the file location of the index to MAESTRO. 
-After identify enriched transcription regulators, MAESTRO also provide the potential target gene list of the top 10 transcription factors for each cluster, which are based on the ChIP-seq peaks from [CistromeDB](http://cistrome.org/db/#/). The target genes will be generated in the "10X_PBMC_10K.TF.GIGGLE" directory.
+Identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilizes giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster-specific peaks. To run this function, users need first to install [giggle](https://github.com/ryanlayer/giggle), download the giggle index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz), and provide the file location of the index to MAESTRO. 
+After identifying enriched transcription regulators, MAESTRO also provides the potential target gene list of the top 10 transcription factors for each cluster, which are based on the ChIP-seq peaks from [CistromeDB](http://cistrome.org/db/#/). The target genes will be generated in the "10X_PBMC_10K.TF.GIGGLE" directory.
 
 ```R
 > pbmc.ATAC.tfs <- ATACAnnotateTranscriptionFactor(ATAC = pbmc.ATAC.res$ATAC, 
@@ -204,7 +204,7 @@ $`0`
 ```
 
 **Step 8. Visualize driver transcription factors for each cluster**     
-According to the annotation of the clusters, we know that cluster 8 is B-cells. Next we want to visualize the enriched regulators in B-cells from Step 7. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors, here we used the gene regulatory potential score as the predicted gene expression level. 
+According to the annotation of the clusters, we know that cluster 8 is B-cells. Next, we want to visualize the enriched regulators in B-cells from Step 7. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors; here, we used the gene regulatory potential score as the predicted gene expression level. 
 
 The output TFs from MAESTRO have already been pre-filtered using TF regulatory potential score. 
 ```R
@@ -220,7 +220,7 @@ The output TFs from MAESTRO have already been pre-filtered using TF regulatory p
 
 <img src="./10X_PBMC_10K_TF_Bcell_filtered.png" width="500" height="480" /> 
 
-If you want to visualize the top factors without filtering using regulatory potential. You can leave the TFs to blank, then the top 10 regulators will be visualized.
+If users want to visualize the top factors without filtering using regulatory potential. Please leave the TFs to blank, then the top 10 regulators will be visualized.
 ```R
 > VisualizeTFenrichment(cluster.1 = 8, 
 >                       type = "ATAC", 
@@ -256,7 +256,7 @@ And we also provide the function for visualize TF/genes regulatory potential usi
 ```
 <img src="./10X_PBMC_10K_TF_Bcell_umap.png" width="900" height="350" /> 
 
-Based on the regulatory potential of TFs, we can see that PAX5 is highly expressed in the B-cells from PBMC, while FOXO3 is genearally distributed. We will next visualize the regulatory potential of PAX5 target genes.
+Based on the regulatory potential of TFs, we can see that PAX5 is highly expressed in the B-cells from PBMC, while FOXO3 is generally distributed. We will next visualize the regulatory potential of PAX5 target genes.
 
 ```R
 > PAX5_target <- as.character(read.table('10X_PBMC_10K_TF.GIGGLE/8.PAX5.34475.target.genes.top500.txt')[1:200,1])
@@ -268,13 +268,13 @@ Based on the regulatory potential of TFs, we can see that PAX5 is highly express
 <img src="./10X_PBMC_10K_TF_Bcell_PAX5.png" width="500" height="400" />  
 
 **Step 9. Save the project for future analysis**     
-Finally, you can save the R project including the raw data, normalized data, clustering result and meta informations for future analysis.
+Finally, users can save the R project, including the raw data, normalized data, clustering result, and meta information for future analysis.
 
 ```R
 saveRDS(pbmc.ATAC.res, "pbmc.ATAC.res.rds")
 ```
 
-The differential peaks, TFs and target genes have already been saved in the current directory by MAESTRO.
+The differential peaks, TFs, and target genes have already been saved in the current directory by MAESTRO.
 
 ```bash
 $ ls 10X_PBMC_10K.DiffPeak.tsv 10X_PBMC_10K_TF.GIGGLE 
