@@ -149,7 +149,7 @@ The output TFs from MAESTRO have already been pre-filtered using TF expression l
 
 <img src="./HNSCC_scRNA_TF_Treg.png" width="500" height="480" /> 
 
-And we also provide the function for visualize TF/genes regulatory potential using Vlnplot and Umap.
+And we also provide the function for visualize TF/genes expression level using Vlnplot and Umap.
 ```R
 > VisualizeVlnplot(genes = c("GATA3","BATF"), 
 >                  type = "RNA", 

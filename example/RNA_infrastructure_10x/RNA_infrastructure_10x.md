@@ -245,7 +245,7 @@ If users want to visualize the top factors without filtering using expression le
 
 <img src="./10X_PBMC_8K_TF_Monocyte_top.png" width="500" height="480" /> 
 
-And we also provide the function for visualize TF/genes regulatory potential using Vlnplot and Umap.
+And we also provide the function for visualize TF/genes expression level using Vlnplot and Umap.
 ```R
 > VisualizeVlnplot(genes = c("SPI1","CEBPB"), 
 >                  type = "RNA", 

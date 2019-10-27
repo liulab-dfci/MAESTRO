@@ -41,7 +41,7 @@ MAESTRO depends on the Cell Ranger and Cell Ranger ATAC for the mapping of the d
 
 **Installing RABIT/LISA**       
 
-MAESTRO utilizes RABIT and LISA to evaluate the enrichment of transcription factors based on the marker genes from scRNA-seq clusters. To run this function, the users need first to install [RABIT](http://rabit.dfci.harvard.edu/), download the RABIT index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz), and provide the file location of the index to MAESTRO in the YAML configuration file. Alternatively, users can also use LISA to predict the potential transcription factors that regulate the marker genes from scRNA-seq clusters. Please follow the description at LISA website(https://github.com/qinqian/lisa) to install and use this function.
+MAESTRO utilizes RABIT and LISA to evaluate the enrichment of transcription factors based on the marker genes from scRNA-seq clusters. To run this function, the users need first to install [RABIT](http://rabit.dfci.harvard.edu/), download the RABIT index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz), and provide the file location of the index to MAESTRO in the YAML configuration file. Alternatively, users can also use LISA to predict the potential transcription factors that regulate the marker genes from scRNA-seq clusters. Please follow the description at [LISA website](https://github.com/qinqian/lisa) to install and use this function.
 
 **Installing giggle**
 
