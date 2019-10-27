@@ -1,9 +1,9 @@
-## Integrated analysis of 10x-genomics based scRNA-seq and scATAC-seq from human PBMC samples
+## Integrated analysis of 10X  Genomics based scRNA-seq and scATAC-seq from human PBMC samples
 
 In this example, we will introduce the integrated analysis of 10x-genomics scRNA-seq and scATAC-seq from human PBMC samples. 
 
 **Step 1. Read the scRNA-seq and scATAC-seq clustering object**     
-Our analysis are based on the clustering result from previous examples. The step-by-step analysis of PBMC scRNA-seq can be found [here](https://github.com/chenfeiwang/MAESTRO/blob/master/example/RNA_infrastructure_10x/RNA_infrastructure_10x.md). The step-by-step analysis of PBMC scATAC-seq can be found [here](https://github.com/chenfeiwang/MAESTRO/blob/master/example/ATAC_infrastructure_10x/ATAC_infrastructure_10x.md).
+Our analysis is based on the clustering result from previous examples. The step-by-step analysis of PBMC scRNA-seq can be found [here](https://github.com/chenfeiwang/MAESTRO/blob/master/example/RNA_infrastructure_10x/RNA_infrastructure_10x.md). The step-by-step analysis of PBMC scATAC-seq can be found [here](https://github.com/chenfeiwang/MAESTRO/blob/master/example/ATAC_infrastructure_10x/ATAC_infrastructure_10x.md).
 
 ```R
 > pbmc.RNA.res <- readRDS('pbmc.RNA.res.rds')
@@ -29,7 +29,7 @@ scATAC-only visualization:
 <img src="./PBMC.coembedded_ATAConly.png" width="530" height="400" /> 
 
 **Step 3. Visualize the driver TF for both scRNA-seq and scATAC-seq samples**      
-MAESTRO provide functions to visualize the enriched TFs for both scRNA-seq and scATAC-seq clusters, thus you can compare the diver regulators from the same cell type. From previous analysis, we know cluster 0 in scRNA-seq and cluster 0 in scATAC-seq are bothe Monocytes, next we will visualize the enrichment of TFs in both clusters.
+MAESTRO provides functions to visualize the enriched TFs for both scRNA-seq and scATAC-seq clusters; thus, you can compare the diver regulators from the same cell type. From the previous analysis, we know cluster 0 in scRNA-seq and cluster 0 in scATAC-seq are bothe Monocytes, next we will visualize the enrichment of TFs in both clusters.
 
 By default, MAESTRO will label the top 10 regulators using TF enrichment from GIGGLE analysis based on scATAC-seq, and also visualize the TF expression level base on mean expression from scRNA-seq. 
 ```R
@@ -47,7 +47,7 @@ By default, MAESTRO will label the top 10 regulators using TF enrichment from GI
 <img src="./PBMC.coembedded_TF_Monocyte.png" width="500" height="480" /> 
 
 **Step 4. Save the project for future analysis**     
-Finally, you can save the integrated R project for future analysis. You can also explore the differential expressed genes, driver regulators in different clusters, and consistency between scRNA-seq and scATAC-seq in the later analysis.
+Finally, users can save the integrated R project for future analysis. Users can also explore the differential expressed genes, driver regulators in different clusters, and consistency between scRNA-seq and scATAC-seq in the later analysis.
 ```R
 > saveRDS(pbmc.coembedded.res, "pbmc.coembedded.Seurat.rds")
 ```
