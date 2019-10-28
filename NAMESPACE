@@ -2,6 +2,7 @@
 
 export(ATACAnnotateCelltype)
 export(ATACAnnotateTranscriptionFactor)
+export(ATACCalculateGenescore)
 export(ATACFilteringPlot)
 export(ATACFragmentSizePlot)
 export(ATACMapPlot)
