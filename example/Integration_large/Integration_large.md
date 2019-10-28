@@ -7,9 +7,7 @@ We will start from the processed dataset and demonstrate the step-by-step analys
 
 ```bash
 $ wget http://cistrome.org/~chenfei/MAESTRO/GSE129785_BCC_scATAC_peak_count.h5.gz
-$ wget http://cistrome.org/~chenfei/MAESTRO/GSE129785_BCC_scATAC_gene_score.h5.gz
 $ gunzip GSE129785_BCC_scATAC_peak_count.h5.gz
-$ gunzip GSE129785_BCC_scATAC_gene_score.h5.gz 
 ```
 If users have their count matrix of mtx files from 10-x genomics, they can convert it to hdf5 format using the functions provided in MAESTRO under the python environment.
 
@@ -23,20 +21,21 @@ $ python
 Then users can use the hdf5 files for the downstream analysis.
 
 **Step 1. Read the data into R environment**     
-To use the MAESTRO R function, following the instructions in MAESTRO [README](https://github.com/chenfeiwang/MAESTRO/blob/master/README.md) page and install the R package. Then read the peak count matrix and gene score matrix into R. We could first filter the peaks with occurrence less than 50 to reduce the computing time and save some memory.
+To use the MAESTRO R function, following the instructions in MAESTRO [README](https://github.com/chenfeiwang/MAESTRO/blob/master/README.md) page and install the R package. Then read the peak count matrix into R. We could first filter the peaks with occurrence less than 50 to reduce the computing time and save some memory.
 
 ```R
 > library(MAESTRO)
 > library(Seurat)
 > library(Matrix)
 > bcc.peak <- Read10X_h5('GSE129785_BCC_scATAC_peak_count.h5')
-> bcc.gene <- Read10X_h5('GSE129785_BCC_scATAC_gene_score.h5')
 > dim(bcc.peak)
 [1] 580789  37818
 > bcc.peak <- bcc.peak[which(rowSums(bcc.peak)>50),]
 > dim(bcc.peak)
 [1] 531055  37818
+> bcc.gene <- ATACCalculateGenescore(bcc.peak)
 ```
+The ATACCalculateGenescore function calls python from R, and utilizes multiple processes (default is 8) to calculate gene scores. However, we need to mention that for large dataset, the gene score calculation usually takes more than 1h and consums large memory. Users should make sure they have enought memory configuration on the computing server of cluster.
 
 **Step 2. Claim the process and memory usage in R**  
 There are still ~0.5 million peaks after filtering. To accelerate the computing process, users can use the multiple processing functions in R and claim the process and memory usage using the flowing commands. 
@@ -100,7 +99,7 @@ We next try to annotate different clusters based on their marker genes. For scAT
 **Step 5. Download the scRNA-seq dataset**     
 However, as we can see from the annotations. Some of the clusters are annotated as "Others", indicating the differential accessibility of marker genes can not robustly annotate these clusters. Usually, scRNA-seq has better discriminations on markers between different clusters, we next performed integrated analysis of the BCC scATAC-seq dataset with public BCC scRNA-seq dataset, and try to use the scRNA-seq cluster labels to annotate the scATAC-seq clusters.
 
-First users can download the scRNA-seq dataset from Cistrome website.
+First, users can download the scRNA-seq dataset from Cistrome website.
 ```bash
 $ wget http://cistrome.org/~chenfei/MAESTRO/GSE123813_BCC_scRNA_counts.h5.gz
 $ wget http://cistrome.org/~chenfei/MAESTRO/GSE123813_BCC_scRNA_metadata.txt.gz
