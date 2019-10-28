@@ -91,10 +91,10 @@ First users need to read the peak count matrix as well as the gene regulatory po
 > pbmc.gene <- Read10X_h5('Result/Analysis/10X_PBMC_10K_gene_score.h5')
 ```
 
-We also support the processed dataset from 10x Cell Ranger pipelines, users can load the gene matrix into R through Seurat package.
+We also support the processed dataset from 10x Cell Ranger pipelines, users can load the gene matrix into R through Seurat package. Then generate the gene regulatory score matrix by the following command.
 ```R
-> library(Seurat)
 > pbmc.peaks <- Read10X_h5("Result/Cellranger/10X_PBMC_10K/outs/filtered_peak_bc_matrix.h5")
+> pbmc.gene <- ATACCalculateGenescore(pbmc.peaks)
 ```
 
 **Step 5. Clustering and differential peak calling**      
@@ -201,6 +201,17 @@ $`0`
  [8] "SKI"
  [9] "E4F1 | GMEB2 | ARNT | HIF1A | AHR | EPAS1"
 [10] "ELF2 | ELF1 | ETV2 | ETS2 | FLI1 | ELK1 | ETV5 | NFAT5 | GABPA | ETV6 | ELK4 | ETS1 | ETV7 | ELK3 | ETV4 | ERG | ETV1 | EHF | FEV | ELF3 | ELF5"
+```
+
+Beside indentify TFs for all the clusters, we also support the differential peaks from a single comparison.
+```R
+> de.peakset <- FindMarkersMAESTRO(pbmc.ATAC.res$ATAC, ident.1 = c(0,2,10,12))
+   |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed = 60s
+> pbmc.ATAC.tfs <- ATACAnnotateTranscriptionFactor(ATAC = pbmc.ATAC.res$ATAC, 
+>                                                  peaks = de.peakset,
+>                                                  cluster = c(0,2,10,12),
+>                                                  project = "10X_PBMC_MAESTRO_Monocyte_TF", 
+>                                                  giggle.path = "/homes/cwang/annotations/giggle")
 ```
 
 **Step 8. Visualize driver transcription factors for each cluster**     

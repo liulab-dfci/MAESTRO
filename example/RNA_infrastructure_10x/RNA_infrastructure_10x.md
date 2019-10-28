@@ -215,6 +215,17 @@ Alternatively, users can also use LISA to identify the driver regulators, using 
 >                                                method = "LISA")
 ```
 
+Beside indentify TFs for all the clusters, we also support the differential gene list from a single comparison.
+```R
+> de.geneset <- FindMarkersMAESTRO(pbmc.RNA.res$RNA, ident.1 = c(0,10))
+   |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed = 02m 24s
+> pbmc.RNA.tfs <- RNAAnnotateTranscriptionFactor(RNA = pbmc.RNA.res$RNA, 
+>                                                genes = de.geneset,
+>                                                cluster = c(0,10),
+>                                                project = "10X_PBMC_8K_Monocyte_TF", 
+>                                                method = "LISA")
+```
+
 **Step 8. Visualize driver transcription factors for each cluster**     
 According to the annotation of the clusters, we know that cluster 0 is Monocyte. Next, we want to visualize the enriched regulators in Monocyte from Step 7. To further filter the regulators, we will also visualize the expression level of the predicted transcription factors. Currently, for scRNA-seq, the VisualizeTFenrichment function only supports LISA results. 
 

@@ -7,19 +7,17 @@ We will start from the processed dataset and demonstrate the step-by-step analys
 
 ```bash
 $ wget http://cistrome.org/~chenfei/MAESTRO/GSE65360_cellline_peak_count.h5.gz
-$ wget http://cistrome.org/~chenfei/MAESTRO/GSE65360_cellline_gene_score.h5.gz
 $ gunzip GSE65360_cellline_peak_count.h5.gz
-$ gunzip GSE65360_cellline_gene_score.h5.gz
 ```
 
 **Step 1. Read the data into R environment**     
-To use the MAESTRO R function, following the instructions in MAESTRO [README](https://github.com/chenfeiwang/MAESTRO/blob/master/README.md) page and install the R package. Then read the peak count matrix and gene score matrix into R.
+To use the MAESTRO R function, following the instructions in MAESTRO [README](https://github.com/chenfeiwang/MAESTRO/blob/master/README.md) page and install the R package. Then read the peak count matrix into R. Then generate the gene regulatory score matrix by the following command.
 
 ```R
 > library(MAESTRO)
 > library(Seurat)
 > cellline.peak <- Read10X_h5('GSE65360_cellline_peak_count.h5')
-> cellline.gene <- Read10X_h5('GSE65360_cellline_gene_score.h5')
+> cellline.gene <- ATACCalculateGenescore(cellline.peak)
 ```
 
 **Step 2. Clustering and differential peak calling**      
@@ -113,6 +111,17 @@ $`0`
  [8] "CD74"
  [9] "TBL1XR1"
 [10] "NIPBL"
+```
+
+Beside indentify TFs for all the clusters, we also support the differential peaks from a single comparison.
+```R
+> de.peakset <- FindMarkersMAESTRO(cellline.ATAC.res$ATAC, ident.1 = c(1,2,7))
+   |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed = 45s
+> pbmc.ATAC.tfs <- ATACAnnotateTranscriptionFactor(ATAC = cellline.ATAC.res$ATAC, 
+>                                                  peaks = de.peakset,
+>                                                  cluster = c(1,2,7),
+>                                                  project = "cellline_scATAC_K562_TF", 
+>                                                  giggle.path = "/homes/cwang/annotations/giggle")
 ```
 
 **Step 5. Visualize driver transcription factors for each cluster**     

@@ -56,11 +56,11 @@ RNAAnnotateCelltype <- function(RNA, genes, signatures, min.score = 0.1, orig.id
         RNA@meta.data$assign.ident = Idents(RNA)[rownames(RNA@meta.data)]
         RNA@meta.data$assign.ident = plyr::mapvalues(x = RNA@meta.data$assign.ident,
                                                            from = current.cluster.ids, to = new.cluster.ids)
-        p = DimPlot(object = RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3)
+        p = DimPlot(object = RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3, repel = T)
         ggsave(paste0(RNA@project.name, "_annotated.png"), p, width=6, height=4)}
     else{
         RNA$assign.ident <- orig.ident
-        p = DimPlot(object = RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3)
+        p = DimPlot(object = RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3, repel = T)
         ggsave(file.path(paste0(RNA@project.name, "_original.png")), p,  width=5.5, height=4)}
     
     return(RNA)    
