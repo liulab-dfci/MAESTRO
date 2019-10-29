@@ -117,11 +117,11 @@ Beside indentify TFs for all the clusters, we also support the differential peak
 ```R
 > de.peakset <- FindMarkersMAESTRO(cellline.ATAC.res$ATAC, ident.1 = c(1,2,7))
    |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed = 45s
-> pbmc.ATAC.tfs <- ATACAnnotateTranscriptionFactor(ATAC = cellline.ATAC.res$ATAC, 
->                                                  peaks = de.peakset,
->                                                  cluster = c(1,2,7),
->                                                  project = "cellline_scATAC_K562_TF", 
->                                                  giggle.path = "/homes/cwang/annotations/giggle")
+> pbmc.ATAC.K562.tfs <- ATACAnnotateTranscriptionFactor(ATAC = cellline.ATAC.res$ATAC, 
+>                                                       peaks = de.peakset,
+>                                                       cluster = c(1,2,7),
+>                                                       project = "cellline_scATAC_K562_TF", 
+>                                                       giggle.path = "/homes/cwang/annotations/giggle")
 ```
 
 **Step 5. Visualize driver transcription factors for each cluster**     
