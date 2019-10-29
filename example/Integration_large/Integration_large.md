@@ -35,7 +35,7 @@ To use the MAESTRO R function, following the instructions in MAESTRO [README](ht
 [1] 531055  37818
 > bcc.gene <- ATACCalculateGenescore(bcc.peak)
 ```
-The ATACCalculateGenescore function calls python from R, and utilizes multiple processes (default is 8) to calculate gene scores. However, we need to mention that for large dataset, the gene score calculation usually takes more than 1h and consums large memory. Users should make sure they have enought memory configuration on the computing server of cluster.
+The ATACCalculateGenescore function calls python from R, and utilizes matrix manipulation to calculate gene scores. However, we need to mention that for large dataset, the gene score calculation usually consums large memory. Users should make sure they have enought memory configuration on the computing server of cluster.
 
 **Step 2. Claim the process and memory usage in R**  
 There are still ~0.5 million peaks after filtering. To accelerate the computing process, users can use the multiple processing functions in R and claim the process and memory usage using the flowing commands. 

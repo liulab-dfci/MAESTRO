@@ -207,11 +207,11 @@ Beside indentify TFs for all the clusters, we also support the differential peak
 ```R
 > de.peakset <- FindMarkersMAESTRO(pbmc.ATAC.res$ATAC, ident.1 = c(0,2,10,12))
    |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed = 60s
-> pbmc.ATAC.tfs <- ATACAnnotateTranscriptionFactor(ATAC = pbmc.ATAC.res$ATAC, 
->                                                  peaks = de.peakset,
->                                                  cluster = c(0,2,10,12),
->                                                  project = "10X_PBMC_MAESTRO_Monocyte_TF", 
->                                                  giggle.path = "/homes/cwang/annotations/giggle")
+> pbmc.ATAC.monocyte.tfs <- ATACAnnotateTranscriptionFactor(ATAC = pbmc.ATAC.res$ATAC, 
+>                                                           peaks = de.peakset,
+>                                                           cluster = c(0,2,10,12),
+>                                                           project = "10X_PBMC_MAESTRO_Monocyte_TF", 
+>                                                           giggle.path = "/homes/cwang/annotations/giggle")
 ```
 
 **Step 8. Visualize driver transcription factors for each cluster**     
