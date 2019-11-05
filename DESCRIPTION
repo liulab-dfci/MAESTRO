@@ -8,7 +8,7 @@ Maintainer: Dongqing Sun<dongqingsun96@gmail.com>
 Description: MAESTRO is an intergrative analysis pipeline to support downstream analysis of single-cell RNA-seq and single-cell ATAC-seq dataset. MAESTRO provides funtion for quality control, normalization, clustering, differential gene and peak analysis, marker gene based annotation, transcription factor identification using Cistome toolkit, and intergrative analysis for scRNA-seq and scATACseq. 
 URL: https://github.com/LiuLab-dfci/MAESTRO
 Depends: R (>= 3.5.1)
-Imports: Seurat (>= 3.0.1), ggplot2 (>= 3.0.0), ggrepel, cowplot, Matrix (>= 
+Imports: Seurat (== 3.0.1), ggplot2 (>= 3.0.0), ggrepel, cowplot, Matrix (>= 
          1.2.14), dplyr, png, RColorBrewer, scales, grid, pheatmap, MAGeCKFlute
 Suggests: knitr, pagoda2, RCA, MAST, DESeq2, scABC, devtools, uwot, cisTopic, chromVAR, motifmatchr,
           SummarizedExperiment, BSgenome.Hsapiens.UCSC.hg38, BSgenome.Mmusculus.UCSC.mm10,

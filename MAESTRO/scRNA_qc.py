@@ -119,7 +119,7 @@ def main():
         FilterCell(raw_matrix_df, 1000, 500, os.path.join(outdir, outpre), platform, genome)
     else:
         raw_matrix_df = pd.read_csv(raw_matrix_file, sep = "\t", header = 0, index_col = 0)
-        FilterCell(raw_matrix_df, 1000, 500, os.path.join(outdir, outpre), platform, genome)
+        FilterCell(raw_matrix_df, 100, 50, os.path.join(outdir, outpre), platform, genome)
 
 
 if __name__ == "__main__":
