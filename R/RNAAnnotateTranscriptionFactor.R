@@ -49,6 +49,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project =
 
   if("cluster" %in% colnames(genes)){
     genes$cluster <- as.factor(genes$cluster)
+    genes <- genes[genes$avg_logFC>0,]
     ifAllcluster = TRUE
   }else{
     ifAllcluster = FALSE

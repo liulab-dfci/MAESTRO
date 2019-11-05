@@ -48,6 +48,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
   
   if("cluster" %in% colnames(peaks)){
     peaks$cluster <- as.factor(peaks$cluster)
+    peaks <- peaks[peaks$avg_logFC>0,]   
     ifAllcluster = TRUE
   }else{
     ifAllcluster = FALSE
