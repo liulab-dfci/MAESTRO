@@ -9,6 +9,8 @@ species: GRCh38
 platform: 10x-genomics
 # The prefix of output files
 outprefix: pbmc_1k_v2
+# Run RSeQC or not [True, False]
+rseqc: False
 # Number of cores to use
 cores: 8
 # annotation to run rabit

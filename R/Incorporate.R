@@ -34,7 +34,7 @@
 #'
 #' @export
 
-Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembedding", dims.use = 1:30, RNA.res = 0.6, ATAC.res = 0.6)
+Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembedding", method = "MAESTRO", dims.use = 1:30, RNA.res = 0.6, ATAC.res = 0.6)
 {
   require(Seurat)
   require(ggplot2)
@@ -49,14 +49,15 @@ Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembeddi
      ATAC <- FindVariableFeatures(ATAC)
      ATAC <- NormalizeData(ATAC)
      ATAC <- ScaleData(ATAC)}
-#  activity.matrix <- CreateGeneActivityMatrix(peak.matrix = RPmatrix, annotation.file = "/homes/cwang/annotations/hg38/Homo_sapiens.GRCh37.82.gtf",  seq.levels = c(1:22, "X", "Y"), upstream = 2000, verbose = TRUE)
-#  activity.matrix <- activity.matrix[,intersect(colnames(ATAC), colnames(activity.matrix))]
-#  ATAC <- subset(ATAC, cells = intersect(colnames(ATAC), colnames(activity.matrix)))
-#  ATAC[["ACTIVITY"]] <- CreateAssayObject(counts = activity.matrix)
-#  DefaultAssay(ATAC) <- "ACTIVITY"
-#  ATAC <- FindVariableFeatures(ATAC)
-#  ATAC <- NormalizeData(ATAC)
-#  ATAC <- ScaleData(ATAC)
+   if(method=="Seurat"){
+     activity.matrix <- CreateGeneActivityMatrix(peak.matrix = RPmatrix, annotation.file = "/homes/cwang/annotations/hg38/Homo_sapiens.GRCh38.98.gtf",  seq.levels = c(1:22, "X", "Y"), upstream = 2000, verbose = TRUE)
+     activity.matrix <- activity.matrix[,intersect(colnames(ATAC), colnames(activity.matrix))]
+     ATAC <- subset(ATAC, cells = intersect(colnames(ATAC), colnames(activity.matrix)))
+     ATAC[["ACTIVITY"]] <- CreateAssayObject(counts = activity.matrix)
+     DefaultAssay(ATAC) <- "ACTIVITY"
+     ATAC <- FindVariableFeatures(ATAC)
+     ATAC <- NormalizeData(ATAC)
+     ATAC <- ScaleData(ATAC)}
   
   transfer.anchors <- FindTransferAnchors(reference = RNA, query = ATAC, features = VariableFeatures(object = RNA), 
                       reference.assay = "RNA", query.assay = "ACTIVITY", reduction = "cca")

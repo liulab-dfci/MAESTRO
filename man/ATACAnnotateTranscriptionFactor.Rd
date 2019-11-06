@@ -18,12 +18,12 @@ ATACAnnotateTranscriptionFactor(ATAC, peaks, cluster = NULL,
 
 \item{project}{Output project name for the giggle analysis result. Default is the project name of the ATAC Seurat object}
 
+\item{giggle.path}{Path of the giggle annotation files. The giggle annoation for CistromeDB is available at https://github.com/liulab-dfci/MAESTRO.
+Download and unzip the annotation, supply the path of the annotations to \code{giggle.anno.path}.}
+
 \item{organism}{Organism for the dataset. Only support "GRCh38" and "GRCm38". Default is "GRCh38".}
 
 \item{top.tf}{Output the target genes for the top TFs. Default is 10, only output the target genes for the top 10 TFs.}
-
-\item{giggle.anno.path}{Path of the giggle annotation files. The giggle annoation for CistromeDB is available at https://github.com/liulab-dfci/MAESTRO.
-Download and unzip the annotation, supply the path of the annotations to \code{giggle.anno.path}.}
 }
 \value{
 A list of top enriched transcription factors and their target genes for each cluster.

@@ -16,10 +16,10 @@ tmp = randomString()
 
 def bedtools_intersect(barcode):
     """Intersect bam file with peak file to genearate binary count output."""
-    if not os.path.isfile(sys.argv[3]+"/"+barcode+".rmdp.bed"):
-        error(sys.argv[3]+"/"+barcode+".rmdp.bed not exist!")
+    if not os.path.isfile(sys.argv[3]+"/"+barcode+".sortedByPos.rmdp.unique.bed"):
+        error(sys.argv[3]+"/"+barcode+".sortedByPos.rmdp.unique.bed not exist!")
     else:
-        os.system("bedtools intersect -wa -a " + sys.argv[1] + " -b " + sys.argv[3] + '/' + barcode + ".rmdp.bed -u > " + tmp + '/' + barcode + ".bed")
+        os.system("bedtools intersect -wa -a " + sys.argv[1] + " -b " + sys.argv[3] + '/' + barcode + ".sortedByPos.rmdp.unique.bed -u > " + tmp + '/' + barcode + ".bed")
     return(tmp + "/" + barcode + ".bed")
 
 def merge_binary_file(peak_file, count_list, count_file, genome = 'GRCh38'):

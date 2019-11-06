@@ -16,7 +16,7 @@ def main():
     for logfile in os.listdir(log_folder):
         if logfile.endswith('.mapping.log'):
             sample = logfile[:-12]
-            total,mapped,duplicate,mito,uniq,promoters = 0,0,0,0,0,0
+            total,mapped,duplicate,uniq,mito,promoters,peaks = 0,0,0,0,0,0,0
             line_id = 0
             for line in open(log_folder + logfile).readlines():
                 line = line.strip().split(' ')
@@ -28,15 +28,17 @@ def main():
                 if line_id == 4:
                     duplicate = line[0]
                 if line_id == 14:
-                    mito = line[0]
-                if line_id == 15:
                     uniq = line[0]
+                if line_id == 15:
+                    mito = line[0]
                 if line_id == 16:
                     promoters = line[0]
-            output[sample] = [total,mapped,duplicate,mito,uniq,promoters]
+                if line_id == 17:
+                    peaks = line[0]
+            output[sample] = [total,mapped,duplicate,uniq,mito,promoters,peaks]
 
     outf = open(out_file,'w')
-    outf.write('sample\ttotal\tmapped\tduplicate\tmito\tuniq\tpromoters\n')
+    outf.write('sample\ttotal\tmapped\tduplicate\tuniq\tmito\tpromoters\tpeaks\n')
     for k in output:
         outf.write(k+'\t'+'\t'.join(output[k])+'\n')
     outf.close()

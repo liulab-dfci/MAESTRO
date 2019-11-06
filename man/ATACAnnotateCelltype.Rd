@@ -5,7 +5,7 @@
 \alias{ATACAnnotateCelltype}
 \title{Annotate scATAC-seq celltype based on marker genes}
 \usage{
-ATACAnnotateCelltype(ATAC, RPmatrix, signatures, min.score = 0.1,
+ATACAnnotateCelltype(ATAC, RPmatrix, signatures, min.score = 0,
   genes.test.use = "wilcox", genes.cutoff = 1e-05, orig.ident = NULL)
 }
 \arguments{
@@ -18,7 +18,7 @@ and gene RP score as values.}
 gene symbol. Check the immune signatures from CIBERSORT (Newman et al., Nature Method, 2015) in example for details.}
 
 \item{min.score}{Minimum score required. For one cluster, if the score for all celltypes are less than 
-\code{min.score}, the cluster will be annotated as "Others". Default is 0.1.}
+\code{min.score}, the cluster will be annotated as "Others". Default is 0.}
 
 \item{genes.test.use}{Denotes which test to use to identify genes. Default is "wilcox".}
 

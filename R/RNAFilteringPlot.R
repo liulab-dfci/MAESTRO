@@ -28,7 +28,7 @@ RNAFilteringPlot <- function(filepath, UMI.cutoff = 1000, gene.number.cutoff = 5
        xlim=c(0,log10(max(UMI_gene[,1])+1)+0.25), ylim=c(0,max(UMI_gene[,2])+150), pch='.',col=RCB_red,ylab='Number of genes covered',xlab='Number of UMIs (log10)')
   points(log10(UMI_gene[which(UMI_gene[,1] >= UMI.cutoff & UMI_gene[,2] >= gene.number.cutoff),1]+1),UMI_gene[which(UMI_gene[,1] >= UMI.cutoff & UMI_gene[,2] >= gene.number.cutoff),2],
          pch='.',col=RCB_blue)
-  legend("topleft",c("cells","non-cells"),col=c(RCB_blue,RCB_red),pch=20, bty = "n")
+  legend("topleft",c("High-quality cells","Low-quality cells"),col=c(RCB_blue,RCB_red),pch=20, bty = "n")
   dev.off()
   write.table(as.character(rownames(UMI_gene[which(UMI_gene[,1]>=UMI.cutoff&(UMI_gene[,2]>=gene.number.cutoff)),])), paste0(name,"_scRNA_validcells.txt"), sep = "\n", quote=F, row.names=F, col.names=F)
 }

@@ -94,7 +94,7 @@ RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident 
 
   #=========DE analysis===========
   message("Identify cluster specific genes ...")
-  cluster.genes <- FindAllMarkersMAESTRO(object = SeuratObj, only.pos = TRUE, min.pct = 0.1, test.use = genes.test.use)
+  cluster.genes <- FindAllMarkersMAESTRO(object = SeuratObj, min.pct = 0.1, test.use = genes.test.use)
   cluster.genes <- cluster.genes[cluster.genes$p_val_adj<genes.cutoff, ]
   write.table(cluster.genes, paste0(SeuratObj@project.name, "_DiffGenes.tsv"), quote = F, sep = "\t")
 

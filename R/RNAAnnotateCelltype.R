@@ -11,7 +11,7 @@
 #' @param signatures Data frame of celltype signatures, with first column is celltype, and second column is
 #' gene symbol. Check the immune signatures from CIBERSORT (Newman et al., Nature Method, 2015) in example for details.
 #' @param min.score Minimum score required. For one cluster, if the score for all celltypes are less than 
-#' \code{min.score}, the cluster will be annotated as "Others". Default is 0.05.
+#' \code{min.score}, the cluster will be annotated as "Others". Default is 0.
 #' @param orig.ident Orignal identity. If given, will use the original identity to annotate the celltypes. Default is NULL.
 #'
 #' @author Chenfei Wang
@@ -28,7 +28,7 @@
 #'
 #' @export
 
-RNAAnnotateCelltype <- function(RNA, genes, signatures, min.score = 0.1, orig.ident = NULL){
+RNAAnnotateCelltype <- function(RNA, genes, signatures, min.score = 0, orig.ident = NULL){
     require(Seurat)
     require(ggplot2)
     if(is.null(orig.ident)){
@@ -45,7 +45,7 @@ RNAAnnotateCelltype <- function(RNA, genes, signatures, min.score = 0.1, orig.id
                         score = sum(avglogFC[y], na.rm = TRUE) / log2(length(y))
                         return(score)
         })
-        if(max(score_cluster, na.rm = TRUE)>=min.score)
+        if(max(score_cluster, na.rm = TRUE)>min.score)
           cluster_celltypes = names(score_cluster)[which.max(score_cluster)]
         else
           cluster_celltypes = "Others"

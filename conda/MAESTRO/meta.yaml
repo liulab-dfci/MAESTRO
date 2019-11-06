@@ -10,11 +10,11 @@ source:
 #     - strap = strap:main
 requirements:
   build:
-    - python =3.6
-    - numpy =1.16.4
+    - python =3.7
+    - numpy =1.17
     - scipy =1.3.0
     - h5py =2.9.0
-    - tables
+    - pytables =3.5.2
     - setuptools
     - snakemake =5.4.5
     - rseqc =3.0.0
@@ -24,6 +24,7 @@ requirements:
     - bedtools =2.28.0
     - rsem =1.3.2
     - picard =2.20.2
+    - macs2 =2.2.5
     - ucsc-bedsort
     - ucsc-bedgraphtobigwig
     - umap-learn
@@ -31,6 +32,7 @@ requirements:
     - r-devtools
     - r-hdf5r
     - r-SDMTools
+    - r-optparse
     - bioconductor-biomaRt
     - bioconductor-MAST
     - bioconductor-AnnotationDbi
@@ -42,11 +44,11 @@ requirements:
     - bioconductor-Rsamtools
     - bioconductor-chromVAR
   run:
-    - python =3.6
-    - numpy =1.16.4
+    - python =3.7
+    - numpy =1.17
     - scipy =1.3.0
     - h5py =2.9.0
-    - tables
+    - pytables =3.5.2
     - setuptools
     - snakemake =5.4.5
     - rseqc =3.0.0
@@ -56,6 +58,7 @@ requirements:
     - bedtools =2.28.0
     - rsem =1.3.2
     - picard =2.20.2
+    - macs2 =2.2.5
     - ucsc-bedsort
     - ucsc-bedgraphtobigwig
     - umap-learn
@@ -63,6 +66,7 @@ requirements:
     - r-devtools
     - r-hdf5r
     - r-SDMTools
+    - r-optparse
     - bioconductor-biomaRt
     - bioconductor-MAST
     - bioconductor-AnnotationDbi

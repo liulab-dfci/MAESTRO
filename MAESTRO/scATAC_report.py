@@ -24,42 +24,42 @@ report_html_temp = open(report_html_tempfile, "r").read()
 # fripplot_link = '''"Plot/%s_scATAC_cell_filtering.png"'''%outpre
 # peakcluster_link = '''"Plot/%s_cluster.png"'''%outpre
 # rpannotate_link = '''"Plot/%s_annotated.png"'''%outpre
-bulkqc_file = "Result/QC/%s_bam_stat.txt"%outpre
+# bulkqc_file = "Result/QC/%s_bam_stat.txt"%outpre
 cluster_regulator_file = "Result/Analysis/%s.PredictedTFTop10.txt"%outpre
 
 
 
 fragplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scATAC_fragment_size.png"%outpre)[0]
-mapplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scATAC_mapping_summary.png"%outpre)[0]
+# mapplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scATAC_mapping_summary.png"%outpre)[0]
 fripplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scATAC_cell_filtering.png"%outpre)[0]
 peakcluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_cluster.png"%outpre)[0]
 rpannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_annotated.png"%outpre)[0]
 readdistrplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scATAC_read_distr.png"%outpre)[0]
 
-line_id = 0
-total,mapped,duplicate,mito,uniq,promoters = 0,0,0,0,0,0
-for line in open(bulkqc_file).readlines():
-    line = line.strip().split(' ')
-    line_id += 1
-    if line_id == 1:
-        total = int(line[0])
-    if line_id == 5:
-        mapped = int(line[0])
-    if line_id == 4:
-        duplicate = int(line[0])
-    if line_id == 14:
-        mito = int(line[0])
-    if line_id == 15:
-        uniq = int(line[0])
-    if line_id == 16:
-        promoters = int(line[0])
-stat_list = [total,mapped,duplicate,mito,uniq,promoters]
+# line_id = 0
+# total,mapped,duplicate,mito,uniq,promoters = 0,0,0,0,0,0
+# for line in open(bulkqc_file).readlines():
+#     line = line.strip().split(' ')
+#     line_id += 1
+#     if line_id == 1:
+#         total = int(line[0])
+#     if line_id == 5:
+#         mapped = int(line[0])
+#     if line_id == 4:
+#         duplicate = int(line[0])
+#     if line_id == 14:
+#         mito = int(line[0])
+#     if line_id == 15:
+#         uniq = int(line[0])
+#     if line_id == 16:
+#         promoters = int(line[0])
+# stat_list = [total,mapped,duplicate,mito,uniq,promoters]
 
-stat_list[1] = str(stat_list[1]) + "(%.2f" %(float(stat_list[1])/float(stat_list[0])*100) + "%)"
-stat_list[2] = str(stat_list[2]) + "(%.2f" %(float(stat_list[2])/float(stat_list[0])*100) + "%)"
-stat_list[3] = str(stat_list[3]) + "(%.2f" %(float(stat_list[3])/float(stat_list[0])*100) + "%)"
-stat_list[4] = str(stat_list[4]) + "(%.2f" %(float(stat_list[4])/float(stat_list[0])*100) + "%)"
-stat_list[5] = str(stat_list[5]) + "(%.2f" %(float(stat_list[5])/float(stat_list[0])*100) + "%)"
+# stat_list[1] = str(stat_list[1]) + "(%.2f" %(float(stat_list[1])/float(stat_list[0])*100) + "%)"
+# stat_list[2] = str(stat_list[2]) + "(%.2f" %(float(stat_list[2])/float(stat_list[0])*100) + "%)"
+# stat_list[3] = str(stat_list[3]) + "(%.2f" %(float(stat_list[3])/float(stat_list[0])*100) + "%)"
+# stat_list[4] = str(stat_list[4]) + "(%.2f" %(float(stat_list[4])/float(stat_list[0])*100) + "%)"
+# stat_list[5] = str(stat_list[5]) + "(%.2f" %(float(stat_list[5])/float(stat_list[0])*100) + "%)"
 
 td_list = []
 for line in open(cluster_regulator_file,"r").readlines():

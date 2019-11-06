@@ -41,6 +41,7 @@ ATACCalculateGenescore <- function(inputMat, project = "MAESTRO.scATAC", organis
   ensembl.genescore = ensembl.genescore[,-4]
   
   peaks_list = rownames(inputMat)
+  peaks_list = gsub(pattern = "\\W", replacement = "_", x = peaks_list)
   if(class(inputMat) != "dgCMatrix"){
     inputMat = as(as.matrix(inputMat), "dgCMatrix")
   }
