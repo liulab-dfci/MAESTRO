@@ -98,7 +98,9 @@ VisualizeTFenrichment <- function(TFs = NULL, cluster.1, cluster.2 = NULL, type 
     TFmean <- scale((TFmean/abs(TFmean))*(abs(TFmean)^0.3),scale=FALSE)
     TFplot <- cbind(TFmean, TFscore1[sg,as.character(cluster.1)], TFscore2[sg,as.character(cluster.2)])
     TFplot <- TFplot[order(TFplot[,3], decreasing=T),];TFplot <- cbind(1:nrow(TFplot),TFplot) # rank uing scATAC-seq
-    colnames(TFplot)<-c("rank","expr","LISA","GIGGLE"); TFplot<-as.data.frame(TFplot)[1:visual.totalnumber,]
+    TFplot <- TFplot[order(TFplot[,3], decreasing=T),];TFplot <- cbind(1:nrow(TFplot),TFplot) # rank uing scRNA-seq
+    TFplot <- cbind(sqrt(TFplot[,1]*TFplot[,2]),TFplot);TFplot <- TFplot[order(TFplot[,1], decreasing=F),];TFplot$rank <- 1:nrow(TFplot) # rank using rank-product
+    colnames(TFplot)<-c("rank","rankLISA","rankGIGGLE","expr","LISA","GIGGLE"); TFplot<-as.data.frame(TFplot)[1:visual.totalnumber,]
     if(is.null(TFs)) {TFplot$plot <- 0;TFplot[TFplot$rank<=visual.topnumber,]$plot <- 1}
     else{TFplot$plot <- 0;TFplot[TFs,]$plot <- 1}
 

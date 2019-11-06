@@ -5,7 +5,7 @@
 \alias{RNAAnnotateCelltype}
 \title{Annotate scRNA-seq celltype based on marker genes}
 \usage{
-RNAAnnotateCelltype(RNA, genes, signatures, min.score = 0.1,
+RNAAnnotateCelltype(RNA, genes, signatures, min.score = 0,
   orig.ident = NULL)
 }
 \arguments{
@@ -17,7 +17,7 @@ RNAAnnotateCelltype(RNA, genes, signatures, min.score = 0.1,
 gene symbol. Check the immune signatures from CIBERSORT (Newman et al., Nature Method, 2015) in example for details.}
 
 \item{min.score}{Minimum score required. For one cluster, if the score for all celltypes are less than 
-\code{min.score}, the cluster will be annotated as "Others". Default is 0.05.}
+\code{min.score}, the cluster will be annotated as "Others". Default is 0.}
 
 \item{orig.ident}{Orignal identity. If given, will use the original identity to annotate the celltypes. Default is NULL.}
 }

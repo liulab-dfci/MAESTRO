@@ -57,8 +57,9 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   message("Identify cluster specific peaks ...")
   SeuratObj <- NormalizeData(SeuratObj, normalization.method = "LogNormalize", scale.factor = 10000)
   cluster.peaks <- NULL
-  cluster.peaks <- FindAllMarkersMAESTRO(object = SeuratObj, only.pos = TRUE, min.pct = 0.01, logfc.threshold = 0.1, test.use = peaks.test.use)
+  cluster.peaks <- FindAllMarkersMAESTRO(object = SeuratObj, min.pct = 0.05, logfc.threshold = 0.1, test.use = peaks.test.use)
   cluster.peaks <- cluster.peaks[cluster.peaks$p_val_adj<peaks.cutoff, ]
+  colnames(cluster.peaks)[7] <- "peak"
   write.table(cluster.peaks, paste0(project, "_DiffPeaks.tsv"), quote=F, sep="\t")}
   
   if(method == "PCA"){
