@@ -47,7 +47,7 @@ ATACAnnotateCelltype <- function(ATAC, RPmatrix, signatures, min.score = 0, gene
   if(is.null(orig.ident)){
      message("Identify cluster specific genes based on RP score ...")
      cluster.genes <- NULL
-     cluster.genes <- FindAllMarkersMAESTRO(object = ATAC, only.pos = TRUE, min.pct = 0.1, test.use = genes.test.use)
+     cluster.genes <- FindAllMarkersMAESTRO(object = ATAC, min.pct = 0.1, test.use = genes.test.use)
      cluster.genes <- cluster.genes[cluster.genes$p_val_adj<genes.cutoff, ]
      write.table(cluster.genes, paste0(ATAC@project.name, "_RPDiffGenes.tsv"), quote = F, sep = "\t")}
   

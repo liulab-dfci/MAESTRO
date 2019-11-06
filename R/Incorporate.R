@@ -34,7 +34,7 @@
 #'
 #' @export
 
-Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembedding", dims.use = 1:30, RNA.res = 0.6, ATAC.res = 0.6)
+Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembedding", method = "MAESTRO", dims.use = 1:30, RNA.res = 0.6, ATAC.res = 0.6)
 {
   require(Seurat)
   require(ggplot2)

@@ -57,7 +57,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
       warning("If you need to filter TFs by gene activity, please specify the cluster.")
     }
     peaks$cluster <- paste(cluster, collapse = ",")
-    peaks$gene <- rownames(peaks)
+    peaks$peak <- rownames(peaks)
   }
   
   if(nrow(peaks)==0){
@@ -85,7 +85,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
     for (icluster in unique(peaks$cluster)) {
       message(paste("Identify enriched TFs for cluster ", icluster, "..."))
       targetList[[icluster]] = list()
-      ipeaks <- peaks[peaks$cluster == icluster, "gene"]
+      ipeaks <- peaks[peaks$cluster == icluster, "peak"]
       ipeaks <- strsplit(ipeaks, "-")
       ipeaks <- data.frame(matrix(unlist(ipeaks), nrow=length(ipeaks), byrow=T))
       outputBed <- paste0(outputDir, "/", icluster, ".peaks.bed")
@@ -111,7 +111,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
         else {tf_all=multimerge(list(tf_all, tf_temp))}
       }
     }
-    write.table(tf_all,paste0(project,'_giggle.txt'),sep='\t',quote = F)
+    write.table(log10(tf_all+1),paste0(project,'_giggle.txt'),sep='\t',quote = F)
     message("Identification of enriched TFs is done.")
     
     if(ifAllcluster){
