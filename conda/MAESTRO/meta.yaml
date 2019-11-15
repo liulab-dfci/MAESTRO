@@ -1,6 +1,6 @@
 package:
   name: maestro
-  version: "0.0.2"
+  version: "1.0.1"
 source:
   git_url: https://github.com/chenfeiwang/MAESTRO.git
 # source:
@@ -28,13 +28,13 @@ requirements:
     - ucsc-bedsort
     - ucsc-bedgraphtobigwig
     - umap-learn
+    - r-base=3.5
     - r-BiocManager
     - r-devtools
     - r-hdf5r
     - r-SDMTools
     - r-optparse
     - r-stringi
-    - r-Seurat =3.0.1
     - bioconductor-biomaRt
     - bioconductor-MAST
     - bioconductor-AnnotationDbi
@@ -65,13 +65,13 @@ requirements:
     - ucsc-bedsort
     - ucsc-bedgraphtobigwig
     - umap-learn
+    - r-base=3.5
     - r-BiocManager
     - r-devtools
     - r-hdf5r
     - r-SDMTools
     - r-optparse
     - r-stringi
-    - r-Seurat =3.0.1
     - bioconductor-biomaRt
     - bioconductor-MAST
     - bioconductor-AnnotationDbi
