@@ -3,7 +3,7 @@ fastqdir: /mnt/Storage/home/sundongqing/Project/Single_cell/Analysis/10xPBMC_1k/
 # Sample name of fastq file (only for platform of "10x-genomics", for example, 
 # if there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the sample name is "pbmc_1k_v2". )
 fastqprefix: pbmc_1k_v2
-# Species to use [GRCh38, mmu] (GRCh38 for human and mmu for mouse)
+# Species to use [GRCh38, GRCm38] (GRCh38 for human and GRCm38 for mouse)
 species: GRCh38
 # Platform of single cell RNA-seq [Smartseq2, 10x-genomics, Dropseq]
 platform: 10x-genomics

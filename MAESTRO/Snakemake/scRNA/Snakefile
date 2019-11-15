@@ -23,7 +23,8 @@ if config["platform"] == "10x-genomics":
             genome = config["genome"]["cellranger"]
         output:
             bam = "Result/Cellranger/" + config["outprefix"] + "/outs/possorted_genome_bam.bam",
-            rawh5 = "Result/Cellranger/" + config["outprefix"] + "/outs/raw_feature_bc_matrix.h5"
+            rawh5 = "Result/Cellranger/" + config["outprefix"] + "/outs/raw_feature_bc_matrix.h5",
+            metrics = "Result/Cellranger/" + config["outprefix"] + "/outs/metrics_summary.csv",
         params:
             outpre = config["outprefix"],
             sourceoutdir = config["outprefix"],
