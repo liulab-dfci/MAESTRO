@@ -7,7 +7,7 @@
 ### v1.0.0
 * Release MAESTRO.
 ### v1.0.1
-* Provide [docker image](https://hub.docker.com/repository/docker/winterdongqing/maestro1.0.2) for easy installation. Note, the docker do not include cellranger/cellrangerATAC, as well as the corresponding genome index. Please install cellranger/cellranger ATAC follow the installation instructions.
+* Provide [docker image](https://hub.docker.com/repository/docker/winterdongqing/maestro) for easy installation. Note, the docker do not include cellranger/cellrangerATAC, as well as the corresponding genome index. Please install cellranger/cellranger ATAC follow the installation instructions.
 
 ## System requirements
 * Linux/Unix
