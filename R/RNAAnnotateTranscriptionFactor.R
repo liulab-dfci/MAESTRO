@@ -247,9 +247,22 @@ RunLISA <- function(genes, project, organism = "GRCh38")
 
 
 RunRABIT <- function(genes, project, rabit.path, organism = "hsa"){
-  genes$entrezid = TransGeneID(genes$gene, fromType = "Symbol", toType = "Entrez",
-                               organism = organism, useBiomart = FALSE,
-                               ensemblHost = "www.ensembl.org")
+  if(organism == "hsa"){
+    genes$entrezid = TransGeneID(genes$gene, fromType = "Symbol", toType = "Entrez",
+                                 organism = organism, useBiomart = FALSE,
+                                 ensemblHost = "www.ensembl.org")
+  }else{
+    marker_mouse = genes$gene
+    library(biomaRt)
+    human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+    mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+    marker_human = getLDS(attributes = c("mgi_symbol"), filters = "mgi_symbol", values = marker_mouse ,mart = mouse, attributesL = "hgnc_symbol", martL = human, uniqueRows=T)
+    genes = merge(genes, marker_human, by.x = "gene", by.y = "MGI.symbol")
+    genes$entrezid = TransGeneID(genes$HGNC.symbol, fromType = "Symbol", toType = "Entrez",
+                                 organism = "hsa", useBiomart = FALSE,
+                                 ensemblHost = "www.ensembl.org")
+  }
+
   genes = na.omit(genes)
   cluster_markers_list <- split(genes, genes$cluster)
   
@@ -261,7 +274,7 @@ RunRABIT <- function(genes, project, rabit.path, organism = "hsa"){
     dir.create(path=outputDir)
   }
   for(i in names(cluster_markers_list)){    
-    cluster_marker_logfc <- cluster_markers_list[[i]][,c(2,8)]
+    cluster_marker_logfc <- cluster_markers_list[[i]][,c("p_val","entrezid")]
     cluster_marker_logfc <- cluster_marker_logfc[which(!duplicated(cluster_marker_logfc$entrezid)),]
     row.names(cluster_marker_logfc) <- cluster_marker_logfc[,'entrezid']
     cluster_marker_logfc <- data.frame(logfc = cluster_marker_logfc[,1], row.names = cluster_marker_logfc[,2])
@@ -320,7 +333,16 @@ RunRABIT <- function(genes, project, rabit.path, organism = "hsa"){
       }
     }
     
-    out_fdr_max$gene <- unlist(strsplit(out_fdr_max$gene, split = "\\."))[seq(2,2*nrow(out_fdr_max),2)]
+    if(organism == "hsa"){
+      out_fdr_max$gene <- unlist(strsplit(out_fdr_max$gene, split = "\\."))[seq(2,2*nrow(out_fdr_max),2)]
+    }else{
+      out_fdr_max$human.gene <- unlist(strsplit(out_fdr_max$gene, split = "\\."))[seq(2,2*nrow(out_fdr_max),2)]
+      tf_mouse = getLDS(attributes = c("hgnc_symbol"), filters = "hgnc_symbol", values = out_fdr_max$human.gene ,mart = human, attributesL = "mgi_symbol", martL = mouse, uniqueRows=T)
+      out_fdr_max = merge(out_fdr_max, tf_mouse,by.x = "human.gene", by.y = "HGNC.symbol")
+      out_fdr_max$gene = out_fdr_max[,ncol(out_fdr_max)]
+      out_fdr_max = out_fdr_max[,-c(1,ncol(out_fdr_max))]
+      out_fdr_max = out_fdr_max[!duplicated(out_fdr_max$gene),]
+    }
     rownames(out_fdr_max) <- out_fdr_max$gene
     if(ncol(out_fdr_max) > 2){
       out_fdr_max <- out_fdr_max[,-1]
