@@ -644,7 +644,7 @@ rule scrna_analysis:
         expression = "../QC/" + config["outprefix"] + "_filtered_gene_count_matrix.h5",
         species = config["species"],
         outpre = config["outprefix"],
-        outdir = "Result/QC",
+        outdir = "Result/Analysis",
         method = config["method"],
         rabitlib = config["rabitlib"],
         lisaenv = config["lisaenv"],
