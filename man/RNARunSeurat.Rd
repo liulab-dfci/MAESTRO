@@ -5,11 +5,21 @@
 \alias{RNARunSeurat}
 \title{Clustering analysis for scRNA-seq data using Seurat}
 \usage{
-RNARunSeurat(inputMat, project = "MAESTRO.scRNA.Seurat",
-  orig.ident = NULL, min.c = 10, min.g = 200, mito = FALSE,
-  mito.cutoff = 0.05, variable.genes = 2000, organism = "GRCh38",
-  dims.use = 1:15, cluster.res = 0.6, genes.test.use = "wilcox",
-  genes.cutoff = 1e-05)
+RNARunSeurat(
+  inputMat,
+  project = "MAESTRO.scRNA.Seurat",
+  orig.ident = NULL,
+  min.c = 10,
+  min.g = 200,
+  mito = FALSE,
+  mito.cutoff = 0.05,
+  variable.genes = 2000,
+  organism = "GRCh38",
+  dims.use = 1:15,
+  cluster.res = 0.6,
+  genes.test.use = "wilcox",
+  genes.cutoff = 1e-05
+)
 }
 \arguments{
 \item{inputMat}{Input unnormalized matrix, with genes as rows and cells as columns. Could be count matrix or TPM, FPKM matrix.}

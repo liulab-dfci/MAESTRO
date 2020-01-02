@@ -5,8 +5,14 @@
 \alias{RNARunPagoda}
 \title{Clustering analysis for scRNA-seq data using Pagoda2}
 \usage{
-RNARunPagoda(inputMat, project = "MAESTRO.scRNA.Pagoda", min.c = 10,
-  min.g = 200, nPCs = 100, nKs = 30)
+RNARunPagoda(
+  inputMat,
+  project = "MAESTRO.scRNA.Pagoda",
+  min.c = 10,
+  min.g = 200,
+  nPCs = 100,
+  nKs = 30
+)
 }
 \arguments{
 \item{inputMat}{Input unnormalized matrix, with genes as rows and cells as columns. Could be count matrix or TPM, FPKM matrix.}

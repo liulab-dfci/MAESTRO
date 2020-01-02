@@ -5,10 +5,18 @@
 \alias{ATACRunSeurat}
 \title{Clustering analysis for scATAC-seq data using Seurat}
 \usage{
-ATACRunSeurat(inputMat, project = "MAESTRO.scATAC.Seurat",
-  orign.ident = NULL, method = "LSI", min.c = 50, min.p = 500,
-  dims.use = 1:30, cluster.res = 0.6, peaks.test.use = "wilcox",
-  peaks.cutoff = 1e-05)
+ATACRunSeurat(
+  inputMat,
+  project = "MAESTRO.scATAC.Seurat",
+  orign.ident = NULL,
+  method = "LSI",
+  min.c = 50,
+  min.p = 500,
+  dims.use = 1:30,
+  cluster.res = 0.6,
+  peaks.test.use = "wilcox",
+  peaks.cutoff = 1e-05
+)
 }
 \arguments{
 \item{inputMat}{Input unnormalized count matrix, with peaks as rows and cells as columns. Rownames should be like "chromosome_peakstart_peakend",

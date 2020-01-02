@@ -13,8 +13,15 @@ outprefix: pbmc_1k_v2
 rseqc: False
 # Number of cores to use
 cores: 8
-# annotation to run rabit
+# The method to predict driver regulators [RABIT, LISA]
+method: LISA
+# Annotation to run rabit (only if method is set to rabit)
 rabitlib: /home1/wangchenfei/Project/SingleCell/scATAC/Code/MAESTRO/MAESTRO/annotations/Rabit_lib
+# Name of lisa environment (only if method is set to lisa)
+lisaenv: lisa
+# Directory where miniconda or anaconda is installed (only if method is set to lisa).
+# For example, /home1/wangchenfei/miniconda3
+condadir: /home1/wangchenfei/miniconda3
 
 # Reference genome 
 genome:

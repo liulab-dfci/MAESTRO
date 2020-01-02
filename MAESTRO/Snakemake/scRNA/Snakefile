@@ -636,22 +636,32 @@ rule scrna_analysis:
     input:
         expression = "Result/QC/" + config["outprefix"] + "_filtered_gene_count_matrix.h5"
     output:
-        directory("Result/Analysis")
+        specificgene = "Result/Analysis/" + config["outprefix"] + "_DiffGenes.tsv",
+        clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
+        annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
+        tflist = "Result/Analysis/" + config["outprefix"] + ".PredictedTFTop10.txt"
     params:
         expression = "../QC/" + config["outprefix"] + "_filtered_gene_count_matrix.h5",
         species = config["species"],
         outpre = config["outprefix"],
+        outdir = "Result/QC",
+        method = config["method"],
         rabitlib = config["rabitlib"],
+        lisaenv = config["lisaenv"],
+        condadir = config["condadir"]
     threads:
         config["cores"]
     shell:
-        "mkdir Result/Analysis;"
-        "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R {params.expression} {params.species} {params.outpre} {params.rabitlib} {output} {threads}"
+        "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R --expression {params.expression} --species {params.species} "
+        "--prefix {params.outpre} --method {params.method} --rabitlib {params.rabitlib} "
+        "--condadir {params.condadir} --lisaenv {params.lisaenv} --outdir {params.outdir} --thread {threads}"
 
 if config["rseqc"]:
     rule scrna_report:
         input:
-            analysis = "Result/Analysis",
+            clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
+            annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
+            tflist = "Result/Analysis/" + config["outprefix"] + ".PredictedTFTop10.txt",
             readdistrplot = "Result/QC/" + config["outprefix"] + "_scRNA_read_distr.png",
             qualplot = "Result/QC/" + config["outprefix"] + "_scRNA_read_quality.png",
             nvcplot = "Result/QC/" + config["outprefix"] + "_scRNA_NVC.png",
@@ -672,7 +682,9 @@ if config["rseqc"]:
 elif config["platform"] == "10x-genomics":
     rule scrna_report:
         input:
-            analysis = "Result/Analysis",
+            clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
+            annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
+            tflist = "Result/Analysis/" + config["outprefix"] + ".PredictedTFTop10.txt",
             readdistrplot = "Result/QC/" + config["outprefix"] + "_scRNA_read_distr.png",
             rnafilterplot = "Result/QC/" + config["outprefix"] + "_scRNA_cell_filtering.png",
         output:
@@ -689,7 +701,9 @@ elif config["platform"] == "10x-genomics":
 else:
     rule scrna_report:
         input:
-            analysis = "Result/Analysis",
+            clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
+            annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
+            tflist = "Result/Analysis/" + config["outprefix"] + ".PredictedTFTop10.txt",
             rnafilterplot = "Result/QC/" + config["outprefix"] + "_scRNA_cell_filtering.png",
         output:
             summaryreport = "Result/" + config["outprefix"] + "_scRNA_report.html",

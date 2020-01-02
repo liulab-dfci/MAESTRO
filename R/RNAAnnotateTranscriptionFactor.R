@@ -15,6 +15,8 @@
 #' same time. LISA do not need annotations for this step. Default is Rabit.
 #' @param rabit.path Path of the rabit annotation files. The rabit annoation for CistromeDB is available at https://github.com/liulab-dfci/MAESTRO.
 #' Download and unzip the annotation, supply the path of the annotations to \code{rabit.path}.
+#' @param conda.dir Directory where miniconda or anaconda is installed. For example, /home1/wangchenfei/miniconda3.
+#' @param lisa.envname The name of the lisa conda environment. Default is lisa.
 #' @param organism Organism for the dataset. Only support "GRCh38" and "GRCm38". Default is "GRCh38".
 #' @param top.tf Output the target genes for the top TFs. Default is 10.
 #'
@@ -33,7 +35,7 @@
 #'
 #' @export
 
-RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project = RNA@project.name, method = "RABIT" ,rabit.path, organism = "GRCh38", top.tf = 10)
+RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project = RNA@project.name, method = "RABIT", rabit.path, conda.dir = "", lisa.envname = "lisa", organism = "GRCh38", top.tf = 10)
 {
   require(Seurat)
   require(MAGeCKFlute)
@@ -68,7 +70,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project =
   }
   if(method == "LISA"){
     scorename = "log(Lisascore)"
-    out_fdr_max_log = RunLISA(genes = genes, project = project, organism = organism)
+    out_fdr_max_log = RunLISA(genes = genes, project = project, organism = organism, conda.dir = conda.dir, lisa.envname = lisa.envname)
   }
 
   if(class(out_fdr_max_log) == "character"){
@@ -192,7 +194,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project =
 }
 
 
-RunLISA <- function(genes, project, organism = "GRCh38")
+RunLISA <- function(genes, project, organism = "GRCh38", conda.dir = "", lisa.envname = "lisa")
 {
   require(plyr)
   if(organism == "GRCh38"){
@@ -218,9 +220,11 @@ RunLISA <- function(genes, project, organism = "GRCh38")
   message("Start to run Lisa.")
   for(i in names(cluster_markers_list))
   {
-    system(paste0("lisa model --method='all' --web=False --new_rp_h5=None --new_count_h5=None --species ",species, " --epigenome '['DNase','H3K27ac']' --cluster=False --covariates=False --random=True --prefix ",i,".txt"," --background=None --stat_background_number=500 --threads 8 ",outputDir,'/', i,'/',i,".txt"))
+    cmd = paste0(". ", conda.dir, "/etc/profile.d/conda.sh && conda activate ", lisa.envname, " && lisa model --method='all' --web=False --new_rp_h5=None --new_count_h5=None --species ",species, " --epigenome '['DNase','H3K27ac']' --cluster=False --covariates=False --random=True --prefix ",i,".txt"," --background=None --stat_background_number=500 --threads 8 ",outputDir,'/', i,'/',i,".txt")
+    system2("/bin/bash", args = c("-c", shQuote(cmd)))
     message(paste0("Lisa in cluster ", i, " is done!"))
   }
+  system("rm *.yml *.profile *.model")
   message("Lisa is done.")
   
   tf_all=NULL
@@ -240,6 +244,10 @@ RunLISA <- function(genes, project, organism = "GRCh38")
   
   tf_all <- do.call(cbind, tf_all)
   tf_all_log10=-log10(tf_all)
+  if(organism == "GRCm38"){
+    library(Hmisc)
+    tf = capitalize(tolower(tf))
+  }
   rownames(tf_all_log10)=tf
   write.table(tf_all_log10,paste0(project,'_lisa.txt'),sep='\t',quote = F)
   return(tf_all_log10)

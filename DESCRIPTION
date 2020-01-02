@@ -21,4 +21,4 @@ NeedsCompilation: no
 biocViews: Software, Single-cell, RNA-seq, ATAC-seq, QualityControl, Clustering, 
        DifferentialExpression, DifferentialPeakCalling, TranscriptionFactorEnrichment,
        IntegrativeAnalyis, Visualization
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
