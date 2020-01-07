@@ -15,6 +15,7 @@ fastqdir = sys.argv[2]
 species = sys.argv[3]
 platform = sys.argv[4]
 rseqc = sys.argv[5]
+method = sys.argv[6]
 
 
 if rseqc == "True":
@@ -31,6 +32,8 @@ if rseqc == "True":
     countgeneplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_cell_filtering.png"%outpre)[0]
     genecluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_cluster.png"%outpre)[0]
     geneannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_annotated.png"%outpre)[0]
+    tdtitle = "Cluster-specific regulator identified by %s" %(method)
+    tdcolname = "log10(%s score)" %(method)
 
     td_list = []
     for line in open(cluster_regulator_file,"r").readlines():
@@ -42,7 +45,7 @@ if rseqc == "True":
     td_str = "\n".join(td_list)
 
     #"totalreads":stat_list[0],"dupreads":stat_list[1],"mapreads":stat_list[2],"maptags":stat_list[3],"exontags":stat_list[4],"introntags":stat_list[5],
-    report_html_instance = report_html_temp % {"outprefix":outpre, "fastqdir":fastqdir, "species":species,"platform":platform, "readdistr":readdistrplot_link,"readqual":readqualplot_link, "nvc":nvcplot_link, "gc":gcplot_link, "genecov":genecovplot_link, "countgene":countgeneplot_link, "genecluster":genecluster_link, "geneannotate":geneannotate_link, "regtable":td_str}
+    report_html_instance = report_html_temp % {"outprefix":outpre, "fastqdir":fastqdir, "species":species,"platform":platform, "readdistr":readdistrplot_link,"readqual":readqualplot_link, "nvc":nvcplot_link, "gc":gcplot_link, "genecov":genecovplot_link, "countgene":countgeneplot_link, "genecluster":genecluster_link, "geneannotate":geneannotate_link, "regtabletitle":tdtitle, "regtablecolname":tdcolname, "regtable":td_str}
 
 elif platform == "10x-genomics":
     report_html_tempfile = os.path.join(SCRIPT_PATH, "html", "scRNA_10x_noqc_template.html")
@@ -54,6 +57,8 @@ elif platform == "10x-genomics":
     countgeneplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_cell_filtering.png"%outpre)[0]
     genecluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_cluster.png"%outpre)[0]
     geneannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_annotated.png"%outpre)[0]
+    tdtitle = "Cluster-specific regulator identified by %s" %(method)
+    tdcolname = "log10(%s score)" %(method)
 
     td_list = []
     for line in open(cluster_regulator_file,"r").readlines():
@@ -65,7 +70,7 @@ elif platform == "10x-genomics":
     td_str = "\n".join(td_list)
 
     #"totalreads":stat_list[0],"dupreads":stat_list[1],"mapreads":stat_list[2],"maptags":stat_list[3],"exontags":stat_list[4],"introntags":stat_list[5],
-    report_html_instance = report_html_temp % {"outprefix":outpre, "fastqdir":fastqdir, "species":species,"platform":platform, "readdistr":readdistrplot_link, "countgene":countgeneplot_link, "genecluster":genecluster_link, "geneannotate":geneannotate_link, "regtable":td_str}
+    report_html_instance = report_html_temp % {"outprefix":outpre, "fastqdir":fastqdir, "species":species,"platform":platform, "readdistr":readdistrplot_link, "countgene":countgeneplot_link, "genecluster":genecluster_link, "geneannotate":geneannotate_link, "regtabletitle":tdtitle, "regtablecolname":tdcolname, "regtable":td_str}
 
 
 else:
@@ -77,6 +82,8 @@ else:
     countgeneplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_cell_filtering.png"%outpre)[0]
     genecluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_cluster.png"%outpre)[0]
     geneannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_annotated.png"%outpre)[0]
+    tdtitle = "Cluster-specific regulator identified by %s" %(method)
+    tdcolname = "log10(%s score)" %(method)
 
     td_list = []
     for line in open(cluster_regulator_file,"r").readlines():
@@ -88,7 +95,7 @@ else:
     td_str = "\n".join(td_list)
 
     #"totalreads":stat_list[0],"dupreads":stat_list[1],"mapreads":stat_list[2],"maptags":stat_list[3],"exontags":stat_list[4],"introntags":stat_list[5],
-    report_html_instance = report_html_temp % {"outprefix":outpre, "fastqdir":fastqdir, "species":species,"platform":platform, "countgene":countgeneplot_link, "genecluster":genecluster_link, "geneannotate":geneannotate_link, "regtable":td_str}
+    report_html_instance = report_html_temp % {"outprefix":outpre, "fastqdir":fastqdir, "species":species,"platform":platform, "countgene":countgeneplot_link, "genecluster":genecluster_link, "geneannotate":geneannotate_link, "regtabletitle":tdtitle, "regtablecolname":tdcolname, "regtable":td_str}
 
 
 # readdistrplot_link = '''"Plot/%s_scRNA_read_distr.png"'''%outpre

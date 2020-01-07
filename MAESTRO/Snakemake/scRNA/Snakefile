@@ -675,9 +675,10 @@ if config["rseqc"]:
             fastqdir = config["fastqdir"],
             species = config["species"],
             platform = config["platform"],
-            rseqc = True
+            rseqc = True,
+            method = config["method"]
         shell:
-            "python " + SCRIPT_PATH + "/scRNA_report.py {params.outpre} {params.fastqdir} {params.species} {params.platform} {params.rseqc}" 
+            "python " + SCRIPT_PATH + "/scRNA_report.py {params.outpre} {params.fastqdir} {params.species} {params.platform} {params.rseqc} {params.method}" 
 
 elif config["platform"] == "10x-genomics":
     rule scrna_report:
@@ -694,9 +695,10 @@ elif config["platform"] == "10x-genomics":
             fastqdir = config["fastqdir"],
             species = config["species"],
             platform = config["platform"],
-            rseqc = False
+            rseqc = False,
+            method = config["method"]
         shell:
-            "python " + SCRIPT_PATH + "/scRNA_report.py {params.outpre} {params.fastqdir} {params.species} {params.platform} {params.rseqc}" 
+            "python " + SCRIPT_PATH + "/scRNA_report.py {params.outpre} {params.fastqdir} {params.species} {params.platform} {params.rseqc} {params.method}" 
 
 else:
     rule scrna_report:
@@ -712,6 +714,7 @@ else:
             fastqdir = config["fastqdir"],
             species = config["species"],
             platform = config["platform"],
-            rseqc = False
+            rseqc = False, 
+            method = config["method"]
         shell:
-            "python " + SCRIPT_PATH + "/scRNA_report.py {params.outpre} {params.fastqdir} {params.species} {params.platform} {params.rseqc}" 
+            "python " + SCRIPT_PATH + "/scRNA_report.py {params.outpre} {params.fastqdir} {params.species} {params.platform} {params.rseqc} {params.method}" 
