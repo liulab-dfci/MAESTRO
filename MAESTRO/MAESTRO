@@ -6,7 +6,7 @@ Created on Wed Jun  5 17:26:44 2019
 @author: Chenfei Wang, Dongqing Sun
 """
 
-version = "1.0.2"
+version = "1.0.1"
 
 import logging
 import sys
