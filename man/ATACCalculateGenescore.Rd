@@ -5,11 +5,8 @@
 \alias{ATACCalculateGenescore}
 \title{Estimate gene activity from peak using regulatory potential model}
 \usage{
-ATACCalculateGenescore(
-  inputMat,
-  project = "MAESTRO.scATAC",
-  organism = "GRCh38"
-)
+ATACCalculateGenescore(inputMat, project = "MAESTRO.scATAC",
+  organism = "GRCh38")
 }
 \arguments{
 \item{inputMat}{Input unnormalized count matrix, with peaks as rows and cells as columns. Rownames should be like "chromosome_peakstart_peakend",

@@ -5,21 +5,12 @@
 \alias{RNARunSeurat}
 \title{Clustering analysis for scRNA-seq data using Seurat}
 \usage{
-RNARunSeurat(
-  inputMat,
-  project = "MAESTRO.scRNA.Seurat",
-  orig.ident = NULL,
-  min.c = 10,
-  min.g = 200,
-  mito = FALSE,
-  mito.cutoff = 0.05,
-  variable.genes = 2000,
-  organism = "GRCh38",
-  dims.use = 1:15,
-  cluster.res = 0.6,
-  genes.test.use = "wilcox",
-  genes.cutoff = 1e-05
-)
+RNARunSeurat(inputMat, project = "MAESTRO.scRNA.Seurat",
+  orig.ident = NULL, min.c = 10, min.g = 200, mito = FALSE,
+  mito.cutoff = 0.05, variable.genes = 2000, organism = "GRCh38",
+  dims.use = 1:15, cluster.res = 0.6, only.pos = FALSE,
+  genes.test.use = "wilcox", genes.cutoff = 1e-05, genes.pct = 0.1,
+  genes.logfc = 0.25)
 }
 \arguments{
 \item{inputMat}{Input unnormalized matrix, with genes as rows and cells as columns. Could be count matrix or TPM, FPKM matrix.}
@@ -48,9 +39,15 @@ Default is 0.05.}
 
 \item{cluster.res}{Value of the clustering resolution parameter. Default is 0.6.}
 
+\item{only.pos}{If seting true, only positive genes will be output. Default is False.}
+
 \item{genes.test.use}{Denotes which test to use to identify genes. Default is "wilcox". See \code{link{FindAllMarkers}} for details.}
 
-\item{genes.cutoff}{Identify differential expressed genes with adjusted p.value less than \code{genes.cutoff} as cluster speficic genes
+\item{genes.cutoff}{Identify differential expressed genes with adjusted p.value less than \code{genes.cutoff} as cluster speficic genes}
+
+\item{genes.pct}{Only test genes that are detected in a minimum fraction of min.pct cells in either of the two populations. Meant to speed up the function by not testing genes that are very infrequently detected Default is 0.1}
+
+\item{genes.logfc}{Limit testing to genes which show, on average, at least X-fold difference (log-scale) between the two groups of cells. Default is 0.2 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 for each cluster. Default cutoff is 1E-5.}
 }
 \value{

@@ -21,8 +21,11 @@
 #' @param organism Organism for the dataset. Only support "GRCh38" and "GRCm38". Default is "GRCh38".
 #' @param dims.use Number of dimensions used for UMAP analysis. Default is 1:15, use the first 15 PCs.
 #' @param cluster.res Value of the clustering resolution parameter. Default is 0.6.
+#' @param only.pos If seting true, only positive genes will be output. Default is False.
 #' @param genes.test.use Denotes which test to use to identify genes. Default is "wilcox". See \code{link{FindAllMarkers}} for details.
 #' @param genes.cutoff Identify differential expressed genes with adjusted p.value less than \code{genes.cutoff} as cluster speficic genes
+#' @param genes.pct Only test genes that are detected in a minimum fraction of min.pct cells in either of the two populations. Meant to speed up the function by not testing genes that are very infrequently detected Default is 0.1
+#' @param genes.logfc Limit testing to genes which show, on average, at least X-fold difference (log-scale) between the two groups of cells. Default is 0.2 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 #' for each cluster. Default cutoff is 1E-5.
 #'
 #' @author Chenfei Wang
@@ -39,8 +42,8 @@
 #' @export
 
 RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident = NULL, min.c = 10, min.g = 200, mito = FALSE, mito.cutoff = 0.05, 
-                variable.genes = 2000, organism = "GRCh38", dims.use = 1:15, cluster.res = 0.6, genes.test.use = "wilcox", 
-                genes.cutoff = 1E-5)
+                         variable.genes = 2000, organism = "GRCh38", dims.use = 1:15, cluster.res = 0.6, only.pos = FALSE, genes.test.use = "wilcox", 
+                         genes.cutoff = 1E-5, genes.pct = 0.1, genes.logfc = 0.25)
 {
   require(Seurat)
   require(ggplot2)
@@ -94,7 +97,7 @@ RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident 
 
   #=========DE analysis===========
   message("Identify cluster specific genes ...")
-  cluster.genes <- FindAllMarkersMAESTRO(object = SeuratObj, min.pct = 0.1, test.use = genes.test.use)
+  cluster.genes <- FindAllMarkersMAESTRO(object = SeuratObj, min.pct = genes.pct, logfc.threshold = genes.logfc, test.use = genes.test.use, only.pos = only.pos)
   cluster.genes <- cluster.genes[cluster.genes$p_val_adj<genes.cutoff, ]
   write.table(cluster.genes, paste0(SeuratObj@project.name, "_DiffGenes.tsv"), quote = F, sep = "\t")
 

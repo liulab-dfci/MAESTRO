@@ -17,8 +17,11 @@
 #' peaks are deteced in one cell. Default is 500. See \code{link{CreateSeuratObject}} for details.
 #' @param dims.use Number of dimensions used for UMAP analysis. Default is 1:30, use the first 30 PCs.
 #' @param cluster.res Value of the clustering resolution parameter. Default is 0.6.
+#' @param only.pos If seting true, only positive peaks will be output. Default is False.
 #' @param peaks.test.use Denotes which test to use to identify differnetial peaks. Default is "wilcox". Available options are "bimod", "roc" and "t".
 #' @param peaks.cutoff Identify differential peaks with adjusted p.value less than \code{peaks.cutoff} as cluster specific peaks
+#' @param peaks.pct Only test peaks that are detected in a minimum fraction of min.pct cells in either of the two populations. Meant to speed up the function by not testing peaks that are very infrequently detected Default is 0.1
+#' @param peaks.logfc Limit testing to peaks which show, on average, at least X-fold difference (log-scale) between the two groups of cells. Default is 0.2 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 #' for each cluster. Default cutoff is 1E-5.
 #'
 #' @author Chenfei Wang
@@ -35,7 +38,8 @@
 #' @export
 
 ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ident = NULL, method = "LSI", min.c = 50, min.p = 500, 
-                          dims.use = 1:30, cluster.res = 0.6, peaks.test.use = "wilcox", peaks.cutoff = 1E-5)
+                          dims.use = 1:30, cluster.res = 0.6, only.pos = FALSE, peaks.test.use = "wilcox", peaks.cutoff = 1E-5,
+                          peaks.pct = 0.1, peaks.logfc = 0.2)
 {
   require(Seurat)
   require(ggplot2)
@@ -57,7 +61,7 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   message("Identify cluster specific peaks ...")
   SeuratObj <- NormalizeData(SeuratObj, normalization.method = "LogNormalize", scale.factor = 10000)
   cluster.peaks <- NULL
-  cluster.peaks <- FindAllMarkersMAESTRO(object = SeuratObj, min.pct = 0.05, logfc.threshold = 0.1, test.use = peaks.test.use)
+  cluster.peaks <- FindAllMarkersMAESTRO(object = SeuratObj, min.pct = peaks.pct, logfc.threshold = peaks.logfc, test.use = peaks.test.use, only.pos = only.pos)
   cluster.peaks <- cluster.peaks[cluster.peaks$p_val_adj<peaks.cutoff, ]
   colnames(cluster.peaks)[7] <- "peak"
   write.table(cluster.peaks, paste0(project, "_DiffPeaks.tsv"), quote=F, sep="\t")}
@@ -82,7 +86,7 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   #============ DE analysis ============
   message("Identify cluster specific peaks ...")
   cluster.peaks <- NULL
-  cluster.peaks <- FindAllMarkersMAESTRO(object = SeuratObj, min.pct = 0.05, logfc.threshold = 0.1, test.use = peaks.test.use)
+  cluster.peaks <- FindAllMarkersMAESTRO(object = SeuratObj, min.pct = peaks.pct, logfc.threshold = peaks.logfc, test.use = peaks.test.use, only.pos = only.pos)
   cluster.peaks <- cluster.peaks[cluster.peaks$p_val_adj<peaks.cutoff, ]
   colnames(cluster.peaks)[7] <- "peak"
   write.table(cluster.peaks, paste0(proj, "_DiffPeaks.tsv"), quote=F, sep="\t")   

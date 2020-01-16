@@ -5,18 +5,11 @@
 \alias{ATACRunSeurat}
 \title{Clustering analysis for scATAC-seq data using Seurat}
 \usage{
-ATACRunSeurat(
-  inputMat,
-  project = "MAESTRO.scATAC.Seurat",
-  orign.ident = NULL,
-  method = "LSI",
-  min.c = 50,
-  min.p = 500,
-  dims.use = 1:30,
-  cluster.res = 0.6,
-  peaks.test.use = "wilcox",
-  peaks.cutoff = 1e-05
-)
+ATACRunSeurat(inputMat, project = "MAESTRO.scATAC.Seurat",
+  orign.ident = NULL, method = "LSI", min.c = 50, min.p = 500,
+  dims.use = 1:30, cluster.res = 0.6, only.pos = FALSE,
+  peaks.test.use = "wilcox", peaks.cutoff = 1e-05, peaks.pct = 0.1,
+  peaks.logfc = 0.2)
 }
 \arguments{
 \item{inputMat}{Input unnormalized count matrix, with peaks as rows and cells as columns. Rownames should be like "chromosome_peakstart_peakend",
@@ -38,9 +31,15 @@ peaks are deteced in one cell. Default is 500. See \code{link{CreateSeuratObject
 
 \item{cluster.res}{Value of the clustering resolution parameter. Default is 0.6.}
 
+\item{only.pos}{If seting true, only positive peaks will be output. Default is False.}
+
 \item{peaks.test.use}{Denotes which test to use to identify differnetial peaks. Default is "wilcox". Available options are "bimod", "roc" and "t".}
 
-\item{peaks.cutoff}{Identify differential peaks with adjusted p.value less than \code{peaks.cutoff} as cluster specific peaks
+\item{peaks.cutoff}{Identify differential peaks with adjusted p.value less than \code{peaks.cutoff} as cluster specific peaks}
+
+\item{peaks.pct}{Only test peaks that are detected in a minimum fraction of min.pct cells in either of the two populations. Meant to speed up the function by not testing peaks that are very infrequently detected Default is 0.1}
+
+\item{peaks.logfc}{Limit testing to peaks which show, on average, at least X-fold difference (log-scale) between the two groups of cells. Default is 0.2 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 for each cluster. Default cutoff is 1E-5.}
 }
 \value{

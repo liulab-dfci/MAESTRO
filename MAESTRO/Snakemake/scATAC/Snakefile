@@ -280,7 +280,7 @@ if config["platform"] == "10x-genomics":
             ">> {log};"
             "cp -fr {params.sourceoutdir} {params.destoutdir};"
             "rm -r {params.sourceoutdir};"
-            "gzip -d {output.fraggz};"
+            "gzip -d {output.fraggz} -c > {output.frag};"
 
     # rule scatac_bulk_unique:
     #     input:
