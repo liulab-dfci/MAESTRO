@@ -47,6 +47,7 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   if(method == "LSI"){    
   #============ LSI ============
   message("LSI analysis ...")
+  VariableFeatures(SeuratObj) <- names(which(Matrix::rowSums(SeuratObj) > min.c))
   SeuratObj <- RunLSI(object = SeuratObj, n = 50, scale.max = NULL) 
   
   #============ UMAP ============
