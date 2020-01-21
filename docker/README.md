@@ -22,7 +22,7 @@ Please use the following commands to the install Minicoda3:
 $ sudo docker pull winterdongqing/maestro:1.0.2
 $ sudo docker image list
 REPOSITORY               TAG                 IMAGE ID            CREATED             SIZE
-winterdongqing/maestro   1.0.2               4a33a05a06d1        3 hours ago         11.4GB
+winterdongqing/maestro   1.0.2               d7012fe3925d        3 hours ago         11.4GB
 ```
 
 ### Run in the container
