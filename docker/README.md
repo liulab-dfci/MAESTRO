@@ -1,4 +1,4 @@
-# MAESTRO v1.0.1 docker
+# MAESTRO v1.0.2 docker
 
 If it is difficult to install MAESTRO because of the system configuration, users can adopt an alternative way to get MAESTRO running through a docker container.
 
@@ -12,7 +12,7 @@ To start a docker container, please install [docker](https://docs.docker.com/ins
 
 ### Pull the image
 
-The docker distribution includes the latest MAESTRO conda package, as well as RABIT, GIGGLE and corresponding genome index.
+The docker distribution includes the latest MAESTRO conda package, as well as RABIT, GIGGLE and corresponding genome index. The [LISA](https://github.com/qinqian/lisa) conda environment has been created in the docker image, but users still need to download required hg38 or mm10 datasets and update the configuration according to the instructions.
 
 **Note:** The docker image does not include cellranger/cellrangerATAC and required reference genome. Please install cellranger/cellranger ATAC locally following the installation instructions.
 
@@ -22,7 +22,7 @@ Please use the following commands to the install Minicoda3:
 $ sudo docker pull winterdongqing/maestro:1.0.1
 $ sudo docker image list
 REPOSITORY               TAG                 IMAGE ID            CREATED             SIZE
-winterdongqing/maestro   1.0.1               4a33a05a06d1        3 hours ago         8.53GB
+winterdongqing/maestro   1.0.2               4a33a05a06d1        3 hours ago         11.4GB
 ```
 
 ### Run in the container
@@ -34,7 +34,7 @@ $ pwd
 /home1/wangchenfei
 $ ls
 annotations  docker  miniconda3  ncbi  Project  R  tmp  Tool
-$ sudo docker run -v /home1/wangchenfei:/root/MAESTRO -it winterdongqing/maestro:1.0.1
+$ sudo docker run -v /home1/wangchenfei:/root/MAESTRO -it winterdongqing/maestro:1.0.2
 ```
 
 ```#``` means that users have been in the container. There are four folders in the  ```root``` directory of the container. The ```Annotation``` directory stores the RABIT index and GIGGLE index. Users can access local data and locally installed softwares through the ```MAESTRO```.
@@ -42,6 +42,12 @@ $ sudo docker run -v /home1/wangchenfei:/root/MAESTRO -it winterdongqing/maestro
 ```bash
 root@901b0b615e2e:~# ls
 Annotation  MAESTRO  Software  miniconda3
+root@901b0b615e2e:~# conda env list
+# conda environments:
+#
+base                  *  /root/miniconda3
+lisa                     /root/miniconda3/envs/lisa
+
 root@901b0b615e2e:~# cd MAESTRO/ && ls
 Project  R  Tool  annotations  docker  miniconda3  ncbi  tmp
 ```

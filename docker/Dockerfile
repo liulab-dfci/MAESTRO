@@ -34,7 +34,8 @@ ENV PATH=/root/miniconda3/bin:${PATH}
 
 # add conda channels and install softwares
 RUN conda config --add channels defaults && conda config --add channels conda-forge && \
-conda config --add channels bioconda && conda install -c liulab-dfci maestro
+conda config --add channels bioconda && conda install -c dongqingsun maestro && \
+conda create -n lisa -c qinqian lisa && source activate lisa && conda install scikit-learn=0.21.3 && conda deactivate
 
 # install giggle and rabit
 RUN apt install -y gcc make autoconf zlib1g-dev libbz2-dev libcurl4-openssl-dev libssl-dev ruby && \
@@ -49,4 +50,3 @@ cd Rabit && ./configure --prefix=/root/miniconda3 LDFLAGS="-L/usr/local/lib -L/u
 # wget http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz && \
 RUN cd /root/Annotation && tar -xzvf rabit.tar.gz && tar -xzvf giggle.tar.gz && \
 rm rabit.tar.gz && rm giggle.tar.gz
-
