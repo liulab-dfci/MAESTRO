@@ -19,7 +19,7 @@ The docker distribution includes the latest MAESTRO conda package, as well as RA
 Please use the following commands to the install Minicoda3:
 
 ``` bash
-$ sudo docker pull winterdongqing/maestro:1.0.1
+$ sudo docker pull winterdongqing/maestro:1.0.2
 $ sudo docker image list
 REPOSITORY               TAG                 IMAGE ID            CREATED             SIZE
 winterdongqing/maestro   1.0.2               4a33a05a06d1        3 hours ago         11.4GB
