@@ -13,7 +13,7 @@
 * Release MAESTRO.
 ### v1.0.1
 * Provide [docker image](https://hub.docker.com/repository/docker/winterdongqing/maestro) for easy installation. Note, the docker does not include cellranger/cellranger ATAC, as well as the corresponding genome index. Please install cellranger/cellranger ATAC following the installation instructions.
-### v1.0.1
+### v1.0.2
 * Fix some bugs and set LISA as the default method to predict transcription factors for scRNA-seq. Note, the docker includes the lisa conda environment, but does not include required pre-computed  genome datasets. Please download hg38 or mm10 datasets and update the configuration following the installation instructions.
 
 ## System requirements
