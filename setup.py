@@ -47,7 +47,7 @@ def main():
     install_rpackage()
     setup(
         name = "MAESTRO",
-        version = "1.0.1",
+        version = "1.0.2",
         package_dir = {'MAESTRO':'MAESTRO'},
         packages = ['MAESTRO'],
         package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'R/*', 'env/*', 'annotations/*', 'html/*', '']},

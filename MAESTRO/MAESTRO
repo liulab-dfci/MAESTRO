@@ -58,8 +58,8 @@ def main():
         "This will install a Snakefile and a config file in this directory. "
         "You can configure the config file according to your needs, and run the workflow with Snakemake "
         "(https://bitbucket.org/johanneskoester/snakemake).")
-    workflow.add_argument("-d", "--directory", help = "Path to the directory where the workflow shall be initialized and results shall be stored.")
-    workflow.add_argument("-m", "--module", choices = ["scATAC","scRNA","integrate"], help="Analysis of scATAC-seq or scRNA-seq, or integrattion analysis")
+    workflow.add_argument("-d", "--directory", help = "Path to the directory where the workflow shall be initialized and results shall be stored.", required=True)
+    workflow.add_argument("-m", "--module", choices = ["scATAC","scRNA","integrate"], help="Analysis of scATAC-seq or scRNA-seq, or integrattion analysis", required=True)
 
     logging.basicConfig(format="%(message)s", level=logging.INFO, stream=sys.stderr)
 
