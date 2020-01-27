@@ -62,9 +62,12 @@ def merge_10X_h5(filename, h5list, genome = 'GRCh38', type = 'Peaks'):
     features = mlist[0].ids
     barcodes = []
     matrix = []
-    for m in mlist:
-        barcodes.append(m.barcodes)
-        matrix.append(m.matrix)
+    for i in range(0,len(mlist)):
+        new_barcodes = []
+        for b in mlist[i].barcodes:
+            new_barcodes.append(h5list[i].split('/')[-1][:-3]+"@"+b.decode('UTF-8'))
+        barcodes.append(numpy.array(new_barcodes, dtype='|S100'))
+        matrix.append(mlist[i].matrix)
         
     write_10X_h5(filename, sp_sparse.hstack(matrix), features, numpy.concatenate(barcodes), genome, type)
 
