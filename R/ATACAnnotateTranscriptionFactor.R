@@ -258,9 +258,9 @@ RunGiggle <- function(peakbed, giggle.path, organism, antFile){
   rownames(resultDf) <- sapply(strsplit(resultDf$file, "_1k/"), function(x) return(gsub("_5foldPeak.bed.gz", "", x[2])))
   resultDf <- resultDf[,c("file_size", "overlaps", "combo_score")]
   targetDf <- merge(resultDf, antFile, by.x=0, by.y=0)
-  colnames(targetDf) <- c("sample_id", "sample_peak_number", "overlap_peak_number", "giggle_score", "species", "factor", "cell_line", "cell_type", "tissue", "disease")                          
+  colnames(targetDf) <- c("sample_id", "sample_peak_number", "overlap_peak_number", "giggle_score", "GSM_id", "species", "factor", "cell_line", "cell_type", "tissue", "disease")                          
   targetDf$biological_resource <- apply(targetDf, 1, function(x) return(paste0(x[7:10], collapse=";")))
-  targetDf <- targetDf[, c("sample_id", "species", "factor", "biological_resource", "giggle_score", "sample_peak_number", "overlap_peak_number")]
+  targetDf <- targetDf[, c("sample_id", "GSM_id", "species", "factor", "biological_resource", "giggle_score", "sample_peak_number", "overlap_peak_number")]
   targetDf <- targetDf[order(-targetDf$giggle_score), ]
   targetDf <- targetDf[!duplicated(targetDf$factor), ]
 
