@@ -14,6 +14,7 @@
 #' Download and unzip the annotation, supply the path of the annotations to \code{giggle.anno.path}.
 #' @param organism Organism for the dataset. Only support "GRCh38" and "GRCm38". Default is "GRCh38".
 #' @param top.tf Output the target genes for the top TFs. Default is 10, only output the target genes for the top 10 TFs.
+#' @param min.peaks Minimum number of peaks requires to run giggle, default is 10.
 #'
 #' @author Dongqing Sun, Changxin Wan, Chenfei Wang
 #'
@@ -31,7 +32,7 @@
 #'
 #' @export
 
-ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project = ATAC@project.name, giggle.path, organism = "GRCh38", top.tf = 10)
+ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project = ATAC@project.name, giggle.path, organism = "GRCh38", top.tf = 10, min.peaks = 10)
 {
   require(Seurat)
   require(Matrix)
@@ -60,8 +61,8 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
     peaks$peak <- rownames(peaks)
   }
   
-  if(nrow(peaks)==0){
-    message("No differential peaks input and no driver TFs identified.")
+  if(nrow(peaks)<=50){
+    message("Not enough differential peaks input and no driver TFs identified.")
     
     reg_table = data.frame(Cluster=Idents(ATAC), CelltypeAnnotation=ATAC@meta.data$assign.ident)
     row.names(reg_table) = NULL
@@ -86,16 +87,20 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
       message(paste("Identify enriched TFs for cluster ", icluster, "..."))
       targetList[[icluster]] = list()
       ipeaks <- peaks[peaks$cluster == icluster, "peak"]
+      if(length(ipeaks) > min.peaks){
       ipeaks <- strsplit(ipeaks, "-")
       ipeaks <- data.frame(matrix(unlist(ipeaks), nrow=length(ipeaks), byrow=T))
       outputBed <- paste0(outputDir, "/", icluster, ".peaks.bed")
       write.table(ipeaks, outputBed, sep="\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
       targetDf = RunGiggle(peakbed = outputBed, giggle.path = giggle.path, organism = organism, antFile = antFile)
-  
       if(nrow(targetDf) > 0){
         rownames(targetDf) = targetDf$factor
         tfList[[icluster]] <- targetDf[,c("factor","giggle_score")]
+      }}
+      else{
+      message(paste("Skip identifying enriched TFs for cluster ", icluster, " because peak number is less than", min.peaks,"..."))
       }
+
     }
     tf_all=NULL
     for (icluster in unique(peaks$cluster))

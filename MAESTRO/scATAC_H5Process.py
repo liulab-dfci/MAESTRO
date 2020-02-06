@@ -53,7 +53,7 @@ def write_10X_h5(filename, matrix, features, barcodes, genome = 'GRCh38', type =
     fet.create_dataset('name', data=P)
     f.close()
 
-def merge_10X_h5(filename, h5list, genome = 'GRCh38', type = 'Peaks'):
+def merge_10X_h5(filename, h5list, genome = 'GRCh38', type = 'Gene Expression'):
     """Merge 10X HDF5 files, h5 filenames should be provided as list."""
     mlist = []
     for file in h5list:
@@ -63,10 +63,7 @@ def merge_10X_h5(filename, h5list, genome = 'GRCh38', type = 'Peaks'):
     barcodes = []
     matrix = []
     for i in range(0,len(mlist)):
-        new_barcodes = []
-        for b in mlist[i].barcodes:
-            new_barcodes.append(h5list[i].split('/')[-1][:-3]+"@"+b.decode('UTF-8'))
-        barcodes.append(numpy.array(new_barcodes, dtype='|S100'))
+        barcodes.append(numpy.array([h5list[i].strip(".h5")+"@"+t.decode('UTF-8') for t in mlist[i].barcodes.tolist()], dtype='|S100'))
         matrix.append(mlist[i].matrix)
         
     write_10X_h5(filename, sp_sparse.hstack(matrix), features, numpy.concatenate(barcodes), genome, type)
