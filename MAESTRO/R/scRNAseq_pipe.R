@@ -19,8 +19,11 @@ option_list = list(
   make_option(c("--species"), type = "character", default = "GRCh38",
               action = "store", help = "The platform of scRNA-seq."
   ),
-  make_option(c("--method"), type = "character", default = "lisa",
-              action = "store", help = "The method to identify driver regulators. [lisa, rabit]"
+  make_option(c("--method"), type = "character", default = "LISA",
+              action = "store", help = "The method to identify driver regulators. [LISA, RABIT]"
+  ),
+  make_option(c("--signature"), type = "character", default = "",
+              action = "store", help = "The cell signature file for celltype annotation. Default is built-in CIBERSORT immune cell signature."
   ),
   make_option(c("--rabitlib"), type = "character", default = "",
               action = "store", help = "Annotation to run rabit (only if method is set to rabit)."
@@ -36,13 +39,14 @@ option_list = list(
   )
 )
 
-argue = parse_args(OptionParser(option_list = option_list, usage = "Generate QC plots."))
+argue = parse_args(OptionParser(option_list = option_list, usage = "Run scRNA-seq analysis pipeline"))
 
 setwd(argue$outdir)
 count_mat = argue$expression
 prefix = argue$prefix
 thread = argue$thread
 method = argue$method
+sigfile = argue$signature
 rabitlib = argue$rabitlib
 condadir = argue$condadir
 lisaenv = argue$lisaenv
@@ -69,9 +73,14 @@ exp.dat = Read10X_h5(filename = count_mat, unique.features = TRUE)
 plan("multiprocess", workers = as.integer(thread))
 options(future.globals.maxSize = 10*1024^3)
 
+if(sigfile == ""){
+  signature = human.immune.CIBERSORT
+}else{
+  signature = read.table(sigfile, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+}
 RNA.res <- RNARunSeurat(inputMat = exp.dat, project = prefix, min.c = 10, min.g = 100)
 RNA.res$RNA <- RNAAnnotateCelltype(RNA = RNA.res$RNA, genes = RNA.res$genes, 
-                                   signatures = human.immune.CIBERSORT, min.score = 0.05)
+                                   signatures = signature, min.score = 0.05)
 saveRDS(RNA.res, paste0(prefix, "_scRNA_Object.rds"))
 RNA.tfs <- RNAAnnotateTranscriptionFactor(RNA = RNA.res$RNA, genes = RNA.res$genes, project = prefix, 
                                           method = method, rabit.path = rabitlib, 

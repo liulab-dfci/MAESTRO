@@ -632,29 +632,56 @@ if config["platform"] == "Smartseq2":
                 "Rscript " + RSCRIPT_PATH + "/scRNAseq_qc.R --prefix {params.outpre} --outdir {params.outdir} --rseqc {params.rseqc} "
                 "--platform {params.platform} --filtering {params.countgene} "
 
-rule scrna_analysis:
-    input:
-        expression = "Result/QC/" + config["outprefix"] + "_filtered_gene_count_matrix.h5"
-    output:
-        specificgene = "Result/Analysis/" + config["outprefix"] + "_DiffGenes.tsv",
-        clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
-        annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
-        tflist = "Result/Analysis/" + config["outprefix"] + ".PredictedTFTop10.txt"
-    params:
-        expression = "../QC/" + config["outprefix"] + "_filtered_gene_count_matrix.h5",
-        species = config["species"],
-        outpre = config["outprefix"],
-        outdir = "Result/Analysis",
-        method = config["method"],
-        rabitlib = config["rabitlib"],
-        lisaenv = config["lisaenv"],
-        condadir = config["condadir"]
-    threads:
-        config["cores"]
-    shell:
-        "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R --expression {params.expression} --species {params.species} "
-        "--prefix {params.outpre} --method {params.method} --rabitlib {params.rabitlib} "
-        "--condadir {params.condadir} --lisaenv {params.lisaenv} --outdir {params.outdir} --thread {threads}"
+if config["signature"]:
+    rule scrna_analysis:
+        input:
+            expression = "Result/QC/" + config["outprefix"] + "_filtered_gene_count_matrix.h5",
+            signature = config["signaturefile"]
+        output:
+            specificgene = "Result/Analysis/" + config["outprefix"] + "_DiffGenes.tsv",
+            clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
+            annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
+            tflist = "Result/Analysis/" + config["outprefix"] + ".PredictedTFTop10.txt"
+        params:
+            expression = "../QC/" + config["outprefix"] + "_filtered_gene_count_matrix.h5",
+            species = config["species"],
+            outpre = config["outprefix"],
+            outdir = "Result/Analysis",
+            method = config["method"],
+            rabitlib = config["rabitlib"],
+            lisaenv = config["lisaenv"],
+            condadir = config["condadir"]
+        threads:
+            config["cores"]
+        shell:
+            "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R --expression {params.expression} --species {params.species} "
+            "--prefix {params.outpre} --method {params.method} --signature {input.signature} --rabitlib {params.rabitlib} "
+            "--condadir {params.condadir} --lisaenv {params.lisaenv} --outdir {params.outdir} --thread {threads}"
+else:
+    rule scrna_analysis:
+        input:
+            expression = "Result/QC/" + config["outprefix"] + "_filtered_gene_count_matrix.h5"
+        output:
+            specificgene = "Result/Analysis/" + config["outprefix"] + "_DiffGenes.tsv",
+            clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
+            annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
+            tflist = "Result/Analysis/" + config["outprefix"] + ".PredictedTFTop10.txt"
+        params:
+            expression = "../QC/" + config["outprefix"] + "_filtered_gene_count_matrix.h5",
+            species = config["species"],
+            outpre = config["outprefix"],
+            outdir = "Result/Analysis",
+            method = config["method"],
+            rabitlib = config["rabitlib"],
+            lisaenv = config["lisaenv"],
+            condadir = config["condadir"]
+        threads:
+            config["cores"]
+        shell:
+            "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R --expression {params.expression} --species {params.species} "
+            "--prefix {params.outpre} --method {params.method} --rabitlib {params.rabitlib} "
+            "--condadir {params.condadir} --lisaenv {params.lisaenv} --outdir {params.outdir} --thread {threads}"
+
 
 if config["rseqc"]:
     rule scrna_report:

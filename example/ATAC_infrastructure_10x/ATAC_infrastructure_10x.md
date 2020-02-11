@@ -91,11 +91,23 @@ First users need to read the peak count matrix as well as the gene regulatory po
 > pbmc.gene <- Read10X_h5('Result/Analysis/10X_PBMC_10K_gene_score.h5')
 ```
 
-We also support the processed dataset from 10x Cell Ranger pipelines, users can load the gene matrix into R through Seurat package. Then generate the gene regulatory score matrix by the following command.
+We also support the processed dataset from 10x Cell Ranger pipelines, users can load the gene matrix into R through Seurat package. Then users can generate the gene regulatory score matrix by the following command.
 ```R
 > pbmc.peaks <- Read10X_h5("Result/Cellranger/10X_PBMC_10K/outs/filtered_peak_bc_matrix.h5")
 > pbmc.gene <- ATACCalculateGenescore(pbmc.peaks)
 ```
+**Note:** If MAESTRO R package is not managed through miniconda, users may encounter the following error.
+```
+Error: Python shared library not found, Python bindings not loaded.
+Use reticulate::install_miniconda() if you'd like to install a Miniconda Python environment.
+```
+It means reticulate R package cannot find the python shared library. If Anaconda has been installed, users just need to specify an alternate version of python, for example:
+```R
+> library(reticulate)
+> use_python("/Users/dongqing/opt/anaconda3/bin/python", required = T)
+> pbmc.gene <- ATACCalculateGenescore(pbmc.peaks)
+```
+If users don't install Miniconda or Anaconda, we recommend to use `reticulate::install_miniconda()` to install a Miniconda Python environment and specify the version through `use_python`.
 
 **Step 5. Clustering and differential peak calling**      
 We next create a Seurat object using the peak count matrix and perform the clustering analysis as well as differential peak calling for different clusters. 1) We first run dimension reduction on the input matrix. As we and others reported [Cusanovich et al, Science 2015](https://science.sciencemag.org/content/348/6237/910/tab-pdf), the Latent Semantic Index (LSI) has been widely used in learning the structure of scATAC-seq data. We use LSI as the default dimension reduction method, which has the best performance according to our benchmark. Users can also use "PCA" as an optional dimension reduction method. 2) We apply UMAP to reduce the dimensions further and identify the clusters using a graph-based clustering approach implemented in [Seurat](https://www.cell.com/cell/pdf/S0092-8674(19)30559-8.pdf). 3) We used a [wilcox-test](https://www.tandfonline.com/doi/abs/10.1080/01621459.1972.10481279) based method to identify the differential peaks for each cluster. The original peak count matrix is scaled and weighed by the total peaks present in each cell to overcome the potential ties in Wilcox-test. It will take 10-20mins to calculate the differential peaks for all the clusters.

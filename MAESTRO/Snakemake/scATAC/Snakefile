@@ -679,25 +679,51 @@ rule scatac_genescore:
     shell:
         "python " + SCRIPT_PATH + "/scATAC_genescore.py {input.count} {output.genescore} {params.genedistance} {params.genebed}"
 
-rule scatac_analysis:
-    input:
-        count = "Result/Analysis/" + config["outprefix"] + "_peak_count.h5",
-        genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.h5"
-    output:
-        specificpeak = "Result/Analysis/" + config["outprefix"] + "_DiffPeaks.tsv",
-        clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
-        annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
-    params:
-        outdir = "Result/Analysis",
-        genescore = config["outprefix"] + "_genescore.h5",
-        outpre = config["outprefix"],
-        count = config["outprefix"] + "_peak_count.h5",
-        giggleannotation = config["giggleannotation"],
-        species = config["species"],
-    threads:
-        config["cores"]
-    shell:
-        "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R {params.count} {params.genescore} {params.species} {params.giggleannotation} {params.outpre} {params.outdir} {threads}"
+if config["signature"]:
+    rule scatac_analysis:
+        input:
+            count = "Result/Analysis/" + config["outprefix"] + "_peak_count.h5",
+            genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.h5",
+            signature = config["signaturefile"]
+        output:
+            specificpeak = "Result/Analysis/" + config["outprefix"] + "_DiffPeaks.tsv",
+            clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
+            annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
+        params:
+            outdir = "Result/Analysis",
+            genescore = config["outprefix"] + "_genescore.h5",
+            outpre = config["outprefix"],
+            count = config["outprefix"] + "_peak_count.h5",
+            giggleannotation = config["giggleannotation"],
+            species = config["species"],
+        threads:
+            config["cores"]
+        shell:
+            "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R --peakcount {params.count} --rpmatrix {params.genescore} "
+            "--species {params.species} --prefix {params.outpre} --signature {input.signature} "
+            "--gigglelib {params.giggleannotation} --outdir {params.outdir} --thread {threads}"
+else:
+    rule scatac_analysis:
+        input:
+            count = "Result/Analysis/" + config["outprefix"] + "_peak_count.h5",
+            genescore = "Result/Analysis/" + config["outprefix"] + "_genescore.h5"
+        output:
+            specificpeak = "Result/Analysis/" + config["outprefix"] + "_DiffPeaks.tsv",
+            clusterplot = "Result/Analysis/" + config["outprefix"] + "_cluster.png",
+            annotateplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
+        params:
+            outdir = "Result/Analysis",
+            genescore = config["outprefix"] + "_genescore.h5",
+            outpre = config["outprefix"],
+            count = config["outprefix"] + "_peak_count.h5",
+            giggleannotation = config["giggleannotation"],
+            species = config["species"],
+        threads:
+            config["cores"]
+        shell:
+            "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R --peakcount {params.count} --rpmatrix {params.genescore} "
+            "--species {params.species} --prefix {params.outpre} "
+            "--gigglelib {params.giggleannotation} --outdir {params.outdir} --thread {threads}"
 
 rule scatac_report:
     input:

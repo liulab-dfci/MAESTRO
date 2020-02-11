@@ -63,6 +63,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project =
     genes$gene <- rownames(genes)
   }
 
+  method = toupper(method)
   if(method == "RABIT"){
     scorename = "log(Rabitscore)"
     out_fdr_max_log = tryCatch(expr = RunRABIT(genes = genes, project = project, rabit.path = rabit.path, organism = org),

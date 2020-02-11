@@ -12,6 +12,11 @@ outprefix: LUCAP_49
 barcodelib: NULL
 # The core number
 cores: 8
+# Flag to provide custom cell signatures [TRUE, FALSE]
+signature: TRUE
+# If signature = TRUE, provide the file location of custom cell signatures.
+# The signature file is tab-seperated. The first column is cell type, and the second column is signature gene.
+signaturefile: /home1/wangchenfei/Project/SingleCell/scATAC/Code/MAESTRO/MAESTRO/annotations/human_immune_CIBERSORT.txt
 # Flag to provide custom peaks [TRUE, FALSE]
 custompeaks: TRUE
 # IF custompeaks = TRUE, provide the file location of custom peaks

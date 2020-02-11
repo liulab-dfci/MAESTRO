@@ -27,6 +27,7 @@
 
 ATACCalculateGenescore <- function(inputMat, project = "MAESTRO.scATAC", organism = "GRCh38"){
   library(reticulate)
+  library(Matrix)
   source_python(paste(system.file(package="MAESTRO"), "ATACCalculateGenescore.py", sep="/"))
   
   if(organism == "GRCh38"){
@@ -48,7 +49,7 @@ ATACCalculateGenescore <- function(inputMat, project = "MAESTRO.scATAC", organis
   
   rp_result = calculate_RP_score(cell_peaks = inputMat, peaks_list = peaks_list, genes_info = ensembl.genescore, 
                                  genes_list = genes_list, decay = 10000)
-  rp_matrix = py_to_r(rp_result[[1]])
+  rp_matrix = rp_result[[1]]
   rownames(rp_matrix) = rp_result[[2]]
   colnames(rp_matrix) = colnames(inputMat)
   
