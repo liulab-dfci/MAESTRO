@@ -41,7 +41,7 @@ Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembeddi
   ATAC$tech <- "ATAC"
   RNA$tech <- "RNA"
   
-  if(is.null(ATAC[["ACTIVITY"]])){
+  if(is.null(ATAC[["ACTIVITY"]])&method!="Seurat"){
      RPmatrix <- RPmatrix[,intersect(colnames(ATAC), colnames(RPmatrix))]
      ATAC <- subset(ATAC, cells = intersect(colnames(ATAC), colnames(RPmatrix)))
      ATAC[["ACTIVITY"]] <- CreateAssayObject(counts = RPmatrix)
@@ -63,6 +63,7 @@ Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembeddi
                       reference.assay = "RNA", query.assay = "ACTIVITY", reduction = "cca")
   celltype.predictions <- TransferData(anchorset = transfer.anchors, refdata = RNA$assign.ident, weight.reduction = ATAC[["lsi"]])
   ATAC@meta.data$assign.ident <- celltype.predictions$predicted.id
+  ATAC@meta.data$prediction.score.max <- celltype.predictions$prediction.score.max
 
   genes.use <- VariableFeatures(RNA)
   refdata <- GetAssayData(RNA, assay = "RNA", slot = "data")[genes.use, ]
