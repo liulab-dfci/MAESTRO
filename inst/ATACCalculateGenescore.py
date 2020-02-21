@@ -69,7 +69,7 @@ def calculate_RP_score(cell_peaks, peaks_list, genes_info, genes_list, decay):
     peaks_info = []
 
     for ipeak, peak in enumerate(peaks_list):
-        peaks_tmp = peak.split("_")
+        peaks_tmp = peak.rsplit("_",maxsplit=2)
         peaks_info.append([peaks_tmp[0], (int(peaks_tmp[1]) + int(peaks_tmp[2])) / 2.0, 0, ipeak])
 
     genes_peaks_score_dok = RP(peaks_info, genes_info, decay)
