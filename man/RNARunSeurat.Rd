@@ -5,12 +5,28 @@
 \alias{RNARunSeurat}
 \title{Clustering analysis for scRNA-seq data using Seurat}
 \usage{
-RNARunSeurat(inputMat, project = "MAESTRO.scRNA.Seurat",
-  orig.ident = NULL, min.c = 10, min.g = 200, mito = FALSE,
-  mito.cutoff = 0.05, variable.genes = 2000, organism = "GRCh38",
-  dims.use = 1:15, cluster.res = 0.6, only.pos = FALSE,
-  genes.test.use = "wilcox", genes.cutoff = 1e-05, genes.pct = 0.1,
-  genes.logfc = 0.25)
+RNARunSeurat(
+  inputMat,
+  project = "MAESTRO.scRNA.Seurat",
+  orig.ident = NULL,
+  min.c = 10,
+  min.g = 200,
+  mito = FALSE,
+  mito.cutoff = 0.05,
+  variable.genes = 2000,
+  organism = "GRCh38",
+  dims.use = 1:15,
+  cluster.res = 0.6,
+  only.pos = FALSE,
+  genes.test.use = "wilcox",
+  genes.cutoff = 1e-05,
+  genes.pct = 0.1,
+  genes.logfc = 0.25,
+  runpca.agrs = list(),
+  findneighbors.args = list(),
+  findclusters.args = list(),
+  ...
+)
 }
 \arguments{
 \item{inputMat}{Input unnormalized matrix, with genes as rows and cells as columns. Could be count matrix or TPM, FPKM matrix.}
@@ -20,10 +36,10 @@ RNARunSeurat(inputMat, project = "MAESTRO.scRNA.Seurat",
 \item{orig.ident}{Orginal identity for the input cells. If supplied, should keep the same order with the column name of the gene x cell matrix.}
 
 \item{min.c}{Minimum number of cells required for a gene. Will exclude the genes from input matrix if they only expressed in 
-less than \code{min.c} cells. Default is 10. See \code{link{CreateSeuratObject}} for details.}
+less than \code{min.c} cells. Default is 10. See \code{\link{CreateSeuratObject}} for details.}
 
 \item{min.g}{Minimum number of genes required for a cell. Will exclude the cells from input matrix if less than \code{min.g}
-genes are deteced in one cell. Default is 200. See \code{link{CreateSeuratObject}} for details.}
+genes are deteced in one cell. Default is 200. See \code{\link{CreateSeuratObject}} for details.}
 
 \item{mito}{Whether or not to check and normalized accroding to the fraction of mitochondria reads and ercc spike-in reads.
 Default is FALSE.}
@@ -31,7 +47,7 @@ Default is FALSE.}
 \item{mito.cutoff}{If \code{mito} is True, filter those cells with mitochondria reads or ercc spike-in reads higher than \code{mito.cutoff}.
 Default is 0.05.}
 
-\item{variable.genes}{Number of variable genes considered in the clustering analysis. Default is 2000. See \code{link{FindVariableFeatures}} for details.}
+\item{variable.genes}{Number of variable genes considered in the clustering analysis. Default is 2000. See \code{\link{FindVariableFeatures}} for details.}
 
 \item{organism}{Organism for the dataset. Only support "GRCh38" and "GRCm38". Default is "GRCh38".}
 
@@ -41,7 +57,7 @@ Default is 0.05.}
 
 \item{only.pos}{If seting true, only positive genes will be output. Default is False.}
 
-\item{genes.test.use}{Denotes which test to use to identify genes. Default is "wilcox". See \code{link{FindAllMarkers}} for details.}
+\item{genes.test.use}{Denotes which test to use to identify genes. Default is "wilcox". See \code{\link{FindAllMarkers}} for details.}
 
 \item{genes.cutoff}{Identify differential expressed genes with adjusted p.value less than \code{genes.cutoff} as cluster speficic genes}
 
@@ -49,6 +65,14 @@ Default is 0.05.}
 
 \item{genes.logfc}{Limit testing to genes which show, on average, at least X-fold difference (log-scale) between the two groups of cells. Default is 0.2 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 for each cluster. Default cutoff is 1E-5.}
+
+\item{findneighbors.args}{Extra arguments passed to \code{\link{FindNeighbors}}.}
+
+\item{findclusters.args}{Extra arguments passed to \code{\link{FindClusters}}.}
+
+\item{\dots}{Extra arguments passed to \code{\link{RunUMAP}}.}
+
+\item{runpca.args}{Extra arguments passed to \code{link{RunPCA}}.}
 }
 \value{
 A list contains a RNA Seurat object and a data frame for the cluster specific genes.

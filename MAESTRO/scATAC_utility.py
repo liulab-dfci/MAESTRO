@@ -3,20 +3,21 @@
 """
 Created on Tue Jan 22 22:36:07 2019
 
-@author: Dongqing Sun
+@author: Dongqing Sun, Chenfei Wang
 """
 
 import sys, os, time
 import logging
 import subprocess
 import random, string
+import re
 from subprocess import call as subpcall
 from pkg_resources import resource_filename
 
 error   = logging.critical
 warn    = logging.warning
-SCRIPT_PATH = os.path.dirname(__file__)
 ENV_PATH = resource_filename('MAESTRO', 'env')
+SCRIPT_PATH = os.path.dirname(__file__)
 RSCRIPT_PATH = resource_filename('MAESTRO', 'R')
 
 def Info(infoStr):
@@ -32,6 +33,45 @@ def run_pip(command):
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE,
                                )
+
+def getfastq_10x(fastqdir, fastqprefix):
+    allfiles = os.listdir(fastqdir)
+    fastqfiles = []
+    pattern = fastqprefix + "\S*.fastq\S*"
+    for file in allfiles:
+        if re.match(pattern, file):
+            fastqfiles.append(file)
+        else:
+            pass
+    r1_fastq = []
+    pattern = "\S*R1\S*"
+    for file in fastqfiles:
+        if re.search(pattern, file):
+            r1_fastq.append(file)
+        else:
+            pass
+    r1_fastq = sorted(r1_fastq)
+    r2_fastq = list(map(lambda x: re.sub("_R1", "_R2", x), r1_fastq))
+    r3_fastq = list(map(lambda x: re.sub("_R1", "_R3", x), r1_fastq))
+    transcript = ""
+    barcode = ""
+    command = "-"
+    if len(set(r2_fastq) & set(fastqfiles)) == len(r1_fastq) and len(set(r3_fastq) & set(fastqfiles)) == len(r1_fastq):
+        r3_fastq = list(map(lambda x: os.path.join(fastqdir, x), r3_fastq))
+        r2_fastq = list(map(lambda x: os.path.join(fastqdir, x), r2_fastq))
+        r1_fastq = list(map(lambda x: os.path.join(fastqdir, x), r1_fastq))
+        r3 = " ".join(r3_fastq)
+        r2 = " ".join(r2_fastq)
+        r1 = " ".join(r1_fastq)
+    else:
+        print("Invalid fastq files!")
+    if r1_fastq[0].endswith("gz"):
+        command = "zcat"
+    else:
+        command = "cat"
+
+    return({"r1": r1, "r3": r3, "barcode": r2, "command": command})
+
 
 def get_fastqlist(fastqpath):
     files = os.listdir(fastqpath)

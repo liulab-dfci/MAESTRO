@@ -10,11 +10,11 @@
 #' @param name Name for the output cell filtering plot and valid cells file.
 #' @param platform Denote platform of the scATAC-seq data, available options are "microfluidic",
 #' "10x-genomics","sci-ATAC-seq". Default platform is "10x-genomics".
-#' @param reads.cutoff Reads cutoff. Cells with less than \code{reads.cutoff} reads will be classified as non-cells.
+#' @param reads.cutoff Reads cutoff. Cells with less than \code{reads.cutoff} reads will be classified as low-quality cells.
 #' Default is 1000.
 #' @param frip.cutoff Fraction of reads in promoter cutoff. Cells with frip score less than \code{frip.cutoff} will be 
-#' classified as non-cells. For 10x-genomics, default is 0.2, which means 20 percent reads should be in promoter regions.
-#' For other platforms like microfluidic or sci-ATAC-seq, default is 0.1.
+#' classified as low-quality cells. For 10x-genomics or sci-ATAC-seq, default is 0.2, which means 20 percent reads should be in promoter regions.
+#' For other platforms like microfluidic, default is 0.1.
 #'
 #' @author Chenfei Wang, Dongqing Sun
 #'
@@ -25,7 +25,7 @@ ATACFilteringPlot <- function(filepath, name, platform, reads.cutoff = 1000, fri
   RCB_blue = "#2166AC"
   RCB_red = "#B2182B"
   
-  if(platform == "microfluidic" || platform == "sci-ATAC-seq"){
+  if(platform == "microfluidic"){
     if(is.null(frip.cutoff)){
       frip.cutoff = 0.1
     }
@@ -43,22 +43,22 @@ ATACFilteringPlot <- function(filepath, name, platform, reads.cutoff = 1000, fri
     write.table(rownames(mapping_matrix[cell,]), 
                 paste0(name,"_scATAC_validcells.txt"), sep = "\n", quote=F, row.names=F, col.names=F)
   }
-  if(platform == "10x-genomics"){
+  if(platform == "10x-genomics" || platform == "sci-ATAC-seq"){
     if(is.null(frip.cutoff)){
       frip.cutoff = 0.2
     }
-    mapping_matrix <- read.csv(filepath)
+    mapping_matrix <- read.table(filepath,sep = "\t", row.names = 1, header = FALSE)
     png(paste0(name,"_scATAC_cell_filtering.png"),width=4.8,height=4.8, res = 300, units = "in")
     par(mai = c(0.85, 0.85, 0.25, 0.25))
-    non_cell = rownames(mapping_matrix)[which(mapping_matrix[,8]<reads.cutoff | (mapping_matrix[,14]/mapping_matrix[,8])<frip.cutoff)]
-    cell = rownames(mapping_matrix)[which(mapping_matrix[,8]>=reads.cutoff & (mapping_matrix[,14]/mapping_matrix[,8])>=frip.cutoff)]   
-    plot(log10(mapping_matrix[non_cell,8]+1),mapping_matrix[non_cell,14]/mapping_matrix[non_cell,8],
+    non_cell = rownames(mapping_matrix)[which(mapping_matrix[,1]<reads.cutoff | (mapping_matrix[,2]/mapping_matrix[,1])<frip.cutoff)]
+    cell = rownames(mapping_matrix)[which(mapping_matrix[,1]>=reads.cutoff & (mapping_matrix[,2]/mapping_matrix[,1])>=frip.cutoff)]   
+    plot(log10(mapping_matrix[non_cell,1]+1),mapping_matrix[non_cell,2]/mapping_matrix[non_cell,1],
          ylim = c(0,1),pch='.',col=RCB_red,ylab='Fraction of promoter reads',xlab='Reads passed filters (log10)')
-    points(log10(mapping_matrix[cell,8]+1),mapping_matrix[cell,14]/mapping_matrix[cell,8],
-         pch='.',col=RCB_blue)
+    points(log10(mapping_matrix[cell,1]+1),mapping_matrix[cell,2]/mapping_matrix[cell,1],
+           pch='.',col=RCB_blue)
     legend("topright",c("High-quality cells","Low-quality cells"),col=c(RCB_blue,RCB_red),pch=20,bty = "n")
     dev.off()
-    write.table(as.character(mapping_matrix[cell,1]), 
+    write.table(rownames(mapping_matrix[cell,]), 
                 paste0(name,"_scATAC_validcells.txt"), sep = "\n", quote=F, row.names=F, col.names=F)
   }
 }

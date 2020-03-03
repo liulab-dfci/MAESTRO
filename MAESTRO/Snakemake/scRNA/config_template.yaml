@@ -1,0 +1,68 @@
+# Directory where fastq files are stored
+fastqdir: {{ fastqdir }}
+# Sample name of fastq file (only for platform of "10x-genomics", for example, 
+# if there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the sample name is "pbmc_1k_v2". )
+fastqprefix: {{ fastqprefix }}
+# Species to use [GRCh38, GRCm38] (GRCh38 for human and GRCm38 for mouse)
+species: {{ species }}
+# Platform of single cell RNA-seq [Smartseq2, 10x-genomics, Dropseq]
+platform: {{ platform }}
+# The prefix of output files
+outprefix: {{ outprefix }}
+# Run RSeQC or not [True, False]
+rseqc: {{ rseqc }}
+# Number of cores to use
+cores: {{ cores }}
+# Flag to provide custom cell signatures [TRUE, FALSE]
+signature: {{ signature }}
+# If signature = TRUE, provide the file location of custom cell signatures.
+# The signature file is tab-seperated. The first column is cell type, and the second column is signature gene.
+signaturefile: {{ signaturefile }}
+# The method to predict driver regulators [RABIT, LISA]
+method: {{ method }}
+# Annotation to run rabit (only if method is set to rabit)
+rabitlib: {{ rabitlib }}
+# Mode to Run LISA [web, local]. DEFAULT: local.
+lisamode: {{ lisamode }}
+# Name of lisa environment (only if method is set to lisa and lisamode is set to local)
+lisaenv: {{ lisaenv }}
+# Directory where miniconda or anaconda is installed (only if method is set to lisa and lisamode is set to local).
+# For example, /home1/wangchenfei/miniconda3
+condadir: {{ condadir }}
+
+# Cutoff for quality control
+cutoff:
+  # Cutoff for the number of count in each cell. DEFAULT: 1000.
+  count: {{ count }}
+  # Cutoff for the number of genes included in each cell. DEFAULT: 500.
+  gene: {{ gene }}
+
+# Reference genome 
+genome:
+  # Genome index directory for STAR
+  mapindex: {{ mapindex }}
+  # genome annotation file from 10x-genomics required for Cell Ranger
+  # cellranger: {{ cellranger }}
+  # the prefix of transcript references for RSEM used by rsem-prepare-reference
+  rsem: {{ rsem }}
+
+# Information about barcode (only for platform of "Dropseq")
+barcode:
+  # whitelist: /home1/wangchenfei/Tool/cellranger-3.1.0/cellranger-cs/3.1.0/lib/python/cellranger/barcodes/3M-february-2018.txt
+  whitelist: {{ whitelist }}
+  # The start site of cell barcode
+  barcodestart: {{ barcodestart }}
+  # The length of cell barcode
+  barcodelength: {{ barcodelength }}
+  # The start site of UMI
+  umistart: {{ umistart }}
+  # The length of UMI
+  umilength: {{ umilength }}
+
+
+# Specify the barcode fastq file and reads fastq file (only for platform of "Dropseq")
+fastq:
+  # barcode fastq file
+  barcode: {{ barcode }}
+  # transcript fastq file
+  transcript: {{ transcript }}

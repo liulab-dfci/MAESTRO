@@ -73,14 +73,20 @@ def calculate_RP_score(cell_peaks, peaks_list, genes_info, genes_list, decay):
         peaks_info.append([peaks_tmp[0], (int(peaks_tmp[1]) + int(peaks_tmp[2])) / 2.0, 0, ipeak])
 
     genes_peaks_score_dok = RP(peaks_info, genes_info, decay)
-    genes_peaks_score_csc = genes_peaks_score_dok.tocsc()
-    genes_cells_score_csr = genes_peaks_score_csc.dot(cell_peaks).tocsr()
+    genes_peaks_score_csr = genes_peaks_score_dok.tocsr()
+    genes_cells_score_csr = genes_peaks_score_csr.dot(cell_peaks.tocsr())
+ 
+    # genes_peaks_score_csc = genes_peaks_score_dok.tocsc()
+    # genes_cells_score_csr = genes_peaks_score_csc.dot(cell_peaks).tocsr()
 
     score_cells_dict = {}
     score_cells_sum_dict = {}
     for igene, gene in enumerate(genes_list):
-        score_cells_dict[gene] = genes_cells_score_csr[igene, :].toarray().ravel().tolist()
-        score_cells_sum_dict[gene] = sum(score_cells_dict[gene])
+        # score_cells_dict[gene] = genes_cells_score_csr[igene, :].toarray().ravel().tolist()
+        # score_cells_sum_dict[gene] = sum(score_cells_dict[gene])
+        score_cells_dict[gene] = igene
+        score_cells_sum_dict[gene] = genes_cells_score_csr[igene, :].sum()
+
 
     score_cells_dict_dedup = {}
     score_cells_dict_max = {}
@@ -93,10 +99,17 @@ def calculate_RP_score(cell_peaks, peaks_list, genes_info, genes_list, decay):
             score_cells_dict_dedup[symbol] = score_cells_dict[gene]
             score_cells_dict_max[symbol] = score_cells_sum_dict[gene]
     gene_symbol = sorted(score_cells_dict_dedup.keys())
-    score_cells_matrix = []
+    matrix_row = []
     for gene in gene_symbol:
-        score_cells_matrix.append(score_cells_dict_dedup[gene])
-    score_cells_matrix = np.array(score_cells_matrix)
-    score_cells_matrix = sp_sparse.csc_matrix(score_cells_matrix)
+        matrix_row.append(score_cells_dict_dedup[gene])
 
-    return((score_cells_matrix,gene_symbol))
+    score_cells_matrix = genes_cells_score_csr[matrix_row, :]
+    score_cells_matrix = score_cells_matrix.tocsc()
+
+    # score_cells_matrix = []
+    # for gene in gene_symbol:
+    #     score_cells_matrix.append(score_cells_dict_dedup[gene])
+    # score_cells_matrix = np.array(score_cells_matrix)
+    # score_cells_matrix = sp_sparse.csc_matrix(score_cells_matrix)
+
+    return((score_cells_matrix, gene_symbol))

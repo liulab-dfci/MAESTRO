@@ -1,36 +1,43 @@
 # Directory where fastq files are stored
-fastqdir: /homes/cwang/projects/ATAC/data/Data_cancer/CFCE_LUCAP/Raw/LUCAP_49_IDX
+fastqdir: {{ fastqdir }}
 # Sample name of fastq file
-fastqprefix: LUCAP_49_IDX
+fastqprefix: {{ fastqprefix }}
 # Species to use [GRCh38, GRCm38] (GRCh38 for human and GRCm38 for mouse)
-species: GRCh38
+species: {{ species }}
 # Platform of single cell ATAC-seq [10x-genomics, sci-ATAC-seq, microfluidic]
-platform: 10x-genomics
+platform: {{ platform }}
 # The prefix of output files
-outprefix: LUCAP_49
-# Please specify the barcode library if the platform is sci-ATAC-seq, or the pipeline will automatically output the barcodes with enough reads count (>1000).
-barcodelib: NULL
+outprefix: {{ outprefix }}
+# Please specify the barcode library if the platform is sci-ATAC-seq, or the pipeline will automatically output the barcodes with enough read counts (>1000).
+whitelist: {{ whitelist }}
 # The core number
-cores: 8
+cores: {{ cores }}
 # Flag to provide custom cell signatures [TRUE, FALSE]
-signature: TRUE
+signature: {{ signature }}
 # If signature = TRUE, provide the file location of custom cell signatures.
 # The signature file is tab-seperated. The first column is cell type, and the second column is signature gene.
-signaturefile: /home1/wangchenfei/Project/SingleCell/scATAC/Code/MAESTRO/MAESTRO/annotations/human_immune_CIBERSORT.txt
+signaturefile: {{ signaturefile }}
 # Flag to provide custom peaks [TRUE, FALSE]
-custompeaks: TRUE
+custompeaks: {{ custompeaks }}
 # IF custompeaks = TRUE, provide the file location of custom peaks
-custompeaksloc: /home1/wangchenfei/Project/SingleCell/scATAC/Code/MAESTRO/MAESTRO/annotations/GRCh38_rDHS_dynamic.bed
+custompeaksloc: {{ custompeaksloc }}
 # Whether or not to call peaks from short fragment (less than 50bp)
-shortpeaks: FALSE
+shortpeaks: {{ shortpeaks }}
 # Gene score decay distance, could be optional from 1kb (promoter-based regulation) and 10kb(enhancer-based regulation), default is 10kb
-genedistance: 10000
+genedistance: {{ genedistance }}
 # Path of the giggle annotation file.
-giggleannotation: /home1/wangchenfei/Project/SingleCell/scATAC/Code/MAESTRO/MAESTRO/annotations/giggle
+giggleannotation: {{ giggleannotation }}
+
+# Quality control cutoff
+cutoff:
+  # Cutoff for the number of count in each cell. DEFAULT: 1000.
+  count: {{ count }}
+  # Cutoff for fraction of reads in promoter in each cell. DEFAULT: 0.2.
+  frip: {{ frip }}
 
 # Reference genome 
 genome:
   # Genome index directory for BWA
-  fasta: /home1/wangchenfei/annotations/refdata-cellranger-atac-GRCh38-1.1.0/fasta/genome.fa
+  fasta: {{ fasta }}
   # genome annotation file from 10x-genomics required for Cell Ranger ATAC
-  cellranger: /home1/wangchenfei/annotations/refdata-cellranger-atac-GRCh38-1.1.0
+  # cellranger: {{ cellranger }}

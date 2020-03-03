@@ -1,17 +1,43 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Feb 14 13:44:50 2019
+# @Author: Dongqing Sun
+# @E-mail: Dongqingsun96@gmail.com
+# @Date:   2020-02-28 22:23:48
+# @Last Modified by:   Dongqing Sun
+# @Last Modified time: 2020-02-28 22:23:51
 
-@author: ChenfeiWang, Dongqing Sun
-"""
 
 import sys,os
+import argparse as ap
+
+def CommandLineParser():
+    parser = ap.ArgumentParser(description = "Merge microfluidic QC log files into singlecell.txt. ")
+
+    group_input = parser.add_argument_group("Input arguments")
+    group_input.add_argument("--log-dir", dest = "log_dir", type = str, default = "",  
+        help = "Directory where QC log files are stored.")
+
+    group_output = parser.add_argument_group("Output arguments")
+    group_output.add_argument("-d", "--directory", dest = "directory", default = "MAESTRO", 
+        help = "Path to the directory where the result file shall be stored. DEFAULT: MAESTRO.")
+
+    return parser.parse_args()
+
 
 def main():
 
-    log_folder = sys.argv[1]
-    out_file = sys.argv[2]
+    myparser = CommandLineParser()
+    log_folder = myparser.log_dir
+    directory = myparser.directory
+
+    try:
+        os.makedirs(directory)
+    except OSError:
+        # either directory exists (then we can ignore) or it will fail in the
+        # next step.
+        pass
+
+    out_file = os.path.join(directory, "singlecell.txt")
+
     output = {}
     for logfile in os.listdir(log_folder):
         if logfile.endswith('.mapping.log'):

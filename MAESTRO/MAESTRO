@@ -1,65 +1,44 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Jun  5 17:26:44 2019
+# @Author: Dongqing Sun
+# @E-mail: Dongqingsun96@gmail.com
+# @Date:   2020-02-13 16:11:58
+# @Last Modified by:   Dongqing Sun
+# @Last Modified time: 2020-02-28 13:58:10
 
-@author: Chenfei Wang, Dongqing Sun
-"""
-
-version = "1.0.2"
+version = "1.1.0"
 
 import logging
-import sys
-import os
+import sys, os
 import shutil
 import argparse as ap
-from pkg_resources import resource_filename
 
-
-def init_workflow(directory, module):
-    try:
-        os.makedirs(directory)
-    except OSError:
-        # either directory exists (then we can ignore) or it will fail in the
-        # next step.
-        pass
-
-
-    def get_resource(f,module):
-        pkgpath = resource_filename('MAESTRO', '.')
-        return os.path.join(pkgpath, "Snakemake", module, f)
-
-    def get_target(f):
-        return os.path.join(directory, f)
-
-    def backup(f):
-        target = get_target(f)
-        if os.path.exists(target):
-            shutil.copy(target, target + ".old")
-
-    def install(f, module):
-        source = get_resource(f, module)
-        target = get_target(f)
-        shutil.copy(source, target)
-
-    backup("Snakefile")
-    install("Snakefile", module)
-    backup("config.yaml")
-    install("config.yaml", module)
-
+from MAESTRO.MAESTRO_PipeInit import *
+from MAESTRO.scATAC_H5Process import *
+from MAESTRO.scATAC_Genescore import genescore_parser, genescore
+from MAESTRO.scATAC_10x_PeakCount import peakcount_parser, peakcount
+from MAESTRO.scRNA_QC import scrnaqc_parser, scrna_qc
 
 def main():
-    # create arg parser
+    """
+    Add main function argument parsers.
+    """
+
     parser = ap.ArgumentParser(description = "MAESTRO(Model-based AnalysEs of Single-cell Transcriptome and RegulOme) is a comprehensive single-cell RNA-seq and ATAC-seq analysis suit built using snakemake.")
     parser.add_argument("-v", "--version", action = "store_true", help = "Print version info.")
 
     subparsers = parser.add_subparsers(dest = "subcommand")
-    workflow = subparsers.add_parser("init", help = "Initialize the MAESTRO workflow in a given directory. "
-        "This will install a Snakefile and a config file in this directory. "
-        "You can configure the config file according to your needs, and run the workflow with Snakemake "
-        "(https://bitbucket.org/johanneskoester/snakemake).")
-    workflow.add_argument("-d", "--directory", help = "Path to the directory where the workflow shall be initialized and results shall be stored.", required=True)
-    workflow.add_argument("-m", "--module", choices = ["scATAC","scRNA","integrate"], help="Analysis of scATAC-seq or scRNA-seq, or integrattion analysis", required=True)
+    scatac_parser(subparsers)
+    scrna_parser(subparsers)
+    integrate_parser(subparsers)
+
+    mtxtoh5_parser(subparsers)
+    counttoh5_parser(subparsers)
+    mergeh5_parser(subparsers)
+
+    peakcount_parser(subparsers)
+    genescore_parser(subparsers)
+    scrnaqc_parser(subparsers)
+    
 
     logging.basicConfig(format="%(message)s", level=logging.INFO, stream=sys.stderr)
 
@@ -68,12 +47,46 @@ def main():
     if args.version:
         print(version)
         exit(0)
-    elif args.subcommand == "init":
-        init_workflow(args.directory, args.module)
+    elif args.subcommand == "scatac-init":
+        scatac_config(args)
+
+    elif args.subcommand == "scrna-init":
+        scrna_config(args)
+
+    elif args.subcommand == "integrate-init":
+        integrate_config(args)
+
+    elif args.subcommand == "mtxtoh5":
+        mtx_2_h5(directory = args.directory, outprefix = args.outprefix, matrix_file = args.matrix, feature_file = args.feature, barcode_file = args.barcode, gene_column = args.gene_column, genome = args.species, datatype = args.datatype)
+
+    elif args.subcommand == "counttoh5":
+        count_2_h5(directory = args.directory, outprefix = args.outprefix, count_file = args.count, genome = args.species, datatype = args.datatype)
+
+    elif args.subcommand == "mergeh5":
+        merge_10X_h5(directory = args.directory, outprefix = args.outprefix, h5list = args.h5_list, genome = args.species, datatype = args.datatype)
+
+    elif args.subcommand == "scatac-peakcount":
+        peakcount(directory = args.directory, outprefix = args.outprefix, peak = args.peak, fragment = args.fragment, barcode = args.barcode, count_cutoff = args.count_cutoff, cores = args.cores, species = args.species)
+
+    elif args.subcommand == "scatac-genescore":
+        genescore(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, peakcount = args.peakcount, feature = args.feature, barcode = args.barcode, genedistance = args.genedistance, species = args.species)
+
+    elif args.subcommand == "scrna-qc":
+        scrna_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, matrix = args.matrix, feature = args.feature, gene_column = args.gene_column, barcode = args.barcode, count_cutoff = args.count_cutoff, gene_cutoff = args.gene_cutoff, species = args.species)
+
     else:
         parser.print_help()
         exit(1)
     exit(0)
 
+
+
 if __name__ == "__main__":
+    """
+    python /Users/dongqing/Documents/Project/SingleCell/scATAC/Code/Snakemake/scATAC/config_parser.py init-scatac -d config_test --fastq-dir /home1/wangchenfei/Project/SingleCell/scATAC/Analysis/10X_PBMC_1k/Data/atac_pbmc_1k_v1_fastqs --fastq-prefix atac_pbmc_1k_v1 --outprefix 10X_PBMC_1k_MAESTRO_V102
+    python /Users/dongqing/Documents/Project/SingleCell/scATAC/Code/Snakemake/scATAC/config_parser.py init-scrna -d config_test_rna --fastq-dir /mnt/Storage/home/sundongqing/Project/Single_cell/Analysis/10xPBMC_1k/pbmc_1k_v2_fastqs --fastq-prefix pbmc_1k_v2 --outprefix pbmc_1k_v2
+    python /Users/dongqing/Documents/Project/SingleCell/scATAC/Code/Snakemake/scATAC/config_parser.py init-integrate -d config_test --rna-object --atac-object --outprefix
+    """
+
     main()
+

@@ -7,7 +7,6 @@ library(pbapply)
 library(optparse)
 
 
-
 option_list = list(
   make_option(c("--prefix"), type = "character", default = "MAESTRO",
               action = "store", help = "The prefix of the output files."

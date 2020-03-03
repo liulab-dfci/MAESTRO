@@ -12,17 +12,23 @@
 #' @param orign.ident Orginal identity for the input cells. If supplied, should keep the same order with the column name of the peak x cell matrix.
 #' @param method Methods for dimension reduction, available options are LSI and PCA. Default is "LSI".
 #' @param min.c Minimum number of cells required for a peak. Will exclude the peaks from input matrix if they only identified in 
-#' less than \code{min.c} cells. Default is 50. See \code{link{CreateSeuratObject}} for details.
+#' less than \code{min.c} cells. Default is 10. See \code{\link{CreateSeuratObject}} for details.
 #' @param min.p Minimum number of peaks required for a cell. Will exclude the cells from input matrix if less than \code{min.p}
-#' peaks are deteced in one cell. Default is 500. See \code{link{CreateSeuratObject}} for details.
+#' peaks are deteced in one cell. Default is 100. See \code{\link{CreateSeuratObject}} for details.
 #' @param dims.use Number of dimensions used for UMAP analysis. Default is 1:30, use the first 30 PCs.
-#' @param cluster.res Value of the clustering resolution parameter. Default is 0.6.
+#' @param cluster.res Value of the clustering resolution parameter. Please use a value above (below) 1.0 
+#' if users want to obtain a larger (smaller) number of communities. Default is 0.6.
 #' @param only.pos If seting true, only positive peaks will be output. Default is False.
 #' @param peaks.test.use Denotes which test to use to identify differnetial peaks. Default is "wilcox". Available options are "bimod", "roc" and "t".
 #' @param peaks.cutoff Identify differential peaks with adjusted p.value less than \code{peaks.cutoff} as cluster specific peaks
 #' @param peaks.pct Only test peaks that are detected in a minimum fraction of min.pct cells in either of the two populations. Meant to speed up the function by not testing peaks that are very infrequently detected Default is 0.1
 #' @param peaks.logfc Limit testing to peaks which show, on average, at least X-fold difference (log-scale) between the two groups of cells. Default is 0.2 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 #' for each cluster. Default cutoff is 1E-5.
+#' @param runlsi.args Extra arguments passed to \code{link{RunLSI}}.
+#' @param runpca.args Extra arguments passed to \code{link{RunPCA}}.
+#' @param findneighbors.args Extra arguments passed to \code{\link{FindNeighbors}}.
+#' @param findclusters.args Extra arguments passed to \code{\link{FindClusters}}.
+#' @param \dots Extra arguments passed to \code{\link{RunUMAP}}.
 #'
 #' @author Chenfei Wang
 #'
@@ -37,9 +43,12 @@
 #'
 #' @export
 
-ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ident = NULL, method = "LSI", min.c = 50, min.p = 500, 
-                          dims.use = 1:30, cluster.res = 0.6, only.pos = FALSE, peaks.test.use = "wilcox", peaks.cutoff = 1E-5,
-                          peaks.pct = 0.1, peaks.logfc = 0.2)
+ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ident = NULL, 
+                          min.c = 10, min.p = 100, method = "LSI", dims.use = 1:30, 
+                          cluster.res = 0.6, only.pos = FALSE, peaks.test.use = "wilcox", 
+                          peaks.cutoff = 1E-5, peaks.pct = 0.1, peaks.logfc = 0.2, 
+                          runlsi.args = list(), runpca.args = list(), 
+                          findneighbors.args = list(), findclusters.args = list(),...)
 {
   require(Seurat)
   require(ggplot2)
@@ -48,13 +57,18 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   #============ LSI ============
   message("LSI analysis ...")
   VariableFeatures(SeuratObj) <- names(which(Matrix::rowSums(SeuratObj) > min.c))
-  SeuratObj <- RunLSI(object = SeuratObj, n = 50, scale.max = NULL) 
+  # SeuratObj <- RunLSI(object = SeuratObj, scale.max = NULL) 
+  SeuratObj <- do.call("RunLSI", c(object = SeuratObj, runlsi.args)) 
   
+    
   #============ UMAP ============
   message("UMAP analysis ...")
-  SeuratObj <- RunUMAP(object = SeuratObj, reduction = "lsi", dims = dims.use)
-  SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "lsi", dims = dims.use)
-  SeuratObj <- FindClusters(object = SeuratObj, resolution = cluster.res)
+  #SeuratObj <- do.call("RunUMAP", c(object = SeuratObj, dims = dims.use, reduction = "lsi", runumap.args))
+  SeuratObj <- RunUMAP(object = SeuratObj, reduction = "lsi", dims = dims.use, ...)
+  SeuratObj <- do.call("FindNeighbors", c(object = SeuratObj, reduction = "lsi", dims = dims.use, findneighbors.args))
+  SeuratObj <- do.call("FindClusters", c(object = SeuratObj, resolution = cluster.res, findclusters.args))
+  # SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "lsi", dims = dims.use)
+  # SeuratObj <- FindClusters(object = SeuratObj, resolution = cluster.res)
   p1 <- DimPlot(object = SeuratObj, pt.size = 0.5, label = TRUE)
   ggsave(file.path(paste0(project, "_cluster.png")), p1, width=5, height=4)
  
@@ -72,15 +86,20 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   message("PCA analysis ...")
   SeuratObj <- NormalizeData(SeuratObj, normalization.method = "LogNormalize", scale.factor = 10000)
   SeuratObj <- ScaleData(object = SeuratObj, var.to.regress="nCount_RNA")
-  SeuratObj <- RunPCA(object = SeuratObj, features = rownames(SeuratObj))
+  SeuratObj <- do.call("RunPCA", c(object = SeuratObj, features = rownames(SeuratObj), runpca.args))
+  
+  # SeuratObj <- RunPCA(object = SeuratObj, features = rownames(SeuratObj))
   p2 = ElbowPlot(object = SeuratObj)
   ggsave(file.path(paste0(project,"_PCElbowPlot.png")), p2, width = 5, height = 4)
   
   #============ UMAP ============
   message("UMAP analysis ...")
-  SeuratObj <- RunUMAP(object = SeuratObj, reduction = "pca", dims = dims.use)
-  SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "pca", dims = dims.use)
-  SeuratObj <- FindClusters(object = SeuratObj, resolution = res)
+  SeuratObj <- RunUMAP(object = SeuratObj, reduction = "pca", dims = dims.use, ...)
+  SeuratObj <- do.call("FindNeighbors", c(object = SeuratObj, reduction = "pca", dims = dims.use, findneighbors.args))
+  SeuratObj <- do.call("FindClusters", c(object = SeuratObj, resolution = cluster.res, findclusters.args))
+  
+  # SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "pca", dims = dims.use)
+  # SeuratObj <- FindClusters(object = SeuratObj, resolution = res)
   p3 <- DimPlot(object = SeuratObj, pt.size = 0.5, label = TRUE)
   ggsave(file.path(paste0(project, "_cluster.png")), p3, width=5, height=4)
 

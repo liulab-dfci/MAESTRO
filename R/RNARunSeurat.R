@@ -10,23 +10,27 @@
 #' @param project Output project name. Default is "MAESTRO.scRNA.Seurat".
 #' @param orig.ident Orginal identity for the input cells. If supplied, should keep the same order with the column name of the gene x cell matrix.
 #' @param min.c Minimum number of cells required for a gene. Will exclude the genes from input matrix if they only expressed in 
-#' less than \code{min.c} cells. Default is 10. See \code{link{CreateSeuratObject}} for details.
+#' less than \code{min.c} cells. Default is 10. See \code{\link{CreateSeuratObject}} for details.
 #' @param min.g Minimum number of genes required for a cell. Will exclude the cells from input matrix if less than \code{min.g}
-#' genes are deteced in one cell. Default is 200. See \code{link{CreateSeuratObject}} for details.
+#' genes are deteced in one cell. Default is 200. See \code{\link{CreateSeuratObject}} for details.
 #' @param mito Whether or not to check and normalized accroding to the fraction of mitochondria reads and ercc spike-in reads.
 #' Default is FALSE.
 #' @param mito.cutoff If \code{mito} is True, filter those cells with mitochondria reads or ercc spike-in reads higher than \code{mito.cutoff}.
 #' Default is 0.05.
-#' @param variable.genes Number of variable genes considered in the clustering analysis. Default is 2000. See \code{link{FindVariableFeatures}} for details.
+#' @param variable.genes Number of variable genes considered in the clustering analysis. Default is 2000. See \code{\link{FindVariableFeatures}} for details.
 #' @param organism Organism for the dataset. Only support "GRCh38" and "GRCm38". Default is "GRCh38".
 #' @param dims.use Number of dimensions used for UMAP analysis. Default is 1:15, use the first 15 PCs.
 #' @param cluster.res Value of the clustering resolution parameter. Default is 0.6.
 #' @param only.pos If seting true, only positive genes will be output. Default is False.
-#' @param genes.test.use Denotes which test to use to identify genes. Default is "wilcox". See \code{link{FindAllMarkers}} for details.
+#' @param genes.test.use Denotes which test to use to identify genes. Default is "wilcox". See \code{\link{FindAllMarkers}} for details.
 #' @param genes.cutoff Identify differential expressed genes with adjusted p.value less than \code{genes.cutoff} as cluster speficic genes
 #' @param genes.pct Only test genes that are detected in a minimum fraction of min.pct cells in either of the two populations. Meant to speed up the function by not testing genes that are very infrequently detected Default is 0.1
 #' @param genes.logfc Limit testing to genes which show, on average, at least X-fold difference (log-scale) between the two groups of cells. Default is 0.2 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 #' for each cluster. Default cutoff is 1E-5.
+#' @param runpca.args Extra arguments passed to \code{link{RunPCA}}.
+#' @param findneighbors.args Extra arguments passed to \code{\link{FindNeighbors}}.
+#' @param findclusters.args Extra arguments passed to \code{\link{FindClusters}}.
+#' @param \dots Extra arguments passed to \code{\link{RunUMAP}}.
 #'
 #' @author Chenfei Wang
 #'
@@ -43,7 +47,9 @@
 
 RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident = NULL, min.c = 10, min.g = 200, mito = FALSE, mito.cutoff = 0.05, 
                          variable.genes = 2000, organism = "GRCh38", dims.use = 1:15, cluster.res = 0.6, only.pos = FALSE, genes.test.use = "wilcox", 
-                         genes.cutoff = 1E-5, genes.pct = 0.1, genes.logfc = 0.25)
+                         genes.cutoff = 1E-5, genes.pct = 0.1, genes.logfc = 0.25,
+                         runpca.agrs = list(), findneighbors.args = list(), 
+                         findclusters.args = list(), ...)
 {
   require(Seurat)
   require(ggplot2)
@@ -79,15 +85,18 @@ RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident 
   
   #=========PCA===========
   message("PCA analysis ...")
-  SeuratObj <- RunPCA(object = SeuratObj, features = VariableFeatures(SeuratObj))
+  SeuratObj <- do.call("RunPCA", c(object = SeuratObj, features = VariableFeatures(SeuratObj), runpca.agrs))
+  # SeuratObj <- RunPCA(object = SeuratObj, features = VariableFeatures(SeuratObj))
   p2 = ElbowPlot(object = SeuratObj)
   ggsave(file.path(paste0(SeuratObj@project.name, "_PCElbowPlot.png")), p2,  width=5, height=4)
   
   #=========UMAP===========
   message("UMAP analysis ...")
-  SeuratObj <- RunUMAP(object = SeuratObj, reduction = "pca", dims = dims.use)
-  SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "pca", dims = dims.use)
-  SeuratObj <- FindClusters(object = SeuratObj, resolution = cluster.res)
+  SeuratObj <- RunUMAP(object = SeuratObj, reduction = "pca", dims = dims.use, ...)
+  SeuratObj <- do.call("FindNeighbors", c(object = SeuratObj, reduction = "pca", dims = dims.use, findneighbors.args))
+  SeuratObj <- do.call("FindClusters", c(object = SeuratObj, resolution = cluster.res, findclusters.args))
+  # SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "pca", dims = dims.use)
+  # SeuratObj <- FindClusters(object = SeuratObj, resolution = cluster.res)
   p3 = DimPlot(object = SeuratObj, label = TRUE, pt.size = 0.2)
   ggsave(file.path(paste0(SeuratObj@project.name, "_cluster.png")), p3,  width=5, height=4)
   if(!is.null(orig.ident)){

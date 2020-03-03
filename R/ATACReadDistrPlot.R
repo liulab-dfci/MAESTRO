@@ -22,11 +22,15 @@ ATACReadDistrPlot <- function(stat.filepath, name, platform)
   theme_set(theme_cowplot())
   RCB_blue = "#2166AC"
   
-  if(platform == "10x-genomics"){
-    singlecell = read.csv(stat.filepath)
-    singlecell_fragsum = colSums(singlecell[,c(2:8,10:18)])
-    singlecell_readsum = singlecell_fragsum*2
-    map_list = c(singlecell_readsum[c(1:2,7,6,15,12)])/1000000
+  if(platform == "10x-genomics" || platform == "sci-ATAC-seq"){
+    # singlecell = read.csv(stat.filepath)
+    # singlecell_fragsum = colSums(singlecell[,c(2:8,10:18)])
+    # singlecell_readsum = singlecell_fragsum*2
+    # map_list = c(singlecell_readsum[c(1:2,7,6,15,12)])/1000000
+    bam_stat_list = readLines(stat.filepath)[c(1,4,14,15,17,16)]
+    total_reads = unlist(strsplit(bam_stat_list[1], split = " "))[1]
+    dup_reads = unlist(strsplit(bam_stat_list[2], split = " "))[1]
+    map_list = as.integer(c(total_reads, dup_reads, bam_stat_list[3:6]))/1000000
   }else{
     singlecell = read.table(stat.filepath, sep = "\t", header = TRUE, row.names = 1)
     singlecell_readsum = colSums(singlecell)
@@ -39,11 +43,6 @@ ATACReadDistrPlot <- function(stat.filepath, name, platform)
   map_df = data.frame(ReadCount = map_list, Group, stringsAsFactors = FALSE)
   map_df$Group = factor(map_df$Group, levels = Group)
 
-  # bam_stat_list = readLines(stat.filepath)[c(1,4,15,14,17,16)]
-  # total_reads = unlist(strsplit(bam_stat_list[1], split = " "))[1]
-  # dup_reads = unlist(strsplit(bam_stat_list[2], split = " "))[1]
-  # map_list = as.integer(c(total_reads, dup_reads, bam_stat_list[3:6]))/1000000
-
   png(paste0(name ,"_scATAC_read_distr.png"), width=4.5,height=4.8, res = 300, units = "in")
   p = ggplot(map_df, aes(x = Group, y = ReadCount)) + 
     geom_bar(stat="identity", fill = RCB_blue) + 
@@ -51,7 +50,7 @@ ATACReadDistrPlot <- function(stat.filepath, name, platform)
     theme(axis.title = element_text(size = 13), axis.text.y = element_text(size = 12, angle = 90, hjust = 0.5), 
           axis.text.x = element_text(angle = 45, size = 12, hjust = 1), axis.ticks.x = element_blank(),
           legend.position="none", axis.title.y = element_text(margin = margin(r = 20, unit = "pt")))+ 
-    geom_text(aes(label = map_ratio_list, y = ReadCount + 30), size = 4.8)
+    geom_text(aes(label = map_ratio_list, y = ReadCount + 0.04*map_list[1] ), size = 4.8)
   print(p)
   dev.off()
 }

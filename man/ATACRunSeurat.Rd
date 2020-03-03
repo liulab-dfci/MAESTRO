@@ -5,11 +5,26 @@
 \alias{ATACRunSeurat}
 \title{Clustering analysis for scATAC-seq data using Seurat}
 \usage{
-ATACRunSeurat(inputMat, project = "MAESTRO.scATAC.Seurat",
-  orign.ident = NULL, method = "LSI", min.c = 50, min.p = 500,
-  dims.use = 1:30, cluster.res = 0.6, only.pos = FALSE,
-  peaks.test.use = "wilcox", peaks.cutoff = 1e-05, peaks.pct = 0.1,
-  peaks.logfc = 0.2)
+ATACRunSeurat(
+  inputMat,
+  project = "MAESTRO.scATAC.Seurat",
+  orign.ident = NULL,
+  min.c = 10,
+  min.p = 100,
+  method = "LSI",
+  dims.use = 1:30,
+  cluster.res = 0.6,
+  only.pos = FALSE,
+  peaks.test.use = "wilcox",
+  peaks.cutoff = 1e-05,
+  peaks.pct = 0.1,
+  peaks.logfc = 0.2,
+  runlsi.args = list(),
+  runpca.args = list(),
+  findneighbors.args = list(),
+  findclusters.args = list(),
+  ...
+)
 }
 \arguments{
 \item{inputMat}{Input unnormalized count matrix, with peaks as rows and cells as columns. Rownames should be like "chromosome_peakstart_peakend",
@@ -19,17 +34,18 @@ for example "chr10_100020591_100020841".}
 
 \item{orign.ident}{Orginal identity for the input cells. If supplied, should keep the same order with the column name of the peak x cell matrix.}
 
-\item{method}{Methods for dimension reduction, available options are LSI and PCA. Default is "LSI".}
-
 \item{min.c}{Minimum number of cells required for a peak. Will exclude the peaks from input matrix if they only identified in 
-less than \code{min.c} cells. Default is 50. See \code{link{CreateSeuratObject}} for details.}
+less than \code{min.c} cells. Default is 10. See \code{\link{CreateSeuratObject}} for details.}
 
 \item{min.p}{Minimum number of peaks required for a cell. Will exclude the cells from input matrix if less than \code{min.p}
-peaks are deteced in one cell. Default is 500. See \code{link{CreateSeuratObject}} for details.}
+peaks are deteced in one cell. Default is 100. See \code{\link{CreateSeuratObject}} for details.}
+
+\item{method}{Methods for dimension reduction, available options are LSI and PCA. Default is "LSI".}
 
 \item{dims.use}{Number of dimensions used for UMAP analysis. Default is 1:30, use the first 30 PCs.}
 
-\item{cluster.res}{Value of the clustering resolution parameter. Default is 0.6.}
+\item{cluster.res}{Value of the clustering resolution parameter. Please use a value above (below) 1.0 
+if users want to obtain a larger (smaller) number of communities. Default is 0.6.}
 
 \item{only.pos}{If seting true, only positive peaks will be output. Default is False.}
 
@@ -41,6 +57,16 @@ peaks are deteced in one cell. Default is 500. See \code{link{CreateSeuratObject
 
 \item{peaks.logfc}{Limit testing to peaks which show, on average, at least X-fold difference (log-scale) between the two groups of cells. Default is 0.2 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 for each cluster. Default cutoff is 1E-5.}
+
+\item{runlsi.args}{Extra arguments passed to \code{link{RunLSI}}.}
+
+\item{runpca.args}{Extra arguments passed to \code{link{RunPCA}}.}
+
+\item{findneighbors.args}{Extra arguments passed to \code{\link{FindNeighbors}}.}
+
+\item{findclusters.args}{Extra arguments passed to \code{\link{FindClusters}}.}
+
+\item{\dots}{Extra arguments passed to \code{\link{RunUMAP}}.}
 }
 \value{
 A list contains a Seurat object for ATAC clusters and a data frame of cluster specific peaks.

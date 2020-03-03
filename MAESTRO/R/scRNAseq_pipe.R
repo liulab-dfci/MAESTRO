@@ -28,6 +28,9 @@ option_list = list(
   make_option(c("--rabitlib"), type = "character", default = "",
               action = "store", help = "Annotation to run rabit (only if method is set to rabit)."
   ),
+  make_option(c("--lisamode"), type = "character", default = "",
+              action = "store", help = "Mode to run LISA (web or local)."
+  ),
   make_option(c("--condadir"), type = "character", default = "",
               action = "store", help = "Directory where miniconda or anaconda is installed (only if method is set to lisa)."
   ),
@@ -48,6 +51,7 @@ thread = argue$thread
 method = argue$method
 sigfile = argue$signature
 rabitlib = argue$rabitlib
+lisamode = argue$lisamode
 condadir = argue$condadir
 lisaenv = argue$lisaenv
 species = argue$species
@@ -83,6 +87,6 @@ RNA.res$RNA <- RNAAnnotateCelltype(RNA = RNA.res$RNA, genes = RNA.res$genes,
                                    signatures = signature, min.score = 0.05)
 saveRDS(RNA.res, paste0(prefix, "_scRNA_Object.rds"))
 RNA.tfs <- RNAAnnotateTranscriptionFactor(RNA = RNA.res$RNA, genes = RNA.res$genes, project = prefix, 
-                                          method = method, rabit.path = rabitlib, 
+                                          method = method, rabit.path = rabitlib, lisa.mode = lisamode, 
                                           conda.dir = condadir, lisa.envname = lisaenv, 
                                           organism = species, top.tf = 10)

@@ -6,11 +6,71 @@ Created on Tue Jan 22 22:36:07 2019
 @author: Dongqing Sun, Chenfei Wang
 """
 
-import os
+import os, re
 from pkg_resources import resource_filename
 
 SCRIPT_PATH = os.path.dirname(__file__)
 RSCRIPT_PATH = resource_filename('MAESTRO', 'R')
+
+
+def getfastq_10x(fastqdir, fastqprefix):
+    allfiles = os.listdir(fastqdir)
+    fastqfiles = []
+    pattern = fastqprefix + "\S*.fastq\S*"
+    for file in allfiles:
+        if re.match(pattern, file):
+            fastqfiles.append(file)
+        else:
+            pass
+    r1_fastq = []
+    pattern = "\S*R1\S*"
+    for file in fastqfiles:
+        if re.search(pattern, file):
+            r1_fastq.append(file)
+        else:
+            pass
+    r1_fastq = sorted(r1_fastq)
+    r2_fastq = list(map(lambda x: re.sub("_R1_", "_R2_", x), r1_fastq))
+    transcript = ""
+    barcode = ""
+    decompress = "-"
+    if len(set(r2_fastq) & set(fastqfiles)) == len(r1_fastq):
+        r2_fastq = list(map(lambda x: os.path.join(fastqdir, x), r2_fastq))
+        r1_fastq = list(map(lambda x: os.path.join(fastqdir, x), r1_fastq))
+        transcript = ",".join(r2_fastq)
+        barcode = ",".join(r1_fastq)
+    else:
+        print("Invalid fastq files!")
+    if r1_fastq[0].endswith("gz"):
+        decompress = "zcat"
+    else:
+        decompress = "-"
+
+    return({"transcript": transcript, "barcode": barcode, "decompress": decompress})
+
+def getfastq_dropseq(fastqdir, barcode, transcript):
+    barcode_files = split(barcode, ",")
+    transcript_files = split(transcript, ",")
+    barcode_files = sorted(barcode_files)
+    transcript_files = sorted(transcript_files)
+    
+    transcript = ""
+    barcode = ""
+    decompress = "-"
+    if len(set(transcript_files)) == len(set(barcode_files)):
+        barcode_files = list(map(lambda x: os.path.join(fastqdir, x), barcode_files))
+        transcript_files = list(map(lambda x: os.path.join(fastqdir, x), transcript_files))
+        transcript = ",".join(transcript_files)
+        barcode = ",".join(barcode_files)
+    else:
+        print("Invalid fastq files!")
+
+    if barcode_files[0].endswith("gz"):
+        decompress = "zcat"
+    else:
+        decompress = "-"
+
+    return({"transcript": transcript, "barcode": barcode, "decompress": decompress})
 
 def get_fastqfile(fastqpath):
     files = os.listdir(fastqpath)
