@@ -27,7 +27,7 @@
 
 MAESTRO uses the [Miniconda3](http://conda.pydata.org/miniconda.html) package management system to harmonize all of the software packages. 
 
-Use the following commands to the install Minicoda3：
+Use the following commands to install Minicoda3：
 ``` bash
 $ wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
 $ bash Miniconda3-latest-Linux-x86_64.sh
@@ -61,7 +61,7 @@ MAESTRO utilizes RABIT and LISA to evaluate the enrichment of transcription fact
 
 MAESTRO utilizes giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster-specific peaks. To run this function, users need first to install [giggle](https://github.com/ryanlayer/giggle), download the giggle index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz), and provide the file location of the index to MAESTRO in the YAML configuration file. 
 
-Note, when installing giggle, please make sure you are not inside an active conda. If so, please do `conda deactivate` first. After compiling giggle, copy the executable in giggle source code directory 'bin/giggle' to $CONDA_PREFIX/bin as `cp bin/giggle $CONDA_PREFIX/bin/`.    
+Note, when installing giggle, please make sure you are not inside an active conda. If so, please do `conda deactivate` first. After compiling giggle, copy the executable in giggle source code directory `bin/giggle` to `$CONDA_PREFIX/bin` as `cp bin/giggle $CONDA_PREFIX/bin/`.    
 
 ## Galleries & Tutorials (click on the image for details)
 
