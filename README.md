@@ -28,7 +28,7 @@
 
 ## Installation
 
-** Installing the full solution of MAESTRO workflow** 
+**Installing the full solution of MAESTRO workflow** 
 
 MAESTRO uses the [Miniconda3](http://conda.pydata.org/miniconda.html) package management system to harmonize all of the software packages. Users can install full solution of MAESTRO using the conda environment.
 
