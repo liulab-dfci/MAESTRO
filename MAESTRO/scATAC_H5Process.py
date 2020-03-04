@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:44:05
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-02-28 01:15:51
+# @Last Modified time: 2020-03-04 13:34:28
 
 
 import os
@@ -24,7 +24,7 @@ def mtxtoh5_parser(subparsers):
     Add main function init-scatac argument parsers.
     """
 
-    workflow = subparsers.add_parser("mtxtoh5", 
+    workflow = subparsers.add_parser("mtx-to-h5", 
         help = "Convert 10X mtx format matrix to HDF5 format.")
     group_input = workflow.add_argument_group("Input files arguments")
     group_input.add_argument("--type", dest = "datatype", default = "Peak", 
@@ -57,7 +57,7 @@ def counttoh5_parser(subparsers):
     Add main function init-scatac argument parsers.
     """
 
-    workflow = subparsers.add_parser("counttoh5", 
+    workflow = subparsers.add_parser("count-to-h5", 
         help = "Convert plain text count table to HDF5 format.")
     group_input = workflow.add_argument_group("Input files arguments")
     group_input.add_argument("--type", dest = "datatype", default = "Peak", 
@@ -85,7 +85,7 @@ def mergeh5_parser(subparsers):
     Add main function init-scatac argument parsers.
     """
 
-    workflow = subparsers.add_parser("mergeh5", 
+    workflow = subparsers.add_parser("merge-h5", 
         help = "Merge 10X HDF5 files.")
     group_input = workflow.add_argument_group("Input files arguments")
     group_input.add_argument("--type", dest = "datatype", default = "Peak", 

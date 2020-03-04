@@ -56,13 +56,13 @@ def main():
     elif args.subcommand == "integrate-init":
         integrate_config(args)
 
-    elif args.subcommand == "mtxtoh5":
+    elif args.subcommand == "mtx-to-h5":
         mtx_2_h5(directory = args.directory, outprefix = args.outprefix, matrix_file = args.matrix, feature_file = args.feature, barcode_file = args.barcode, gene_column = args.gene_column, genome = args.species, datatype = args.datatype)
 
-    elif args.subcommand == "counttoh5":
+    elif args.subcommand == "count-to-h5":
         count_2_h5(directory = args.directory, outprefix = args.outprefix, count_file = args.count, genome = args.species, datatype = args.datatype)
 
-    elif args.subcommand == "mergeh5":
+    elif args.subcommand == "merge-h5":
         merge_10X_h5(directory = args.directory, outprefix = args.outprefix, h5list = args.h5_list, genome = args.species, datatype = args.datatype)
 
     elif args.subcommand == "scatac-peakcount":
