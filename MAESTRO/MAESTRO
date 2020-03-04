@@ -14,9 +14,9 @@ import argparse as ap
 
 from MAESTRO.MAESTRO_PipeInit import *
 from MAESTRO.scATAC_H5Process import *
-from MAESTRO.scATAC_Genescore import genescore_parser, genescore
+from MAESTRO.scATAC_genescore import genescore_parser, genescore
 from MAESTRO.scATAC_10x_PeakCount import peakcount_parser, peakcount
-from MAESTRO.scRNA_QC import scrnaqc_parser, scrna_qc
+from MAESTRO.scRNA_qc import scrnaqc_parser, scrna_qc
 
 def main():
     """
