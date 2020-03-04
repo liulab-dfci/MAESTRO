@@ -28,7 +28,7 @@
 
 ## Installation
 
-** Installing the full solution of MAESTRO workflow **     
+** Installing the full solution of MAESTRO workflow** 
 
 MAESTRO uses the [Miniconda3](http://conda.pydata.org/miniconda.html) package management system to harmonize all of the software packages. Users can install full solution of MAESTRO using the conda environment.
 
@@ -89,7 +89,7 @@ COMMAND -h` to see the detail description for each option of each module.
 ## Galleries & Tutorials (click on the image for details)
 
 [<img src="./image/RNA.10x.png" width="280" height="318" />](./example/RNA_infrastructure_10x/RNA_infrastructure_10x.md)
-[<img src="./image/ATAC.10x.png" width="280" height="318" />](./example/ATAC_infrastructure_10x/ATAC_infrastructure_10x.md)
+[<img src="./image/ATAC.10x.png" width="280" height="318" />](./example/ATAC_infrastructure_10x/ATAC_infrastructure_10x.md)  
 [<img src="./image/integration.10x.png" width="280" height="318" />](./example/Integration/Integration.md)
 [<img src="./image/integration.large.png" width="280" height="318" />](./example/Integration_large/Integration_large.md)
 
