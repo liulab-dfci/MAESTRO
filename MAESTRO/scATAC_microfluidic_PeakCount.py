@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-28 13:57:12
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-02-29 03:02:25
+# @Last Modified time: 2020-03-03 20:57:34
 
 
 import os,sys
@@ -16,7 +16,7 @@ from functools import partial
 
 from MAESTRO.scATAC_utility import *
 from MAESTRO.scATAC_H5Process import *
-from MAESTRO.scATAC_10x_PeakCount import merge_binary_file
+from MAESTRO.scATAC_10x_PeakCount import merge_binary_file, generate_binary_matrix
 
 tmp = randomString()
 
@@ -97,7 +97,7 @@ def main():
     pool.join()
 
     count_list = result.get()
-    merge_binary_file(peak_file, count_list, count_file, genome)
+    merge_binary_file(peak_file, count_list, count_file, cores, genome)
     shutil.rmtree(tmp)
 
 if __name__ == "__main__":

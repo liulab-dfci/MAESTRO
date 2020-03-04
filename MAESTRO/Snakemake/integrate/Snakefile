@@ -13,36 +13,38 @@ from MAESTRO.scATAC_utility import SCRIPT_PATH, RSCRIPT_PATH
 
 rule all:
     input:
-        summaryreport = "Result/" + config["outprefix"] + "_integrate_report.html"
+        summaryreport = "Result/%s_integrate_report.html" %(config["outprefix"])
 
 rule integrate_merge:
     input:
         atacobj = config["atacobject"],
         rnaobj = config["rnaobject"]
     output:
-        mergeobject = "Result/Analysis/" + config["outprefix"] + "_integrate_Object.rds",
-        sourceplot = "Result/Analysis/" + config["outprefix"] + "_source.png",
-        rnaplot = "Result/Analysis/" + config["outprefix"] + "_RNAonly.png",
-        atacplot = "Result/Analysis/" + config["outprefix"] + "_ATAConly.png",
-        annoplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
+        mergeobject = "Result/Analysis/%s_integrate_Object.rds" %(config["outprefix"]),
+        sourceplot = "Result/Analysis/%s_source.png" %(config["outprefix"]),
+        rnaplot = "Result/Analysis/%s_RNAonly.png" %(config["outprefix"]),
+        atacplot = "Result/Analysis/%s_ATAConly.png" %(config["outprefix"]),
+        annoplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
     params:
         outpre = config["outprefix"],
         outdir = "Result/Analysis",
     shell:
-        "Rscript " + RSCRIPT_PATH + "/integrate.R {input.atacobj} {input.rnaobj} {params.outpre} {params.outdir}"
+        "Rscript " + RSCRIPT_PATH + "/integrate.R --atacobj {input.atacobj} --rnaobj {input.rnaobj} --prefix {params.outpre} --outdir {params.outdir}"
 
 rule integrate_report:
     input:
-        mergeobject = "Result/Analysis/" + config["outprefix"] + "_integrate_Object.rds",
-        sourceplot = "Result/Analysis/" + config["outprefix"] + "_source.png",
-        rnaplot = "Result/Analysis/" + config["outprefix"] + "_RNAonly.png",
-        atacplot = "Result/Analysis/" + config["outprefix"] + "_ATAConly.png",
-        annoplot = "Result/Analysis/" + config["outprefix"] + "_annotated.png",
+        mergeobject = "Result/Analysis/%s_integrate_Object.rds" %(config["outprefix"]),
+        sourceplot = "Result/Analysis/%s_source.png" %(config["outprefix"]),
+        rnaplot = "Result/Analysis/%s_RNAonly.png" %(config["outprefix"]),
+        atacplot = "Result/Analysis/%s_ATAConly.png" %(config["outprefix"]),
+        annoplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
     output:
-        summaryreport = "Result/" + config["outprefix"] + "_integrate_report.html"
+        summaryreport = "Result/%s_integrate_report.html" %(config["outprefix"])
     params:
         outpre = config["outprefix"],
         rnaobj = config["rnaobject"],
         atacobj = config["atacobject"],
+        outdir = "Result"
     shell:
-        "python " + SCRIPT_PATH + "/integrate_report.py {params.outpre} {params.rnaobj} {params.atacobj}"
+        "python " + SCRIPT_PATH + "/integrate_HTMLReport.py --outprefix {params.outpre} --rna-object {params.rnaobj} "
+        "--atac-object {params.atacobj} --directory {params.outdir}"

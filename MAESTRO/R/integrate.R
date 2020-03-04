@@ -1,11 +1,32 @@
 library(MAESTRO)
 library(Seurat)
+library(optparse)
 
-argue = commandArgs(T)
 
+option_list = list(
+  make_option(c("--prefix"), type = "character", default = "MAESTRO",
+              action = "store", help = "The prefix of the output files."
+  ),
+  make_option(c("--outdir"), type = "character", default = "Result/Analysis",
+              action = "store", help = "The directory where the output files are stored."
+  ),
+  make_option(c("--atacobj"), type = "character", default = "",
+              action = "store", help = "scATAC Seurat object."
+  ),
+  make_option(c("--rnaobj"), type = "character", default = "",
+              action = "store", help = "scRNA Seurat object."
+  )
+)
 
-Seurat1 = readRDS(argue[1])
-Seurat2 = readRDS(argue[2])
-setwd(argue[4])
-Seurat.combined = Incorporate(ATAC = Seurat1, RNA = Seurat2, RPmatrix = NULL, project = argue[3], dims.use = 1:30, RNA.res = 0.6, ATAC.res = 0.6)
-saveRDS(Seurat.combined, paste0(argue[3], "_integrate_Object.rds"))
+argue = parse_args(OptionParser(option_list = option_list, usage = "Run integration pipeline"))
+
+atacobj = argue$atacobj
+rnaobj = argue$rnaobj
+outprefix = argue$prefix
+setwd(argue$outdir)
+
+Seurat1 = readRDS(atacobj)
+Seurat2 = readRDS(rnaobj)
+
+Seurat.combined = Incorporate(ATAC = Seurat1$ATAC, RNA = Seurat2$RNA, RPmatrix = NULL, project = outprefix, dims.use = 1:30, RNA.res = 0.6, ATAC.res = 0.6)
+saveRDS(Seurat.combined, paste0(outprefix, "_integrate_Object.rds"))

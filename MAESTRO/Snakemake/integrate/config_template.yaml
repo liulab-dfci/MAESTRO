@@ -1,0 +1,6 @@
+# The path of scRNA Seurat object
+rnaobject: {{ rnaobject }}
+# The path of scATAC RP Seurat object 
+atacobject: {{ atacobject }}
+# The prefix of output files
+outprefix: {{ outprefix }}

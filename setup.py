@@ -41,13 +41,13 @@ def install_rpackage():
     print("Installation of required R packages is DONE")
 
 def main():
-    install_drseq()
-    # install_giggle()
+    # install_drseq()
+    install_giggle()
     # install_rabit()
-    install_rpackage()
+    # install_rpackage()
     setup(
         name = "MAESTRO",
-        version = "1.0.2",
+        version = "1.1.0",
         package_dir = {'MAESTRO':'MAESTRO'},
         packages = ['MAESTRO'],
         package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'R/*', 'env/*', 'annotations/*', 'html/*', '']},

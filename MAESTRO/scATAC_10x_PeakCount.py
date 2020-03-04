@@ -3,13 +3,16 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-24 22:26:54
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-02-28 14:24:39
+# @Last Modified time: 2020-03-03 20:37:54
 
 import os,sys
 import time
 import shutil
+import itertools
 import multiprocessing as mp
 import argparse as ap
+import numpy as np
+import scipy.sparse as sp_sparse
 from collections import defaultdict
 from functools import partial
 
@@ -94,13 +97,12 @@ def bedtools_intersect(barcode, peak_bed):
     os.system("bedtools intersect -wa -a " + peak_bed + " -b " + tmp + "/" + barcode + " -u > " + tmp + "/" + barcode + ".bed")
     return(tmp + "/" + barcode + ".bed")
 
-def merge_binary_file(peak_file, count_list, count_file, genome = 'GRCh38'):
-    """Merge the intersectBed result into binary count table."""
+
+def generate_binary_matrix(count_list, peak_list):
 
     binary_count = {}
-    for line in open(peak_file, 'r'):
-        line = line.strip().split('\t')
-        binary_count[line[0]+'_'+line[1]+'_'+line[2]] = [0]*len(count_list)
+    for peak in peak_list:
+        binary_count[peak] = sp_sparse.dok_matrix((1, len(count_list)), dtype=np.int8)
     
     barcodes = []
     for i in range(0,len(count_list)):
@@ -108,13 +110,49 @@ def merge_binary_file(peak_file, count_list, count_file, genome = 'GRCh38'):
         for line in open(count_list[i], 'r'):
             line = line.strip().split('\t')
             if line[0]+'_'+line[1]+'_'+line[2] in binary_count:
-               binary_count[line[0]+'_'+line[1]+'_'+line[2]][i] = 1
+               binary_count[line[0]+'_'+line[1]+'_'+line[2]][0, i] = 1
 
-    features = list(sorted(binary_count.keys()))
     matrix = []
-    for k in features:
+    for k in peak_list:
         matrix.append(binary_count[k])
-    write_10X_h5(count_file, matrix, features, barcodes, genome = genome, datatype = 'Peaks')
+    matrix = sp_sparse.vstack(matrix)
+    
+    return((matrix, barcodes))
+
+
+def merge_binary_file(peak_file, count_list, count_file, cores, genome = 'GRCh38'):
+    """Merge the intersectBed result into binary count table."""
+    
+    peak_list = []
+    for line in open(peak_file, 'r'):
+        line = line.strip().split('\t')
+        peak_list.append(line[0]+'_'+line[1]+'_'+line[2])
+    peak_list = sorted(peak_list)
+
+    count_list_split = []
+    i = 0
+    while i < len(count_list):
+        if i + 1000 < len(count_list):
+            count_list_split.append(count_list[i : (i + 1000)])
+            i += 1000
+        else:
+            count_list_split.append(count_list[i : len(count_list)])
+            i = len(count_list)
+
+    pool = mp.Pool(processes = int(cores))
+    partial_generate_binary_matrix = partial(generate_binary_matrix, peak_list = peak_list) 
+    result = pool.map_async(partial_generate_binary_matrix, count_list_split)
+    pool.close()
+    pool.join()
+
+    result_list = result.get()
+    matrix_list = [i[0] for i in result_list]
+    barcode_list = [i[1] for i in result_list]
+
+    matrix = sp_sparse.hstack(matrix_list)
+    barcodes = list(itertools.chain.from_iterable(barcode_list))
+
+    write_10X_h5(count_file, matrix, peak_list, barcodes, genome = genome, datatype = 'Peaks')
 
 
 def peakcount(peak, fragment, barcode, cores, count_cutoff, directory, outprefix, species):
@@ -139,6 +177,6 @@ def peakcount(peak, fragment, barcode, cores, count_cutoff, directory, outprefix
     pool.join()
 
     count_list = result.get()
-    merge_binary_file(peak, count_list, count_file, species)
+    merge_binary_file(peak, count_list, count_file, cores, species)
     shutil.rmtree(tmp)
 
