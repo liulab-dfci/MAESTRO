@@ -39,15 +39,15 @@
 #' # TFs of interest
 #' VisualizeTFenrichment(TFs = c("CEBPA","CEBPB","CEBPD"), cluster.1 = 0, type = "RNA", SeuratObj = pbmc$RNA, visual.totalnumber = 100, width = 6, height = 3, name = "PBMC.scRNA.tf")
 #'
+#'
+#' @importFrom ggplot2 aes element_text geom_point ggplot ggsave labs scale_colour_gradient2 theme theme_classic
+#' @importFrom ggrepel geom_text_repel
 #' @export
 
 VisualizeTFenrichment <- function(TFs = NULL, cluster.1, cluster.2 = NULL, type = "RNA", SeuratObj, visual.topnumber = 10, visual.totalnumber = 100, LISA.table = NULL, GIGGLE.table = NULL, width = 5, height = 4.5, name = "TFEnrichmentPlot"){
-  require(ggplot2)
-  require(ggrepel)
-
   if(type == "RNA")
   {
-    if(is.null(LISA.table)) LISA.table = paste0(SeuratObj@project.name,'_TF_lisa.txt')
+    if(is.null(LISA.table)) LISA.table = paste0(SeuratObj@project.name,'_lisa.txt')
     TFscore = read.delim(LISA.table, check.names=F)
     sg = intersect(rownames(SeuratObj),rownames(TFscore))
     TFmean =  apply(log2(SeuratObj$RNA@counts[sg,SeuratObj@meta.data[,'RNA_snn_res.0.6']==as.character(cluster.1)]+1),1,mean)+0.0000000001
@@ -68,7 +68,7 @@ VisualizeTFenrichment <- function(TFs = NULL, cluster.1, cluster.2 = NULL, type 
   }
   if(type == "ATAC")
   {
-    if(is.null(GIGGLE.table)) GIGGLE.table = paste0(SeuratObj@project.name,'_TF_giggle.txt')
+    if(is.null(GIGGLE.table)) GIGGLE.table = paste0(SeuratObj@project.name,'_giggle.txt')
     TFscore = read.delim(GIGGLE.table, check.names=F)
     sg = intersect(rownames(SeuratObj),rownames(TFscore))
     TFmean = apply(log2(SeuratObj$ACTIVITY@counts[sg,SeuratObj@meta.data[,'ATAC_snn_res.0.6']==as.character(cluster.1)]+1),1,mean)+0.0000000001;
@@ -89,8 +89,8 @@ VisualizeTFenrichment <- function(TFs = NULL, cluster.1, cluster.2 = NULL, type 
   }
   if(type == "Integrated")
   {
-    if(is.null(LISA.table)) LISA.table = paste0(SeuratObj@project.name,'_TF_lisa.txt')
-    if(is.null(GIGGLE.table)) GIGGLE.table = paste0(SeuratObj@project.name,'_TF_giggle.txt')
+    if(is.null(LISA.table)) LISA.table = paste0(SeuratObj@project.name,'_lisa.txt')
+    if(is.null(GIGGLE.table)) GIGGLE.table = paste0(SeuratObj@project.name,'_giggle.txt')
     TFscore1 = read.delim(LISA.table, check.names=F)
     TFscore2 = read.delim(GIGGLE.table, check.names=F)
     sg = intersect(intersect(rownames(SeuratObj),rownames(TFscore1)),rownames(TFscore2))

@@ -31,6 +31,7 @@
 #' @return A dataframe containing a ranked list of pytative markers and 
 #' associated statics(p-value, ROC score, etc.)
 #'
+#' @importFrom Seurat Idents
 #' @export
 
 FindAllMarkersMAESTRO <- function(object, test.use = 'wilcox', 
@@ -38,7 +39,6 @@ FindAllMarkersMAESTRO <- function(object, test.use = 'wilcox',
                                   only.pos = FALSE, verbose = TRUE, return.thresh = 1e-2,
                                   min.cells.feature = 3, min.cells.group = 3,
                                   slot = "data", latent.vars = NULL){
-  require(Seurat)
   ident.all <- sort(unique(Idents(object = object)))
   all.res <- lapply(0:(length(ident.all)-1), function(x){
     if (verbose) {

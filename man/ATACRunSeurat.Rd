@@ -58,9 +58,9 @@ if users want to obtain a larger (smaller) number of communities. Default is 0.6
 \item{peaks.logfc}{Limit testing to peaks which show, on average, at least X-fold difference (log-scale) between the two groups of cells. Default is 0.2 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 for each cluster. Default cutoff is 1E-5.}
 
-\item{runlsi.args}{Extra arguments passed to \code{link{RunLSI}}.}
+\item{runlsi.args}{Extra arguments passed to \code{\link{RunLSI}}.}
 
-\item{runpca.args}{Extra arguments passed to \code{link{RunPCA}}.}
+\item{runpca.args}{Extra arguments passed to \code{\link{RunPCA}}.}
 
 \item{findneighbors.args}{Extra arguments passed to \code{\link{FindNeighbors}}.}
 

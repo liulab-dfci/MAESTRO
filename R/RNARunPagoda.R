@@ -30,8 +30,9 @@
 
 RNARunPagoda <- function(inputMat, project = "MAESTRO.scRNA.Pagoda", min.c = 10, min.g = 200, nPCs = 100, nKs = 30)
 {
-  require(pagoda2)
-  require(igraph)
+  library(pagoda2)
+  library(igraph)
+  
   PagodaObj <- Pagoda2$new(inputMat,modelType='plain',trim=10,log.scale=T)
   PagodaObj$adjustVariance(plot=T,do.par=T,gam.k=10)
   PagodaObj$calculatePcaReduction(nPcs=nPCs,n.odgenes=3e3,maxit=1000)

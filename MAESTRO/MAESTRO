@@ -14,9 +14,10 @@ import argparse as ap
 
 from MAESTRO.MAESTRO_PipeInit import *
 from MAESTRO.scATAC_H5Process import *
-from MAESTRO.scATAC_genescore import genescore_parser, genescore
+from MAESTRO.scATAC_Genescore import genescore_parser, genescore
 from MAESTRO.scATAC_10x_PeakCount import peakcount_parser, peakcount
-from MAESTRO.scRNA_qc import scrnaqc_parser, scrna_qc
+from MAESTRO.scRNA_QC import scrnaqc_parser, scrna_qc
+from MAESTRO.scATAC_QC import scatacqc_parser, scatac_qc
 
 def main():
     """
@@ -38,6 +39,7 @@ def main():
     peakcount_parser(subparsers)
     genescore_parser(subparsers)
     scrnaqc_parser(subparsers)
+    scatacqc_parser(subparsers)
     
 
     logging.basicConfig(format="%(message)s", level=logging.INFO, stream=sys.stderr)
@@ -72,7 +74,9 @@ def main():
         genescore(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, peakcount = args.peakcount, feature = args.feature, barcode = args.barcode, genedistance = args.genedistance, species = args.species)
 
     elif args.subcommand == "scrna-qc":
-        scrna_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, matrix = args.matrix, feature = args.feature, gene_column = args.gene_column, barcode = args.barcode, count_cutoff = args.count_cutoff, gene_cutoff = args.gene_cutoff, species = args.species)
+        scrna_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, matrix = args.matrix, feature = args.feature, gene_column = args.gene_column, barcode = args.barcode, count_cutoff = args.count_cutoff, gene_cutoff = args.gene_cutoff, cell_cutoff = args.cell_cutoff, species = args.species)
+    elif args.subcommand == "scatac-qc":
+        scatac_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, peakcount = args.peakcount, feature = args.feature, barcode = args.barcode, single_stat = args.single_stat, peak_cutoff = args.peak_cutoff, count_cutoff = args.count_cutoff, frip_cutoff = args.frip_cutoff, cell_cutoff = args.cell_cutoff, species = args.species)
 
     else:
         parser.print_help()

@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-28 22:23:48
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-02-28 22:23:51
+# @Last Modified time: 2020-03-05 17:13:48
 
 
 import sys,os
@@ -42,29 +42,34 @@ def main():
     for logfile in os.listdir(log_folder):
         if logfile.endswith('.mapping.log'):
             sample = logfile[:-12]
-            total,mapped,duplicate,uniq,mito,promoters,peaks = 0,0,0,0,0,0,0
+            # total,mapped,duplicate,uniq,mito,promoters,peaks = 0,0,0,0,0,0,0
+            uniq,promoter = 0,0
             line_id = 0
             for line in open(log_folder + logfile).readlines():
                 line = line.strip().split(' ')
                 line_id += 1
                 if line_id == 1:
-                    total = line[0]
-                if line_id == 5:
-                    mapped = line[0]
-                if line_id == 4:
-                    duplicate = line[0]
-                if line_id == 14:
                     uniq = line[0]
-                if line_id == 15:
-                    mito = line[0]
-                if line_id == 16:
-                    promoters = line[0]
-                if line_id == 17:
-                    peaks = line[0]
-            output[sample] = [total,mapped,duplicate,uniq,mito,promoters,peaks]
+                if line_id == 2:
+                    promoter = line[0]
+                # if line_id == 1:
+                #     total = line[0]
+                # if line_id == 5:
+                #     mapped = line[0]
+                # if line_id == 4:
+                #     duplicate = line[0]
+                # if line_id == 14:
+                #     uniq = line[0]
+                # if line_id == 15:
+                #     mito = line[0]
+                # if line_id == 16:
+                #     promoters = line[0]
+                # if line_id == 17:
+                #     peaks = line[0]
+            output[sample] = [uniq,promoter]
 
     outf = open(out_file,'w')
-    outf.write('sample\ttotal\tmapped\tduplicate\tuniq\tmito\tpromoters\tpeaks\n')
+    # outf.write('Cell\tUnique\tPromoter\n')
     for k in output:
         outf.write(k+'\t'+'\t'.join(output[k])+'\n')
     outf.close()

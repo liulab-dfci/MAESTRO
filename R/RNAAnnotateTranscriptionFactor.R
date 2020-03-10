@@ -42,15 +42,14 @@
 #' pbmc.tfs <- RNAAnnotateTranscriptionFactor(pbmc.RNA.res$RNA, pbmc.RNA.res$genes, project = "PBMC.scRNA.TF", rabit.path = "/homes/cwang/annotations/rabit")
 #' pbmc.tfs
 #'
+#' @importFrom Seurat GetAssayData Idents
 #' @export
+
 
 RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project = RNA@project.name, 
                                            method = "RABIT", rabit.path, lisa.mode = "local", conda.dir = "", 
                                            lisa.envname = "lisa", organism = "GRCh38", top.tf = 10)
 {
-  require(Seurat)
-  require(MAGeCKFlute)
-  require(Matrix)
   if(organism == "GRCh38"){
     org = "hsa"
     data(human.tf.family)
@@ -174,6 +173,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project =
       names(cluster_tf_list_filter_tf) = colnames(cluster_tf_list_filter)
       names(cluster_tf_list_filter_score) = colnames(cluster_tf_list_filter)
     }
+    
     if(!ifAllcluster){
       names(cluster_tf_list_filter_tf) = paste(cluster, collapse = ",")
       names(cluster_tf_list_filter_score) = paste(cluster, collapse = ",")
@@ -221,7 +221,6 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project =
 
 RunLISALocal <- function(genes, project, organism = "GRCh38", conda.dir = "", lisa.envname = "lisa")
 {
-  require(plyr)
   if(organism == "GRCh38"){
     species = "hg38"
   }
@@ -236,7 +235,7 @@ RunLISALocal <- function(genes, project, organism = "GRCh38", conda.dir = "", li
   
   for(i in names(cluster_markers_list))
   {
-    cluster_marker=as.matrix(cluster_markers_list[[i]]$gene)
+    cluster_marker = as.matrix(cluster_markers_list[[i]]$gene)
     lisaDir <- paste0(outputDir, "/",i)
     if (!file.exists(lisaDir)) dir.create(path=lisaDir)
     write.table(cluster_marker,paste0(lisaDir,'/', i, ".txt"),sep='\t',col.names = F, row.names = F,quote = FALSE)
@@ -252,26 +251,25 @@ RunLISALocal <- function(genes, project, organism = "GRCh38", conda.dir = "", li
   system("rm *.yml *.profile *.model")
   message("Lisa is done.")
   
-  tf_all=NULL
+  tf_all = NULL
   for(i in names(cluster_markers_list))
   {
-    fileName=paste0(outputDir,'/', i,'/',i, '.txt_chipseq_cauchy_combine_dedup.csv')
+    fileName = paste0(outputDir,'/', i,'/',i, '.txt_chipseq_cauchy_combine_dedup.csv')
     if (file.exists(fileName))
     {
-      tf_p=read.csv(fileName)
-      rownames(tf_p)=tf_p$TF
-      tf=as.vector(sort(tf_p$TF))
-      tf_temp=data.frame(tf_p[tf,2])
-      colnames(tf_temp)=paste0(i)
-      tf_all=c(tf_all,list(tf_temp))
+      tf_p = read.csv(fileName)
+      rownames(tf_p) = tf_p$TF
+      tf = as.vector(sort(tf_p$TF))
+      tf_temp = data.frame(tf_p[tf,2])
+      colnames(tf_temp) = paste0(i)
+      tf_all = c(tf_all,list(tf_temp))
     }
   }
   
   tf_all <- do.call(cbind, tf_all)
-  tf_all_log10=-log10(tf_all)
+  tf_all_log10 = -log10(tf_all)
   if(organism == "GRCm38"){
-    library(Hmisc)
-    tf = capitalize(tolower(tf))
+    tf = Hmisc::capitalize(tolower(tf))
   }
   rownames(tf_all_log10)=tf
   write.table(tf_all_log10,paste0(project,'_lisa.txt'),sep='\t',quote = F)
@@ -280,9 +278,6 @@ RunLISALocal <- function(genes, project, organism = "GRCh38", conda.dir = "", li
 
 RunLISAWeb <- function(genes, project, organism = "GRCh38")
 {
-  require(httr)
-  require(stringr)
-  require(plyr)
   if(organism == "GRCh38"){
     species = "hg38"
   }
@@ -345,8 +340,7 @@ RunLISAWeb <- function(genes, project, organism = "GRCh38")
   tf_all <- do.call(cbind, tf_all)
   tf_all_log10=-log10(tf_all)
   if(organism == "GRCm38"){
-    library(Hmisc)
-    tf = capitalize(tolower(tf))
+    tf = Hmisc::capitalize(tolower(tf))
   }
   rownames(tf_all_log10)=tf
   write.table(tf_all_log10,paste0(project,'_lisa.txt'),sep='\t',quote = F)
@@ -361,11 +355,11 @@ PostForm <- function(geneset, jobname)
                 'Accept'='text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 'Accept-Encoding'='gzip, deflat',
                 'Accept-Language'='en-us')
-  resp1 = GET(url = url, add_headers(.headers = myheaders))
-  resp1_text = content(resp1, "text")
+  resp1 = httr::GET(url = url, add_headers(.headers = myheaders))
+  resp1_text = httr::content(resp1, "text")
   
   csrf_pattern = "<input id=\"csrf_token\" name=\"csrf_token\" type=\"hidden\" value=\"(.*)\">"
-  csrf = str_match(resp1_text, csrf_pattern)[1,2]
+  csrf = stringr::str_match(resp1_text, csrf_pattern)[1,2]
   
   form_post = list(
     csrf_token = csrf,
@@ -374,23 +368,23 @@ PostForm <- function(geneset, jobname)
     name = jobname
   )
   
-  resp2 = POST(url, add_headers(.headers = myheaders), body = form_post, encode="form")
+  resp2 = httr::POST(url, add_headers(.headers = myheaders), body = form_post, encode="form")
   
-  resp3 = GET(resp2$url)
-  resp3_text = content(resp3, "text")
+  resp3 = httr::GET(resp2$url)
+  resp3_text = httr::content(resp3, "text")
   
   zip_pattern = "<a class=\"nav-link\" href=\"(.*).zip\">"
-  res_zip = str_match(resp3_text, zip_pattern)[1,2]
+  res_zip = stringr::str_match(resp3_text, zip_pattern)[1,2]
   res_zip_url = paste0(url, res_zip, ".zip")
   return(res_zip_url)
 }
 
 DownloadResult <- function(resurl, destfile)
 {
-  resp4 = GET(resurl)
+  resp4 = httr::GET(resurl)
   while(resp4$status_code != 200){
     Sys.sleep(60)
-    resp4 = GET(resurl)
+    resp4 = httr::GET(resurl)
   }
   
   download.file(resurl, destfile)
@@ -400,16 +394,15 @@ DownloadResult <- function(resurl, destfile)
 RunRABIT <- function(genes, project, rabit.path, organism = "hsa")
 {
   if(organism == "hsa"){
-    genes$entrezid = TransGeneID(genes$gene, fromType = "Symbol", toType = "Entrez",
+    genes$entrezid = MAGeCKFlute::TransGeneID(genes$gene, fromType = "Symbol", toType = "Entrez",
                                  organism = organism, ensemblHost = "www.ensembl.org")
   }else{
     marker_mouse = genes$gene
-    library(biomaRt)
-    human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
-    mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
-    marker_human = getLDS(attributes = c("mgi_symbol"), filters = "mgi_symbol", values = marker_mouse ,mart = mouse, attributesL = "hgnc_symbol", martL = human, uniqueRows=T)
+    human = biomaRt::useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+    mouse = biomaRt::useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+    marker_human = biomaRt::getLDS(attributes = c("mgi_symbol"), filters = "mgi_symbol", values = marker_mouse ,mart = mouse, attributesL = "hgnc_symbol", martL = human, uniqueRows=T)
     genes = merge(genes, marker_human, by.x = "gene", by.y = "MGI.symbol")
-    genes$entrezid = TransGeneID(genes$HGNC.symbol, fromType = "Symbol", toType = "Entrez",
+    genes$entrezid = MAGeCKFlute::TransGeneID(genes$HGNC.symbol, fromType = "Symbol", toType = "Entrez",
                                  organism = "hsa", useBiomart = FALSE,
                                  ensemblHost = "www.ensembl.org")
   }
@@ -488,7 +481,7 @@ RunRABIT <- function(genes, project, rabit.path, organism = "hsa")
       out_fdr_max$gene <- unlist(strsplit(out_fdr_max$gene, split = "\\."))[seq(2,2*nrow(out_fdr_max),2)]
     }else{
       out_fdr_max$human.gene <- unlist(strsplit(out_fdr_max$gene, split = "\\."))[seq(2,2*nrow(out_fdr_max),2)]
-      tf_mouse = getLDS(attributes = c("hgnc_symbol"), filters = "hgnc_symbol", values = out_fdr_max$human.gene ,mart = human, attributesL = "mgi_symbol", martL = mouse, uniqueRows=T)
+      tf_mouse = biomaRt::getLDS(attributes = c("hgnc_symbol"), filters = "hgnc_symbol", values = out_fdr_max$human.gene ,mart = human, attributesL = "mgi_symbol", martL = mouse, uniqueRows=T)
       out_fdr_max = merge(out_fdr_max, tf_mouse,by.x = "human.gene", by.y = "HGNC.symbol")
       out_fdr_max$gene = out_fdr_max[,ncol(out_fdr_max)]
       out_fdr_max = out_fdr_max[,-c(1,ncol(out_fdr_max))]

@@ -27,12 +27,14 @@
 #' str(pbmc.ATAC.res$ATAC)
 #' head(pbmc.ATAC.res$cluster)
 #'
+#' @importFrom scales hue_pal
 #' @export
 
 ATACRuncisTopic <- function(inputMat, project = "MAESTRO.scATAC.cisTopic", min.c = 50, min.p = 500, topics.number = c(5,10,20,30), topic.select = 30)
 {
-  require(cisTopic)
-  require(fpc)
+  library(cisTopic)
+  library(fpc)
+  
   #============ Peak filtering ============
   message("Peak filtering ...")
   inputMat = rbind(inputMat, apply(inputMat,2,sum))

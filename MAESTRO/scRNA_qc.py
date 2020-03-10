@@ -3,13 +3,14 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 21:14:12
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-03-03 03:12:38
+# @Last Modified time: 2020-03-05 14:42:49
 
 import os
 import argparse as ap
 import numpy as np
 import scipy.sparse as sp_sparse
 
+from rpy2.robjects.packages import importr
 from MAESTRO.scATAC_H5Process import *
 
 def scrnaqc_parser(subparsers):
@@ -18,7 +19,9 @@ def scrnaqc_parser(subparsers):
     """
 
     workflow = subparsers.add_parser("scrna-qc", 
-        help = "Perform quality control for scRNA-seq gene-cell count matrix.")
+        help = "Perform quality control for scRNA-seq gene-cell count matrix. "
+        "Filter cells according to read counts and number of genes covered and "
+        "filter genes according to number of cells covered.")
     group_input = workflow.add_argument_group("Input files arguments")
     group_input.add_argument("--format", dest = "format", default = "", 
         choices = ["h5", "mtx", "plain"], 
@@ -44,7 +47,9 @@ def scrnaqc_parser(subparsers):
     group_cutoff.add_argument("--count-cutoff", dest = "count_cutoff", default = 1000, type = int,
         help = "Cutoff for the number of count in each cell. DEFAULT: 1000.")
     group_cutoff.add_argument("--gene-cutoff", dest = "gene_cutoff", default = 500, type = int,
-        help = "Cutoff for the number of genes included in each cell. DEFAULT: 500.")        
+        help = "Cutoff for the number of genes included in each cell. DEFAULT: 500.")
+    group_cutoff.add_argument("--cell-cutoff", dest = "cell_cutoff", default = 10, type = int,
+        help = "Cutoff for the number of cells covered by each gene. DEFAULT: 10.")     
 
     group_output = workflow.add_argument_group("Output arguments")
     group_output.add_argument("-d", "--directory", dest = "directory", default = "MAESTRO", 
@@ -54,7 +59,7 @@ def scrnaqc_parser(subparsers):
 
 
 
-def FilterCell(rawmatrix, feature, barcode, count_cutoff, gene_cutoff, outprefix, species):
+def Filter(rawmatrix, feature, barcode, count_cutoff, gene_cutoff, cell_cutoff, outprefix, species):
     count_per_cell = np.asarray(rawmatrix.sum(axis=0))
     genes_per_cell = np.asarray((rawmatrix > 0).sum(axis=0))
     count_gene = np.concatenate((count_per_cell,genes_per_cell), axis=0)
@@ -68,16 +73,25 @@ def FilterCell(rawmatrix, feature, barcode, count_cutoff, gene_cutoff, outprefix
             stat_out.write(barcode[i] + "\t" + "\t".join(stat_list) + "\n")
     
     passed_cell = np.logical_and(count_per_cell > count_cutoff, genes_per_cell > gene_cutoff)
-    gene = [True]*rawmatrix.shape[0]
-    passed_cell_matrix = rawmatrix[np.ix_(gene, passed_cell.tolist()[0])]
+
+    cells_per_gene = np.asarray((rawmatrix > 0).sum(axis=1))
+    passed_gene = cells_per_gene > cell_cutoff
+    passed_gene = np.transpose(passed_gene)
+
+    # gene = [True]*rawmatrix.shape[0]
+    passed_cell_matrix = rawmatrix[np.ix_(passed_gene.tolist()[0], passed_cell.tolist()[0])]
 
     passed_barcodes = np.array(barcode)[passed_cell.tolist()[0]].tolist()
+    passed_genes = np.array(feature)[passed_gene.tolist()[0]].tolist()
+
     # passed_barcodes = [bc.decode('utf-8') for bc in passed_barcodes]
 
-    write_10X_h5(outprefix + "_filtered_gene_count.h5", matrix = passed_cell_matrix, features = feature, barcodes = passed_barcodes, genome = species, datatype = 'Gene')
+    write_10X_h5(outprefix + "_filtered_gene_count.h5", matrix = passed_cell_matrix, features = passed_genes, barcodes = passed_barcodes, genome = species, datatype = 'Gene')
+
+    return(statfile)
 
 
-def scrna_qc(directory, outprefix, fileformat, matrix, feature, gene_column, barcode, count_cutoff, gene_cutoff, species):
+def scrna_qc(directory, outprefix, fileformat, matrix, feature, gene_column, barcode, count_cutoff, gene_cutoff, cell_cutoff, species):
 
     try:
         os.makedirs(directory)
@@ -120,5 +134,9 @@ def scrna_qc(directory, outprefix, fileformat, matrix, feature, gene_column, bar
 
     filename = os.path.join(directory, outprefix)
 
-    FilterCell(rawmatrix = rawmatrix, feature = features, barcode = barcodes, count_cutoff = count_cutoff, gene_cutoff = gene_cutoff, outprefix = filename, species = species)
+    stat_file = Filter(rawmatrix = rawmatrix, feature = features, barcode = barcodes, count_cutoff = count_cutoff, gene_cutoff = gene_cutoff, cell_cutoff = cell_cutoff, outprefix = filename, species = species)
+
+    maestro_r = importr("MAESTRO")
+    maestro_r.RNAFilteringPlot(filepath = stat_file, UMI_cutoff = count_cutoff, gene_number_cutoff = gene_cutoff, name = filename)
+
 

@@ -25,15 +25,15 @@
 #' pbmc.ATAC.res <- ATACRunscABC(inputMat = pbmc.ATAC, project = "PBMC.scATAC.scABC")
 #' head(pbmc.ATAC.res)
 #'
+#' @import gplots
+#' @importFrom scales hue_pal
+#' @importFrom devtools source_url
+#' @importFrom uwot umap
 #' @export
 
 ATACRunscABC <- function(inputMat, project = "MAESTRO.scATAC.scABC", min.c = 50, min.p = 500, cluster.number = 10)
 {
-  require(scABC)
-  require(gplots)
-  require(devtools)
-  require(uwot)
-  require(scales)
+  library(scABC)
   #============ Peak filtering and normalization ============
   message("Peak filtering and normalization ...")
   inputMat <- as.matrix(inputMat)

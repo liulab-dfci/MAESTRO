@@ -30,10 +30,14 @@ giggleannotation: {{ giggleannotation }}
 
 # Quality control cutoff
 cutoff:
+  # Minimum number of peaks included in each cell. DEFAULT: 100.
+  peak: {{ peak }}
   # Cutoff for the number of count in each cell. DEFAULT: 1000.
   count: {{ count }}
   # Cutoff for fraction of reads in promoter in each cell. DEFAULT: 0.2.
   frip: {{ frip }}
+  # Minimum number of cells covered by each peak. DEFAULT: 10.
+  cell: {{ cell }}
 
 # Reference genome 
 genome:

@@ -50,6 +50,8 @@ requirements:
     - bioconductor-BiocGenerics
     - bioconductor-Rsamtools
     - bioconductor-chromVAR
+    - bioconductor-chromVARmotifs
+    - bioconductor-motifmatchr
     - bioconductor-cicero
     - bioconductor-genefilter
   run:
@@ -93,6 +95,8 @@ requirements:
     - bioconductor-BiocGenerics
     - bioconductor-Rsamtools
     - bioconductor-chromVAR
+    - bioconductor-chromVARmotifs
+    - bioconductor-motifmatchr
     - bioconductor-cicero
     - bioconductor-genefilter
 about:

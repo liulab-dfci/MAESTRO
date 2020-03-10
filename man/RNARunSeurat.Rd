@@ -72,7 +72,7 @@ for each cluster. Default cutoff is 1E-5.}
 
 \item{\dots}{Extra arguments passed to \code{\link{RunUMAP}}.}
 
-\item{runpca.args}{Extra arguments passed to \code{link{RunPCA}}.}
+\item{runpca.args}{Extra arguments passed to \code{\link{RunPCA}}.}
 }
 \value{
 A list contains a RNA Seurat object and a data frame for the cluster specific genes.

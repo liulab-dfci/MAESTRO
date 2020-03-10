@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:40:27
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-03-04 01:20:52
+# @Last Modified time: 2020-03-07 02:00:44
 
 
 import os
@@ -53,10 +53,14 @@ def scatac_parser(subparsers):
 
     # Quality control cutoff
     group_cutoff = workflow.add_argument_group("Quality control arguments")
+    group_cutoff.add_argument("--peak-cutoff", dest = "peak_cutoff", default = 100, type = int,
+        help = "Minimum number of peaks included in each cell. DEFAULT: 100.")
     group_cutoff.add_argument("--count-cutoff", dest = "count_cutoff", default = 1000, type = int, 
         help = "Cutoff for the number of count in each cell. DEFAULT: 1000.")
     group_cutoff.add_argument("--frip-cutoff", dest = "frip_cutoff", default = 0.2, type = float, 
         help = "Cutoff for fraction of reads in promoter in each cell. DEFAULT: 0.2.")
+    group_cutoff.add_argument("--cell-cutoff", dest = "cell_cutoff", default = 10, type = int,
+        help = "Minimum number of cells covered by each peak. DEFAULT: 10.")
 
     # Reference genome arguments
     group_reference = workflow.add_argument_group("Reference genome arguments")
@@ -67,7 +71,7 @@ def scatac_parser(subparsers):
         "http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz and decompress it.")
     group_reference.add_argument("--fasta", dest = "fasta", 
         default = "/home1/wangchenfei/annotations/refdata-cellranger-atac-GRCh38-1.1.0/fasta/genome.fa", 
-        help = "Genome fasta file for BWA. If the platform is not '10x-genomics', please specify it. "
+        help = "Genome fasta file for minimap2. If the platform is not '10x-genomics', please specify it. "
         "Users can just use the genome.fa file in the reference required for Cell Ranger ATAC."
         "For example, 'refdata-cellranger-atac-GRCh38-1.1.0/fasta/genome.fa'.")
     # group_reference.add_argument("--cellranger", dest = "cellranger", 
@@ -172,7 +176,9 @@ def scrna_parser(subparsers):
     group_cutoff.add_argument("--count-cutoff", dest = "count_cutoff", default = 1000, type = int,
         help = "Cutoff for the number of count in each cell. DEFAULT: 1000.")
     group_cutoff.add_argument("--gene-cutoff", dest = "gene_cutoff", default = 500, type = int,
-        help = "Cutoff for the number of genes included in each cell. DEFAULT: 500.")   
+        help = "Cutoff for the number of genes included in each cell. DEFAULT: 500.")
+    group_cutoff.add_argument("--cell-cutoff", dest = "cell_cutoff", default = 10, type = int,
+        help = "Cutoff for the number of cells covered by each gene. DEFAULT: 10.")  
 
     # Reference genome arguments
     group_reference = workflow.add_argument_group("Reference genome arguments")
@@ -305,8 +311,10 @@ def scatac_config(args):
             outprefix = args.outprefix,
             whitelist = args.whitelist,
             cores = args.cores,
+            peak = args.peak_cutoff,
             count = args.count_cutoff,
             frip = args.frip_cutoff,
+            cell = args.cell_cutoff,
             signature = args.signature,
             signaturefile = args.signature_file,
             custompeaks = args.custompeak,
@@ -349,6 +357,7 @@ def scrna_config(args):
             cores = args.cores,
             count = args.count_cutoff,
             gene = args.gene_cutoff,
+            cell = args.cell_cutoff,
             signature = args.signature,
             signaturefile = args.signature_file,
             method = args.method,

@@ -24,8 +24,8 @@
 #' @param peaks.pct Only test peaks that are detected in a minimum fraction of min.pct cells in either of the two populations. Meant to speed up the function by not testing peaks that are very infrequently detected Default is 0.1
 #' @param peaks.logfc Limit testing to peaks which show, on average, at least X-fold difference (log-scale) between the two groups of cells. Default is 0.2 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 #' for each cluster. Default cutoff is 1E-5.
-#' @param runlsi.args Extra arguments passed to \code{link{RunLSI}}.
-#' @param runpca.args Extra arguments passed to \code{link{RunPCA}}.
+#' @param runlsi.args Extra arguments passed to \code{\link{RunLSI}}.
+#' @param runpca.args Extra arguments passed to \code{\link{RunPCA}}.
 #' @param findneighbors.args Extra arguments passed to \code{\link{FindNeighbors}}.
 #' @param findclusters.args Extra arguments passed to \code{\link{FindClusters}}.
 #' @param \dots Extra arguments passed to \code{\link{RunUMAP}}.
@@ -41,6 +41,8 @@
 #' str(pbmc.ATAC.res$ATAC)
 #' head(pbmc.ATAC.res$peaks)
 #'
+#' @importFrom Seurat CreateSeuratObject DimPlot ElbowPlot FindClusters FindNeighbors NormalizeData RunLSI RunPCA RunUMAP ScaleData VariableFeatures
+#' @importFrom ggplot2 ggsave
 #' @export
 
 ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ident = NULL, 
@@ -50,8 +52,6 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
                           runlsi.args = list(), runpca.args = list(), 
                           findneighbors.args = list(), findclusters.args = list(),...)
 {
-  require(Seurat)
-  require(ggplot2)
   SeuratObj <- CreateSeuratObject(inputMat, project = project, min.cells = min.c, min.features = min.p, assay = "ATAC")
   if(method == "LSI"){    
   #============ LSI ============

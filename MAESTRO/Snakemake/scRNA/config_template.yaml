@@ -36,6 +36,8 @@ cutoff:
   count: {{ count }}
   # Cutoff for the number of genes included in each cell. DEFAULT: 500.
   gene: {{ gene }}
+  # Cutoff for the number of cells covered by each gene. DEFAULT: 10.
+  cell: {{ cell }}
 
 # Reference genome 
 genome:
