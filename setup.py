@@ -7,13 +7,13 @@ Created on Tue Jun  4 13:10:51 2019
 """
 
 import sys,os
-from distutils.core import setup
+# from distutils.core import setup
 
 
-# try:
-#     from setuptools import setup, find_packages
-# except ImportError:
-#     print("Could not load setuptools. Please install the setuptools package.")
+try:
+    from setuptools import setup, find_packages
+except ImportError:
+    print("Could not load setuptools. Please install the setuptools package.")
 
 def install_drseq():
     curdir = os.getcwd()
