@@ -44,9 +44,10 @@ def install_rpackage():
 
 def main():
     # install_drseq()
+    install_rpackage()
     install_giggle()
     # install_rabit()
-    install_rpackage()
+    
     setup(
         name = "MAESTRO",
         version = "1.1.0",
