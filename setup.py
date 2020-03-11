@@ -7,11 +7,13 @@ Created on Tue Jun  4 13:10:51 2019
 """
 
 import sys,os
+from distutils.core import setup
 
-try:
-    from setuptools import setup, find_packages
-except ImportError:
-    print("Could not load setuptools. Please install the setuptools package.")
+
+# try:
+#     from setuptools import setup, find_packages
+# except ImportError:
+#     print("Could not load setuptools. Please install the setuptools package.")
 
 def install_drseq():
     curdir = os.getcwd()
@@ -51,7 +53,8 @@ def main():
         package_dir = {'MAESTRO':'MAESTRO'},
         packages = ['MAESTRO'],
         package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'R/*', 'env/*', 'annotations/*', 'html/*', '']},
-        scripts = ['MAESTRO/MAESTRO','refpkg/giggle/bin/giggle'],
+        data_files = [('bin', ['refpkg/giggle/bin/giggle'])],
+        scripts = ['MAESTRO/MAESTRO'],
         include_package_data = True,
         
         author = "Chenfei Wang, Dongqing Sun",
@@ -61,8 +64,6 @@ def main():
         license = "GPL-3.0",
         url = "https://github.com/chenfeiwang/MAESTRO",
         
-        zip_safe = False,
-        install_requires=[],
         # entry_points = {"console_scripts": ["strap = strap:main"]},
         classifiers = [
             "Development Status :: 4 - Beta",
