@@ -51,7 +51,7 @@ def main():
         package_dir = {'MAESTRO':'MAESTRO'},
         packages = ['MAESTRO'],
         package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'R/*', 'env/*', 'annotations/*', 'html/*', '']},
-        scripts = ['MAESTRO/MAESTRO'],
+        scripts = ['MAESTRO/MAESTRO','refpkg/giggle/bin/giggle'],
         include_package_data = True,
         
         author = "Chenfei Wang, Dongqing Sun",
