@@ -36,10 +36,12 @@ def main():
     counttoh5_parser(subparsers)
     mergeh5_parser(subparsers)
 
-    peakcount_parser(subparsers)
-    genescore_parser(subparsers)
     scrnaqc_parser(subparsers)
     scatacqc_parser(subparsers)
+
+    peakcount_parser(subparsers)
+    genescore_parser(subparsers)
+
     
 
     logging.basicConfig(format="%(message)s", level=logging.INFO, stream=sys.stderr)
@@ -66,17 +68,18 @@ def main():
 
     elif args.subcommand == "merge-h5":
         merge_10X_h5(directory = args.directory, outprefix = args.outprefix, h5list = args.h5_list, genome = args.species, datatype = args.datatype)
+    
+    elif args.subcommand == "scrna-qc":
+        scrna_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, matrix = args.matrix, feature = args.feature, gene_column = args.gene_column, barcode = args.barcode, count_cutoff = args.count_cutoff, gene_cutoff = args.gene_cutoff, cell_cutoff = args.cell_cutoff, species = args.species)
+   
+    elif args.subcommand == "scatac-qc":
+        scatac_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, peakcount = args.peakcount, feature = args.feature, barcode = args.barcode, single_stat = args.single_stat, peak_cutoff = args.peak_cutoff, count_cutoff = args.count_cutoff, frip_cutoff = args.frip_cutoff, cell_cutoff = args.cell_cutoff, species = args.species)
 
     elif args.subcommand == "scatac-peakcount":
         peakcount(directory = args.directory, outprefix = args.outprefix, peak = args.peak, fragment = args.fragment, barcode = args.barcode, count_cutoff = args.count_cutoff, cores = args.cores, species = args.species)
 
     elif args.subcommand == "scatac-genescore":
         genescore(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, peakcount = args.peakcount, feature = args.feature, barcode = args.barcode, genedistance = args.genedistance, species = args.species)
-
-    elif args.subcommand == "scrna-qc":
-        scrna_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, matrix = args.matrix, feature = args.feature, gene_column = args.gene_column, barcode = args.barcode, count_cutoff = args.count_cutoff, gene_cutoff = args.gene_cutoff, cell_cutoff = args.cell_cutoff, species = args.species)
-    elif args.subcommand == "scatac-qc":
-        scatac_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, peakcount = args.peakcount, feature = args.feature, barcode = args.barcode, single_stat = args.single_stat, peak_cutoff = args.peak_cutoff, count_cutoff = args.count_cutoff, frip_cutoff = args.frip_cutoff, cell_cutoff = args.cell_cutoff, species = args.species)
 
     else:
         parser.print_help()
@@ -86,11 +89,5 @@ def main():
 
 
 if __name__ == "__main__":
-    """
-    python /Users/dongqing/Documents/Project/SingleCell/scATAC/Code/Snakemake/scATAC/config_parser.py init-scatac -d config_test --fastq-dir /home1/wangchenfei/Project/SingleCell/scATAC/Analysis/10X_PBMC_1k/Data/atac_pbmc_1k_v1_fastqs --fastq-prefix atac_pbmc_1k_v1 --outprefix 10X_PBMC_1k_MAESTRO_V102
-    python /Users/dongqing/Documents/Project/SingleCell/scATAC/Code/Snakemake/scATAC/config_parser.py init-scrna -d config_test_rna --fastq-dir /mnt/Storage/home/sundongqing/Project/Single_cell/Analysis/10xPBMC_1k/pbmc_1k_v2_fastqs --fastq-prefix pbmc_1k_v2 --outprefix pbmc_1k_v2
-    python /Users/dongqing/Documents/Project/SingleCell/scATAC/Code/Snakemake/scATAC/config_parser.py init-integrate -d config_test --rna-object --atac-object --outprefix
-    """
-
     main()
 

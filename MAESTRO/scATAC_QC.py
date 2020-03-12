@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-03-04 20:21:08
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-03-05 14:05:54
+# @Last Modified time: 2020-03-12 23:40:55
 
 
 import os
@@ -11,8 +11,10 @@ import argparse as ap
 import numpy as np
 import scipy.sparse as sp_sparse
 
-from rpy2.robjects.packages import importr
+# from rpy2.robjects.packages import importr
 from MAESTRO.scATAC_H5Process import *
+from MAESTRO.scRNA_utility import RSCRIPT_PATH
+
 
 def scatacqc_parser(subparsers):
     """
@@ -131,8 +133,12 @@ def scatac_qc(directory, outprefix, fileformat, peakcount, feature, barcode, sin
         validcells_list = []
 
     else:
-        maestro_r = importr("MAESTRO")
-        maestro_r.ATACFilteringPlot(filepath = single_stat, platform = "10x-genomics", name = filename, reads_cutoff = count_cutoff, frip_cutoff = frip_cutoff)
+        # maestro_r = importr("MAESTRO")
+        # maestro_r.ATACFilteringPlot(filepath = single_stat, platform = "10x-genomics", name = filename, reads_cutoff = count_cutoff, frip_cutoff = frip_cutoff)
+
+        cmd = "Rscript %s/scATACseq_qc_filtering.R --prefix %s --outdir . --singlestat %s --countcutoff %s --fripcutoff %s" %(RSCRIPT_PATH, filename, single_stat, count_cutoff, frip_cutoff)
+        os.system(cmd)
+
         validcells_file = filename + "_scATAC_validcells.txt"
         with open(validcells_file, "r") as validcells_in:
             validcells_list = validcells_in.readlines()

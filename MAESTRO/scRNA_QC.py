@@ -3,15 +3,17 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 21:14:12
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-03-05 14:42:49
+# @Last Modified time: 2020-03-12 23:35:02
 
 import os
 import argparse as ap
 import numpy as np
 import scipy.sparse as sp_sparse
 
-from rpy2.robjects.packages import importr
+# from rpy2.robjects.packages import importr
 from MAESTRO.scATAC_H5Process import *
+from MAESTRO.scRNA_utility import RSCRIPT_PATH
+
 
 def scrnaqc_parser(subparsers):
     """
@@ -136,7 +138,9 @@ def scrna_qc(directory, outprefix, fileformat, matrix, feature, gene_column, bar
 
     stat_file = Filter(rawmatrix = rawmatrix, feature = features, barcode = barcodes, count_cutoff = count_cutoff, gene_cutoff = gene_cutoff, cell_cutoff = cell_cutoff, outprefix = filename, species = species)
 
-    maestro_r = importr("MAESTRO")
-    maestro_r.RNAFilteringPlot(filepath = stat_file, UMI_cutoff = count_cutoff, gene_number_cutoff = gene_cutoff, name = filename)
+    # maestro_r = importr("MAESTRO")
+    # maestro_r.RNAFilteringPlot(filepath = stat_file, UMI_cutoff = count_cutoff, gene_number_cutoff = gene_cutoff, name = filename)
 
+    cmd = "Rscript %s/scRNAseq_qc_filtering.R --prefix %s --outdir . --filtering %s --countcutoff %s --genecutoff %s" %(RSCRIPT_PATH, filename, stat_file, count_cutoff, gene_cutoff)
+    os.system(cmd)
 

@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:40:27
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-03-07 02:00:44
+# @Last Modified time: 2020-03-13 02:33:07
 
 
 import os
@@ -65,20 +65,16 @@ def scatac_parser(subparsers):
     # Reference genome arguments
     group_reference = workflow.add_argument_group("Reference genome arguments")
     group_reference.add_argument("--giggleannotation", dest = "giggleannotation", 
-        default = "/home1/wangchenfei/Project/SingleCell/scATAC/Code/MAESTRO/MAESTRO/annotations/giggle", 
+        required = True, 
         help = "Path of the giggle annotation file required for regulator identification. "
         "Please download the annotation file from "
         "http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz and decompress it.")
     group_reference.add_argument("--fasta", dest = "fasta", 
-        default = "/home1/wangchenfei/annotations/refdata-cellranger-atac-GRCh38-1.1.0/fasta/genome.fa", 
-        help = "Genome fasta file for minimap2. If the platform is not '10x-genomics', please specify it. "
-        "Users can just use the genome.fa file in the reference required for Cell Ranger ATAC."
-        "For example, 'refdata-cellranger-atac-GRCh38-1.1.0/fasta/genome.fa'.")
-    # group_reference.add_argument("--cellranger", dest = "cellranger", 
-    #     default = "/home1/wangchenfei/annotations/refdata-cellranger-atac-GRCh38-1.1.0", 
-    #     help = "Genome annotation file downloaded from 10x-genomics "
-    #     "(https://support.10xgenomics.com/single-cell-atac/software/downloads/latest) "
-    #     "required for Cell Ranger ATAC. ")
+        required = True,
+        help = "Genome fasta file for minimap2. "
+        "Users can just download the fasta file from "
+        "http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz and decompress it. "
+        "For example, 'Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa'.")
 
     # Barcode library arguments
     group_barcode = workflow.add_argument_group("Barcode library arguments, only for platform of 'sci-ATAC-seq'")
@@ -148,11 +144,11 @@ def scrna_parser(subparsers):
         "If there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the prefix is 'pbmc_1k_v2'.")
     group_input.add_argument("--fastq-barcode", dest = "fastq_barcode", type = str, default = "", 
         help = "Specify the barcode fastq file, only for the platform of 'Dropseq'. "
-        "If there are multiple pairs of fastq, please provide a comma-separated list of barcode fastq files."
+        "If there are multiple pairs of fastq, please provide a comma-separated list of barcode fastq files. "
         "For example, --fastq-barcode test1_1.fastq,test2_1.fastq")
     group_input.add_argument("--fastq-transcript", dest = "fastq_transcript", type = str, default = "", 
         help = "Specify the transcript fastq file, only for the platform of 'Dropseq'. "
-        "If there are multiple pairs of fastq, please provide a comma-separated list of barcode fastq files."
+        "If there are multiple pairs of fastq, please provide a comma-separated list of barcode fastq files. "
         "For example, --fastq-barcode test1_2.fastq,test2_2.fastq")
     group_input.add_argument("--species", dest = "species", default = "GRCh38",
         choices = ["GRCh38", "GRCm38"], type = str, 
@@ -183,31 +179,21 @@ def scrna_parser(subparsers):
     # Reference genome arguments
     group_reference = workflow.add_argument_group("Reference genome arguments")
     group_reference.add_argument("--mapindex", dest = "mapindex", 
-        default = "/home1/wangchenfei/annotations/hg38/STAR_2.7.3a", 
+        required = True, 
         help = "Genome index directory for STAR. Users can just download the index file "
-        "from http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz and decompress it.")
-    # group_reference.add_argument("--mapindex", dest = "mapindex", 
-    #     default = "/home1/wangchenfei/annotations/refdata-cellranger-GRCh38-3.0.0/star", 
-    #     help = "Genome index directory for STAR. If the platform is not '10x-genomics', please specify it. "
-    #     "Users can just use the index file in the reference required for Cell Ranger."
-    #     "For example, 'refdata-cellranger-GRCh38-3.0.0/star'.")
-    # group_reference.add_argument("--cellranger", dest = "cellranger", 
-    #     default = "/home1/wangchenfei/annotations/refdata-cellranger-GRCh38-3.0.0", 
-    #     help = "Genome annotation file downloaded from 10x-genomics "
-    #     "(https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest) "
-    #     "required for Cell Ranger.")
+        "from http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz and decompress it. "
+        "Then specify the index directory for STAR, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_STAR_2.7.3a'.")
     group_reference.add_argument("--rsem", dest = "rsem", 
-        default = "/home1/wangchenfei/annotations/hg38/RSEM_ref/GRCh38", 
-        help = "The prefix of transcript references for RSEM used by rsem-prepare-reference. "
+        help = "The prefix of transcript references for RSEM used by rsem-prepare-reference (Only required when the platform is Smartseq2). "
         "Users can directly download the annotation file from "
-        "http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz and decompress it.")
+        "http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz and decompress it."
+        "Then specify the prefix for RSEM, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_RSEM_1.3.2/GRCh38'.")
 
     # Barcode arguments
     group_barcode = workflow.add_argument_group("Barcode arguments, for platform of 'Dropseq' or '10x-genomics'")
     group_barcode.add_argument("--whitelist", dest = "whitelist", type = str, 
-        default = "/home1/wangchenfei/Tool/cellranger-3.1.0/cellranger-cs/3.1.0/lib/python/cellranger/barcodes/737K-august-2016.txt",
         help = "If the platform is 'Dropseq' or '10x-genomics', please specify the barcode library (whitelist) "
-        "so that the pipeline STARsolo can do the error correction and demultiplexing of cell barcodes. "
+        "so that STARsolo can do the error correction and demultiplexing of cell barcodes. "
         "The 10X Chromium whitelist file can be found inside the CellRanger distribution. "
         "Please make sure that the whitelist is compatible with the specific version of the 10X chemistry: V2 or V3. "
         "For example, in CellRanger 3.1.0, the V2 whitelist is "
@@ -228,22 +214,22 @@ def scrna_parser(subparsers):
     group_regulator.add_argument("--method", dest = "method", type = str, 
         choices = ["RABIT", "LISA"], default = "LISA",
         help = "Method to predict driver regulators.")
-    group_regulator.add_argument("--rabitlib", dest = "rabitlib", type = str, 
-        default = "/home1/wangchenfei/Project/SingleCell/scATAC/Code/MAESTRO/MAESTRO/annotations/Rabit_lib",
-        help = "Path of the rabit annotation file required for regulator identification. "
+    group_regulator.add_argument("--rabitlib", dest = "rabitlib", type = str,
+        help = "Path of the rabit annotation file required for regulator identification (only required if method is set to RABIT). "
         "Please download the annotation file from "
         "http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz and decompress it.")
     group_regulator.add_argument("--lisamode", dest = "lisamode", type = str, default = "local", choices = ["local", "web"],
         help = "Mode to Run LISA, 'local' or 'web'. If the mode is set as 'local', "
         "please install LISA (https://github.com/qinqian/lisa) and download pre-computed datasets following the instructions. "
         "The 'web' mode is to run online version of LISA. In consideration of the connection issue and size of datasets, "
-        "the 'local' mode is recommended to run the whole MAESTRO pipeline.")
+        "the 'local' mode is recommended to run the whole MAESTRO pipeline. "
+        "If the mode is 'local', please provide the name of LISA environment through --lisaenv "
+        "and specify the directory where miniconda or anaconda is installed through --condadir. DEFAULT: local.")
     group_regulator.add_argument("--lisaenv", dest = "lisaenv", type = str, default = "lisa",
-        help = "Name of lisa environment (only if method is set to lisa and lisamode is set to local). DEFAULT: lisa.")
+        help = "Name of LISA environment (required if method is set to lisa and lisamode is set to local). DEFAULT: lisa.")
     group_regulator.add_argument("--condadir", dest = "condadir", type = str, 
-        default = "/home1/wangchenfei/miniconda3",
         help = "Directory where miniconda or anaconda is installed "
-        "(only if method is set to lisa and lisamode is set to local). For example, '/home1/wangchenfei/miniconda3'.")
+        "(required if method is set to lisa and lisamode is set to local). For example, '/home/user/miniconda3'.")
 
     # Signature file arguments
     group_signature = workflow.add_argument_group("Cell signature arguments")
@@ -269,9 +255,9 @@ def integrate_parser(subparsers):
 
     # Input files arguments
     group_input = workflow.add_argument_group("Input files arguments")
-    group_input.add_argument("--rna-object", dest = "rna_object", default = "", type = str,
+    group_input.add_argument("--rna-object", dest = "rna_object", required = True, type = str,
         help = "Path of scRNA Seurat object generated by MAESTRO scRNA pipeline.")
-    group_input.add_argument("--atac-object", dest = "atac_object", default = "", type = str,
+    group_input.add_argument("--atac-object", dest = "atac_object", required = True, type = str,
         help = "Path of scATAC Seurat object generated by MAESTRO scATAC pipeline.")
 
     # Output arguments
@@ -299,7 +285,6 @@ def scatac_config(args):
 
     pkgpath = resource_filename('MAESTRO', 'Snakemake')
     template_file = os.path.join(pkgpath, "scATAC", "config_template.yaml")
-    # template_file = "/Users/dongqing/Documents/Project/SingleCell/scATAC/Code/Snakemake/scATAC/config_template.yaml"
     configfile = os.path.join(args.directory, "config.yaml")
     config_template = Template(open(template_file, "r").read(), trim_blocks=True, lstrip_blocks=True)
     with open(configfile, "w") as configout:
@@ -343,7 +328,6 @@ def scrna_config(args):
 
     pkgpath = resource_filename('MAESTRO', 'Snakemake')
     template_file = os.path.join(pkgpath, "scRNA", "config_template.yaml")
-    # template_file = "/Users/dongqing/Documents/Project/SingleCell/scATAC/Code/Snakemake/scRNA/config_template.yaml"
     configfile = os.path.join(args.directory, "config.yaml")
     config_template = Template(open(template_file, "r").read(), trim_blocks=True, lstrip_blocks=True)
     with open(configfile, "w") as configout:
@@ -394,7 +378,6 @@ def integrate_config(args):
 
     pkgpath = resource_filename('MAESTRO', 'Snakemake')
     template_file = os.path.join(pkgpath, "integrate", "config_template.yaml")
-    # template_file = "/Users/dongqing/Documents/Project/SingleCell/scATAC/Code/Snakemake/integrate/config_template.yaml"
     configfile = os.path.join(args.directory, "config.yaml")
     config_template = Template(open(template_file, "r").read(), trim_blocks=True, lstrip_blocks=True)
     with open(configfile, "w") as configout:
