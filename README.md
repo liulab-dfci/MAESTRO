@@ -42,7 +42,11 @@ And then users can create an isolated environment for MAESTRO and install throug
 $ conda config --add channels defaults
 $ conda config --add channels bioconda
 $ conda config --add channels conda-forge
-$ conda create -n MAESTRO maestro -c liulab-dfci
+# to make the installation faster, we recommend using mamba
+$ conda install mamba -c conda-forge
+$ mamba create -n MAESTRO maestro -c liulab-dfci
+# activate the environment 
+$ conda activate MAESTRO
 ```
 
 **Installing the MAESTRO R package** 
