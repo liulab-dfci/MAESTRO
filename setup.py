@@ -53,7 +53,7 @@ def main():
         version = "1.1.0",
         package_dir = {'MAESTRO':'MAESTRO'},
         packages = ['MAESTRO'],
-        package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'R/*', 'env/*', 'annotations/*', 'html/*', '']},
+        package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'Snakemake/integrate/*', 'R/*', 'annotations/*', 'html/*', '']},
         data_files = [(os.path.join(sys.prefix,'bin'), ['refpkg/giggle/bin/giggle'])],
         scripts = ['MAESTRO/MAESTRO'],
         include_package_data = True,

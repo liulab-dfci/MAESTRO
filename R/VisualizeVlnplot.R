@@ -38,8 +38,14 @@
 #' @export
 
 VisualizeVlnplot <- function(genes, type, SeuratObj, ncol = NULL, width = 6, height = 4, name = "MultipleVlnPlot"){
-  genes = intersect(rownames(SeuratObj),unique(genes))
-  gene_expr = GetAssayData(object = SeuratObj)[genes, ]
+  if(type == "ATAC"){
+    genes = intersect(rownames(SeuratObj$ACTIVITY),unique(genes))
+    gene_expr = GetAssayData(object = SeuratObj$ACTIVITY)[genes, ]
+  }
+  if(type == "RNA"){
+    genes = intersect(rownames(SeuratObj),unique(genes))
+    gene_expr = GetAssayData(object = SeuratObj)[genes, ]
+  }
   cell_cluster = Idents(SeuratObj)
   vlnplots = lapply(genes, function(x){
     expr_cluster = merge(cell_cluster, as.data.frame(gene_expr[x, ]), by.x = 0, by.y = 0)
@@ -61,6 +67,7 @@ VisualizeVlnplot <- function(genes, type, SeuratObj, ncol = NULL, width = 6, hei
   })
   combinedplot = CombinePlots(vlnplots, ncol = ncol)
   ggsave(paste0(name,"_vlnplot.png"), combinedplot,  width=width, height=height)
+  return(combinedplot)
 }
 
 

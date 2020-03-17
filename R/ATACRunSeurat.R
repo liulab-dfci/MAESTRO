@@ -43,6 +43,7 @@
 #'
 #' @importFrom Seurat CreateSeuratObject DimPlot ElbowPlot FindClusters FindNeighbors NormalizeData RunLSI RunPCA RunUMAP ScaleData VariableFeatures
 #' @importFrom ggplot2 ggsave
+#' @importFrom Gmisc fastDoCall
 #' @export
 
 ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ident = NULL, 
@@ -58,15 +59,15 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   message("LSI analysis ...")
   VariableFeatures(SeuratObj) <- names(which(Matrix::rowSums(SeuratObj) > min.c))
   # SeuratObj <- RunLSI(object = SeuratObj, scale.max = NULL) 
-  SeuratObj <- do.call("RunLSI", c(object = SeuratObj, runlsi.args)) 
+  SeuratObj <- fastDoCall("RunLSI", c(object = SeuratObj, runlsi.args)) 
   
     
   #============ UMAP ============
   message("UMAP analysis ...")
-  #SeuratObj <- do.call("RunUMAP", c(object = SeuratObj, dims = dims.use, reduction = "lsi", runumap.args))
+  #SeuratObj <- fastDoCall("RunUMAP", c(object = SeuratObj, dims = dims.use, reduction = "lsi", runumap.args))
   SeuratObj <- RunUMAP(object = SeuratObj, reduction = "lsi", dims = dims.use, ...)
-  SeuratObj <- do.call("FindNeighbors", c(object = SeuratObj, reduction = "lsi", dims = dims.use, findneighbors.args))
-  SeuratObj <- do.call("FindClusters", c(object = SeuratObj, resolution = cluster.res, findclusters.args))
+  SeuratObj <- fastDoCall("FindNeighbors", c(object = SeuratObj, reduction = "lsi", dims = dims.use, findneighbors.args))
+  SeuratObj <- fastDoCall("FindClusters", c(object = SeuratObj, resolution = cluster.res, findclusters.args))
   # SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "lsi", dims = dims.use)
   # SeuratObj <- FindClusters(object = SeuratObj, resolution = cluster.res)
   p1 <- DimPlot(object = SeuratObj, pt.size = 0.5, label = TRUE)
@@ -86,7 +87,7 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   message("PCA analysis ...")
   SeuratObj <- NormalizeData(SeuratObj, normalization.method = "LogNormalize", scale.factor = 10000)
   SeuratObj <- ScaleData(object = SeuratObj, var.to.regress="nCount_RNA")
-  SeuratObj <- do.call("RunPCA", c(object = SeuratObj, features = rownames(SeuratObj), runpca.args))
+  SeuratObj <- fastDoCall("RunPCA", c(object = SeuratObj, features = rownames(SeuratObj), runpca.args))
   
   # SeuratObj <- RunPCA(object = SeuratObj, features = rownames(SeuratObj))
   p2 = ElbowPlot(object = SeuratObj)
@@ -95,8 +96,8 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   #============ UMAP ============
   message("UMAP analysis ...")
   SeuratObj <- RunUMAP(object = SeuratObj, reduction = "pca", dims = dims.use, ...)
-  SeuratObj <- do.call("FindNeighbors", c(object = SeuratObj, reduction = "pca", dims = dims.use, findneighbors.args))
-  SeuratObj <- do.call("FindClusters", c(object = SeuratObj, resolution = cluster.res, findclusters.args))
+  SeuratObj <- fastDoCall("FindNeighbors", c(object = SeuratObj, reduction = "pca", dims = dims.use, findneighbors.args))
+  SeuratObj <- fastDoCall("FindClusters", c(object = SeuratObj, resolution = cluster.res, findclusters.args))
   
   # SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "pca", dims = dims.use)
   # SeuratObj <- FindClusters(object = SeuratObj, resolution = res)

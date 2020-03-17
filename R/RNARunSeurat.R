@@ -45,6 +45,7 @@
 #'
 #' @importFrom Seurat CreateSeuratObject DimPlot ElbowPlot FindClusters FindNeighbors FindVariableFeatures GetAssayData NormalizeData RunPCA RunUMAP ScaleData SubsetData VlnPlot
 #' @importFrom ggplot2 ggplot ggsave
+#' @importFrom Gmisc fastDoCall
 #' @export
 
 RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident = NULL, min.c = 10, min.g = 200, mito = FALSE, mito.cutoff = 0.05, 
@@ -70,8 +71,8 @@ RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident 
     SeuratObj$percent.ercc <- percent.ercc
     p1 = VlnPlot(SeuratObj, c("percent.mito","percent.ercc"), ncol = 2)
     ggsave(paste0(SeuratObj@project.name, ".spikein.png"), p1,  width=6, height=4.5)
-    SeuratObj <- SubsetData(SeuratObj, subset.name = "percent.mito", high.threshold = 0.05)
-    SeuratObj <- SubsetData(SeuratObj, subset.name = "percent.ercc", high.threshold = 0.05)
+    SeuratObj <- subset(x = SeuratObj, subset = percent.mito < high.threshold)
+    SeuratObj <- subset(x = SeuratObj, subset = percent.ercc < high.threshold)
     vars.to.regress = c("nCount_RNA","percent.mito","percent.ercc")}
   else{
     vars.to.regress = "nCount_RNA"}
@@ -84,7 +85,7 @@ RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident 
   
   #=========PCA===========
   message("PCA analysis ...")
-  SeuratObj <- do.call("RunPCA", c(object = SeuratObj, features = VariableFeatures(SeuratObj), runpca.agrs))
+  SeuratObj <- fastDoCall("RunPCA", c(object = SeuratObj, features = VariableFeatures(SeuratObj), runpca.agrs))
   # SeuratObj <- RunPCA(object = SeuratObj, features = VariableFeatures(SeuratObj))
   p2 = ElbowPlot(object = SeuratObj)
   ggsave(file.path(paste0(SeuratObj@project.name, "_PCElbowPlot.png")), p2,  width=5, height=4)
@@ -92,8 +93,8 @@ RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident 
   #=========UMAP===========
   message("UMAP analysis ...")
   SeuratObj <- RunUMAP(object = SeuratObj, reduction = "pca", dims = dims.use, ...)
-  SeuratObj <- do.call("FindNeighbors", c(object = SeuratObj, reduction = "pca", dims = dims.use, findneighbors.args))
-  SeuratObj <- do.call("FindClusters", c(object = SeuratObj, resolution = cluster.res, findclusters.args))
+  SeuratObj <- fastDoCall("FindNeighbors", c(object = SeuratObj, reduction = "pca", dims = dims.use, findneighbors.args))
+  SeuratObj <- fastDoCall("FindClusters", c(object = SeuratObj, resolution = cluster.res, findclusters.args))
   # SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "pca", dims = dims.use)
   # SeuratObj <- FindClusters(object = SeuratObj, resolution = cluster.res)
   p3 = DimPlot(object = SeuratObj, label = TRUE, pt.size = 0.2)

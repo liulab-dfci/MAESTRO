@@ -36,10 +36,14 @@
 #' @export
 
 VisualizeUmap <- function(genes, type, SeuratObj, ncol = NULL, width = 6, height = 4, name = "MultipleUmapPlot"){
-  require(ggplot2)
-
-  genes = intersect(rownames(SeuratObj),unique(genes))
-  gene_expr = GetAssayData(object = SeuratObj)[genes, ]
+  if(type == "ATAC"){
+    genes = intersect(rownames(SeuratObj$ACTIVITY),unique(genes))
+    gene_expr = GetAssayData(object = SeuratObj$ACTIVITY)[genes, ]
+  }
+  if(type == "RNA"){
+    genes = intersect(rownames(SeuratObj),unique(genes))
+    gene_expr = GetAssayData(object = SeuratObj)[genes, ]
+  }
   umap_df = SeuratObj@reductions$umap@cell.embeddings
   umapplots = lapply(genes, function(x){
     umap_expr = merge(umap_df, as.data.frame(gene_expr[x, ]), by.x = 0, by.y = 0)

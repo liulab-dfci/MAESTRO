@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:40:27
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-03-13 02:33:07
+# @Last Modified time: 2020-03-17 18:18:20
 
 
 import os
@@ -31,7 +31,7 @@ def scatac_parser(subparsers):
         help = "Directory where fastq files are stored.")
     group_input.add_argument("--fastq-prefix", dest = "fastq_prefix", type = str, default = "", 
         help = "Sample name of fastq file (required for the platform of '10x-genomics' or 'sci-ATAC-seq'). "
-        "When the platform is '10x-genomics', if there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the prefix is 'pbmc_1k_v2'."
+        "When the platform is '10x-genomics', if there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the prefix is 'pbmc_1k_v2'. "
         "If the platform is 'sci-ATAC-seq', there are two ways to provide fastq files. "
         "The first is to provide pair-end sequencing results which contain two fastq files -- prefix_1.fastq and prefix_2.fastq. "
         "If in this way, the barcode for each read needs to be included in the reads ID (the first line of each read) "
@@ -101,7 +101,7 @@ def scatac_parser(subparsers):
     group_peak.add_argument("--shortpeak", dest = "shortpeak", action = "store_true", 
         help = "Whether or not to call peaks from short fragments (shorter than 150bp). If set, "
         "MAESTRO will merge the peaks called from all fragments and those called from short fragments, "
-        "and then use the merged peak file for further analysis."
+        "and then use the merged peak file for further analysis. "
         "If not (by default), the pipeline will only use peaks called from all fragments.")
     
     # Gene score arguments

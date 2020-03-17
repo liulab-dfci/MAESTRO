@@ -355,7 +355,7 @@ PostForm <- function(geneset, jobname)
                 'Accept'='text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 'Accept-Encoding'='gzip, deflat',
                 'Accept-Language'='en-us')
-  resp1 = httr::GET(url = url, add_headers(.headers = myheaders))
+  resp1 = httr::GET(url = url, httr::add_headers(.headers = myheaders))
   resp1_text = httr::content(resp1, "text")
   
   csrf_pattern = "<input id=\"csrf_token\" name=\"csrf_token\" type=\"hidden\" value=\"(.*)\">"
@@ -368,7 +368,7 @@ PostForm <- function(geneset, jobname)
     name = jobname
   )
   
-  resp2 = httr::POST(url, add_headers(.headers = myheaders), body = form_post, encode="form")
+  resp2 = httr::POST(url, httr::add_headers(.headers = myheaders), body = form_post, encode="form")
   
   resp3 = httr::GET(resp2$url)
   resp3_text = httr::content(resp3, "text")
