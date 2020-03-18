@@ -85,7 +85,7 @@ Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembeddi
   ggsave(file.path(paste0(CombinedObj@project.name, "_RNAonly.png")), p2, width=5, height=4)
   p3 <- DimPlot(CombinedObj, reduction = "umap", group.by = "ATAC_snn_res.0.6", cells = rownames(CombinedObj@meta.data[which(CombinedObj@meta.data[,'tech']=='ATAC'),]), label = TRUE)
   ggsave(file.path(paste0(CombinedObj@project.name, "_ATAConly.png")), p3, width=5, height=4)
-  p4 <- DimPlot(object = CombinedObj, pt.size = 0.5, group.by = "assign.ident", label = TRUE)
+  p4 <- DimPlot(object = CombinedObj, pt.size = 0.15, group.by = "assign.ident", label = TRUE, label.size = 2.5)
   ggsave(file.path(paste0(CombinedObj@project.name, "_annotated.png")), p4, width=6, height=4)
   
   write.table(CombinedObj@meta.data, file.path(paste0(CombinedObj@project.name, "_metadata.tsv")),quote=F,sep="\t")
