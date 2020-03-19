@@ -40,9 +40,10 @@ if config["platform"] == "microfluidic":
             bam = "Result/minimap2/{fastqid}.sortedByPos.bam"
         output:
             bam = "Result/minimap2/{fastqid}.sortedByPos.rmdp.bam",
-            metric = "Result/minimap2/{fastqid}.sortedByPos.rmdp.txt"
+            metric = "Result/minimap2/{fastqid}.sortedByPos.rmdp.txt",
+            tmp = temp(directory("Result/Tmp"))
         shell:
-            "picard MarkDuplicates INPUT={input.bam} OUTPUT={output.bam} METRICS_FILE={output.metric};"
+            "picard MarkDuplicates INPUT={input.bam} OUTPUT={output.bam} METRICS_FILE={output.metric} TMP_DIR={output.tmp};"
             "rm {input.bam}"
 
     # rule scatac_bamindex:
@@ -488,6 +489,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
             bam = "Result/minimap2/%s.sortedByPos.rmdp.bam" %(config["outprefix"]),
             metric = "Result/minimap2/%s.rmdp.txt" %(config["outprefix"]),
             fragbed = "Result/QC/%s_frag.bed" %(config["outprefix"]),
+            tmp = temp(directory("Result/Tmp"))
         params:
             sam = "Result/minimap2/%s.sortedByPos.rmdp.sample.sam" %(config["outprefix"])
         threads:
@@ -495,7 +497,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
         benchmark:
             "Result/Benchmark/%s_Rmdp.benchmark" %(config["outprefix"])
         shell:
-            "picard MarkDuplicates INPUT={input.bam} OUTPUT={output.bam} METRICS_FILE={output.metric};"
+            "picard MarkDuplicates INPUT={input.bam} OUTPUT={output.bam} METRICS_FILE={output.metric} TMP_DIR={output.tmp};"
             "samtools view -@ {threads} -s 0.01 -o {params.sam} {input.bam};"
             "awk '{{if ($9>0) print $9}}' {params.sam} > {output.fragbed};"
 
