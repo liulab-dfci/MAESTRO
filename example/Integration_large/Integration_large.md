@@ -126,10 +126,10 @@ Then users can load the BCC scRNA-seq dataset into R, perform clustering analysi
 > bcc.RNA.anno <- read.delim("GSE123813_BCC_scRNA_metadata.txt")
 > bcc.RNA.res$RNA@meta.data = cbind(bcc.RNA.res$RNA@meta.data, bcc.RNA.anno[match(colnames(bcc.RNA.res$RNA), bcc.RNA.anno[,1]),c(2,3,5)])
 > bcc.RNA.res$RNA@meta.data$assign.ident = bcc.RNA.res$RNA@meta.data$cluster
-> p = DimPlot(object = bcc.RNA.res$RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3)
-> ggsave(paste0(bcc.RNA.res$RNA@project.name, "_annotated.png"), p, width=6, height=4)
+> p = DimPlot(object = bcc.RNA.res$RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3, repel = TRUE)
+> ggsave(paste0(bcc.RNA.res$RNA@project.name, "_annotated_meta.png"), p, width=6.5, height=4.5)
 ```
-<img src="./GSE129785_BCC_scRNA_annotated.png" width="630" height="420" /> 
+<img src="./GSE123813_BCC_scRNA_annotated_meta.png" width="650" height="450" /> 
 
 ### Step 7. Integrated analysis of BCC scATAC-seq and scRNA-seq
 Next, we can integrate the BCC scATAC-seq clusters with scRNA-seq clusters, co-embed the scRNA-seq and scATAC-seq cells in the same low dimensional space, and transfer the cell type labels from scRNA-seq to scATAC-seq. MAESTRO will automatically generate the scATAC and scRNA co-aligned visualization, cell-type annotated visualization using scRNA-seq labels, RNA-only visualization, and ATAC-only visualization.
@@ -138,20 +138,20 @@ Next, we can integrate the BCC scATAC-seq clusters with scRNA-seq clusters, co-e
 > bcc.coembedded.res <- Incorporate(RNA = bcc.RNA.res$RNA, ATAC = bcc.ATAC.res$ATAC, project = "BCC_integrated")
 ```
 Co-embedding visualization:     
-<img src="./GSE129785_BCC_coembedded_source.png" width="460" height="400" /> 
+<img src="./BCC_integrated_source.png" width="525" height="420" /> 
 
 Co-embedding and annotated visualization:     
-<img src="./GSE129785_BCC_coembedded_annotated.png" width="460" height="400" /> 
+<img src="./BCC_integrated_annotated.png" width="630" height="420" /> 
 
 scRNA-only visualization:       
-<img src="./GSE129785_BCC_coembedded_RNAonly.png" width="530" height="400" /> 
+<img src="./BCC_integrated_RNAonly.png" width="525" height="420" /> 
 
 scATAC-only visualization:      
-<img src="./GSE129785_BCC_coembedded_ATAConly.png" width="530" height="400" /> 
+<img src="./BCC_integrated_ATAConly.png" width="525" height="420" /> 
 
 **Step 8. Save the project for future analysis**     
 Finally, users can save the integrated R project for future analysis. Users can also explore the differential expressed genes, driver regulators in different clusters, and consistency between scRNA-seq and scATAC-seq in the later analysis.
 
 ```R
-> saveRDS(bcc.coembedded.res, "BCC.scRA.coembedded.rds")
+> saveRDS(bcc.coembedded.res, "BCC_integrated.rds")
 ```

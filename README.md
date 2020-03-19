@@ -92,10 +92,10 @@ COMMAND -h` to see the detail description for each option of each module.
 
 ## Galleries & Tutorials (click on the image for details)
 
-[<img src="./image/RNA.10x.png" width="280" height="318" />](./example/RNA_infrastructure_10x/RNA_infrastructure_10x.md)
-[<img src="./image/ATAC.10x.png" width="280" height="318" />](./example/ATAC_infrastructure_10x/ATAC_infrastructure_10x.md)  
-[<img src="./image/integration.10x.png" width="280" height="318" />](./example/Integration/Integration.md)
-[<img src="./image/integration.large.png" width="280" height="318" />](./example/Integration_large/Integration_large.md)
+[<img src="./image/RNA.10x.png" width="297" height="378" />](./example/RNA_infrastructure_10x/RNA_infrastructure_10x.md)
+[<img src="./image/ATAC.10x.png" width="297" height="378" />](./example/ATAC_infrastructure_10x/ATAC_infrastructure_10x.md)  
+[<img src="./image/integration.10x.png" width="297" height="378" />](./example/Integration/Integration.md)
+[<img src="./image/integration.large.png" width="297" height="378" />](./example/Integration_large/Integration_large.md)
 
 ## Citation
 
