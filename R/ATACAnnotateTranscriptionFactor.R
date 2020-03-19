@@ -88,7 +88,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
       targetList[[icluster]] = list()
       ipeaks <- peaks[peaks$cluster == icluster, "peak"]
       if(length(ipeaks) > min.peaks){
-      ipeaks <- strsplit(ipeaks, "-")
+      ipeaks <- strsplit(ipeaks, "\\W")
       ipeaks <- data.frame(matrix(unlist(ipeaks), nrow=length(ipeaks), byrow=T))
       outputBed <- paste0(outputDir, "/", icluster, ".peaks.bed")
       write.table(ipeaks, outputBed, sep="\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
