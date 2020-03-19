@@ -41,7 +41,7 @@ if config["platform"] == "microfluidic":
         output:
             bam = "Result/minimap2/{fastqid}.sortedByPos.rmdp.bam",
             metric = "Result/minimap2/{fastqid}.sortedByPos.rmdp.txt",
-            tmp = temp(directory("Result/Tmp"))
+            tmp = temp(directory("Result/Tmp/{fastqid}"))
         shell:
             "picard MarkDuplicates INPUT={input.bam} OUTPUT={output.bam} METRICS_FILE={output.metric} TMP_DIR={output.tmp};"
             "rm {input.bam}"
