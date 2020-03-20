@@ -15,7 +15,7 @@ ATACRunSeurat(
   dims.use = 1:30,
   cluster.res = 0.6,
   only.pos = FALSE,
-  peaks.test.use = "wilcox",
+  peaks.test.use = "presto",
   peaks.cutoff = 1e-05,
   peaks.pct = 0.1,
   peaks.logfc = 0.2,
@@ -49,7 +49,8 @@ if users want to obtain a larger (smaller) number of communities. Default is 0.6
 
 \item{only.pos}{If seting true, only positive peaks will be output. Default is False.}
 
-\item{peaks.test.use}{Denotes which test to use to identify differnetial peaks. Default is "wilcox". Available options are "bimod", "roc" and "t".}
+\item{peaks.test.use}{Denotes which test to use to identify differnetial peaks. Default is "presto", a fast version of Wilcoxon Rank Sum test. 
+Available options are "wilcox" and "t". See \code{\link{FindAllMarkersMAESTRO}} for details.}
 
 \item{peaks.cutoff}{Identify differential peaks with adjusted p.value less than \code{peaks.cutoff} as cluster specific peaks}
 
