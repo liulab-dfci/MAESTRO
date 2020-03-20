@@ -34,6 +34,7 @@
 #'
 #' @importFrom Seurat Idents
 #' @importFrom presto wilcoxauc sumGroups
+#' @import dplyr
 #' @export
 
 FindAllMarkersMAESTRO <- function(object, test.use = 'presto', 
