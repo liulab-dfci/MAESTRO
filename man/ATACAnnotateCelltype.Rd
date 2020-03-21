@@ -9,7 +9,7 @@ ATACAnnotateCelltype(
   ATAC,
   signatures,
   min.score = 0,
-  genes.test.use = "wilcox",
+  genes.test.use = "presto",
   genes.cutoff = 1e-05,
   orig.ident = NULL
 )
@@ -23,7 +23,7 @@ gene symbol. Check the immune signatures from CIBERSORT (Newman et al., Nature M
 \item{min.score}{Minimum score required. For one cluster, if the score for all celltypes are less than 
 \code{min.score}, the cluster will be annotated as "Others". Default is 0.}
 
-\item{genes.test.use}{Denotes which test to use to identify genes. Default is "wilcox".}
+\item{genes.test.use}{Denotes which test to use to identify genes. Default is "presto".}
 
 \item{genes.cutoff}{Identify differential expressed genes with adjusted p.value less than \code{genes.cutoff} as cluster speficic genes
 for each cluster. Default cutoff is 1E-5.}

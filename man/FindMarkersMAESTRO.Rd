@@ -9,7 +9,7 @@ FindMarkersMAESTRO(
   object,
   ident.1 = 0,
   ident.2 = NULL,
-  test.use = "wilcox",
+  test.use = "presto",
   slot = "data",
   features = NULL,
   min.pct = 0.1,
@@ -29,7 +29,8 @@ FindMarkersMAESTRO(
 \item{ident.2}{A second identity of cluster for comparison; if \code{NULL},
 use all other cells for comparison. Default is \code{NULL}.}
 
-\item{test.use}{Method to use to identify differential genes or peaks. Default is "wilcox", Wilcoxon Rank Sum test.
+\item{test.use}{Method to use to identify differential genes or peaks. Default is "presto", a fast version of Wilcoxon Rank Sum test.
+"presto" produces exactly the same result as "wilcox", but "presto" is much faster.
 For scATAC-seq, "t" test is another option. For scRNA-seq, other available options are "bimod",
 "roc", "t", "negbinom", "poisson", "LR", "MAST", "DESeq2", which supported by Seurat \code{link{FindMarkers}} function.}
 

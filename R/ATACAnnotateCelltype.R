@@ -11,7 +11,7 @@
 #' gene symbol. Check the immune signatures from CIBERSORT (Newman et al., Nature Method, 2015) in example for details.
 #' @param min.score Minimum score required. For one cluster, if the score for all celltypes are less than 
 #' \code{min.score}, the cluster will be annotated as "Others". Default is 0.
-#' @param genes.test.use Denotes which test to use to identify genes. Default is "wilcox". 
+#' @param genes.test.use Denotes which test to use to identify genes. Default is "presto". 
 #' @param genes.cutoff Identify differential expressed genes with adjusted p.value less than \code{genes.cutoff} as cluster speficic genes
 #' for each cluster. Default cutoff is 1E-5.
 #' @param orig.ident Orignal identity. If given, will use the original identity to annotate the celltypes. Default is NULL.
@@ -34,7 +34,7 @@
 #' @importFrom ggplot2 ggsave
 #' @export
 
-ATACAnnotateCelltype <- function(ATAC, signatures, min.score = 0, genes.test.use = "wilcox", genes.cutoff = 1E-5, orig.ident = NULL)
+ATACAnnotateCelltype <- function(ATAC, signatures, min.score = 0, genes.test.use = "presto", genes.cutoff = 1E-5, orig.ident = NULL)
 {
   DefaultAssay(ATAC) <- "ACTIVITY"
 

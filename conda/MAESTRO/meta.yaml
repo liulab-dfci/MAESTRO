@@ -55,6 +55,7 @@ requirements:
     - bioconductor-cicero
     - bioconductor-genefilter
     - bioconductor-GOSemSim
+    - bioconductor-DESeq2
   run:
     - xorg-libxrender
     - python =3.7
@@ -101,6 +102,8 @@ requirements:
     - bioconductor-cicero
     - bioconductor-genefilter
     - bioconductor-GOSemSim
+    - bioconductor-DESeq2
+
 about:
   home: https://github.com/chenfeiwang/MAESTRO
   license: GPL-3.0

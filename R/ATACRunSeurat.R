@@ -19,7 +19,8 @@
 #' @param cluster.res Value of the clustering resolution parameter. Please use a value above (below) 1.0 
 #' if users want to obtain a larger (smaller) number of communities. Default is 0.6.
 #' @param only.pos If seting true, only positive peaks will be output. Default is False.
-#' @param peaks.test.use Denotes which test to use to identify differnetial peaks. Default is "wilcox". Available options are "bimod", "roc" and "t".
+#' @param peaks.test.use Denotes which test to use to identify differnetial peaks. Default is "presto", a fast version of Wilcoxon Rank Sum test. 
+#' Available options are "wilcox" and "t". See \code{\link{FindAllMarkersMAESTRO}} for details.
 #' @param peaks.cutoff Identify differential peaks with adjusted p.value less than \code{peaks.cutoff} as cluster specific peaks
 #' @param peaks.pct Only test peaks that are detected in a minimum fraction of min.pct cells in either of the two populations. Meant to speed up the function by not testing peaks that are very infrequently detected Default is 0.1
 #' @param peaks.logfc Limit testing to peaks which show, on average, at least X-fold difference (log-scale) between the two groups of cells. Default is 0.2 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
@@ -48,7 +49,7 @@
 
 ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ident = NULL, 
                           min.c = 10, min.p = 100, method = "LSI", dims.use = 1:30, 
-                          cluster.res = 0.6, only.pos = FALSE, peaks.test.use = "wilcox", 
+                          cluster.res = 0.6, only.pos = FALSE, peaks.test.use = "presto", 
                           peaks.cutoff = 1E-5, peaks.pct = 0.1, peaks.logfc = 0.2, 
                           runlsi.args = list(), runpca.args = list(), 
                           findneighbors.args = list(), findclusters.args = list(),...)
