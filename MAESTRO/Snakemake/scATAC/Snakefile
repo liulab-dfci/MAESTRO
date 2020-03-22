@@ -27,7 +27,7 @@ if config["platform"] == "microfluidic":
             fastq1 = "%s/{fastqid}_1.fastq" %(config["fastqdir"]),
             fastq2 = "%s/{fastqid}_2.fastq" %(config["fastqdir"])
         output:
-            bam = "Result/minimap2/{fastqid}.sortedByPos.bam"
+            bam = temp("Result/minimap2/{fastqid}.sortedByPos.bam")
         threads:
             config["cores"]
         shell:
@@ -292,15 +292,14 @@ if config["platform"] == "microfluidic":
             
 if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
     if config["platform"] == "10x-genomics":
-        rule scatac_map:
+        rule scatac_preprocess:
             input:
                 fastqs = config["fastqdir"],
                 fasta = config["genome"]["fasta"]
             output:
-                bam = temp("Result/minimap2/%s.sortedByPos.bam" %(config["outprefix"])),
-                r1cat = temp("%s/%s_R1.fastq" %(config["fastqdir"], config["fastqprefix"])),
-                r2cat = temp("%s/%s_R2.fastq" %(config["fastqdir"], config["fastqprefix"])),
-                r3cat = temp("%s/%s_R3.fastq" %(config["fastqdir"], config["fastqprefix"])),
+                r1cat = "%s/%s_R1.fastq" %(config["fastqdir"], config["fastqprefix"]),
+                r2cat = "%s/%s_R2.fastq" %(config["fastqdir"], config["fastqprefix"]),
+                r3cat = "%s/%s_R3.fastq" %(config["fastqdir"], config["fastqprefix"]),
             params:
                 r1 = getfastq_10x(config["fastqdir"], config["fastqprefix"])["r1"],
                 r2 = getfastq_10x(config["fastqdir"], config["fastqprefix"])["barcode"],
@@ -308,17 +307,12 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
                 cmd = getfastq_10x(config["fastqdir"], config["fastqprefix"])["command"],
             threads:
                 config["cores"]
-            log:
-                "Result/Log/" + config["outprefix"] + "_minimap.log"
             benchmark:
-                "Result/Benchmark/%s_Minimap2.benchmark" %(config["outprefix"])
+                "Result/Benchmark/%s_Preprocess.benchmark" %(config["outprefix"])
             shell:
                 "{params.cmd} {params.r1} > {output.r1cat};"
                 "{params.cmd} {params.r2} > {output.r2cat};"
                 "{params.cmd} {params.r3} > {output.r3cat};"
-                "minimap2 -ax sr -t {threads} {input.fasta} {output.r1cat} {output.r3cat} "
-                "| samtools view --threads {threads} -b "
-                "| samtools sort --threads {threads} -o {output.bam};"
 
 
     # rule scatac_bulk_unique:
@@ -365,21 +359,21 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
             shell:
                 "python " + SCRIPT_PATH + "/scATAC_sci_BarcodeExtract.py --R1 {input.fastq1} --R2 {input.fastq2} -O {params.outdir}"
 
-        rule scatac_map:
-            input:
-                fasta = config["genome"]["fasta"],
-                r1 = "%s/%s_R1.fastq" %(config["fastqdir"], config["fastqprefix"]),
-                r3 = "%s/%s_R3.fastq" %(config["fastqdir"], config["fastqprefix"]),
-            output:
-                bam = temp("Result/minimap2/%s.sortedByPos.bam" %(config["outprefix"])),
-            threads:
-                config["cores"]
-            benchmark:
-                "Result/Benchmark/%s_Minimap2.benchmark" %(config["outprefix"])
-            shell:
-                "minimap2 -ax sr -t {threads} {input.fasta} {input.r1} {input.r3} "
-                "| samtools view --threads {threads} -b "
-                "| samtools sort --threads {threads} -o {output.bam};"
+    rule scatac_map:
+        input:
+            fasta = config["genome"]["fasta"],
+            r1 = "%s/%s_R1.fastq" %(config["fastqdir"], config["fastqprefix"]),
+            r3 = "%s/%s_R3.fastq" %(config["fastqdir"], config["fastqprefix"]),
+        output:
+            bam = temp("Result/minimap2/%s.sortedByPos.bam" %(config["outprefix"])),
+        threads:
+            config["cores"]
+        benchmark:
+            "Result/Benchmark/%s_Minimap2.benchmark" %(config["outprefix"])
+        shell:
+            "minimap2 -ax sr -t {threads} {input.fasta} {input.r1} {input.r3} "
+            "| samtools view --threads {threads} -b "
+            "| samtools sort --threads {threads} -o {output.bam};"
 
     rule scatac_fragmentgenerate:
         input:
