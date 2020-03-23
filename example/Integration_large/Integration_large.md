@@ -107,8 +107,7 @@ $ gunzip GSE123813_BCC_scRNA_metadata.txt.gz
 ```
 
 ### Step 6. Perform clustering analysis and cell type annotation for BCC scRNA-seq
-Then users can load the BCC scRNA-seq dataset into R, perform clustering analysis like the [previous demonstrations](https://github.com/chenfeiwang/MAESTRO/blob/master/example/RNA_infrastructure_10x/RNA_infrastructure_10x.md), and annotate the scRNA-seq clusters using original labels.
-
+Then users can load the BCC scRNA-seq dataset into R, perform clustering analysis like the [previous demonstrations](../RNA_infrastructure_10x/RNA_infrastructure_10x.md).
 ```R
 > bcc <- Read10X_h5('GSE123813_BCC_scRNA_counts.h5')
 > bcc.expr <- RNACountToTPM(bcc, idType = "Symbol")
@@ -123,13 +122,46 @@ Then users can load the BCC scRNA-seq dataset into R, perform clustering analysi
                               cluster.res = 0.6,
                               genes.test.use = "wilcox",
                               genes.cutoff = 1e-05)
+```
+
+<img src="./GSE123813_BCC_scRNA_cluster.png" width="525" height="420" /> 
+
+Then we can annotate the scRNA-seq clusters using public immune signatures from CIBERSORT.
+```R
+> data(human.immune.CIBERSORT)
+> bcc.RNA.res$RNA <- RNAAnnotateCelltype(RNA = bcc.RNA.res$RNA, 
+                                         gene = bcc.RNA.res$gene,
+                                         signatures = human.immune.CIBERSORT, 
+                                         min.score = 0.05)
+```
+
+<img src="./GSE123813_BCC_scRNA_annotated.png" width="525" height="420" /> 
+
+This scRNA-seq dataset provides metadata. So, we can also annotate the scRNA-seq clusters using the original labels.
+```R
 > bcc.RNA.anno <- read.delim("GSE123813_BCC_scRNA_metadata.txt")
-> bcc.RNA.res$RNA@meta.data = cbind(bcc.RNA.res$RNA@meta.data, bcc.RNA.anno[match(colnames(bcc.RNA.res$RNA), bcc.RNA.anno[,1]),c(2,3,5)])
-> bcc.RNA.res$RNA@meta.data$assign.ident = bcc.RNA.res$RNA@meta.data$cluster
-> p = DimPlot(object = bcc.RNA.res$RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3, repel = TRUE)
+> bcc.RNA.res$RNA@meta.data <- cbind(bcc.RNA.res$RNA@meta.data, bcc.RNA.anno[match(colnames(bcc.RNA.res$RNA), bcc.RNA.anno[,1]),c(2,3,5)])
+> p = DimPlot(object <- bcc.RNA.res$RNA, label = TRUE, pt.size = 0.2, group.by = "cluster", label.size = 3, repel = TRUE)
 > ggsave(paste0(bcc.RNA.res$RNA@project.name, "_annotated_meta.png"), p, width=6.5, height=4.5)
 ```
+
 <img src="./GSE123813_BCC_scRNA_annotated_meta.png" width="650" height="450" /> 
+
+We can combine the MAESTRO automatic annotation results and the original labels, and then finalize the clusters mannually. 
+```R
+> current.cluster.ids <- levels(bcc.RNA.res$RNA@meta.data$seurat_clusters)
+> new.cluster.ids <- c("0:CD8Teff", "1:CD4Tconv", "2:B", "3:CD4Tconv", "4:Treg", 
+                       "5:CD8Teff", "6:CD8Teff", "7:Malignant", "8:mDC", "9:Plasma", 
+                       "10:MonoMac", "11:CAF", "12:TProliferation", "13:pDC", "14:Malignant", 
+                       "15:Plasma", "16:Endothelial", "17:CAF", "18:Melanocyte")
+> assign.ident.mannual <- plyr::mapvalues(x = bcc.RNA.res$RNA@meta.data$seurat_clusters, from = current.cluster.ids, to = new.cluster.ids)
+> bcc.RNA.res$RNA@meta.data$assign.ident.CIBERSORT = bcc.RNA.res$RNA@meta.data$assign.ident
+> bcc.RNA.res$RNA@meta.data$assign.ident = assign.ident.mannual
+> p = DimPlot(object = bcc.RNA.res$RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3, repel = T)
+> ggsave(paste0(bcc.RNA.res$RNA@project.name, "_annotated_mannually.png"), p, width=6, height=4)
+```
+
+<img src="./GSE123813_BCC_scRNA_annotated_mannually.png" width="630" height="420" /> 
 
 ### Step 7. Integrated analysis of BCC scATAC-seq and scRNA-seq
 Next, we can integrate the BCC scATAC-seq clusters with scRNA-seq clusters, co-embed the scRNA-seq and scATAC-seq cells in the same low dimensional space, and transfer the cell type labels from scRNA-seq to scATAC-seq. MAESTRO will automatically generate the scATAC and scRNA co-aligned visualization, cell-type annotated visualization using scRNA-seq labels, RNA-only visualization, and ATAC-only visualization.

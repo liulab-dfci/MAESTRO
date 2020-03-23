@@ -198,7 +198,7 @@ It means reticulate R package cannot find the python shared library. If Anaconda
 
 If users don't install Miniconda or Anaconda, we recommend to use `reticulate::install_miniconda()` to install a Miniconda Python environment and specify the version through `use_python`.
 
-### Step 1. Perform clustering analysis and differential peak calling**      
+### Step 1. Perform clustering analysis and differential peak calling    
 We next create a Seurat object using the peak count matrix and perform the clustering analysis as well as differential peak calling for different clusters. `ATACRunSeurat()` function in MAESTRO integrate muiltiple functions of Seurat and perform the routine analysis as follows.
 
 **Analysis**
@@ -220,25 +220,25 @@ MAESTRO adopts a [wilcox-test](https://www.tandfonline.com/doi/abs/10.1080/01621
                                  dims.use = 1:30,
                                  cluster.res = 0.6,
                                  only.pos = TRUE,
-                                 peaks.test.use = "wilcox",
+                                 peaks.test.use = "presto",
                                  peaks.cutoff = 1e-05,
                                  peaks.pct = 0.1,
                                  peaks.logfc = 0.2)
 > head(pbmc.ATAC.res$peaks)
-                                p_val avg_logFC pct.1 pct.2     p_val_adj
-chr20-50274837-50275400 1.494303e-205 0.4843556 0.485 0.162 1.675652e-200
-chr14-50038442-50039234 3.047673e-184 0.4336734 0.495 0.182 3.417539e-179
-chr18-48896621-48897389 1.822834e-183 0.4404956 0.415 0.131 2.044053e-178
-chr20-40688901-40689960 2.031796e-173 0.4306285 0.451 0.162 2.278374e-168
-chr6-44058462-44059515  2.549222e-168 0.4112970 0.501 0.196 2.858596e-163
-chr22-44068366-44069201 2.086646e-150 0.4008221 0.406 0.144 2.339881e-145
-                        cluster                    peak
-chr20-50274837-50275400       0 chr20-50274837-50275400
-chr14-50038442-50039234       0 chr14-50038442-50039234
-chr18-48896621-48897389       0 chr18-48896621-48897389
-chr20-40688901-40689960       0 chr20-40688901-40689960
-chr6-44058462-44059515        0  chr6-44058462-44059515
-chr22-44068366-44069201       0 chr22-44068366-44069201
+          p_val avg_logFC pct.1 pct.2     p_val_adj cluster
+1  0.000000e+00 0.4752823 0.572 0.135  0.000000e+00       0
+2  0.000000e+00 0.4224288 0.496 0.125  0.000000e+00       0
+3 4.355527e-286 0.3982421 0.478 0.129 6.985916e-281       0
+4 1.797037e-283 0.3954815 0.457 0.118 2.882304e-278       0
+5 1.017501e-255 0.3727491 0.411 0.102 1.631991e-250       0
+6 3.109149e-251 0.3694872 0.409 0.103 4.986827e-246       0
+                      peak
+1   chr6-44058458-44059516
+2  chr14-50038437-50039234
+3 chr9-129777051-129777688
+4  chr20-50274836-50275400
+5 chr8-141137795-141138489
+6 chr2-112839364-112840014
 ```
 
 `ATACRunSeurat()` returns a list of a Seurat object `ATAC` and dataframe `peaks`. Please see [Seurat Github wiki](https://github.com/satijalab/seurat/wiki) for more details of the Seurat object structure. Users can use the `str()` command to get an intuitive understanding of the object.
@@ -256,30 +256,30 @@ We next try to annotate different clusters based on their marker genes. For scAT
 > pbmc.ATAC.res$ATAC <- ATACAnnotateCelltype(ATAC = pbmc.ATAC.res$ATAC,
                                              signatures = human.immune.CIBERSORT, 
                                              min.score = 0.1, 
-                                             genes.test.use = "wilcox",
+                                             genes.test.use = "presto",
                                              genes.cutoff = 1E-5)
 > head(pbmc.ATAC.res$ATAC@meta.data)
-                   orig.ident nCount_ATAC nFeature_ATAC ATAC_snn_res.0.6
-AAACGAAAGAGCGAAA 10X_PBMC_10k        4919          4919                0
-AAACGAAAGAGTTTGA 10X_PBMC_10k        5847          5847                4
-AAACGAAAGCGAGCTA 10X_PBMC_10k        8161          8161                8
-AAACGAAAGGCTTCGC 10X_PBMC_10k       33682         33682               10
-AAACGAAAGTGCTGAG 10X_PBMC_10k        4255          4255                0
-AAACGAAGTCAGGCTC 10X_PBMC_10k        2680          2680                3
+                       orig.ident nCount_ATAC nFeature_ATAC ATAC_snn_res.0.6
+AAACGAAAGAGCGAAA 10X_PBMC_MAESTRO        6073          6073                0
+AAACGAAAGAGTTTGA 10X_PBMC_MAESTRO        7091          7091                2
+AAACGAAAGCGAGCTA 10X_PBMC_MAESTRO       10187         10187                7
+AAACGAAAGGCTTCGC 10X_PBMC_MAESTRO       40191         40191               13
+AAACGAAAGTGCTGAG 10X_PBMC_MAESTRO        5343          5343                0
+AAACGAAGTCAGGCTC 10X_PBMC_MAESTRO        2853          2853                1
                  seurat_clusters nCount_ACTIVITY nFeature_ACTIVITY
-AAACGAAAGAGCGAAA               0        7566.290             20834
-AAACGAAAGAGTTTGA               4        8815.877             22358
-AAACGAAAGCGAGCTA               8       14336.689             25545
-AAACGAAAGGCTTCGC              10       50857.237             34625
-AAACGAAAGTGCTGAG               0        6890.523             19761
-AAACGAAGTCAGGCTC               3        5242.070             15857
+AAACGAAAGAGCGAAA               0        8832.537             19326
+AAACGAAAGAGTTTGA               2       10169.177             20662
+AAACGAAAGCGAGCTA               7       17031.471             24756
+AAACGAAAGGCTTCGC              13       57484.577             34209
+AAACGAAAGTGCTGAG               0        8132.421             18455
+AAACGAAGTCAGGCTC               1        5323.381             13041
                    assign.ident
 AAACGAAAGAGCGAAA      Monocytes
 AAACGAAAGAGTTTGA      Monocytes
 AAACGAAAGCGAGCTA          ActNK
 AAACGAAAGGCTTCGC NaiveCD4Tcells
 AAACGAAAGTGCTGAG      Monocytes
-AAACGAAGTCAGGCTC         Others
+AAACGAAGTCAGGCTC NaiveCD4Tcells
 ```
 
 <img src="./10X_PBMC_10k_annotated.png" width="630" height="420" /> 
@@ -293,7 +293,7 @@ All the reduction results are stored in `Object@reductions`. For example, users 
                group.by = "assign.ident", label.size = 3, 
                cols = brewer.pal(8,"Set2")) + 
        theme_linedraw() + NoLegend()
-> ggsave(file.path(paste0(pbmc.ATAC.res$ATAC@project.name, "_annotated_nolegend.png")), p, width=5, height=5)
+> ggsave(file.path(paste0(pbmc.ATAC.res$ATAC@project.name, "_annotated_nolegend.png")), p, width=4.5, height=4.5)
 ```
 
 <img src="./10X_PBMC_10k_annotated_nolegend.png" width="420" height="420" />
@@ -308,37 +308,37 @@ After identifying enriched transcription regulators, MAESTRO also provides the p
                                                    project = "10X_PBMC_10k", 
                                                    giggle.path = "/home1/wangchenfei/annotations/MAESTRO/giggle")
 > pbmc.ATAC.tfs[["0"]]
- [1] "NR4A1 | RARA | ESRRA | NR4A3 | NR4A2 | RXRA | NR1I3 | THRA | RXRB | RARG | NR1H3 | NR2F6 | VDR | PPARD | PPARA | THRB | ESR2 | PPARG | NR2C1 | NR2F1 | ESR1 | NR5A2 | RXRG | NR2F2 | NR1I2 | HNF4A | NR1H4 | RARB | NR5A1 | ESRRB"
- [2] "IRF1 | IRF3 | STAT3 | SPI1 | STAT2 | BCL6 | BCL11A | STAT1 | IRF2 | IRF8 | SPIB | STAT5A | STAT4 | STAT5B | PRDM1 | IRF4"
+ [1] "RARA | ESRRA | NR4A1 | NR4A2 | NR4A3 | RXRA | NR1I3 | THRA | RXRB | RARG | VDR | NR2F6 | NR1H3 | PPARD | PPARA | PPARG | THRB | ESR2 | NR2C1 | NR2F1 | ESR1 | NR5A2 | NR1I2 | RXRG | NR2F2 | HNF4A | HNF4G | ESRRB | NR1H4 | RARB | NR5A1"
+ [2] "IRF1 | IRF3 | SPI1 | STAT3 | BCL11A | BCL6 | STAT2 | IRF2 | STAT1 | IRF8 | STAT5A | SPIB | STAT5B | PRDM1 | IRF4 | STAT4"
  [3] "PML"
- [4] "GLI1 | GLI3 | GLI2"
- [5] "E4F1 | GMEB2 | ARNT | HIF1A | EPAS1 | AHR"
+ [4] "DBP | ATF4 | DDIT3 | CEBPA | NFIL3 | CEBPB | CEBPD | CEBPG | CEBPE | BATF3 | BATF | HLF"
+ [5] "GLI1 | GLI3 | GLI2"
  [6] "BRD4"
  [7] "SKI"
- [8] "DBP | ATF4 | DDIT3 | CEBPA | CEBPB | NFIL3 | CEBPD | CEBPE | CEBPG | BATF3 | BATF | HLF"
- [9] "NCOR1"
-[10] "JUNB | FOS | FOSB | JUND | FOSL2 | JUN | FOSL1 | NFE2L2 | NFE2 | BACH1 | ZNF554 | BACH2"
+ [8] "E4F1 | GMEB2 | ARNT | HIF1A | AHR | EPAS1"
+ [9] "ELF2 | ELF1 | ETV2 | ETS2 | FLI1 | ELK1 | ETV5 | NFAT5 | GABPA | ETV6 | ELK4 | ETS1 | ETV7 | ELK3 | ETV4 | ERG | ETV1 | EHF | FEV | ELF3 | ELF5"
+[10] "FOS | JUNB | FOSB | JUND | FOSL2 | JUN | FOSL1 | NFE2L2 | NFE2 | BACH1 | ZNF554 | BACH2"
 ```
 
 Besides indentifying TFs for all the clusters, we also support the differential peaks from a single comparison.
 ```R
 > DefaultAssay(pbmc.ATAC.res$ATAC) = "ATAC"
-> de.peakset <- FindMarkersMAESTRO(pbmc.ATAC.res$ATAC, ident.1 = c(0,1,4))
+> de.peakset <- FindMarkersMAESTRO(pbmc.ATAC.res$ATAC, ident.1 = c(0,2,10,12))
 > pbmc.ATAC.monocyte.tfs <- ATACAnnotateTranscriptionFactor(ATAC = pbmc.ATAC.res$ATAC, 
                                                             peaks = de.peakset,
-                                                            cluster = c(0,1,4),
+                                                            cluster = c(0,2,10,12),
                                                             project = "10X_PBMC_10k_Monocyte", 
                                                             giggle.path = "/home1/wangchenfei/annotations/MAESTRO/giggle")
 ```
 
 ### Step 4. Visualize driver transcription factors for each cluster
-According to the annotation of the clusters, we know that cluster 7 is B cells. Next, we want to visualize the enriched regulators in B cells from Step 4. 
+According to the annotation of the clusters, we know that cluster 11 is B cells. Next, we want to visualize the enriched regulators in B cells from Step 4. 
 
 The output TFs from MAESTRO have already been pre-filtered using TF regulatory potential score. 
 ```R
-> tfs = sapply(pbmc.ATAC.tfs[["7"]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
+> tfs <- sapply(pbmc.ATAC.tfs[["8"]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
 > p <- VisualizeTFenrichment(TFs = tfs, 
-                             cluster.1 = 7, 
+                             cluster.1 = 11, 
                              type = "ATAC", 
                              SeuratObj = pbmc.ATAC.res$ATAC, 
                              GIGGLE.table = "10X_PBMC_10k_giggle.txt",
@@ -350,7 +350,7 @@ The output TFs from MAESTRO have already been pre-filtered using TF regulatory p
 
 If users want to visualize the top factors without filtering using regulatory potential. Please leave the TFs to blank, then the top 10 regulators will be visualized.
 ```R
-> p <- VisualizeTFenrichment(cluster.1 = 7, 
+> p <- VisualizeTFenrichment(cluster.1 = 11, 
                              type = "ATAC", 
                              SeuratObj = pbmc.ATAC.res$ATAC, 
                              GIGGLE.table = "10X_PBMC_10k_giggle.txt",
@@ -374,11 +374,11 @@ To further filter the regulators, users may want to visualize the expression lev
                         type = "ATAC", 
                         SeuratObj = pbmc.ATAC.res$ATAC, 
                         ncol = 2, 
-                        width = 8.5, 
+                        width = 9, 
                         height = 4, 
                         name = "10X_PBMC_10k_Bcell")
 ```
-<img src="./10X_PBMC_10k_Bcell_vlnplot.png" width="765" height="360" />   
+<img src="./10X_PBMC_10k_Bcell_vlnplot.png" width="810" height="360" />   
 
 ```R
 > p <- VisualizeUmap(genes = c("PAX5","FOXO3"),
@@ -394,7 +394,7 @@ To further filter the regulators, users may want to visualize the expression lev
 Based on the regulatory potential of TFs, we can see that PAX5 is highly expressed in the B cells from PBMC, while FOXO3 is generally distributed. We will next visualize the regulatory potential of PAX5 target genes.
 
 ```R
-> PAX5_target <- as.character(read.table("10X_PBMC_10k.GIGGLE/7.PAX5.34476.target.genes.top500.txt")[1:200,1])
+> PAX5_target <- as.character(read.table("10X_PBMC_10k.GIGGLE/11.PAX5.34475.target.genes.top500.txt")[1:200,1])
 > PAX5_target <- intersect(PAX5_target, rownames(pbmc.ATAC.res$ATAC$ACTIVITY))
 > pbmc.ATAC.res$ATAC@meta.data$PAX5_target <- Matrix::colMeans(GetAssayData(pbmc.ATAC.res$ATAC$ACTIVITY)[PAX5_target, ], na.rm = TRUE)
 > p <- FeaturePlot(pbmc.ATAC.res$ATAC,  features = "PAX5_target", cols = c("grey", "blue"))

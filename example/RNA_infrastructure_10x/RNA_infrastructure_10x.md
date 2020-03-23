@@ -147,7 +147,7 @@ MAESTRO performs quality control at both bulk and single-cell level. Here we lis
 
 **Mappability plot for scRNA-seq QC analysis (bulk level)**
 
-MAESTRO checks the read mappability and distribution of reads in CDS and intronic regions. CDS read distribution checks proper RNA processing and library preparation which ensures accurate expression quantification. In general, for human or mouse, uniquely mapped reads should account for more than 60% of all reads, and more reads should be distributed in exon regions than intron reads.
+MAESTRO checks the read mappability and distribution of reads in CDS and intronic regions. CDS read distribution checks proper RNA processing and library preparation which ensures accurate expression quantification. In general, for human or mouse, uniquely mapped reads should account for more than 60% of all reads, and more reads should be distributed in exon regions than intron reads. La Manno et al (2018) found that for scRNA-seq, 15–25% of reads contained unspliced intronic sequences. 
 
 <img src="./10X_PBMC_8k_scRNA_read_distr.png" width="422" height="450" /> 
 
@@ -201,7 +201,7 @@ MAESTRO employs the graph-based clustering method in Seurat for scRNA-seq cluste
 * **UMAP visualization:**
 UMAP is used to visualize all the single cells. MAESTRO adopts [UMAP](https://arxiv.org/abs/1802.03426) to achieve a low dimension embedding, in which similar cells are placed together. To get a better result for visualization, users can tune the parameters of `RunUMAP` by adding the arguments in `RNARunSeurat` function, like `RNARunSeurat(inputMat = pbmc.gene, ..., n.neighbors = 20, min.dist = 0.2)`. 
 * **Differential gene analysis:**
-The default differential expression method is [wilcox-test](https://www.tandfonline.com/doi/abs/10.1080/01621459.1972.10481279). Users can also use other model-based methods like [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) and [MAST](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4676162/). These methods have been integrated into `FindAllMarkers` function in Seurat. We provide `FindAllMarkersMAESTRO` function in MAESTRO, which is adapted from `FindAllMarkers`, to reduce the computational time and memory. Genes with logFC greater than 0.25, minimum presence faction in cells of 0.1, and p-value less than 1E-5 are identified as marker genes for each cluster.
+The default differential expression method is [presto](https://github.com/immunogenomics/presto), a fast version of wilcoxon test. Users can also use other model-based methods like [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) and [MAST](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4676162/). These methods have been integrated into `FindAllMarkers` function in Seurat. We provide `FindAllMarkersMAESTRO` function in MAESTRO, which is adapted from `FindAllMarkers`, to reduce the computational time and memory. Genes with logFC greater than 0.25, minimum presence faction in cells of 0.1, and p-value less than 1E-5 are identified as marker genes for each cluster.
 
 ```R
 > pbmc.RNA.res <- RNARunSeurat(inputMat = pbmc.gene,
@@ -216,19 +216,19 @@ The default differential expression method is [wilcox-test](https://www.tandfonl
                                dims.use = 1:15,
                                cluster.res = 0.6,
                                only.pos = FALSE,
-                               genes.test.use = "wilcox",
+                               genes.test.use = "presto",
                                genes.cutoff = 1e-05,
                                genes.pct = 0.1,
                                genes.logfc = 0.25)
 
 > head(pbmc.RNA.res$genes)
-           p_val avg_logFC pct.1 pct.2 p_val_adj cluster       gene
-S100A8         0  3.560335 0.992 0.390         0       0     S100A8
-S100A9         0  3.443707 0.993 0.463         0       0     S100A9
-LYZ            0  2.812824 0.994 0.460         0       0        LYZ
-S100A12        0  2.694738 0.914 0.080         0       0    S100A12
-AC020656.1     0  2.442931 0.967 0.115         0       0 AC020656.1
-FCN1           0  2.278404 0.976 0.143         0       0       FCN1
+  p_val avg_logFC pct.1 pct.2 p_val_adj cluster       gene
+1     0  3.560335 0.992 0.390         0       0     S100A8
+2     0  3.443707 0.993 0.463         0       0     S100A9
+3     0  2.812824 0.994 0.460         0       0        LYZ
+4     0  2.694738 0.914 0.080         0       0    S100A12
+5     0  2.442931 0.967 0.115         0       0 AC020656.1
+6     0  2.278404 0.976 0.143         0       0       FCN1
 ```
 
 `RNARunSeurat()` returns a list of a Seurat object `RNA` and dataframe `genes`. Please see [Seurat Github wiki](https://github.com/satijalab/seurat/wiki) for more details of the Seurat object structure. Users can use the `str()` command to get an intuitive understanding of the object.
