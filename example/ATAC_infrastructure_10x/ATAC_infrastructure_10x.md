@@ -259,13 +259,13 @@ We next try to annotate different clusters based on their marker genes. For scAT
                                              genes.test.use = "presto",
                                              genes.cutoff = 1E-5)
 > head(pbmc.ATAC.res$ATAC@meta.data)
-                       orig.ident nCount_ATAC nFeature_ATAC ATAC_snn_res.0.6
-AAACGAAAGAGCGAAA 10X_PBMC_MAESTRO        6073          6073                0
-AAACGAAAGAGTTTGA 10X_PBMC_MAESTRO        7091          7091                2
-AAACGAAAGCGAGCTA 10X_PBMC_MAESTRO       10187         10187                7
-AAACGAAAGGCTTCGC 10X_PBMC_MAESTRO       40191         40191               13
-AAACGAAAGTGCTGAG 10X_PBMC_MAESTRO        5343          5343                0
-AAACGAAGTCAGGCTC 10X_PBMC_MAESTRO        2853          2853                1
+                   orig.ident nCount_ATAC nFeature_ATAC ATAC_snn_res.0.6
+AAACGAAAGAGCGAAA 10X_PBMC_10k        6073          6073                0
+AAACGAAAGAGTTTGA 10X_PBMC_10k        7091          7091                2
+AAACGAAAGCGAGCTA 10X_PBMC_10k       10187         10187                7
+AAACGAAAGGCTTCGC 10X_PBMC_10k       40191         40191               13
+AAACGAAAGTGCTGAG 10X_PBMC_10k        5343          5343                0
+AAACGAAGTCAGGCTC 10X_PBMC_10k        2853          2853                1
                  seurat_clusters nCount_ACTIVITY nFeature_ACTIVITY
 AAACGAAAGAGCGAAA               0        8832.537             19326
 AAACGAAAGAGTTTGA               2       10169.177             20662

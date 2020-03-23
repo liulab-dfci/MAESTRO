@@ -58,23 +58,16 @@ Similar to [previous demonstration](https://github.com/chenfeiwang/MAESTRO/blob/
                                 min.p = 500,
                                 dims.use = 1:30,
                                 cluster.res = 0.6,
-                                peaks.test.use = "wilcox",
+                                peaks.test.use = "presto",
                                 peaks.cutoff = 1e-05)
 > head(bcc.ATAC.res$peaks)
-                          p_val avg_logFC pct.1 pct.2 p_val_adj cluster
-chr17-55314606-55315106       0 0.3968655 0.348 0.033         0       0
-chr7-36208966-36209466        0 0.3900693 0.370 0.049         0       0
-chr13-110965223-110965723     0 0.3635558 0.373 0.087         0       0
-chr2-159879020-159879520      0 0.3236877 0.309 0.044         0       0
-chr10-126041663-126042163     0 0.3210925 0.373 0.097         0       0
-chr19-50329070-50329570       0 0.3117215 0.462 0.200         0       0
-                                               peak
-chr17-55314606-55315106     chr17-55314606-55315106
-chr7-36208966-36209466       chr7-36208966-36209466
-chr13-110965223-110965723 chr13-110965223-110965723
-chr2-159879020-159879520   chr2-159879020-159879520
-chr10-126041663-126042163 chr10-126041663-126042163
-chr19-50329070-50329570     chr19-50329070-50329570
+  p_val avg_logFC pct.1 pct.2 p_val_adj cluster                      peak
+1     0 0.3970384 0.345 0.037         0       0   chr17-55314606-55315106
+2     0 0.3923740 0.371 0.052         0       0    chr7-36208966-36209466
+3     0 0.3601251 0.364 0.091         0       0 chr13-110965223-110965723
+4     0 0.3236424 0.368 0.100         0       0 chr10-126041663-126042163
+5     0 0.3138130 0.453 0.204         0       0   chr19-50329070-50329570
+6     0 0.3123080 0.294 0.048         0       0  chr2-159879020-159879520
 ```
 
 <img src="./GSE129785_BCC_scATAC_cluster.png" width="525" height="420" /> 
@@ -88,7 +81,7 @@ We next try to annotate different clusters based on their marker genes. For scAT
 > bcc.ATAC.res$ATAC <- ATACAnnotateCelltype(ATAC = bcc.ATAC.res$ATAC, 
                                             signatures = human.immune.CIBERSORT, 
                                             min.score = 0.1, 
-                                            genes.test.use = "wilcox",
+                                            genes.test.use = "presto",
                                             genes.cutoff = 1E-5)
 > head(bcc.ATAC.res$ATAC@meta.data$assign.ident)
 ```
@@ -120,7 +113,7 @@ Then users can load the BCC scRNA-seq dataset into R, perform clustering analysi
                               variable.genes = 2000, 
                               organism = "GRCh38",
                               cluster.res = 0.6,
-                              genes.test.use = "wilcox",
+                              genes.test.use = "presto",
                               genes.cutoff = 1e-05)
 ```
 
@@ -135,7 +128,7 @@ Then we can annotate the scRNA-seq clusters using public immune signatures from 
                                          min.score = 0.05)
 ```
 
-<img src="./GSE123813_BCC_scRNA_annotated.png" width="525" height="420" /> 
+<img src="./GSE123813_BCC_scRNA_annotated.png" width="630" height="420" /> 
 
 This scRNA-seq dataset provides metadata. So, we can also annotate the scRNA-seq clusters using the original labels.
 ```R
