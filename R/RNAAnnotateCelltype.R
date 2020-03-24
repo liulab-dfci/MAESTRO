@@ -35,7 +35,8 @@
 RNAAnnotateCelltype <- function(RNA, genes, signatures = "human.immune.CIBERSORT", min.score = 0, orig.ident = NULL){
     if(is.null(orig.ident)){
         if(class(signatures) == "character"){
-            signatures = data(signatures)
+            data(list = signatures)
+            signatures = get(signatures)
         }
         celltypes <- as.character(unique(signatures[,1]))
         signature_list <- sapply(1:length(celltypes),function(x){
