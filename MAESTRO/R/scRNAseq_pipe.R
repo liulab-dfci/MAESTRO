@@ -77,8 +77,8 @@ exp.dat = Read10X_h5(filename = count_mat, unique.features = TRUE)
 plan("multiprocess", workers = as.integer(thread))
 options(future.globals.maxSize = 10*1024^3)
 
-if(sigfile == ""){
-  signature = human.immune.CIBERSORT
+if(sigfile %in% c("human.immune.CIBERSORT", "mouce.brain.ALLEN", "mouse.all.facs.TabulaMuris", "mouse.all.droplet.TabulaMuris")){
+  signature = signature
 }else{
   signature = read.table(sigfile, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
 }
