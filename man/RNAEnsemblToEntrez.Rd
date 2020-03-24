@@ -5,9 +5,14 @@
 \alias{RNAEnsemblToEntrez}
 \title{Gene ID conversion between ENTREZID and SYMBOL}
 \usage{
-RNAEnsemblToEntrez(genes, fromType = "Symbol", toType = "Entrez",
-  organism = "hsa", useBiomart = FALSE,
-  ensemblHost = "www.ensembl.org")
+RNAEnsemblToEntrez(
+  genes,
+  fromType = "Symbol",
+  toType = "Entrez",
+  organism = "hsa",
+  useBiomart = FALSE,
+  ensemblHost = "www.ensembl.org"
+)
 }
 \arguments{
 \item{genes}{A character vector, input genes to be converted.}

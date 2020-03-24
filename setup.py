@@ -7,6 +7,8 @@ Created on Tue Jun  4 13:10:51 2019
 """
 
 import sys,os
+# from distutils.core import setup
+
 
 try:
     from setuptools import setup, find_packages
@@ -42,15 +44,17 @@ def install_rpackage():
 
 def main():
     # install_drseq()
+    install_rpackage()
     install_giggle()
     # install_rabit()
-    install_rpackage()
+    
     setup(
         name = "MAESTRO",
         version = "1.1.0",
         package_dir = {'MAESTRO':'MAESTRO'},
         packages = ['MAESTRO'],
-        package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'R/*', 'env/*', 'annotations/*', 'html/*', '']},
+        package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'Snakemake/integrate/*', 'R/*', 'annotations/*', 'html/*', '']},
+        data_files = [(os.path.join(sys.prefix,'bin'), ['refpkg/giggle/bin/giggle'])],
         scripts = ['MAESTRO/MAESTRO'],
         include_package_data = True,
         
@@ -61,8 +65,6 @@ def main():
         license = "GPL-3.0",
         url = "https://github.com/chenfeiwang/MAESTRO",
         
-        zip_safe = False,
-        install_requires=[],
         # entry_points = {"console_scripts": ["strap = strap:main"]},
         classifiers = [
             "Development Status :: 4 - Beta",

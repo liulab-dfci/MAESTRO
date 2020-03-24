@@ -26,16 +26,16 @@
 #' data(pbmc.RP)
 #' data(human.immune.CIBERSORT)
 #' pbmc.ATAC.res <- ATACRunSeurat(inputMat = pbmc.ATAC, project = "PBMC.scATAC.Seurat", method = "LSI")
-#' pbmc.ATAC.res$ATAC <- ATACAnnotateCelltype(pbmc.ATAC.res$ATAC, pbmc.RP, human.immune.CIBERSORT, min.score = 0.1, genes.cutoff = 1E-3)
+#' pbmc.ATAC.res$ATAC <- ATACAttachGenescore(pbmc.ATAC.res$ATAC, pbmc.RP)
+#' pbmc.ATAC.res$ATAC <- ATACAnnotateCelltype(pbmc.ATAC.res$ATAC, human.immune.CIBERSORT, min.score = 0.1, genes.cutoff = 1E-3)
 #' pbmc.tfs <- ATACAnnotateTranscriptionFactor(ATAC = pbmc.ATAC.res$ATAC, peaks = pbmc.ATAC.res$peaks, project = "PBMC.scATAC.TF", giggle.path = "/home/annotations/giggle")
 #' pbmc.tfs
 #'
+#' @importFrom Seurat GetAssayData Idents
 #' @export
 
 ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project = ATAC@project.name, giggle.path, organism = "GRCh38", top.tf = 10, min.peaks = 10)
 {
-  require(Seurat)
-  require(Matrix)
   if(organism == "GRCh38"){
       data(GRCh38.CistromeDB.genescore)
       data(human.tf.family)
@@ -48,8 +48,9 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
       tf_family_list <- MOUSE.TFFamily}
   
   if("cluster" %in% colnames(peaks)){
-    peaks$cluster <- as.factor(peaks$cluster)
+    # peaks$cluster <- as.factor(peaks$cluster)
     peaks <- peaks[peaks$avg_logFC>0,]
+    colnames(peaks)[7] = "peak"
     ifAllcluster = TRUE
   }else{
     ifAllcluster = FALSE
@@ -88,7 +89,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
       targetList[[icluster]] = list()
       ipeaks <- peaks[peaks$cluster == icluster, "peak"]
       if(length(ipeaks) > min.peaks){
-      ipeaks <- strsplit(ipeaks, "-")
+      ipeaks <- strsplit(ipeaks, "\\W")
       ipeaks <- data.frame(matrix(unlist(ipeaks), nrow=length(ipeaks), byrow=T))
       outputBed <- paste0(outputDir, "/", icluster, ".peaks.bed")
       write.table(ipeaks, outputBed, sep="\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
@@ -190,7 +191,11 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
 
     cluster_tf_list_filter_tf = cluster_tf_list_filter["tf",]
     cluster_tf_list_filter_score = cluster_tf_list_filter["score",]
-    
+    if(length(cluster_tf_list_filter_tf) == 1){
+      names(cluster_tf_list_filter_tf) = colnames(cluster_tf_list_filter)
+      names(cluster_tf_list_filter_score) = colnames(cluster_tf_list_filter)
+    }
+        
     if(!ifAllcluster){
       names(cluster_tf_list_filter_tf) = paste(cluster, collapse = ",")
       names(cluster_tf_list_filter_score) = paste(cluster, collapse = ",")
@@ -200,30 +205,33 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
     colnames(cluster_tf_df) = c("Cluster","TF")
     cluster_score_df = reshape2::melt(cluster_tf_list_filter_score)[,c(2,1)]
     colnames(cluster_score_df) = c("Cluster","Gigglescore")
-
     cluster_tf_df[,"log(Gigglescore)"] = round(log10(cluster_score_df$Gigglescore), 2)
 
-    if(ifAllcluster){
-      reg_table = data.frame(Cluster = Idents(ATAC), CelltypeAnnotation = ATAC@meta.data$assign.ident)
-      row.names(reg_table) = NULL
-      celltype_count = table(reg_table)
-      celltype_count_df = as.data.frame(celltype_count, stringsAsFactors = FALSE)
-      celltype_dominate = sapply(unique(celltype_count_df$Cluster),function(x){
-        celltype_count_df_cluster = celltype_count_df[celltype_count_df$Cluster == x,]
-        celltype_dominate = celltype_count_df_cluster[which.max(celltype_count_df_cluster$Freq), "CelltypeAnnotation"]
-      })
-      reg_table_unique = data.frame(Cluster = names(celltype_dominate), CelltypeAnnotation = celltype_dominate)
-    }else{
-      if(length(cluster) == 1 && cluster == "unknown"){
-        reg_table_unique = data.frame(Cluster = "unknown", CelltypeAnnotation = "unknown")
+    if("assign.ident" %in% colnames(ATAC@meta.data)){
+      if(ifAllcluster){
+        reg_table = data.frame(Cluster = Idents(ATAC), CelltypeAnnotation = ATAC@meta.data$assign.ident)
+        row.names(reg_table) = NULL
+        celltype_count = table(reg_table)
+        celltype_count_df = as.data.frame(celltype_count, stringsAsFactors = FALSE)
+        celltype_dominate = sapply(unique(celltype_count_df$Cluster),function(x){
+          celltype_count_df_cluster = celltype_count_df[celltype_count_df$Cluster == x,]
+          celltype_dominate = celltype_count_df_cluster[which.max(celltype_count_df_cluster$Freq), "CelltypeAnnotation"]
+        })
+        reg_table_unique = data.frame(Cluster = names(celltype_dominate), CelltypeAnnotation = celltype_dominate)
+      }else{
+        if(length(cluster) == 1 && cluster == "unknown"){
+          reg_table_unique = data.frame(Cluster = "unknown", CelltypeAnnotation = "unknown")
+        }else{
+          celltype = ATAC$assign.ident[names(Idents(ATAC))[Idents(ATAC) %in% cluster]]
+          celltype_count = sort(table(celltype), decreasing = TRUE)
+          celltype_dominate = names(celltype_count)[1]
+          reg_table_unique = data.frame(Cluster = paste(cluster, collapse = ","), CelltypeAnnotation = celltype_dominate)
+        }
       }
-      celltype = ATAC$assign.ident[names(Idents(ATAC))[Idents(ATAC) %in% cluster]]
-      celltype_count = sort(table(celltype), decreasing = TRUE)
-      celltype_dominate = names(celltype_count)[1]
-      reg_table_unique = data.frame(Cluster = paste(cluster, collapse = ","), CelltypeAnnotation = celltype_dominate)
+    }else{
+      reg_table_unique = data.frame(Cluster = unique(cluster_tf_df$Cluster), CelltypeAnnotation = "unknown")
     }
     reg_df = merge(reg_table_unique, cluster_tf_df)
-    
     write.table(reg_df,paste0(project, ".PredictedTFTop", top.tf, ".txt"), col.names = TRUE, row.names = FALSE, sep = "\t", quote = FALSE)
     
     for(icluster in colnames(cluster_tf_list_filter)){

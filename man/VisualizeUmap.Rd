@@ -5,8 +5,15 @@
 \alias{VisualizeUmap}
 \title{UMAP plot to show expression level or regulatory potential of genes}
 \usage{
-VisualizeUmap(genes, type, SeuratObj, ncol = NULL, width = 6,
-  height = 4, name = "MultipleUmapPlot")
+VisualizeUmap(
+  genes,
+  type,
+  SeuratObj,
+  ncol = NULL,
+  width = 6,
+  height = 4,
+  name = "MultipleUmapPlot"
+)
 }
 \arguments{
 \item{genes}{Genes or TFs to plot.}
@@ -39,6 +46,7 @@ VisualizeUmap(genes = tfs, type = "RNA", SeuratObj = pbmc$RNA, ncol = 5, width =
 
 # Genes of interest
 VisualizeUmap(genes = c("MS4A1","FCGR3A","CD3D","GZMB"), type = "RNA", SeuratObj = pbmc$RNA, ncol = 2, width = 7, height =4.5, name = "PBMC.scRNA.genes")
+
 
 }
 \author{

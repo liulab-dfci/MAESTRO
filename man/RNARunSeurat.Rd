@@ -18,7 +18,7 @@ RNARunSeurat(
   dims.use = 1:15,
   cluster.res = 0.6,
   only.pos = FALSE,
-  genes.test.use = "wilcox",
+  genes.test.use = "presto",
   genes.cutoff = 1e-05,
   genes.pct = 0.1,
   genes.logfc = 0.25,
@@ -57,7 +57,7 @@ Default is 0.05.}
 
 \item{only.pos}{If seting true, only positive genes will be output. Default is False.}
 
-\item{genes.test.use}{Denotes which test to use to identify genes. Default is "wilcox". See \code{\link{FindAllMarkers}} for details.}
+\item{genes.test.use}{Denotes which test to use to identify genes. Default is "presto", a fast version of Wilcoxon Rank Sum test. See \code{\link{FindAllMarkersMAESTRO}} for details.}
 
 \item{genes.cutoff}{Identify differential expressed genes with adjusted p.value less than \code{genes.cutoff} as cluster speficic genes}
 
@@ -72,7 +72,7 @@ for each cluster. Default cutoff is 1E-5.}
 
 \item{\dots}{Extra arguments passed to \code{\link{RunUMAP}}.}
 
-\item{runpca.args}{Extra arguments passed to \code{link{RunPCA}}.}
+\item{runpca.args}{Extra arguments passed to \code{\link{RunPCA}}.}
 }
 \value{
 A list contains a RNA Seurat object and a data frame for the cluster specific genes.

@@ -8,9 +8,6 @@ option_list = list(
   make_option(c("--outdir"), type = "character", default = "MAESTRO",
               action = "store", help = "The directory where the output files are stored."
   ),
-  make_option(c("--platform"), type = "character", default = "10x-genomics",
-              action = "store", help = "The platform of scATAC-seq."
-  ),
   make_option(c("--bulkstat"), type = "character", default = "flagstat.txt",
               action = "store", help = "The result of samtools flagstat."
   ),
@@ -30,7 +27,6 @@ option_list = list(
 argue = parse_args(OptionParser(option_list = option_list, usage = "Generate QC plots."))
 
 setwd(argue$outdir)
-platform = argue$platform
 bulkstat_file = argue$bulkstat
 singlestat_file = argue$singlestat
 fragment_file = argue$fragment
@@ -38,7 +34,7 @@ count_cutoff = argue$countcutoff
 frip_cutoff = argue$fripcutoff
 prefix = argue$prefix
 
-ATACReadDistrPlot(stat.filepath = bulkstat_file, name = prefix, platform = platform)
+ATACReadDistrPlot(stat.filepath = bulkstat_file, name = prefix)
 ATACFragmentSizePlot(filepath = fragment_file, name = prefix)
-ATACFilteringPlot(filepath = singlestat_file, platform = platform, name = prefix, 
-                  reads.cutoff = count_cutoff, frip.cutoff = frip_cutoff)
+ATACFilteringPlot(filepath = singlestat_file, name = prefix, 
+                   reads.cutoff = count_cutoff, frip.cutoff = frip_cutoff)

@@ -18,10 +18,14 @@
 #'
 #' @examples
 #' 
+#' @importFrom ggplot2 aes ggplot ggtitle theme_classic xlab ylab
 #' @export
 
 RNADiffusionMap <- function(RNA, project = RNA@project.name, start.genes, end.genes , clusters = unique(RNA@meta.data$seurat_clusters))
 {
+  library(destiny)
+  library(ggthemes)
+  library(ggbeewarm)
   cells <- RNA@meta.data[which(RNA@meta.data$seurat_clusters %in% clusters),]
   genes <- c(start.genes, end.genes)
   dm.data <- RNA@data[intersect(rownames(RNA@data),genes),rownames(cells)]

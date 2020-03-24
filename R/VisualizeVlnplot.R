@@ -33,13 +33,19 @@
 #' # Genes of interest
 #' VisualizeVlnplot(genes = c("MS4A1","FCGR3A","CD3D","GZMB"), type = "RNA", SeuratObj = pbmc$RNA, ncol = 2, width = 7, height =4.5, name = "PBMC.scRNA.genes")
 #'
+#' @importFrom Seurat CombinePlots GetAssayData Idents
+#' @importFrom ggplot2 aes element_blank element_text element_line geom_violin ggplot ggsave labs theme
 #' @export
 
 VisualizeVlnplot <- function(genes, type, SeuratObj, ncol = NULL, width = 6, height = 4, name = "MultipleVlnPlot"){
-  require(ggplot2)
-
-  genes = intersect(rownames(SeuratObj),unique(genes))
-  gene_expr = GetAssayData(object = SeuratObj)[genes, ]
+  if(type == "ATAC"){
+    genes = intersect(rownames(SeuratObj$ACTIVITY),unique(genes))
+    gene_expr = GetAssayData(object = SeuratObj$ACTIVITY)[genes, ]
+  }
+  if(type == "RNA"){
+    genes = intersect(rownames(SeuratObj),unique(genes))
+    gene_expr = GetAssayData(object = SeuratObj)[genes, ]
+  }
   cell_cluster = Idents(SeuratObj)
   vlnplots = lapply(genes, function(x){
     expr_cluster = merge(cell_cluster, as.data.frame(gene_expr[x, ]), by.x = 0, by.y = 0)
@@ -60,7 +66,8 @@ VisualizeVlnplot <- function(genes, type, SeuratObj, ncol = NULL, width = 6, hei
     return(p)
   })
   combinedplot = CombinePlots(vlnplots, ncol = ncol)
-  ggsave(paste0(name,".png"), combinedplot,  width=width, height=height)
+  ggsave(paste0(name,"_vlnplot.png"), combinedplot,  width=width, height=height)
+  return(combinedplot)
 }
 
 

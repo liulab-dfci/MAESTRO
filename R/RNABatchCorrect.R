@@ -20,10 +20,10 @@
 #'
 #' @examples
 #' 
+#' @importFrom Seurat DefaultAssay DimPlot FindClusters FindIntegrationAnchors FindNeighbors FindVariableFeatures IntegrateData NormalizeData RunPCA RunUMAP ScaleData SplitObject
 #' @export
 
 RNABatchCorrect <- function(RNA, batch, nfeatures = 2000, dims.use = 1:15, cluster.res = 0.6){
-    require(Seurat)    
     RNA@meta.data$batch <- batch
     data.list <- SplitObject(RNA, split.by = "batch")
     for(i in 1:length(data.list)){

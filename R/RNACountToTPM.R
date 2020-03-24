@@ -24,7 +24,6 @@
 
 RNACountToTPM <- function(countMat, idType = "Ensembl", organism = "GRCh38")
 {
-   library(Matrix)
    if(organism=="GRCh38"){
      data(GRCh38.ensembl)
      ensembl <- GRCh38.ensembl}

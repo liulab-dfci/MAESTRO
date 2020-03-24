@@ -22,12 +22,12 @@
 #' @param dims.use Number of dimensions used for UMAP analysis. Default is 1:15, use the first 15 PCs.
 #' @param cluster.res Value of the clustering resolution parameter. Default is 0.6.
 #' @param only.pos If seting true, only positive genes will be output. Default is False.
-#' @param genes.test.use Denotes which test to use to identify genes. Default is "wilcox". See \code{\link{FindAllMarkers}} for details.
+#' @param genes.test.use Denotes which test to use to identify genes. Default is "presto", a fast version of Wilcoxon Rank Sum test. See \code{\link{FindAllMarkersMAESTRO}} for details.
 #' @param genes.cutoff Identify differential expressed genes with adjusted p.value less than \code{genes.cutoff} as cluster speficic genes
 #' @param genes.pct Only test genes that are detected in a minimum fraction of min.pct cells in either of the two populations. Meant to speed up the function by not testing genes that are very infrequently detected Default is 0.1
 #' @param genes.logfc Limit testing to genes which show, on average, at least X-fold difference (log-scale) between the two groups of cells. Default is 0.2 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 #' for each cluster. Default cutoff is 1E-5.
-#' @param runpca.args Extra arguments passed to \code{link{RunPCA}}.
+#' @param runpca.args Extra arguments passed to \code{\link{RunPCA}}.
 #' @param findneighbors.args Extra arguments passed to \code{\link{FindNeighbors}}.
 #' @param findclusters.args Extra arguments passed to \code{\link{FindClusters}}.
 #' @param \dots Extra arguments passed to \code{\link{RunUMAP}}.
@@ -43,17 +43,17 @@
 #' str(pbmc.RNA.res$RNA)
 #' head(pbmc.RNA.res$genes)
 #'
+#' @importFrom Seurat CreateSeuratObject DimPlot ElbowPlot FindClusters FindNeighbors FindVariableFeatures GetAssayData NormalizeData RunPCA RunUMAP ScaleData SubsetData VlnPlot
+#' @importFrom ggplot2 ggplot ggsave
+#' @importFrom Gmisc fastDoCall
 #' @export
 
 RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident = NULL, min.c = 10, min.g = 200, mito = FALSE, mito.cutoff = 0.05, 
-                         variable.genes = 2000, organism = "GRCh38", dims.use = 1:15, cluster.res = 0.6, only.pos = FALSE, genes.test.use = "wilcox", 
+                         variable.genes = 2000, organism = "GRCh38", dims.use = 1:15, cluster.res = 0.6, only.pos = FALSE, genes.test.use = "presto", 
                          genes.cutoff = 1E-5, genes.pct = 0.1, genes.logfc = 0.25,
                          runpca.agrs = list(), findneighbors.args = list(), 
                          findclusters.args = list(), ...)
 {
-  require(Seurat)
-  require(ggplot2)
-  require(Matrix)
   SeuratObj <- CreateSeuratObject(inputMat, project = project, min.cells = min.c, min.features = min.g)
 
   #=========Mitochondria and Spike-in========  
@@ -71,8 +71,8 @@ RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident 
     SeuratObj$percent.ercc <- percent.ercc
     p1 = VlnPlot(SeuratObj, c("percent.mito","percent.ercc"), ncol = 2)
     ggsave(paste0(SeuratObj@project.name, ".spikein.png"), p1,  width=6, height=4.5)
-    SeuratObj <- subset(SeuratObj, subset.name = "percent.mito", high.threshold = 0.05)
-    SeuratObj <- subset(SeuratObj, subset.name = "percent.ercc", high.threshold = 0.05)
+    SeuratObj <- subset(x = SeuratObj, subset = percent.mito < high.threshold)
+    SeuratObj <- subset(x = SeuratObj, subset = percent.ercc < high.threshold)
     vars.to.regress = c("nCount_RNA","percent.mito","percent.ercc")}
   else{
     vars.to.regress = "nCount_RNA"}
@@ -85,7 +85,7 @@ RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident 
   
   #=========PCA===========
   message("PCA analysis ...")
-  SeuratObj <- do.call("RunPCA", c(object = SeuratObj, features = VariableFeatures(SeuratObj), runpca.agrs))
+  SeuratObj <- fastDoCall("RunPCA", c(object = SeuratObj, features = VariableFeatures(SeuratObj), runpca.agrs))
   # SeuratObj <- RunPCA(object = SeuratObj, features = VariableFeatures(SeuratObj))
   p2 = ElbowPlot(object = SeuratObj)
   ggsave(file.path(paste0(SeuratObj@project.name, "_PCElbowPlot.png")), p2,  width=5, height=4)
@@ -93,8 +93,8 @@ RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident 
   #=========UMAP===========
   message("UMAP analysis ...")
   SeuratObj <- RunUMAP(object = SeuratObj, reduction = "pca", dims = dims.use, ...)
-  SeuratObj <- do.call("FindNeighbors", c(object = SeuratObj, reduction = "pca", dims = dims.use, findneighbors.args))
-  SeuratObj <- do.call("FindClusters", c(object = SeuratObj, resolution = cluster.res, findclusters.args))
+  SeuratObj <- fastDoCall("FindNeighbors", c(object = SeuratObj, reduction = "pca", dims = dims.use, findneighbors.args))
+  SeuratObj <- fastDoCall("FindClusters", c(object = SeuratObj, resolution = cluster.res, findclusters.args))
   # SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "pca", dims = dims.use)
   # SeuratObj <- FindClusters(object = SeuratObj, resolution = cluster.res)
   p3 = DimPlot(object = SeuratObj, label = TRUE, pt.size = 0.2)

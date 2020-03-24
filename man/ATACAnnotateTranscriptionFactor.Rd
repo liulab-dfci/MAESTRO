@@ -45,7 +45,8 @@ data(pbmc.ATAC)
 data(pbmc.RP)
 data(human.immune.CIBERSORT)
 pbmc.ATAC.res <- ATACRunSeurat(inputMat = pbmc.ATAC, project = "PBMC.scATAC.Seurat", method = "LSI")
-pbmc.ATAC.res$ATAC <- ATACAnnotateCelltype(pbmc.ATAC.res$ATAC, pbmc.RP, human.immune.CIBERSORT, min.score = 0.1, genes.cutoff = 1E-3)
+pbmc.ATAC.res$ATAC <- ATACAttachGenescore(pbmc.ATAC.res$ATAC, pbmc.RP)
+pbmc.ATAC.res$ATAC <- ATACAnnotateCelltype(pbmc.ATAC.res$ATAC, human.immune.CIBERSORT, min.score = 0.1, genes.cutoff = 1E-3)
 pbmc.tfs <- ATACAnnotateTranscriptionFactor(ATAC = pbmc.ATAC.res$ATAC, peaks = pbmc.ATAC.res$peaks, project = "PBMC.scATAC.TF", giggle.path = "/home/annotations/giggle")
 pbmc.tfs
 

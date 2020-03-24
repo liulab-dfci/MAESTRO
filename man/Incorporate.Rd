@@ -26,6 +26,9 @@ and gene RP score as values. Can be ignored if \code{\link{ATACAnnotateCelltype}
 
 \item{project}{Output project name. Default is "MAESTRO.coembedded".}
 
+\item{method}{Method to do integration, MAESTRO or Seurat. If "MAESTRO", gene RP score will be used to quantify the gene activity for scATAC-seq.
+If "Seurat" is set, \code{\link{CreateGeneActivityMatrix}} from Seurat will be used to model the gene activity.}
+
 \item{dims.use}{Number of dimensions used for PCA and UMAP analysis. Default is 1:30, use the first 30 PCs.}
 
 \item{RNA.res}{Clusterig resolution used for the scRNA-seq dataset, should keep the same with the input RNA object. Default is 0.6.}
