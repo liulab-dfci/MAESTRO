@@ -53,13 +53,13 @@ RPmatrix = Read10X_h5(rp_mat)
 plan("multiprocess", workers = as.integer(thread))
 options(future.globals.maxSize = 10*1024^3)
 
-if(sigfile == ""){
-  signature = human.immune.CIBERSORT
+if(sigfile %in% c("human.immune.CIBERSORT", "mouce.brain.ALLEN", "mouse.all.facs.TabulaMuris", "mouse.all.droplet.TabulaMuris")){
+  signatures = sigfile
 }else{
-  signature = read.table(sigfile, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+  signatures = read.table(sigfile, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
 }
 result = ATACRunSeurat(inputMat = countmatrix, project = prefix, method = "LSI")
 result$ATAC = ATACAttachGenescore(ATAC = result$ATAC, RPmatrix = RPmatrix)
-result$ATAC = ATACAnnotateCelltype(result$ATAC, signatures = signature)
+result$ATAC = ATACAnnotateCelltype(result$ATAC, signatures = signatures)
 saveRDS(result, paste0(prefix, "_scATAC_Object.rds"))
 result.tfs = ATACAnnotateTranscriptionFactor(ATAC = result$ATAC, peaks = result$peaks, project = prefix, giggle.path = gigglelib, organism = species)

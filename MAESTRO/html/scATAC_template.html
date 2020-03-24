@@ -108,9 +108,26 @@
                                                         </path>
                                                     </svg>
                                                 </h3>
-                                                <p class="collapse" id="readdistr" style="font-size: 0.925rem">
-                                                    Read mappability, duplicated reads percentage, fraction of reads mapped to mitochondria genes or peak regions.
-                                                </p>
+                                                <div class="collapse" id="readdistr">
+                                                    <p style="font-size: 0.925rem">
+                                                        Read mappability, duplicated reads percentage, fraction of reads mapped to mitochondrial genes, peak regions or promoter regions. 
+                                                    </p>
+                                                    <ul>
+                                                        <li>
+                                                            The <strong>percentage of duplicate reads</strong> shows whether the library is over-amplified due to limited starting material. For human or mouse, if the percentage of duplicate reads is more than 50%%, there may be something wrong during the library preparation.
+                                                        </li>
+                                                        <li>
+                                                            The <strong>percentage of uniquely mapped reads</strong> is usually more than 50%%. If the percentage is less than 50%%, it might be due to inadequate sequencing depth or excessive PCR amplification.
+                                                        </li>
+                                                        <li>
+                                                            <strong>Reads derived from mitochondrial DNA</strong> represent noise in ATAC-seq data, and should be discarded in the downstream analysis. The mitochondrial read fraction shows a large degree of variation across different species and cell types. 
+                                                        </li>
+                                                        <li>
+                                                            The <strong>fraction of reads in peak or promoter regions</strong> is used to evaluate the signal-to-noise ratio of ATAC-seq data quality. At the bulk level, if the values are less than 2%%, it might indicate that the ATAC-seq assay does not capture strong signals.
+                                                        </li>
+                                                    </ul>
+                                                    
+                                                </div>
                                                 <a href=%(readdistr)s><img src=%(readdistr)s width="375" height="400" class="float-left"></a>
                                             </div>
                                             <div class="col-6">
@@ -122,7 +139,8 @@
                                                     </svg>
                                                 </h3>
                                                 <p class="collapse" id="fragment" style="font-size: 0.925rem">
-                                                    Fragment size distribution for 1%% reads sampled from scATAC-seq. Only fragments with insert size less than 1,000 are considered. Y-axis represents the number of fragments.
+                                                    Fragment size distribution for 1%% reads sampled from scATAC-seq. Only fragments with insert size less than 1,000 are considered. Y-axis represents the number of fragments. The fragment size distribution should show a periodicity of approximately 200bp due to nucleosome protection of the chromatin to transposase cutting.
+
                                                 </p>
                                                 <a href=%(fragment)s><img src=%(fragment)s width="400" height="400" class="float-left"></a>
                                             </div>

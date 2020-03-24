@@ -30,14 +30,11 @@ whitelist: {{ whitelist }}
 # The core number
 cores: {{ cores }}
 
-# Whether or not to provide custom cell signatures. [True, Flase]  
-# If signature is set as True, users need to provide the file location of cell signatures through signaturefile. 
-# By default (False), the pipeline will use the built-in immune cell signature adapted from CIBERSORT. DEFAULT: False.
+# Cell signature file used to annotate cell types. MAESTRO provides several sets of built-in cell signatures. 
+# Users can choose from ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']. 
+# Custom cell signatures are also supported. In this situation, users need to provide the file location of cell signatures, 
+# and the signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene.
 signature: {{ signature }}
-
-# If signature = True, provide the file location of custom cell signatures.
-# The signature file is tab-seperated. The first column is cell type, and the second column is signature gene.
-signaturefile: {{ signaturefile }}
 
 # Whether or not to provide custom peaks. [False, True]
 # If custompeaks is set as True, users need to provide the file location of peak file through custompeaksloc 

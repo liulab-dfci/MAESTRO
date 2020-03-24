@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:40:27
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-03-17 18:18:20
+# @Last Modified time: 2020-03-24 16:32:13
 
 
 import os
@@ -112,13 +112,11 @@ def scatac_parser(subparsers):
 
     # Signature file arguments
     group_signature = workflow.add_argument_group("Cell signature arguments")
-    group_signature.add_argument("--signature", dest = "signature", action = "store_true", 
-        help = "Whether or not to provide custom cell signatures. If set, users need to "
-        "provide the file location of cell signatures through '--signature-file'. By default (not set), "
-        "the pipeline will use the built-in immune cell signature adapted from CIBERSORT.")
-    group_signature.add_argument("--signature-file", dest = "signature_file", type = str, default = "", 
-        help = "If '--signature' is set, please provide the file location of custom cell signatures. "
-        "The signature file is tab-seperated. The first column is cell type, and the second column is signature gene.")
+    group_signature.add_argument("--signature", dest = "signature", type = str, default = "human.immune.CIBERSORT", 
+        help = "Cell signature file used to annotate cell types. MAESTRO provides several sets of built-in cell signatures. "
+        "Users can choose from ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']. "
+        "Custom cell signatures are also supported. In this situation, users need to provide the file location of cell signatures, "
+        "and the signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene.")
         
     return
 
@@ -233,13 +231,11 @@ def scrna_parser(subparsers):
 
     # Signature file arguments
     group_signature = workflow.add_argument_group("Cell signature arguments")
-    group_signature.add_argument("--signature", dest = "signature", action = "store_true", 
-        help = "Whether or not to provide custom cell signatures. If set, users need to "
-        "provide the file location of cell signatures through '--signature-file'. By default (not set), "
-        "the pipeline will use the built-in immune cell signature adapted from CIBERSORT.")
-    group_signature.add_argument("--signature-file", dest = "signature_file", type = str, default = "",
-        help = "If '--signature' is set, please provide the file location of custom cell signatures. "
-        "The signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene.")
+    group_signature.add_argument("--signature", dest = "signature", type = str, default = "human.immune.CIBERSORT", 
+        help = "Cell signature file used to annotate cell types. MAESTRO provides several sets of built-in cell signatures. "
+        "Users can choose from ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']. "
+        "Custom cell signatures are also supported. In this situation, users need to provide the file location of cell signatures, "
+        "and the signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene.")
     
     return
 
@@ -301,7 +297,6 @@ def scatac_config(args):
             frip = args.frip_cutoff,
             cell = args.cell_cutoff,
             signature = args.signature,
-            signaturefile = args.signature_file,
             custompeaks = args.custompeak,
             custompeaksloc = args.custompeak_file,
             shortpeaks = args.shortpeak,
@@ -343,7 +338,6 @@ def scrna_config(args):
             gene = args.gene_cutoff,
             cell = args.cell_cutoff,
             signature = args.signature,
-            signaturefile = args.signature_file,
             method = args.method,
             rabitlib = args.rabitlib,
             lisamode = args.lisamode,
