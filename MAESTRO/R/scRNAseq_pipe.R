@@ -78,13 +78,13 @@ plan("multiprocess", workers = as.integer(thread))
 options(future.globals.maxSize = 10*1024^3)
 
 if(sigfile %in% c("human.immune.CIBERSORT", "mouce.brain.ALLEN", "mouse.all.facs.TabulaMuris", "mouse.all.droplet.TabulaMuris")){
-  signature = signature
+  signatures = sigfile
 }else{
-  signature = read.table(sigfile, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+  signatures = read.table(sigfile, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
 }
 RNA.res <- RNARunSeurat(inputMat = exp.dat, project = prefix, min.c = 10, min.g = 100)
 RNA.res$RNA <- RNAAnnotateCelltype(RNA = RNA.res$RNA, genes = RNA.res$genes, 
-                                   signatures = signature, min.score = 0.05)
+                                   signatures = signatures, min.score = 0.05)
 saveRDS(RNA.res, paste0(prefix, "_scRNA_Object.rds"))
 RNA.tfs <- RNAAnnotateTranscriptionFactor(RNA = RNA.res$RNA, genes = RNA.res$genes, project = prefix, 
                                           method = method, rabit.path = rabitlib, lisa.mode = lisamode, 
