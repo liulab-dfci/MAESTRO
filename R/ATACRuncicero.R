@@ -25,6 +25,7 @@
 
 ATACRuncicero <- function(peakCountFile, outPrefix)
 {
+  # cicero annotate_cds_by_site build_gene_activity_matrix detectGenes estimateSizeFactors make_atac_cds make_cicero_cds normalize_gene_activities pData reducedDimA reduceDimension run_cicero
   library(cicero)
   peakCount = read.delim(peakCountFile, header=F)
   colnames(peakCount) = c("Peak","Cell","Count")

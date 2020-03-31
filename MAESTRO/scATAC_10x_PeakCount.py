@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-24 22:26:54
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-03-03 20:37:54
+# @Last Modified time: 2020-03-16 18:15:08
 
 import os,sys
 import time
@@ -34,9 +34,10 @@ def peakcount_parser(subparsers):
         "The peak file is BED formatted with tab seperated. "
         "The first column is chromsome, the second is chromStart, and the third is chromEnd.")
     group_input.add_argument("--fragment", dest = "fragment", default = "", type = str, 
-        help = "Location of fragment.tsv file. "
+        help = "Location of fragments.tsv file. "
         "The fragments.tsv contains one line per unique fragment, with tab-separated fields as described below. "
-        "Each row has 5 columns, representing chrom, chromStart, chromEnd, barcode and duplicateCount, respectively.")   
+        "Each row has 5 columns, representing chrom, chromStart, chromEnd, barcode and duplicateCount, respectively. "
+        "In MAESTOR output, the file should be fragments_corrected_count.tsv. In Cell Ranger ATAC output, the file should be fragments.tsv. ")   
     group_input.add_argument("--barcode", dest = "barcode", default = "", type = str, 
         help = "Location of valid cell barcode file (optional). "
         "Each line of the file represents a valid barcode. "

@@ -26,21 +26,38 @@
 #' str(pbmc.ATAC.res$dev)
 #' head(pbmc.ATAC.res$zscore[,1:10])
 #'
+#' @importFrom SummarizedExperiment SummarizedExperiment
+#' @importFrom GenomicRanges GRanges
 #' @export
 
 ATACRunchromVAR <- function(inputMat, project = "MAESTRO.scATAC.chromVAR", min.c = 50, min.p = 500, organism = "GRCh38")
 {
-  require(chromVAR)
-  require(motifmatchr)
-  require(Matrix)
-  require(SummarizedExperiment)
-  require(chromVARmotifs)
+  library(chromVAR)
+  library(motifmatchr)
+  library(chromVARmotifs)
+  
+  if (!requireNamespace("chromVAR", quietly = TRUE)) {
+    stop("Package \"chromVAR\" needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  if (!requireNamespace("motifmatchr", quietly = TRUE)) {
+    stop("Package \"motifmatchr\" needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  if (!requireNamespace("chromVARmotifs", quietly = TRUE)) {
+    stop("Package \"chromVARmotifs\" needed for this function to work. Please install it.",
+         call. = FALSE)
+  }  
 
   if(organism == "GRCh38") {
-     require(BSgenome.Hsapiens.UCSC.hg38)
+    if (!requireNamespace("BSgenome.Hsapiens.UCSC.hg38", quietly = TRUE)) {
+      stop("Package \"BSgenome.Hsapiens.UCSC.hg38\" needed for this function to work. Please install it.",
+           call. = FALSE)}
      data("human_pwms_v2")}
   if(organism == "GRCm38") {
-     require(BSgenome.Mmusculus.UCSC.mm10)
+    if (!requireNamespace("BSgenome.Mmusculus.UCSC.mm10", quietly = TRUE)) {
+      stop("Package \"BSgenome.Mmusculus.UCSC.mm10\" needed for this function to work. Please install it.",
+           call. = FALSE)}
      data("mouse_pwms_v2")}
   
   #============ Peak filtering and normalization ============

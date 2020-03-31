@@ -99,7 +99,8 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
             barcode = "Result/STAR/%sSolo.out/Gene/raw/barcodes.tsv" %(config["outprefix"]),
         output:
             countgene = "Result/QC/%s_count_gene_stat.txt" %(config["outprefix"]),
-            filtermatrix = "Result/QC/%s_filtered_gene_count.h5" %(config["outprefix"])
+            filtermatrix = "Result/QC/%s_filtered_gene_count.h5" %(config["outprefix"]),
+            rnafilterplot = "Result/QC/%s_scRNA_cell_filtering.png" %(config["outprefix"]),
         params:
             count = config["cutoff"]["count"],
             gene = config["cutoff"]["gene"],
@@ -199,7 +200,8 @@ if config["platform"] == "Smartseq2":
             expression = "Result/Count/%s_gene_count_matrix.txt" %(config["outprefix"]),
         output:
             countgene = "Result/QC/%s_count_gene_stat.txt" %(config["outprefix"]),
-            filtermatrix = "Result/QC/%s_filtered_gene_count.h5" %(config["outprefix"])
+            filtermatrix = "Result/QC/%s_filtered_gene_count.h5" %(config["outprefix"]),
+            rnafilterplot = "Result/QC/%s_scRNA_cell_filtering.png" %(config["outprefix"]),
         params:
             count = config["cutoff"]["count"],
             gene = config["cutoff"]["gene"],
@@ -372,14 +374,13 @@ if config["rseqc"]:
             nvc = "Result/QC/%s.NVC.xls" %(config["outprefix"]),
             gc = "Result/QC/%s.GC.xls" %(config["outprefix"]),
             genecov = "Result/QC/%s.geneBodyCoverage.txt" %(config["outprefix"]),
-            countgene = "Result/QC/%s_count_gene_stat.txt" %(config["outprefix"]),
+            # countgene = "Result/QC/%s_count_gene_stat.txt" %(config["outprefix"]),
         output:
             readdistrplot = "Result/QC/%s_scRNA_read_distr.png" %(config["outprefix"]),
             qualplot = "Result/QC/%s_scRNA_read_quality.png" %(config["outprefix"]),
             nvcplot = "Result/QC/%s_scRNA_NVC.png" %(config["outprefix"]),
             gcplot = "Result/QC/%s_scRNA_GCcontent.png" %(config["outprefix"]),
             genecovplot = "Result/QC/%s_scRNA_genebody_cov.png" %(config["outprefix"]),
-            rnafilterplot = "Result/QC/%s_scRNA_cell_filtering.png" %(config["outprefix"]),
         params:
             outpre = config["outprefix"],
             outdir = "Result/QC",
@@ -390,91 +391,63 @@ if config["rseqc"]:
             nvc = "%s.NVC.xls" %(config["outprefix"]),
             gc = "%s.GC.xls" %(config["outprefix"]),
             genecov = "%s.geneBodyCoverage.txt" %(config["outprefix"]),
-            countgene = "%s_count_gene_stat.txt" %(config["outprefix"]),
-            count = config["cutoff"]["count"],
-            gene = config["cutoff"]["gene"]
+            # countgene = "%s_count_gene_stat.txt" %(config["outprefix"]),
+            # count = config["cutoff"]["count"],
+            # gene = config["cutoff"]["gene"]
         benchmark:
             "Result/Benchmark/%s_QCPlot.benchmark" %(config["outprefix"])
         shell:
-            "Rscript " + RSCRIPT_PATH + "/scRNAseq_qc.R --prefix {params.outpre} --outdir {params.outdir} --rseqc {params.rseqc} "
-            "--bamstat {params.stat} --readdistr {params.distr} --qual {params.qual} --nvc {params.nvc} --gc {params.gc} "
-            "--genecov {params.genecov} --filtering {params.countgene} --countcutoff {params.count} --genecutoff {params.gene}"
+            "Rscript " + RSCRIPT_PATH + "/scRNAseq_qc.R --prefix {params.outpre} --outdir {params.outdir} "
+            "--bamstat {params.stat} --readdistr {params.distr} --qual {params.qual} --nvc {params.nvc} "
+            "--gc {params.gc} --genecov {params.genecov}"
 
-else:
-    rule scrna_rseqc_plot:
-        input:
-            countgene = "Result/QC/%s_count_gene_stat.txt" %(config["outprefix"]),
-        output:
-            rnafilterplot = "Result/QC/%s_scRNA_cell_filtering.png" %(config["outprefix"]),
-        params:
-            outpre = config["outprefix"],
-            outdir = "Result/QC",
-            rseqc = "FALSE",
-            platform = config["platform"],
-            countgene = "%s_count_gene_stat.txt" %(config["outprefix"]),
-            count = config["cutoff"]["count"],
-            gene = config["cutoff"]["gene"]
-        benchmark:
-            "Result/Benchmark/%s_QCPlot.benchmark" %(config["outprefix"])
-        shell:
-            "Rscript " + RSCRIPT_PATH + "/scRNAseq_qc.R --prefix {params.outpre} --outdir {params.outdir} --rseqc {params.rseqc} "
-            "--filtering {params.countgene} --countcutoff {params.count} --genecutoff {params.gene}"
+# else:
+#     rule scrna_rseqc_plot:
+#         input:
+#             countgene = "Result/QC/%s_count_gene_stat.txt" %(config["outprefix"]),
+#         output:
+#             rnafilterplot = "Result/QC/%s_scRNA_cell_filtering.png" %(config["outprefix"]),
+#         params:
+#             outpre = config["outprefix"],
+#             outdir = "Result/QC",
+#             rseqc = "FALSE",
+#             platform = config["platform"],
+#             countgene = "%s_count_gene_stat.txt" %(config["outprefix"]),
+#             count = config["cutoff"]["count"],
+#             gene = config["cutoff"]["gene"]
+#         benchmark:
+#             "Result/Benchmark/%s_QCPlot.benchmark" %(config["outprefix"])
+#         shell:
+#             "Rscript " + RSCRIPT_PATH + "/scRNAseq_qc.R --prefix {params.outpre} --outdir {params.outdir} --rseqc {params.rseqc} "
+#             "--filtering {params.countgene} --countcutoff {params.count} --genecutoff {params.gene}"
 
-if config["signature"]:
-    rule scrna_analysis:
-        input:
-            expression = "Result/QC/%s_filtered_gene_count.h5" %(config["outprefix"]),
-            signature = config["signaturefile"]
-        output:
-            specificgene = "Result/Analysis/%s_DiffGenes.tsv" %(config["outprefix"]),
-            clusterplot = "Result/Analysis/%s_cluster.png" %(config["outprefix"]),
-            annotateplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
-            tflist = "Result/Analysis/%s.PredictedTFTop10.txt" %(config["outprefix"])
-        params:
-            expression = "../QC/%s_filtered_gene_count.h5" %(config["outprefix"]),
-            species = config["species"],
-            outpre = config["outprefix"],
-            outdir = "Result/Analysis",
-            method = config["method"],
-            rabitlib = config["rabitlib"],
-            lisamode = config["lisamode"],
-            lisaenv = config["lisaenv"],
-            condadir = config["condadir"]
-        benchmark:
-            "Result/Benchmark/%s_Analysis.benchmark" %(config["outprefix"])
-        threads:
-            config["cores"]
-        shell:
-            "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R --expression {params.expression} --species {params.species} "
-            "--prefix {params.outpre} --method {params.method} --signature {input.signature} --rabitlib {params.rabitlib} "
-            "--lisamode {params.lisamode} --condadir {params.condadir} --lisaenv {params.lisaenv} --outdir {params.outdir} --thread {threads}"
-else:
-    rule scrna_analysis:
-        input:
-            expression = "Result/QC/%s_filtered_gene_count.h5" %(config["outprefix"])
-        output:
-            specificgene = "Result/Analysis/%s_DiffGenes.tsv" %(config["outprefix"]),
-            clusterplot = "Result/Analysis/%s_cluster.png" %(config["outprefix"]),
-            annotateplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
-            tflist = "Result/Analysis/%s.PredictedTFTop10.txt" %(config["outprefix"])
-        params:
-            expression = "../QC/%s_filtered_gene_count.h5" %(config["outprefix"]),
-            species = config["species"],
-            outpre = config["outprefix"],
-            outdir = "Result/Analysis",
-            method = config["method"],
-            rabitlib = config["rabitlib"],
-            lisamode = config["lisamode"],
-            lisaenv = config["lisaenv"],
-            condadir = config["condadir"]
-        benchmark:
-            "Result/Benchmark/%s_Analysis.benchmark" %(config["outprefix"])
-        threads:
-            config["cores"]
-        shell:
-            "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R --expression {params.expression} --species {params.species} "
-            "--prefix {params.outpre} --method {params.method} --rabitlib {params.rabitlib} "
-            "--lisamode {params.lisamode} --condadir {params.condadir} --lisaenv {params.lisaenv} --outdir {params.outdir} --thread {threads}"
+rule scrna_analysis:
+    input:
+        expression = "Result/QC/%s_filtered_gene_count.h5" %(config["outprefix"]),
+    output:
+        specificgene = "Result/Analysis/%s_DiffGenes.tsv" %(config["outprefix"]),
+        clusterplot = "Result/Analysis/%s_cluster.png" %(config["outprefix"]),
+        annotateplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
+        tflist = "Result/Analysis/%s.PredictedTFTop10.txt" %(config["outprefix"])
+    params:
+        expression = "../QC/%s_filtered_gene_count.h5" %(config["outprefix"]),
+        species = config["species"],
+        outpre = config["outprefix"],
+        outdir = "Result/Analysis",
+        method = config["method"],
+        rabitlib = config["rabitlib"],
+        lisamode = config["lisamode"],
+        lisaenv = config["lisaenv"],
+        condadir = config["condadir"],
+        signature = config["signature"]
+    benchmark:
+        "Result/Benchmark/%s_Analysis.benchmark" %(config["outprefix"])
+    threads:
+        config["cores"]
+    shell:
+        "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R --expression {params.expression} --species {params.species} "
+        "--prefix {params.outpre} --method {params.method} --signature {params.signature} --rabitlib {params.rabitlib} "
+        "--lisamode {params.lisamode} --condadir {params.condadir} --lisaenv {params.lisaenv} --outdir {params.outdir} --thread {threads}"
 
 if config["rseqc"]:
     rule scrna_report:

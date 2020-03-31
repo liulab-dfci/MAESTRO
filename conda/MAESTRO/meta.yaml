@@ -17,6 +17,7 @@ requirements:
     - h5py =2.10.0
     - pytables =3.6.1
     - setuptools
+    - rpy2 =3.1.0
     - snakemake =5.10.0
     - rseqc =3.0.0
     - star =2.7.3a
@@ -50,8 +51,11 @@ requirements:
     - bioconductor-BiocGenerics
     - bioconductor-Rsamtools
     - bioconductor-chromVAR
+    - bioconductor-motifmatchr
     - bioconductor-cicero
     - bioconductor-genefilter
+    - bioconductor-GOSemSim
+    - bioconductor-DESeq2
   run:
     - xorg-libxrender
     - python =3.7
@@ -60,6 +64,7 @@ requirements:
     - h5py =2.10.0
     - pytables =3.6.1
     - setuptools
+    - rpy2 =3.1.0
     - snakemake =5.10.0
     - rseqc =3.0.0
     - star =2.7.3a
@@ -93,8 +98,12 @@ requirements:
     - bioconductor-BiocGenerics
     - bioconductor-Rsamtools
     - bioconductor-chromVAR
+    - bioconductor-motifmatchr
     - bioconductor-cicero
     - bioconductor-genefilter
+    - bioconductor-GOSemSim
+    - bioconductor-DESeq2
+
 about:
   home: https://github.com/chenfeiwang/MAESTRO
   license: GPL-3.0

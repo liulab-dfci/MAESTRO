@@ -10,7 +10,8 @@
 #' @param ident.1 The identy of interested cluster, default is 0.
 #' @param ident.2 A second identity of cluster for comparison; if \code{NULL},
 #' use all other cells for comparison. Default is \code{NULL}.
-#' @param test.use Method to use to identify differential genes or peaks. Default is "wilcox", Wilcoxon Rank Sum test.
+#' @param test.use Method to use to identify differential genes or peaks. Default is "presto", a fast version of Wilcoxon Rank Sum test.
+#' "presto" produces exactly the same result as "wilcox", but "presto" is much faster.
 #' For scATAC-seq, "t" test is another option. For scRNA-seq, other available options are "bimod",
 #' "roc", "t", "negbinom", "poisson", "LR", "MAST", "DESeq2", which supported by Seurat \code{link{FindMarkers}} function.
 #' @param slot Slot to pull data from; note that if test.use is "negbinom", "poisson", or "DESeq2", 
@@ -32,18 +33,17 @@
 #' @return A dataframe containing a ranked list of pytative markers and 
 #' associated statics(p-value, ROC score, etc.)
 #'
+#' @importFrom Seurat GetAssayData MinMax WhichCells
+#' @importFrom future nbrOfWorkers
+#' @importFrom pbapply pbsapply
+#' @importFrom future.apply future_sapply
 #' @export
 #' 
 
-FindMarkersMAESTRO <- function(object, ident.1 = 0, ident.2 = NULL,test.use = 'wilcox', 
+FindMarkersMAESTRO <- function(object, ident.1 = 0, ident.2 = NULL,test.use = 'presto', 
                                slot = "data", features = NULL, min.pct = 0.1, logfc.threshold = 0.25,
                                latent.vars = NULL, min.cells.feature = 3, min.cells.group = 3,
                                only.pos = FALSE, verbose = TRUE){
-  require(Matrix)
-  require(future)
-  require(future.apply)
-  require(pbapply)
-  
   features = if(is.null(features)){rownames(object)} else {features}
   methods.noprefiliter <- c("DESeq2")
   if (test.use %in% methods.noprefiliter) {
@@ -106,6 +106,11 @@ FindMarkersMAESTRO <- function(object, ident.1 = 0, ident.2 = NULL,test.use = 'w
   # DE test
   test.res.pval = switch(
     test.use,
+    'presto' = prestoTest(
+      data.use = data[features, c(cells.1, cells.2), drop = FALSE],
+      cells.1 = cells.1,
+      cells.2 = cells.2
+    ),
     'wilcox' = WilcoxDETest(
       data.use = data[features, c(cells.1, cells.2), drop = FALSE],
       cells.1 = cells.1,
@@ -180,6 +185,20 @@ FindMarkersMAESTRO <- function(object, ident.1 = 0, ident.2 = NULL,test.use = 'w
     test.res$p_val_adj <- p.adjust(p = test.res$p_val, method = "bonferroni", n = nrow(x = object))
   }
   return(test.res)
+}
+
+prestoTest <- function(
+  data.use,
+  cells.1,
+  cells.2
+){
+  group.info <- data.frame(row.names = c(cells.1, cells.2))
+  group.info[cells.1, "group"] <- "Group1"
+  group.info[cells.2, "group"] <- "Group2"
+  group.info = as.character(unlist(group.info))
+  presto.res = presto::wilcoxauc(data.use, group.info)
+  res = presto.res[presto.res$group == "Group1", c("feature", "pval")]
+  return(data.frame(p_val = res$pval, row.names = res$feature))
 }
 
 WilcoxDETest <- function(
@@ -280,8 +299,8 @@ AUCMarkerTest <- function(data1, data2, mygenes, print.bar = TRUE) {
   return(AUC)
 }
 
+#' @importFrom ROCR performance prediction
 DifferentialAUC <- function(x, y) {
-  require(ROCR)
   prediction.use <- prediction(
     predictions = c(x, y),
     labels = c(rep(x = 1, length(x = x)), rep(x = 0, length(x = y))),
@@ -314,7 +333,7 @@ DiffTTest <- function(
   return(data.frame(p_val,row.names = rownames(x = data.use)))
 }
 
-
+#' @importFrom MASS glm.nb
 GLMDETest <- function(
   data.use,
   cells.1,
@@ -324,7 +343,6 @@ GLMDETest <- function(
   test.use = NULL,
   verbose = TRUE
 ) {
-  require(MASS)
   group.info <- data.frame(
     group = rep(
       x = c('Group1', 'Group2'),
@@ -487,6 +505,7 @@ DESeq2DETest <- function(
   return(to.return)
 }
 
+#' @importFrom lmtest lrtest
 LRDETest <- function(
   data.use,
   cells.1,
@@ -494,7 +513,6 @@ LRDETest <- function(
   latent.vars = NULL,
   verbose = TRUE
 ) {
-  require(lmtest)
   group.info <- data.frame(row.names = c(cells.1, cells.2))
   group.info[cells.1, "group"] <- "Group1"
   group.info[cells.2, "group"] <- "Group2"

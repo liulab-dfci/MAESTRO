@@ -15,7 +15,7 @@ ATACRunSeurat(
   dims.use = 1:30,
   cluster.res = 0.6,
   only.pos = FALSE,
-  peaks.test.use = "wilcox",
+  peaks.test.use = "presto",
   peaks.cutoff = 1e-05,
   peaks.pct = 0.1,
   peaks.logfc = 0.2,
@@ -49,7 +49,8 @@ if users want to obtain a larger (smaller) number of communities. Default is 0.6
 
 \item{only.pos}{If seting true, only positive peaks will be output. Default is False.}
 
-\item{peaks.test.use}{Denotes which test to use to identify differnetial peaks. Default is "wilcox". Available options are "bimod", "roc" and "t".}
+\item{peaks.test.use}{Denotes which test to use to identify differnetial peaks. Default is "presto", a fast version of Wilcoxon Rank Sum test. 
+Available options are "wilcox" and "t". See \code{\link{FindAllMarkersMAESTRO}} for details.}
 
 \item{peaks.cutoff}{Identify differential peaks with adjusted p.value less than \code{peaks.cutoff} as cluster specific peaks}
 
@@ -58,9 +59,9 @@ if users want to obtain a larger (smaller) number of communities. Default is 0.6
 \item{peaks.logfc}{Limit testing to peaks which show, on average, at least X-fold difference (log-scale) between the two groups of cells. Default is 0.2 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 for each cluster. Default cutoff is 1E-5.}
 
-\item{runlsi.args}{Extra arguments passed to \code{link{RunLSI}}.}
+\item{runlsi.args}{Extra arguments passed to \code{\link{RunLSI}}.}
 
-\item{runpca.args}{Extra arguments passed to \code{link{RunPCA}}.}
+\item{runpca.args}{Extra arguments passed to \code{\link{RunPCA}}.}
 
 \item{findneighbors.args}{Extra arguments passed to \code{\link{FindNeighbors}}.}
 

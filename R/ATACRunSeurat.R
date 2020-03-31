@@ -19,13 +19,14 @@
 #' @param cluster.res Value of the clustering resolution parameter. Please use a value above (below) 1.0 
 #' if users want to obtain a larger (smaller) number of communities. Default is 0.6.
 #' @param only.pos If seting true, only positive peaks will be output. Default is False.
-#' @param peaks.test.use Denotes which test to use to identify differnetial peaks. Default is "wilcox". Available options are "bimod", "roc" and "t".
+#' @param peaks.test.use Denotes which test to use to identify differnetial peaks. Default is "presto", a fast version of Wilcoxon Rank Sum test. 
+#' Available options are "wilcox" and "t". See \code{\link{FindAllMarkersMAESTRO}} for details.
 #' @param peaks.cutoff Identify differential peaks with adjusted p.value less than \code{peaks.cutoff} as cluster specific peaks
 #' @param peaks.pct Only test peaks that are detected in a minimum fraction of min.pct cells in either of the two populations. Meant to speed up the function by not testing peaks that are very infrequently detected Default is 0.1
 #' @param peaks.logfc Limit testing to peaks which show, on average, at least X-fold difference (log-scale) between the two groups of cells. Default is 0.2 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 #' for each cluster. Default cutoff is 1E-5.
-#' @param runlsi.args Extra arguments passed to \code{link{RunLSI}}.
-#' @param runpca.args Extra arguments passed to \code{link{RunPCA}}.
+#' @param runlsi.args Extra arguments passed to \code{\link{RunLSI}}.
+#' @param runpca.args Extra arguments passed to \code{\link{RunPCA}}.
 #' @param findneighbors.args Extra arguments passed to \code{\link{FindNeighbors}}.
 #' @param findclusters.args Extra arguments passed to \code{\link{FindClusters}}.
 #' @param \dots Extra arguments passed to \code{\link{RunUMAP}}.
@@ -41,32 +42,33 @@
 #' str(pbmc.ATAC.res$ATAC)
 #' head(pbmc.ATAC.res$peaks)
 #'
+#' @importFrom Seurat CreateSeuratObject DimPlot ElbowPlot FindClusters FindNeighbors NormalizeData RunLSI RunPCA RunUMAP ScaleData VariableFeatures
+#' @importFrom ggplot2 ggsave
+#' @importFrom Gmisc fastDoCall
 #' @export
 
 ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ident = NULL, 
                           min.c = 10, min.p = 100, method = "LSI", dims.use = 1:30, 
-                          cluster.res = 0.6, only.pos = FALSE, peaks.test.use = "wilcox", 
+                          cluster.res = 0.6, only.pos = FALSE, peaks.test.use = "presto", 
                           peaks.cutoff = 1E-5, peaks.pct = 0.1, peaks.logfc = 0.2, 
                           runlsi.args = list(), runpca.args = list(), 
                           findneighbors.args = list(), findclusters.args = list(),...)
 {
-  require(Seurat)
-  require(ggplot2)
   SeuratObj <- CreateSeuratObject(inputMat, project = project, min.cells = min.c, min.features = min.p, assay = "ATAC")
   if(method == "LSI"){    
   #============ LSI ============
   message("LSI analysis ...")
   VariableFeatures(SeuratObj) <- names(which(Matrix::rowSums(SeuratObj) > min.c))
   # SeuratObj <- RunLSI(object = SeuratObj, scale.max = NULL) 
-  SeuratObj <- do.call("RunLSI", c(object = SeuratObj, runlsi.args)) 
+  SeuratObj <- fastDoCall("RunLSI", c(object = SeuratObj, runlsi.args)) 
   
     
   #============ UMAP ============
   message("UMAP analysis ...")
-  #SeuratObj <- do.call("RunUMAP", c(object = SeuratObj, dims = dims.use, reduction = "lsi", runumap.args))
+  #SeuratObj <- fastDoCall("RunUMAP", c(object = SeuratObj, dims = dims.use, reduction = "lsi", runumap.args))
   SeuratObj <- RunUMAP(object = SeuratObj, reduction = "lsi", dims = dims.use, ...)
-  SeuratObj <- do.call("FindNeighbors", c(object = SeuratObj, reduction = "lsi", dims = dims.use, findneighbors.args))
-  SeuratObj <- do.call("FindClusters", c(object = SeuratObj, resolution = cluster.res, findclusters.args))
+  SeuratObj <- fastDoCall("FindNeighbors", c(object = SeuratObj, reduction = "lsi", dims = dims.use, findneighbors.args))
+  SeuratObj <- fastDoCall("FindClusters", c(object = SeuratObj, resolution = cluster.res, findclusters.args))
   # SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "lsi", dims = dims.use)
   # SeuratObj <- FindClusters(object = SeuratObj, resolution = cluster.res)
   p1 <- DimPlot(object = SeuratObj, pt.size = 0.5, label = TRUE)
@@ -86,7 +88,7 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   message("PCA analysis ...")
   SeuratObj <- NormalizeData(SeuratObj, normalization.method = "LogNormalize", scale.factor = 10000)
   SeuratObj <- ScaleData(object = SeuratObj, var.to.regress="nCount_RNA")
-  SeuratObj <- do.call("RunPCA", c(object = SeuratObj, features = rownames(SeuratObj), runpca.args))
+  SeuratObj <- fastDoCall("RunPCA", c(object = SeuratObj, features = rownames(SeuratObj), runpca.args))
   
   # SeuratObj <- RunPCA(object = SeuratObj, features = rownames(SeuratObj))
   p2 = ElbowPlot(object = SeuratObj)
@@ -95,8 +97,8 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   #============ UMAP ============
   message("UMAP analysis ...")
   SeuratObj <- RunUMAP(object = SeuratObj, reduction = "pca", dims = dims.use, ...)
-  SeuratObj <- do.call("FindNeighbors", c(object = SeuratObj, reduction = "pca", dims = dims.use, findneighbors.args))
-  SeuratObj <- do.call("FindClusters", c(object = SeuratObj, resolution = cluster.res, findclusters.args))
+  SeuratObj <- fastDoCall("FindNeighbors", c(object = SeuratObj, reduction = "pca", dims = dims.use, findneighbors.args))
+  SeuratObj <- fastDoCall("FindClusters", c(object = SeuratObj, resolution = cluster.res, findclusters.args))
   
   # SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "pca", dims = dims.use)
   # SeuratObj <- FindClusters(object = SeuratObj, resolution = res)

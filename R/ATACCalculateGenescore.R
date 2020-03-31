@@ -22,12 +22,12 @@
 #' data(pbmc.ATAC)
 #' pbmc.ATAC.RP.res <- ATACCalculateGenescore(inputMat = pbmc.ATAC)
 #'
+#' @importFrom reticulate source_python
+#' @importClassesFrom Matrix dgCMatrix
 #' @export 
 #' 
 
 ATACCalculateGenescore <- function(inputMat, project = "MAESTRO.scATAC", organism = "GRCh38"){
-  library(reticulate)
-  library(Matrix)
   source_python(paste(system.file(package="MAESTRO"), "ATACCalculateGenescore.py", sep="/"))
   
   if(organism == "GRCh38"){

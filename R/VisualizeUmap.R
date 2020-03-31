@@ -30,13 +30,20 @@
 #' # Genes of interest
 #' VisualizeUmap(genes = c("MS4A1","FCGR3A","CD3D","GZMB"), type = "RNA", SeuratObj = pbmc$RNA, ncol = 2, width = 7, height =4.5, name = "PBMC.scRNA.genes")
 #' 
+#' 
+#' @importFrom Seurat CombinePlots GetAssayData
+#' @importFrom ggplot2 aes element_blank element_line geom_point ggplot ggsave labs scale_color_gradient theme
 #' @export
 
 VisualizeUmap <- function(genes, type, SeuratObj, ncol = NULL, width = 6, height = 4, name = "MultipleUmapPlot"){
-  require(ggplot2)
-
-  genes = intersect(rownames(SeuratObj),unique(genes))
-  gene_expr = GetAssayData(object = SeuratObj)[genes, ]
+  if(type == "ATAC"){
+    genes = intersect(rownames(SeuratObj$ACTIVITY),unique(genes))
+    gene_expr = GetAssayData(object = SeuratObj$ACTIVITY)[genes, ]
+  }
+  if(type == "RNA"){
+    genes = intersect(rownames(SeuratObj),unique(genes))
+    gene_expr = GetAssayData(object = SeuratObj)[genes, ]
+  }
   umap_df = SeuratObj@reductions$umap@cell.embeddings
   umapplots = lapply(genes, function(x){
     umap_expr = merge(umap_df, as.data.frame(gene_expr[x, ]), by.x = 0, by.y = 0)
@@ -56,7 +63,7 @@ VisualizeUmap <- function(genes, type, SeuratObj, ncol = NULL, width = 6, height
     return(p)
   })
   combinedplot = CombinePlots(umapplots, ncol = ncol)
-  ggsave(paste0(name, ".png"), combinedplot,  width=width, height=height)  
+  ggsave(paste0(name, "_umapplot.png"), combinedplot,  width=width, height=height)  
 }
 
 
