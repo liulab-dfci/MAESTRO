@@ -1,11 +1,11 @@
 # 10x PBMC 10k scATAC-seq
 
-In this example, we will be analyzing a scATAC-seq dataset of 10K human peripheral blood mononuclear cells (PBMCs) freely available from 10X Genomics. The raw dataset can be downloaded from the 10X Genomics website. We will show you how to [run through the whole MAESTRO pipeline](#run-maestro-pipeline) from the raw sequencing fastq files to the final results. We also provide guidance on how to [perform custom analysis](#perform-custom-analysis-from-the-pipeline-output) starting from the output of MAESTRO pipeline.
+In this example, we will be analyzing a scATAC-seq dataset of 10K human peripheral blood mononuclear cells (PBMCs) freely available from 10X Genomics. The raw dataset can be downloaded from the 10X Genomics website. We will show you how to [run through the whole MAESTRO pipeline](#run-maestro-pipeline) from the raw sequencing fastq files to the final results. We also provide guidance on how to [perform custom analysis](#perform-custom-analysis-from-the-pipeline-output) starting from the pipeline output such as the peak count matrix.
 
 ## Run MAESTRO pipeline
 
 ### Step 0. Download the data and prepare the environment
-Please downlowd the raw data from 10X genomics website.
+Please download the raw data from 10X genomics website.
 ```bash
 $ wget http://s3-us-west-2.amazonaws.com/10x.files/samples/cell-atac/1.1.0/atac_v1_pbmc_10k/atac_v1_pbmc_10k_fastqs.tar
 $ tar xvf atac_v1_pbmc_10k_fastqs.tar
@@ -55,7 +55,7 @@ Arguments  |  Description
 ---------  |  -----------
 `--platform` | {10x-genomics,Dropseq,Smartseq2} Platform of single cell RNA-seq. DEFAULT: 10x-genomics.
 `--fastq-dir` | Directory where fastq files are stored.
-`--fastq-prefix` | Sample name of fastq file (required for the platform of '10x-genomics' or 'sci-ATAC-seq'). When the platform is '10x-genomics', if there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the prefix is 'pbmc_1k_v2'. If the platform is 'sci-ATAC-seq', there are two ways to provide fastq files. The first is to provide pair-end sequencing results which contain two fastq files -- prefix_1.fastq and prefix_2.fastq. If in this way, the barcode for each read needs to be included in the reads ID (the first line of each read) in the format of '@ReadName:CellBarcode:OtherInformation'. For example, @rd.1:TCTCCCGCCGAGGCTGACTGCATAAGGCGAAT:SHEN-MISEQ02:1:1101:15311:1341. The other way is to provide 10x-like fastq files which should contain three fastq files -- prefix_R1.fastq, prefix_R2.fastq and prefix_R3.fastq. In this way, read1, barcode and read2 are associated with R1, R2, R3, respectively.
+`--fastq-prefix` | Sample name of fastq file (required for the platform of '10x-genomics' or 'sci-ATAC-seq'). When the platform is '10x-genomics', if there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the prefix is 'pbmc_1k_v2'. If the platform is 'sci-ATAC-seq', there are two ways to provide fastq files. The first is to provide pair-end sequencing results that contain two fastq files -- prefix_1.fastq and prefix_2.fastq. If in this way, the barcode for each read needs to be included in the reads ID (the first line of each read) in the format of '@ReadName:CellBarcode:OtherInformation'. For example, @rd.1:TCTCCCGCCGAGGCTGACTGCATAAGGCGAAT:SHEN-MISEQ02:1:1101:15311:1341. The other way is to provide 10x-like fastq files which should contain three fastq files -- prefix_R1.fastq, prefix_R2.fastq and prefix_R3.fastq. In this way, read1, barcode and read2 are associated with R1, R2, R3, respectively.
 `--species` | {GRCh38,GRCm38} Species (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.
 
 **Running and output arguments:**
@@ -82,18 +82,18 @@ Arguments  |  Description
 `--giggleannotation` | Path of the giggle annotation file required for regulator identification. Please download the annotation file from [here](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz) and decompress it.
 `--fasta` | Genome fasta file for minimap2. Users can just download the fasta file from [here](http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz) and decompress it. For example, `--fasta Refdata_scATAC_MAESTR O_GRCh38_1.1.0/GRCh38_genome.fa`.
 
-**Barcode library arguments, only for platform of 'sci-ATAC-seq':**
+**Barcode library arguments, only for the platform of 'sci-ATAC-seq':**
 
 Arguments  |  Description
 ---------  |  -----------
-`--whitelist` | If the platform is 'sci-ATAC-seq' or '10x-genomics', please specify the barcode library (whitelist) so that the pipeline can correct cell barcodes with 1 base mismatched. Otherwise, the pipeline will automatically output the barcodes with enough read count (>1000).The 10X Chromium whitelist file can be found inside the CellRanger-ATAC distribution. For example, in CellRanger-ATAC 1.1.0, the whitelist is 'cellranger-atac-1.1.0/cellranger-atac-cs/1.1.0/lib/python/barcodes/737K-cratac-v1.txt'.
+`--whitelist` | If the platform is 'sci-ATAC-seq' or '10x-genomics', please specify the barcode library (whitelist) so that the pipeline can correct cell barcodes with 1 base mismatched. Otherwise, the pipeline will automatically output the barcodes with enough read count (>1000). The 10X Chromium whitelist file can be found inside the CellRanger-ATAC distribution. For example, in CellRanger-ATAC 1.1.0, the whitelist is 'cellranger-atac-1.1.0/cellranger-atac-cs/1.1.0/lib/python/barcodes/737K-cratac-v1.txt'.
 
 **Customized peak arguments:**
 
 Arguments  |  Description
 ---------  |  -----------
 `--custompeak` | Whether or not to provide custom peaks. If set, users need to provide the file location of peak file through `--custompeak-file` and then MAESTRO will merge the custom peak file and the peak file called from all fragments using MACS2. By default (not set), the pipeline will use the peaks called using MACS2.
-`--custompeak-file` | If `--custompeak` is set, please provide the file location of custom peak file. The peak file is BED formatted with tab seperated. The first column is chromsome, the second is chromStart, and the third is chromEnd.
+`--custompeak-file` | If `--custompeak` is set, please provide the file location of custom peak file. The peak file is BED formatted with tab-separated. The first column is the chromosome, the second is chromStart, and the third is chromEnd.
 `--shortpeak` | Whether or not to call peaks from short fragments (shorter than 150bp). If set, MAESTRO will merge the peaks called from all fragments and those called from short fragments, and then use the merged peak file for further analysis. If not (by default), the pipeline will only use peaks called from all fragments.
 
 **Gene score arguments:**
@@ -107,7 +107,7 @@ Arguments  |  Description
 Arguments  |  Description
 ---------  |  -----------
 `--signature` | Whether or not to provide custom cell signatures. If set, users need to provide the file location of cell signatures through `--signature-file`. By default (not set), the pipeline will use the built-in immune cell signature adapted from CIBERSORT.
-`--signature-file` | If `--signature` is set, please provide the file location of custom cell signatures. The signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene.
+`--signature-file` | If `--signature` is set, please provide the file location of custom cell signatures. The signature file is tab-separated without header. The first column is the cell type, and the second column is the signature gene.
 
 
 ### Step 2. Run MAESTRO
@@ -119,7 +119,7 @@ $ nohup snakemake --cores 10 > 10X_PBMC_10k.out &
 ```
 
 ### Step 3. Understand the final output files   
-The whole pipeline in this example takes about 6 hours with 10 cores. Here, we assume users have ran MAESTRO successfully. An output directory is specified in the run call, and will contain several useful outputs as described below.
+The whole pipeline in this example takes about 6 hours with 10 cores. Here, we assume users have run MAESTRO successfully. An output directory is specified in the run call, and will contain several useful outputs as described below.
 ```bash
 $ ls Result
 10X_PBMC_10k_scATAC_report.html  Analysis  Benchmark  Log  minimap2  QC
@@ -127,7 +127,7 @@ $ ls Result
 
 #### Output files
 * **minimap2:**
-The `minimap2` directory contains all the mapping results generated by `minimap2`. `fragments_corrected_count.tsv` is a BED-like tabular file, in which each line represents a unique ATAC-seq fragment captured by the assay. The 5 columns in the file are chrom, chromStart, chromEnd, barcode and duplicateCount, respectively. All the barcodes have been corrected according to the whitelist users provide. `fragments_corrected_count.tsv` is used for counting peaks in the downstream analysis.
+The `minimap2` directory contains all the mapping results generated by `minimap2`. `fragments_corrected_count.tsv` is a BED-like tabular file, in which each line represents a unique ATAC-seq fragment captured by the assay. The 5 columns in the file are chrom, chromStart, chromEnd, barcode, and duplicateCount, respectively. All the barcodes have been corrected according to the whitelist users provide. `fragments_corrected_count.tsv` is used for counting peaks in the downstream analysis.
 * **QC:**
 The `QC` directory contains quality control analysis results of scATAC-seq data, including the barcode filtering table `outprefix_scATAC_validcells.txt`, filtered count matrix `outprefix_filtered_peak_count.h5` and other QC results. The filtered count matrix is generated according to `singlecell.txt` and the parameters like `--count-cutoff` and `--frip-cutoff` that users provide. `singlecell.txt` is a tabular file, which provides QC information associated with the fragments per barcode. The file contains three columns, representing barcode, number of fragments and number of fragments overlapping promoter regions. 
 * **Analysis:**
@@ -143,8 +143,8 @@ MAESTRO performs quality control at both bulk and single-cell level. Here we lis
 
 **Mappability plot for scATAC-seq QC analysis (bulk level)**
 
-MAESTRO evaluates read mappability, duplicate reads percentage, fraction of reads mapped to mitochondrial genes, peak regions or promoter regions.  
-* The **percentage of duplicate reads** shows whether the library is over-amplified due to limited starting material. PCR duplicates will be removed for downstream analysis. So, we expect as few duplicate reads as possible. For human or mouse, if the percentage of duplicate reads is more than 50%, there may be something wrong during the library preparation.
+MAESTRO evaluates read mappability, duplicate reads percentage, the fraction of reads mapped to mitochondrial genes, peak regions or promoter regions.  
+* The **percentage of duplicate reads** shows whether the library is over-amplified due to limited starting material. PCR duplicates will be removed for downstream analysis. So, we expect as few duplicates read as possible. For human or mouse, if the percentage of duplicate reads is more than 50%, there may be something wrong during the library preparation.
 * As for **uniquely mapped reads**, if the percentage is less than 50%, it might be due to inadequate sequencing depth or excessive PCR amplification.   
 * **Reads derived from mitochondrial DNA** represent noise in ATAC-seq data, and should be discarded in the downstream analysis.
 * The **fraction of reads in peak or promoter regions** is a widely used metric to evaluate the signal-to-noise ratio of ATAC-seq data quality. High values are an indicator of a good signal-to-noise ratio. At the bulk level, if the values are less than 2%, it seems that ATAC-seq assay does not capture strong signals. 
@@ -159,12 +159,12 @@ The fragment size distribution should show a periodicity of approximately 200bp 
 
 **Cell filtering plot for scATAC-seq QC analysis (single-cell level)**
 
-While fraction of reads in peaks is a good way to check overall sample quality at the bulk level, peak calls from the aggregated scATAC-seq data are dominated by the major populations. Therefore, instead of using the fraction of reads in aggregated peaks to filter cell barcodes, which might eliminate the rare cell populations, we use the fraction of reads in promoter regions to filter the cell barcodes. Cells with fewer than 1000 unique fragments and 20% fraction of promoter reads are treated as low-quality cells and filtered out from the downstream analysis. If the sequencing depth is not enough or the number of cells is small, please lower the `--count-cutoff` and `--frip-cutoff`.
+While the fraction of reads in peaks is a good way to check overall sample quality at the bulk level, peak calls from the aggregated scATAC-seq data are dominated by the major populations. Therefore, instead of using the fraction of reads in aggregated peaks to filter cell barcodes, which might eliminate the rare cell populations, we use the fraction of reads in promoter regions to filter the cell barcodes. Cells with fewer than 1000 unique fragments and 20% fraction of promoter reads are treated as low-quality cells and filtered out from the downstream analysis. If the sequencing depth is not enough or the number of cells is small, please lower the `--count-cutoff` and `--frip-cutoff`.
 
 <img src="./10X_PBMC_10k_scATAC_cell_filtering.png" width="450" height="450" /> 
 
 ## Perform custom analysis from the pipeline output
-Although MAESTRO will generate all the analysis resuls through the snakemake-based workflow, in most cases, users might focus on specific clusters or sub-clusters or want to tune some of the parameters to improve the results. Then users can utilize the stand-alone MAESTRO R package, which has been installed in the MAESTRO conda environment, to perform custom analysis from the processed dataset (peak by cell binary matrix). We will show you how to run through the downstream analysis using the R package step by step.
+Although MAESTRO will generate all the analysis results through the snakemake-based workflow, in most cases, users might focus on specific clusters or sub-clusters or want to tune some of the parameters to improve the results. Then users can utilize the stand-alone MAESTRO R package, which has been installed in the MAESTRO conda environment, to perform custom analysis from the processed dataset (peak by cell binary matrix). We will show you how to run through the downstream analysis using the R package step by step.
 
 ### Step 0. Read data
 First users need to read the peak count matrix as well as the gene regulatory potential matrix generated by MAESTRO into the R enviroment. To support the processing of large datasets, in MAESTRO we use [HDF5 format](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/advanced/h5_matrices) for all the expression, atac-seq peak count and RP tables. 
@@ -199,7 +199,7 @@ It means reticulate R package cannot find the python shared library. If Anaconda
 If users don't install Miniconda or Anaconda, we recommend to use `reticulate::install_miniconda()` to install a Miniconda Python environment and specify the version through `use_python`.
 
 ### Step 1. Perform clustering analysis and differential peak calling    
-We next create a Seurat object using the peak count matrix and perform the clustering analysis as well as differential peak calling for different clusters. `ATACRunSeurat()` function in MAESTRO integrate muiltiple functions of Seurat and perform the routine analysis as follows.
+We next create a Seurat object using the peak count matrix and perform the clustering analysis as well as differential peak calling for different clusters. `ATACRunSeurat()` function in MAESTRO integrates multiple functions of Seurat and perform the routine analysis as follows.
 
 **Analysis**
 * **Dimension reduction:**
@@ -360,13 +360,6 @@ If users want to visualize the top factors without filtering using regulatory po
 ```
 
 <img src="./10X_PBMC_10k_Bcell_top.png" width="500" height="450" /> 
-
-`VisualizeTFenrichment` returns a ggplot2 object, which can be added layers on.
-```R
-> p <- p + theme_linedraw()
-> ggsave(file.path(paste0(pbmc.ATAC.res$ATAC@project.name, "_Bcell_top_rightlegend.png")), p,  width=5.5, height=5)
-```
-<img src="./10X_PBMC_10k_Bcell_top_rightlegend.png" width="495" height="450" />
 
 To further filter the regulators, users may want to visualize the expression level of the predicted transcription factors. Here, we use the gene regulatory potential score as the predicted gene expression level. We provide the function for visualize TF/genes regulatory potential using Vlnplot and Umap.
 ```R

@@ -34,7 +34,7 @@ To use the MAESTRO R function, please install the R package following the instru
 > bcc.gene <- ATACCalculateGenescore(bcc.peak)
 ```
 
-The `ATACCalculateGenescore` function calls python from R, and utilizes matrix manipulation to calculate gene scores. However, we need to mention that for large dataset, the gene score calculation usually consumes large memory. Users should make sure they have enough memory configuration on the computing server or cluster. Or users can choose to calculate gene score using `MAESTRO scatac-genescore`, which can reduce memory consumption to a certain extent.
+The `ATACCalculateGenescore` function calls python from R, and utilizes matrix manipulation to calculate gene scores. However, we need to mention that for a large dataset, the gene score calculation usually consumes large memory. Users should make sure they have enough memory configuration on the computing server or cluster. Or users can choose to calculate gene score using `MAESTRO scatac-genescore`, which can reduce memory consumption to a certain extent.
 ```bash
 MAESTRO scatac-genescore --format h5 --peakcount GSE129785_BCC_scATAC_peak_count.h5 \
 --species GRCh38 --directory . --outprefix GSE129785_BCC_scATAC
@@ -89,7 +89,7 @@ We next try to annotate different clusters based on their marker genes. For scAT
 <img src="./GSE129785_BCC_scATAC_annotated.png" width="630" height="420" /> 
 
 ### Step 5. Download the scRNA-seq dataset
-However, as we can see from the annotations, some of the clusters are annotated as "Others", indicating that the differential accessibility of marker genes can not robustly annotate these clusters. Usually, scRNA-seq has better discrimination on markers between different clusters. Next we will perform integrated analysis of the BCC scATAC-seq dataset with public BCC scRNA-seq dataset, and try to use the scRNA-seq cluster labels to annotate the scATAC-seq clusters.
+However, as we can see from the annotations, some of the clusters are annotated as "Others", indicating that the differential accessibility of marker genes can not robustly annotate these clusters. Usually, scRNA-seq has better discrimination on markers between different clusters. Next, we will perform integrated analysis of the BCC scATAC-seq dataset with the public BCC scRNA-seq dataset, and try to use the scRNA-seq cluster labels to annotate the scATAC-seq clusters.
 
 First, users can download the scRNA-seq dataset from Cistrome website.
 ```bash

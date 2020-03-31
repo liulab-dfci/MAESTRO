@@ -1,11 +1,11 @@
 # 10X PBMC 8k scRNA-seq
 
-In this example, we will be analyzing a scRNA-seq dataset of 8K human peripheral blood mononuclear cells (PBMCs) freely available from 10X Genomics. The raw dataset can be downloaded from the 10X Genomics website. We will show you how to [run through the whole MAESTRO pipeline](#run-maestro-pipeline) from the raw sequencing fastq files to the final results. We also provide guidance on how to [perform custom analysis](#perform-custom-analysis-from-the-pipeline-output) starting from the output of MAESTRO pipeline.
+In this example, we will be analyzing a scRNA-seq dataset of 8K human peripheral blood mononuclear cells (PBMCs) freely available from 10X Genomics. The raw dataset can be downloaded from the 10X Genomics website. We will show you how to [run through the whole MAESTRO pipeline](#run-maestro-pipeline) from the raw sequencing fastq files to the final results. We also provide guidance on how to [perform custom analysis](#perform-custom-analysis-from-the-pipeline-output) starting from the pipeline output such as the expression count matrix.
 
 ## Run MAESTRO pipeline
 
 ### Step 0. Download the data and prepare the environment
-Please downlowd the raw data from 10X genomics website.
+Please download the raw data from 10X genomics website.
 ```bash
 $ wget http://s3-us-west-2.amazonaws.com/10x.files/samples/cell-exp/2.1.0/pbmc8k/pbmc8k_fastqs.tar
 $ tar xvf pbmc8k_fastqs.tar
@@ -90,7 +90,7 @@ Arguments  |  Description
 
 Arguments  |  Description
 ---------  |  -----------
-`--whitelist` | If the platform is 'Dropseq' or '10x-genomics', please specify the barcode library (whitelist) so that STARsolo can do the error correction and demultiplexing of cell barcodes. The 10X Chromium whitelist file can be found inside the CellRanger distribution. Please make sure that the whitelist is compatible with the specific version of the 10X chemistry: V2 or V3. For example, in CellRanger 3.1.0, the V2 whitelist is 'cellranger-3.1.0/cellranger-cs/3.1.0/lib/python/cellranger/barcodes/737K-august-2016.txt'. The V3 whitelist is 'cellranger-3.1.0/cellranger-cs/3.1.0/lib/python/cellranger/barcodes/3M-february-2018.txt'.
+`--whitelist` | If the platform is 'Dropseq' or '10x-genomics', please specify the barcode library (whitelist) so that STARsolo can do the error correction and demultiplex of cell barcodes. The 10X Chromium whitelist file can be found inside the CellRanger distribution. Please make sure that the whitelist is compatible with the specific version of the 10X chemistry: V2 or V3. For example, in CellRanger 3.1.0, the V2 whitelist is 'cellranger-3.1.0/cellranger-cs/3.1.0/lib/python/cellranger/barcodes/737K-august-2016.txt'. The V3 whitelist is 'cellranger-3.1.0/cellranger-cs/3.1.0/lib/python/cellranger/barcodes/3M-february-2018.txt'.
 `--barcode-start` | The start site of each barcode. DEFAULT: 1.
 `--barcode-length` | The length of cell barcode. For 10x-genomics, the length of barcode is 16. DEFAULT: 16.
 `--umi-start` | The start site of UMI. DEFAULT: 17.
@@ -100,8 +100,7 @@ Arguments  |  Description
 
 Arguments  |  Description
 ---------  |  -----------
-`--method` | {RABIT,LISA} Method to predict driver regulators.
-`--rabitlib` | Path of the rabit annotation file required for regulator identification (only required if method is set to RABIT). Please download the annotation file from [here](http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz) and decompress it.
+`--method` | Method to predict driver regulators, now only support LISA.
 `--lisamode` | Mode to Run LISA, 'local' or 'web'. If the mode is set as 'local', please install [LISA](https://github.com/qinqian/lisa) and download pre-computed datasets following the instructions. The 'web' mode is to run online version of LISA. In consideration of the connection issue and size of datasets, the 'local' mode is recommended to run the whole MAESTRO pipeline. If the mode is 'local', please provide the name of LISA environment through `--lisaenv` and specify the directory where miniconda or anaconda is installed through `--condadir`. DEFAULT: local.
 `--lisaenv` | Name of LISA environment (required if method is set to lisa and lisamode is set to local). DEFAULT: lisa.
 `--condadir` | Directory where miniconda or anaconda is installed (required if method is set to lisa and lisamode is set to local). For example, `--condadir /home/user/miniconda3`.
@@ -111,7 +110,7 @@ Arguments  |  Description
 Arguments  |  Description
 ---------  |  -----------
 `--signature` | Whether or not to provide custom cell signatures. If set, users need to provide the file location of cell signatures through `--signature-file`. By default (not set), the pipeline will use the built-in immune cell signature adapted from CIBERSORT.
-`--signature-file` | If `--signature` is set, please provide the file location of custom cell signatures. The signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene.
+`--signature-file` | If `--signature` is set, please provide the file location of custom cell signatures. The signature file is tab-separated without header. The first column is the cell type, and the second column is the signature gene.
 
 
 ### Step 2. Run MAESTRO
@@ -131,7 +130,7 @@ $ ls Result
 
 #### Output files 
 * **STAR:**
-The `STAR` directory contains all the mapping and analysis files generated by `STAR` normal (Smartseq2) or solo mode (10x-genomics or Dropseq). For solo mode, `Solo.out/Gene/` stores raw and filtered count matrix. In MAESTRO pipeline, raw count matrix is used for futher filter according to quality control arguments like `--count-cutoff` `--gene-cutoff` and `--cell-cutoff`.
+The `STAR` directory contains all the mapping and analysis files generated by `STAR` normal (Smartseq2) or solo mode (10x-genomics or Dropseq). For solo mode, `Solo.out/Gene/` stores raw and filtered count matrix. In MAESTRO pipeline, raw count matrix is used for a further filter according to quality control arguments like `--count-cutoff` `--gene-cutoff` and `--cell-cutoff`.
 * **QC:**
 The `QC` directory contains quality control analysis results of scRNA-seq data, including the filtered count matrix `outprefix_filtered_gene_count.h5` and RSeQC results (if `--rseqc` is set).
 * **Analysis:**
@@ -165,7 +164,7 @@ Cells with less than 1000 UMIs and 500 genes covered are treated as low-quality 
 
 
 ## Perform custom analysis from the pipeline output
-Although MAESTRO will generate all the analysis resuls through the snakemake-based workflow, in most cases, users might focus on specific clusters or sub-clusters or want to tune some of the parameters to improve the results. Then users can utilize the stand-alone MAESTRO R package, which has been installed in the MAESTRO conda environment, to perform custom analysis from the processed dataset (gene by cell count matrix). We will show you how to run through the downstream analysis using the R package step by step.
+Although MAESTRO will generate all the analysis results through the snakemake-based workflow, in most cases, users might focus on specific clusters or sub-clusters or want to tune some of the parameters to improve the results. Then users can utilize the stand-alone MAESTRO R package, which has been installed in the MAESTRO conda environment, to perform custom analysis from the processed dataset (gene by cell count matrix). We will show you how to run through the downstream analysis using the R package step by step.
 
 ### Step 0. Read data
 First users need to read the gene expression count matrix generated by MAESTRO pipeline into the R environment. To support the processing of large datasets, in MAESTRO we use [HDF5 format](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/h5_matrices) for all the expression, atac-seq peak count and RP tables. 
@@ -181,18 +180,18 @@ We also support the processed dataset from 10x Cell Ranger pipeline or STARsolo.
 ```
 
 ### Step 1. Perform clustering and differential gene analysis
-We next create a Seurat object using the gene expression matrix and perform the clustering analysis as well as differential gene analysis for different clusters. `RNARunSeurat()` function in MAESTRO integrate muiltiple functions of Seurat and perform the routine analysis as follows.
+We next create a Seurat object using the gene expression matrix and perform the clustering analysis as well as differential gene analysis for different clusters. `RNARunSeurat()` function in MAESTRO integrates multiple functions of Seurat and perform the routine analysis as follows.
 
 1. **Single-cell level quality control**
 * **Cell and gene coverage:**
 Cells with less than 200 genes expressed, and genes expressed in less than 10 cells will be removed from the analysis. 
 * **Mitochondrial gene and ERCC:**
-If `mito = TRUE` and `mito.cutoff = 0.05` is set, we will also filter the cells with more than 5% mitochondrial reads or more than 5% ERCC spike-ins. Mitochondrial genes are expressed in most cells and their expression level is specific to cell types. High expression level (i.e., high percentage) of mitochondrial genes could be detected from apoptotic or lysing cells, which should not be included in the analysis. ERCC spike-ins are used to estimate total mRNA content captured in cells. High level of ERCC is likely caused by cell death. Similarly, cells with high percentage of ERCC need to be filtered.
+If `mito = TRUE` and `mito.cutoff = 0.05` is set, we will also filter the cells with more than 5% mitochondrial reads or more than 5% ERCC spike-ins. Mitochondrial genes are expressed in most cells and their expression level is specific to cell types. High expression level (i.e., high percentage) of mitochondrial genes could be detected from apoptotic or lysing cells, which should not be included in the analysis. ERCC spike-ins are used to estimate total mRNA content captured in cells. High level of ERCC is likely caused by cell death. Similarly, cells with a high percentage of ERCC need to be filtered.
 2. **Normalization**
 * **Removing unwanted confounding factors:**
 Single cells may contain unwanted sources of variation, such as technical noise. These factors may have a disturbing effect on downstream analysis and should be removed out. Seurat provides a function to regress user-defined variables out.
 * **Variance shrinkage and high-variance gene identification:**
-Based on the assumption that the expression level of most genes in all cells are similar, variance adjustment is needed to preserve biological variation and minimize unknown experiment variation. After shrinking variance, really highly variable genes are identified and only the top 2000 variable genes are used in the downstream analysis.
+Based on the assumption that the expression level of most genes in all cells is similar, variance adjustment is needed to preserve biological variation and minimize unknown experiment variation. After shrinking variance, really highly variable genes are identified and only the top 2000 variable genes are used in the downstream analysis.
 3. **Analysis**
 * **Dimension reduction and determining significant components:**
 MAESTRO performed PCA on top variable features to reduce the dimension of the dataset. An elbow plot is generated to visualize the variance of each PC and identify the "elbow" point to determine the significant PCs. If not set, the top 15 PCs will be selected by default for downstream analysis. 
@@ -201,7 +200,7 @@ MAESTRO employs the graph-based clustering method in Seurat for scRNA-seq cluste
 * **UMAP visualization:**
 UMAP is used to visualize all the single cells. MAESTRO adopts [UMAP](https://arxiv.org/abs/1802.03426) to achieve a low dimension embedding, in which similar cells are placed together. To get a better result for visualization, users can tune the parameters of `RunUMAP` by adding the arguments in `RNARunSeurat` function, like `RNARunSeurat(inputMat = pbmc.gene, ..., n.neighbors = 20, min.dist = 0.2)`. 
 * **Differential gene analysis:**
-The default differential expression method is [presto](https://github.com/immunogenomics/presto), a fast version of wilcoxon test. Users can also use other model-based methods like [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) and [MAST](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4676162/). These methods have been integrated into `FindAllMarkers` function in Seurat. We provide `FindAllMarkersMAESTRO` function in MAESTRO, which is adapted from `FindAllMarkers`, to reduce the computational time and memory. Genes with logFC greater than 0.25, minimum presence faction in cells of 0.1, and p-value less than 1E-5 are identified as marker genes for each cluster.
+The default differential expression method is [presto](https://github.com/immunogenomics/presto), a fast version of Wilcoxon test. Users can also use other model-based methods like [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) and [MAST](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4676162/). These methods have been integrated into `FindAllMarkers` function in Seurat. We provide `FindAllMarkersMAESTRO` function in MAESTRO, which is adapted from `FindAllMarkers`, to reduce the computational time and memory. Genes with logFC greater than 0.25, minimum presence faction in cells of 0.1, and p-value less than 1E-5 are identified as marker genes for each cluster.
 
 ```R
 > pbmc.RNA.res <- RNARunSeurat(inputMat = pbmc.gene,
@@ -282,7 +281,7 @@ All the reduction results are stored in `Object@reductions`. For example, users 
 <img src="./10X_PBMC_8k_annotated_nolegend.png" width="420" height="420" />
 
 ### Step 3. Identify driver transcription regulators
-To dentify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilizes LISA or RABIT to predict the potential transcription factors based on the marker genes in each cluster. The two methods both use the transcriptional regulator binding profiles from CistromeDB to identify the potential regulators shaping the expression pattern of each cluster. If users choose to use LISA, MAESTRO provides two options for running LISA, "local" and "web". The web mode does not need to install LISA and download the annotations. If users select the local mode, which is much faster and more stable than the web version, users need to install LISA locally, build the annotation files according to the [LISA document](https://github.com/qinqian/lisa), and provide the environment name of LISA when using the `RNAAnnotateTranscriptionFactor` function. If users have mutiple clusters of differential genes, the "local" mode is recommended.
+To identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilizes LISA to predict the potential transcription factors based on the marker genes in each cluster, which rely on the transcriptional regulator binding profiles from CistromeDB to identify the potential regulators shaping the expression pattern of each cluster. MAESTRO provides two options for running LISA, "local" and "web". The web mode does not need to install LISA and download the annotations. If users select the local mode, which is much faster and more stable than the web version, users need to install LISA locally, build the annotation files according to the [LISA document](https://github.com/qinqian/lisa), and provide the environment name of LISA when using the `RNAAnnotateTranscriptionFactor` function. If users have multiple clusters of differential genes, the "local" mode is recommended.
 
 ```R
 > pbmc.RNA.tfs <- RNAAnnotateTranscriptionFactor(RNA = pbmc.RNA.res$RNA,
@@ -320,15 +319,6 @@ Besides identifying TFs for all the clusters, we also support the differential g
                                                           top.tf = 20)
 ```
 
-Alternatively, users can also use RABIT to identify the driver regulators, using the following commands. To run this function, users need first to install [RABIT](http://rabit.dfci.harvard.edu/), download the rabit index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz), and provide the file location of the index to `RNAAnnotateTranscriptionFactor`.
-```R
-> pbmc.RNA.tfs.rabit <- RNAAnnotateTranscriptionFactor(RNA = pbmc.RNA.res$RNA, 
-                                                 genes = pbmc.RNA.res$genes, 
-                                                 project = "10X_PBMC_8k_RABIT", 
-                                                 method = "RABIT",
-                                                 rabit.path = "/home1/wangchenfei/annotations/MAESTRO/rabit")
-```
-
 ### Step 4. Visualize driver transcription factors for each cluster  
 According to the annotation of the clusters, we know that cluster 0 is Monocyte. Next, we want to visualize the enriched regulators in Monocyte from Step 5.
 
@@ -357,13 +347,6 @@ If users want to visualize the top factors without filtering. Please leave the T
                              name = "10X_PBMC_8k_Monocyte_top")
 ```
 <img src="./10X_PBMC_8k_Monocyte_top.png" width="500" height="450" /> 
-
-`VisualizeTFenrichment` returns a ggplot2 object, which can be added layers on.
-```R
-> p <- p + theme_linedraw()
-> ggsave(file.path(paste0(pbmc.RNA.res$RNA@project.name, "_Monocyte_top_rightlegend.png")), p,  width=5.5, height=5)
-```
-<img src="./10X_PBMC_8k_Monocyte_top_rightlegend.png" width="495" height="450" />
 
 To further filter the regulators, users may want to visualize the expression level of the predicted transcription factors. We provide the function for visualize TF/genes expression level using Vlnplot and Umap.
 ```R
@@ -414,9 +397,6 @@ The differential genes, predicted TFs for each cluster and all the figures have 
 [13] "10X_PBMC_8k_Monocyte.lisa"
 [14] "10X_PBMC_8k_Monocyte.PredictedTFTop20.txt"
 [15] "10X_PBMC_8k_PCElbowPlot.png"
-[16] "10X_PBMC_8k_RABIT_rabit.txt"
-[17] "10X_PBMC_8k_RABIT.PredictedTFTop10.txt"
-[18] "10X_PBMC_8k_RABIT.RABIT"
 [19] "10X_PBMC_8k_res.rds"
 [20] "10X_PBMC_8k.lisa"
 [21] "10X_PBMC_8k.PredictedTFTop10.txt"

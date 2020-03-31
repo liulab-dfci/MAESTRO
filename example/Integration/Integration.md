@@ -50,7 +50,7 @@ $ nohup snakemake > 10X_PBMC_8kRNA_10kATAC.out &
 ```
 
 ### Step 3. Understand the final output files   
-The whole pipeline in this example takes about 20 minutes. Here, we assume users have ran MAESTRO successfully. An output directory is specified in the run call, and will contain several useful outputs as described below.
+The whole pipeline in this example takes about 20 minutes. Here, we assume users have run MAESTRO successfully. An output directory is specified in the run call, and will contain several useful outputs as described below.
 ```bash
 $ ls Result
 10X_PBMC_8kRNA_10kATAC_integrate_report.html  Analysis
@@ -75,11 +75,11 @@ Our analysis is based on the clustering result from previous examples. The step-
 ```
 
 ### Step 1. Co-embedding of scRNA-seq and scATAC-seq cells 
-To visualize all the scRNA-seq and scATAC-seq cells together, we can co-embedded the scRNA-seq and scATAC-seq cells in the same low dimensional space. MAESTRO co-embedding are largely based on canonical correlation analysis (CCA) from [Seurat](https://satijalab.org/seurat/v3.0/atacseq_integration_vignette.html). We have calculated the gene regulatory potential matrix using MAESTRO in the 10X PBMC 10k scATAC example, which could represent the predicted gene expression level from ATAC-seq reads. 
+To visualize all the scRNA-seq and scATAC-seq cells together, we can co-embedded the scRNA-seq and scATAC-seq cells in the same low dimensional space. MAESTRO co-embedding is largely based on canonical correlation analysis (CCA) from [Seurat](https://satijalab.org/seurat/v3.0/atacseq_integration_vignette.html). We have calculated the gene regulatory potential matrix using MAESTRO in the 10X PBMC 10k scATAC example, which could represent the predicted gene expression level from ATAC-seq reads. 
 
 1. To integrate scRNA-seq and scATAC-seq datasets, MAESTRO identify 'anchors' between scRNA-seq gene expression and scATAC-seq gene activity using `FindTransferAnchors` in Seurat. After identifying the transfer anchors, the cell type annotation from scRNA-seq clusters can be transferred to scATAC-seq clusters using `TransferData` function in Seurat.
 2. To visualize all the cells in the same low dimensional space, MAESTRO uses the same anchors used in the cell type label transferring analysis, and imputes the scRNA-seq gene expression using scATAC-seq regulatory potential score of highly variable genes from scRNA-seq.
-3. The measured scRNA-seq and imputed scRNA-seq data are merged together using CCA and scaled to normalize the variance and mean. Then MAESTRO performs PCA for dimension reduction and uses UMAP to visualize all the cells together. MAESTRO will automatically generate the scATAC and scRNA co-aligned visualization, cell-type annotated visualization using scRNA-seq labels, RNA-only visualization and ATAC-only visualization.
+3. The measured scRNA-seq and imputed scRNA-seq data are merged together using CCA and scaled to normalize the variance and mean. Then MAESTRO performs PCA for dimension reduction and uses UMAP to visualize all the cells together. MAESTRO will automatically generate the scATAC and scRNA co-aligned visualization, cell-type annotated visualization using scRNA-seq labels, RNA-only visualization, and ATAC-only visualization.
 
 ```R
 > pbmc.coembedded.res <- Incorporate(RNA = pbmc.RNA.res$RNA, 
