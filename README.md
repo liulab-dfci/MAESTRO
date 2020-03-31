@@ -14,11 +14,11 @@
 ### v1.0.1
 * Provide [docker image](https://hub.docker.com/repository/docker/winterdongqing/maestro) for easy installation. Note, the docker does not include cellranger/cellranger ATAC, as well as the corresponding genome index. Please install cellranger/cellranger ATAC following the installation instructions.
 ### v1.0.2
-* Fix some bugs and set LISA as the default method to predict transcription factors for scRNA-seq. Note, the docker includes the lisa conda environment, but does not include required pre-computed  genome datasets. Please download hg38 or mm10 datasets and update the configuration following the installation instructions.
+* Fix some bugs and set LISA as the default method to predict transcription factors for scRNA-seq. Note, the docker includes the LISA conda environment, but does not include required pre-computed genome datasets. Please download hg38 or mm10 datasets and update the configuration following the installation instructions.
 ### v1.1.0
-* Change the default alignment method of MAESTRO from cellranger to [starsolo](https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md) and [minimap2](https://github.com/lh3/minimap2) for accerating the mapping time.
+* Change the default alignment method of MAESTRO from cellranger to [starsolo](https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md) and [minimap2](https://github.com/lh3/minimap2) for accelerating the mapping time.
 * Improve the memory efficiency of scATAC gene score calculation.
-* Incoparate the installation of giggle into MAESTRO, add web API for LISA function, all the core MAESTRO function can be installed through the conda environment now!
+* Incorporate the installation of giggle into MAESTRO, add web API for LISA function, all the core MAESTRO function can be installed through the conda environment now!
 * Provide more documents for the QC parameters and add flexibility for other parameters in the workflow.
 
 ## System requirements
@@ -30,7 +30,7 @@
 
 **Installing the full solution of MAESTRO workflow** 
 
-MAESTRO uses the [Miniconda3](http://conda.pydata.org/miniconda.html) package management system to harmonize all of the software packages. Users can install full solution of MAESTRO using the conda environment.
+MAESTRO uses the [Miniconda3](http://conda.pydata.org/miniconda.html) package management system to harmonize all of the software packages. Users can install the full solution of MAESTRO using the conda environment.
 
 Use the following commands to install Minicoda3：
 ``` bash
@@ -42,7 +42,11 @@ And then users can create an isolated environment for MAESTRO and install throug
 $ conda config --add channels defaults
 $ conda config --add channels bioconda
 $ conda config --add channels conda-forge
-$ conda create -n MAESTRO maestro -c liulab-dfci
+# To make the installation faster, we recommend using mamba
+$ conda install mamba -c conda-forge
+$ mamba create -n MAESTRO maestro -c liulab-dfci
+# Activate the environment 
+$ conda activate MAESTRO
 ```
 
 **Installing the MAESTRO R package** 
@@ -54,13 +58,13 @@ $ R
 > install_github("liulab-dfci/MAESTRO")
 ```
 
-**Requried annotations for MAESTRO workflow**
+**Required annotations for MAESTRO workflow**
 
 * MAESTRO depends on [starsolo](https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md) and [minimap2](https://github.com/lh3/minimap2) for mapping scRNA-seq and scATAC-seq dataset. Users need to generate the reference files for the alignment software and specify the path of the annotations to MAESTRO through command line options.
 
-* MAESTRO utilizes LISA to evaluate the enrichment of transcription factors based on the marker genes from scRNA-seq clusters. MAESTRO provided two options for LISA function, the web version do not need installation of LISA and download the annotations. If users select the local version, which is faster than the web version, users need to install [LISA](https://github.com/qinqian/lisa) locally, build the annotation files according to the LISA document, and provide the path of LISA to MAESTRO when using the RNAAnnotateTranscriptionFactor function.
+* MAESTRO utilizes LISA to evaluate the enrichment of transcription factors based on the marker genes from scRNA-seq clusters. By default, users can choose the "web" option, which will use the API function in MAESTRO to perform LISA analysis. However, if users want to use the local version of LISA, they need to install [LISA](https://github.com/qinqian/lisa) locally, build the annotation files according to the LISA document, and provide the path of LISA to MAESTRO when using the RNAAnnotateTranscriptionFactor function.
 
-* MAESTRO utilizes giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster-specific peaks. By default [giggle](https://github.com/ryanlayer/giggle) is installed in MAESTRO environment. The giggle index for Cistrome database can be download [here](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz). Users need to download the file and provide the location of the giggle annation to MAESTRO when using the ATACAnnotateTranscriptionFactor function.
+* MAESTRO utilizes giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster-specific peaks. By default [giggle](https://github.com/ryanlayer/giggle) is installed in MAESTRO environment. The giggle index for Cistrome database can be download [here](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz). Users need to download the file and provide the location of the giggle annotation to MAESTRO when using the ATACAnnotateTranscriptionFactor function.
 
 ## Usage
 ```
@@ -83,15 +87,15 @@ Subcommand | Description
 `scatac-peakcount` | Generate peak-cell binary count matrix.
 `scatac-genescore` | Calculate gene score based on the binarized scATAC peak count.
 
-Example for running MAESTRO can be found at the follwing galleries. Please use `MAESTRO
+Example of running MAESTRO can be found at the following galleries. Please use `MAESTRO
 COMMAND -h` to see the detail description for each option of each module.
 
 ## Galleries & Tutorials (click on the image for details)
 
-[<img src="./image/RNA.10x.png" width="280" height="318" />](./example/RNA_infrastructure_10x/RNA_infrastructure_10x.md)
-[<img src="./image/ATAC.10x.png" width="280" height="318" />](./example/ATAC_infrastructure_10x/ATAC_infrastructure_10x.md)  
-[<img src="./image/integration.10x.png" width="280" height="318" />](./example/Integration/Integration.md)
-[<img src="./image/integration.large.png" width="280" height="318" />](./example/Integration_large/Integration_large.md)
+[<img src="./image/RNA.10x.png" width="297" height="378" />](./example/RNA_infrastructure_10x/RNA_infrastructure_10x.md)
+[<img src="./image/ATAC.10x.png" width="297" height="378" />](./example/ATAC_infrastructure_10x/ATAC_infrastructure_10x.md)  
+[<img src="./image/integration.10x.png" width="297" height="378" />](./example/Integration/Integration.md)
+[<img src="./image/integration.large.png" width="297" height="378" />](./example/Integration_large/Integration_large.md)
 
 ## Citation
 
