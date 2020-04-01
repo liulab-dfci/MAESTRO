@@ -332,68 +332,59 @@ Besides indentifying TFs for all the clusters, we also support the differential 
 ```
 
 ### Step 4. Visualize driver transcription factors for each cluster
-According to the annotation of the clusters, we know that cluster 11 is B cells. Next, we want to visualize the enriched regulators in B cells from Step 4. 
+According to the annotation of the clusters, we know that cluster 0 is Monocytes. Next, we want to visualize the enriched regulators in Monocytes from Step 4. 
 
 The output TFs from MAESTRO have already been pre-filtered using TF regulatory potential score. 
 ```R
-> tfs <- sapply(pbmc.ATAC.tfs[["8"]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
+> tfs <- sapply(pbmc.ATAC.tfs[["1"]], function(x) {return(unlist(strsplit(x, split = " | ", fixed = TRUE))[1])})
 > p <- VisualizeTFenrichment(TFs = tfs, 
-                             cluster.1 = 11, 
+                             cluster.1 = 0, 
                              type = "ATAC", 
                              SeuratObj = pbmc.ATAC.res$ATAC, 
                              GIGGLE.table = "10X_PBMC_10k_giggle.txt",
                              visual.totalnumber = 100, 
-                             name = "10X_PBMC_10k_Bcell_filtered") 
+                             name = "10X_PBMC_10k_Monocytes_filtered") 
 ```
 
-<img src="./10X_PBMC_10k_Bcell_filtered.png" width="500" height="450" /> 
+<img src="./10X_PBMC_10k_Monocytes_filtered.png" width="500" height="450" /> 
 
 If users want to visualize the top factors without filtering using regulatory potential. Please leave the TFs to blank, then the top 10 regulators will be visualized.
 ```R
-> p <- VisualizeTFenrichment(cluster.1 = 11, 
+> p <- VisualizeTFenrichment(cluster.1 = 0, 
                              type = "ATAC", 
                              SeuratObj = pbmc.ATAC.res$ATAC, 
                              GIGGLE.table = "10X_PBMC_10k_giggle.txt",
                              visual.topnumber = 10,
                              visual.totalnumber = 100, 
-                             name = "10X_PBMC_10k_Bcell_top")   
+                             name = "10X_PBMC_10k_Monocytes_top")   
 ```
 
-<img src="./10X_PBMC_10k_Bcell_top.png" width="500" height="450" /> 
+<img src="./10X_PBMC_10k_Monocytes_top.png" width="500" height="450" /> 
 
 To further filter the regulators, users may want to visualize the expression level of the predicted transcription factors. Here, we use the gene regulatory potential score as the predicted gene expression level. We provide the function for visualize TF/genes regulatory potential using Vlnplot and Umap.
 ```R
-> p <- VisualizeVlnplot(genes = c("PAX5","FOXO3"), 
+> p <- VisualizeVlnplot(genes = c("SPI1","RARA"), 
                         type = "ATAC", 
                         SeuratObj = pbmc.ATAC.res$ATAC, 
                         ncol = 2, 
                         width = 9, 
                         height = 4, 
-                        name = "10X_PBMC_10k_Bcell")
+                        name = "10X_PBMC_10k_Monocytes")
 ```
-<img src="./10X_PBMC_10k_Bcell_vlnplot.png" width="810" height="360" />   
+<img src="./10X_PBMC_10k_Monocytes_vlnplot.png" width="810" height="360" />   
 
 ```R
-> p <- VisualizeUmap(genes = c("PAX5","FOXO3"),
+> p <- VisualizeUmap(genes = c("SPI1","RARA"),
                      type = "ATAC", 
                      SeuratObj = pbmc.ATAC.res$ATAC, 
                      ncol = 2, 
                      width = 8, 
                      height = 3, 
-                     name = "10X_PBMC_10k_Bcell")
+                     name = "10X_PBMC_10k_Monocytes")
 ```
-<img src="./10X_PBMC_10k_Bcell_umapplot.png" width="900" height="350" /> 
+<img src="./10X_PBMC_10k_Monocytes_umapplot.png" width="900" height="350" /> 
 
-Based on the regulatory potential of TFs, we can see that PAX5 is highly expressed in the B cells from PBMC, while FOXO3 is generally distributed. We will next visualize the regulatory potential of PAX5 target genes.
-
-```R
-> PAX5_target <- as.character(read.table("10X_PBMC_10k.GIGGLE/11.PAX5.34475.target.genes.top500.txt")[1:200,1])
-> PAX5_target <- intersect(PAX5_target, rownames(pbmc.ATAC.res$ATAC$ACTIVITY))
-> pbmc.ATAC.res$ATAC@meta.data$PAX5_target <- Matrix::colMeans(GetAssayData(pbmc.ATAC.res$ATAC$ACTIVITY)[PAX5_target, ], na.rm = TRUE)
-> p <- FeaturePlot(pbmc.ATAC.res$ATAC,  features = "PAX5_target", cols = c("grey", "blue"))
-> ggsave(file.path("10X_PBMC_10k_Bcell_PAX5.png"), p, width = 5, height = 4)
- ```
-<img src="./10X_PBMC_10k_Bcell_PAX5.png" width="500" height="400" />  
+Based on the regulatory potential of TFs, we can see that SPI1 is highly expressed in the Monocytes from PBMC, while RARA is generally distributed among all cell-types. 
 
 ### Step 5. Save the project for future analysis
 Finally, users can save the R project, including the raw data, normalized data, clustering result, and meta information for future analysis.
@@ -408,21 +399,19 @@ The differential peaks, predicted TFs, and target genes and all the figures have
 > list.files()
  [1] "10X_PBMC_10k_annotated_nolegend.png"
  [2] "10X_PBMC_10k_annotated.png"
- [3] "10X_PBMC_10k_Bcell_filtered.pdf"
- [4] "10X_PBMC_10k_Bcell_PAX5.png"
- [5] "10X_PBMC_10k_Bcell_top_rightlegend.png"
- [6] "10X_PBMC_10k_Bcell_top.pdf"
- [7] "10X_PBMC_10k_Bcell_umapplot.png"
- [8] "10X_PBMC_10k_Bcell_vlnplot.png"
- [9] "10X_PBMC_10k_cluster.png"
-[10] "10X_PBMC_10k_DiffPeaks.tsv"
-[11] "10X_PBMC_10k_giggle.txt"
-[12] "10X_PBMC_10k_Monocyte_giggle.txt"
-[13] "10X_PBMC_10k_Monocyte.GIGGLE"
-[14] "10X_PBMC_10k_Monocyte.PredictedTFTop10.txt"
-[15] "10X_PBMC_10k_res.rds"
-[16] "10X_PBMC_10k_RPDiffGenes.tsv"
-[17] "10X_PBMC_10k.GIGGLE"
-[18] "10X_PBMC_10k.PredictedTFTop10.txt"
+ [3] "10X_PBMC_10k_Monocyte_filtered.pdf"
+ [4] "10X_PBMC_10k_Monocyte_top.pdf"
+ [5] "10X_PBMC_10k_Monocyte_umapplot.png"
+ [6] "10X_PBMC_10k_Monocyte_vlnplot.png"
+ [7] "10X_PBMC_10k_cluster.png"
+ [8] "10X_PBMC_10k_DiffPeaks.tsv"
+ [9] "10X_PBMC_10k_giggle.txt"
+[10] "10X_PBMC_10k_Monocyte_giggle.txt"
+[11] "10X_PBMC_10k_Monocyte.GIGGLE"
+[12] "10X_PBMC_10k_Monocyte.PredictedTFTop10.txt"
+[13] "10X_PBMC_10k_res.rds"
+[14] "10X_PBMC_10k_RPDiffGenes.tsv"
+[15] "10X_PBMC_10k.GIGGLE"
+[16] "10X_PBMC_10k.PredictedTFTop10.txt"
 ```
 
