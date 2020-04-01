@@ -343,10 +343,10 @@ The output TFs from MAESTRO have already been pre-filtered using TF regulatory p
                              SeuratObj = pbmc.ATAC.res$ATAC, 
                              GIGGLE.table = "10X_PBMC_10k_giggle.txt",
                              visual.totalnumber = 100, 
-                             name = "10X_PBMC_10k_Monocytes_filtered") 
+                             name = "10X_PBMC_10k_Monocyte_filtered") 
 ```
 
-<img src="./10X_PBMC_10k_Monocytes_filtered.png" width="500" height="450" /> 
+<img src="./10X_PBMC_10k_Monocyte_filtered.png" width="500" height="450" /> 
 
 If users want to visualize the top factors without filtering using regulatory potential. Please leave the TFs to blank, then the top 10 regulators will be visualized.
 ```R
@@ -356,10 +356,10 @@ If users want to visualize the top factors without filtering using regulatory po
                              GIGGLE.table = "10X_PBMC_10k_giggle.txt",
                              visual.topnumber = 10,
                              visual.totalnumber = 100, 
-                             name = "10X_PBMC_10k_Monocytes_top")   
+                             name = "10X_PBMC_10k_Monocyte_top")   
 ```
 
-<img src="./10X_PBMC_10k_Monocytes_top.png" width="500" height="450" /> 
+<img src="./10X_PBMC_10k_Monocyte_top.png" width="500" height="450" /> 
 
 To further filter the regulators, users may want to visualize the expression level of the predicted transcription factors. Here, we use the gene regulatory potential score as the predicted gene expression level. We provide the function for visualize TF/genes regulatory potential using Vlnplot and Umap.
 ```R
@@ -369,9 +369,9 @@ To further filter the regulators, users may want to visualize the expression lev
                         ncol = 2, 
                         width = 9, 
                         height = 4, 
-                        name = "10X_PBMC_10k_Monocytes")
+                        name = "10X_PBMC_10k_Monocyte")
 ```
-<img src="./10X_PBMC_10k_Monocytes_vlnplot.png" width="810" height="360" />   
+<img src="./10X_PBMC_10k_Monocyte_vlnplot.png" width="810" height="360" />   
 
 ```R
 > p <- VisualizeUmap(genes = c("SPI1","RARA"),
@@ -380,9 +380,9 @@ To further filter the regulators, users may want to visualize the expression lev
                      ncol = 2, 
                      width = 8, 
                      height = 3, 
-                     name = "10X_PBMC_10k_Monocytes")
+                     name = "10X_PBMC_10k_Monocyte")
 ```
-<img src="./10X_PBMC_10k_Monocytes_umapplot.png" width="900" height="350" /> 
+<img src="./10X_PBMC_10k_Monocyte_umapplot.png" width="900" height="350" /> 
 
 Based on the regulatory potential of TFs, we can see that SPI1 is highly expressed in the Monocytes from PBMC, while RARA is generally distributed among all cell-types. 
 
