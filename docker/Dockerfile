@@ -4,10 +4,10 @@ MAINTAINER dongqingsun96@gmail.com
 
 WORKDIR /root/
 
-ADD . /root/Annotation/
+# ADD . /root/Annotation/
 
 # install miniconda3
-RUN apt-get update && apt-get install -y wget bzip2 git vim && \
+RUN apt-get update && apt-get install -y wget bzip2 git vim gcc make autoconf zlib1g-dev libbz2-dev libcurl4-openssl-dev libssl-dev ruby && \
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
 bash Miniconda3-latest-Linux-x86_64.sh -b && rm Miniconda3-latest-Linux-x86_64.sh
 
@@ -34,19 +34,19 @@ ENV PATH=/root/miniconda3/bin:${PATH}
 
 # add conda channels and install softwares
 RUN conda config --add channels defaults && conda config --add channels conda-forge && \
-conda config --add channels bioconda && conda install -c dongqingsun maestro && \
-conda create -n lisa -c qinqian lisa && source activate lisa && conda install scikit-learn=0.21.3 && conda deactivate
+conda config --add channels bioconda && conda install -c dongqingsun maestro=1.1.0 && \
+conda install mamba -c conda-forge && mamba create -n lisa -c qinqian lisa=1.0
 
 # install giggle and rabit
-RUN apt install -y gcc make autoconf zlib1g-dev libbz2-dev libcurl4-openssl-dev libssl-dev ruby && \
-mkdir /root/Software/ && cd /root/Software/ && git clone https://github.com/ryanlayer/giggle.git && cd giggle && make && \
-echo "export PATH=/root/Software/giggle/bin:$PATH" >> /root/.bashrc && \
-apt-get install -y build-essential libgsl-dev libblas-dev liblapack-dev && conda install -c conda-forge lapack && \
-cd ../ && wget http://rabit.dfci.harvard.edu/download/Rabit.tar.gz && tar xvf Rabit.tar.gz && \
-cd Rabit && ./configure --prefix=/root/miniconda3 LDFLAGS="-L/usr/local/lib -L/usr/lib -L/root/miniconda3/lib" CPPFLAGS="-I/usr/local/include -I/usr/include -I/root/miniconda3/include" && make && make check && make install
+# RUN apt install -y gcc make autoconf zlib1g-dev libbz2-dev libcurl4-openssl-dev libssl-dev ruby && \
+# mkdir /root/Software/ && cd /root/Software/ && git clone https://github.com/ryanlayer/giggle.git && cd giggle && make && \
+# echo "export PATH=/root/Software/giggle/bin:$PATH" >> /root/.bashrc && \
+# apt-get install -y build-essential libgsl-dev libblas-dev liblapack-dev && conda install -c conda-forge lapack && \
+# cd ../ && wget http://rabit.dfci.harvard.edu/download/Rabit.tar.gz && tar xvf Rabit.tar.gz && \
+# cd Rabit && ./configure --prefix=/root/miniconda3 LDFLAGS="-L/usr/local/lib -L/usr/lib -L/root/miniconda3/lib" CPPFLAGS="-I/usr/local/include -I/usr/include -I/root/miniconda3/include" && make && make check && make install
 
 # download rabit index and giggle index
 # RUN mkdir /root/Annotation/ && cd /root/Annotation/ && wget http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz && \
 # wget http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz && \
-RUN cd /root/Annotation && tar -xzvf rabit.tar.gz && tar -xzvf giggle.tar.gz && \
-rm rabit.tar.gz && rm giggle.tar.gz
+# RUN cd /root/Annotation && tar -xzvf rabit.tar.gz && tar -xzvf giggle.tar.gz && \
+# rm rabit.tar.gz && rm giggle.tar.gz
