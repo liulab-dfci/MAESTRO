@@ -25,7 +25,7 @@ $ MAESTRO scatac-init --platform 10x-genomics --species GRCh38 \
 --peak-cutoff 100 --count-cutoff 1000 --frip-cutoff 0.2 --cell-cutoff 50 \
 --giggleannotation annotations/MAESTRO/giggle \
 --fasta annotations/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa \
---whitelist Data/barcodes/737K-cratac-v1.txt
+--whitelist Data/barcodes/737K-cratac-v1.txt --signature human.immune.CIBERSORT
 ```
 
 To get a full description of command-line options, please use the command `MAESTRO scatac-init -h`.
