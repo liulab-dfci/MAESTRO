@@ -20,22 +20,22 @@ $ conda activate MAESTRO
 Initialize the MAESTRO scRNA-seq workflow using `MAESTRO scrna-init` command. This will install a Snakefile and a config file in this directory.
 ```bash
 $ MAESTRO scrna-init --platform 10x-genomics --species GRCh38 \
---fastq-dir /home1/wangchenfei/Project/SingleCell/scRNA/Analysis/MAESTRO_tutorial/Data/fastqs --fastq-prefix pbmc8k \
---cores 8 --rseqc --directory 10X_PBMC_8k_MAESTRO_V110 --outprefix 10X_PBMC_8k \
---mapindex /home1/wangchenfei/annotations/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_STAR_2.7.3a \
---whitelist /home1/wangchenfei/Tool/cellranger-3.1.0/cellranger-cs/3.1.0/lib/python/cellranger/barcodes/737K-august-2016.txt \
---umi-length 10 --method LISA --lisamode local --lisaenv lisa_update --condadir /home1/wangchenfei/miniconda3
+--fastq-dir Data/10X_PBMC_8k/fastqs --fastq-prefix pbmc8k \
+--cores 8 --rseqc --directory Analysis/10X_PBMC_8k_MAESTRO_V110 --outprefix 10X_PBMC_8k \
+--mapindex annotations/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_STAR_2.7.3a \
+--whitelist Data/barcodes/737K-august-2016.txt \
+--umi-length 10 --method LISA --lisamode local --lisaenv lisa --condadir /home1/user/miniconda3 --signature human.immune.CIBERSORT
 ```
 
 To get a full description of command-line options, please use the command `MAESTRO scrna-init -h`.
 ```bash
 usage: MAESTRO scrna-init [-h] [--platform {10x-genomics,Dropseq,Smartseq2}]
-                          [--fastq-dir FASTQ_DIR]
-                          [--fastq-prefix FASTQ_PREFIX]
+                          --fastq-dir FASTQ_DIR [--fastq-prefix FASTQ_PREFIX]
                           [--fastq-barcode FASTQ_BARCODE]
                           [--fastq-transcript FASTQ_TRANSCRIPT]
                           [--species {GRCh38,GRCm38}] [--cores CORES]
-                          [--rseqc] [-d DIRECTORY] [--outprefix OUTPREFIX]
+                          [--rseqc] [--directory DIRECTORY]
+                          [--outprefix OUTPREFIX]
                           [--count-cutoff COUNT_CUTOFF]
                           [--gene-cutoff GENE_CUTOFF]
                           [--cell-cutoff CELL_CUTOFF] --mapindex MAPINDEX
@@ -43,10 +43,9 @@ usage: MAESTRO scrna-init [-h] [--platform {10x-genomics,Dropseq,Smartseq2}]
                           [--barcode-start BARCODE_START]
                           [--barcode-length BARCODE_LENGTH]
                           [--umi-start UMI_START] [--umi-length UMI_LENGTH]
-                          [--method {RABIT,LISA}] [--rabitlib RABITLIB]
-                          [--lisamode {local,web}] [--lisaenv LISAENV]
-                          [--condadir CONDADIR] [--signature]
-                          [--signature-file SIGNATURE_FILE]
+                          [--method {LISA}] [--lisamode {local,web}]
+                          [--lisaenv LISAENV] --condadir CONDADIR
+                          [--signature SIGNATURE]
 ```
 
 Here we list all the arguments and their description.
@@ -60,7 +59,7 @@ Arguments  |  Description
 `--fastq-prefix` | Sample name of fastq file, only for the platform of '10x-genomics'. If there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the prefix is 'pbmc_1k_v2'.
 `--fastq-barcode` | Specify the barcode fastq file, only for the platform of 'Dropseq'. If there are multiple pairs of fastq, please provide a comma-separated list of barcode fastq files. For example, `--fastq-barcode test1_1.fastq,test2_1.fastq`.
 `--fastq-transcript` | Specify the transcript fastq file, only for the platform of 'Dropseq'.
-`--species` | {GRCh38,GRCm38} Species (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.
+`--species` | {GRCh38,GRCm38} Specify the genome assembly (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.
 
 **Running and output arguments:**
 
@@ -84,7 +83,7 @@ Arguments  |  Description
 Arguments  |  Description
 ---------  |  -----------
 `--mapindex` | Genome index directory for STAR. Users can just download the index file from [here](http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz) and decompress it. Then specify the index directory for STAR, for example, `--mapindex Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_STAR_2.7.3a`.
-`--rsem` | The prefix of transcript references for RSEM used by rsem-prepare-reference (Only required when the platform is Smartseq2). Users can directly download the annotation file from [here](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz) and decompress it. Then specify the prefix for RSEM, for example, `--rsem Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_RSEM_1.3.2/GRCh38`.
+`--rsem` | The prefix of transcript references for RSEM used by rsem-prepare-reference (Only required when the platform is Smartseq2). Users can directly download the reference file for [huamn](http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz) and [mouse](http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCm38_1.1.0.tar.gz) from CistromeDB and decompress them. Then specify the prefix for RSEM, for example, `--rsem Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_RSEM_1.3.2/GRCh38`.
 
 **Barcode arguments, for platform of 'Dropseq' or '10x-genomics':**
 
@@ -109,8 +108,7 @@ Arguments  |  Description
 
 Arguments  |  Description
 ---------  |  -----------
-`--signature` | Whether or not to provide custom cell signatures. If set, users need to provide the file location of cell signatures through `--signature-file`. By default (not set), the pipeline will use the built-in immune cell signature adapted from CIBERSORT.
-`--signature-file` | If `--signature` is set, please provide the file location of custom cell signatures. The signature file is tab-separated without header. The first column is the cell type, and the second column is the signature gene.
+`--signature` | Cell signature file used to annotate cell types. MAESTRO provides several sets of built-in cell signatures. Users can choose from ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']. Custom cell signatures are also supported. In this situation, users need to provide the file location of cell signatures, and the signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene. DEFAULT: human.immune.CIBERSORT.
 
 
 ### Step 2. Run MAESTRO
@@ -289,8 +287,8 @@ To identify enriched transcription regulators is crucial to understanding gene r
                                                  project = pbmc.RNA.res$RNA@project.name,
                                                  method = "LISA",
                                                  lisa.mode = "local",
-                                                 conda.dir = "/home1/wangchenfei/miniconda3",
-                                                 lisa.envname = "lisa_update",
+                                                 conda.dir = "/home1/user/miniconda3",
+                                                 lisa.envname = "lisa",
                                                  organism = "GRCh38",
                                                  top.tf = 10)
 > pbmc.RNA.tfs[["0"]]
