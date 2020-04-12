@@ -13,8 +13,8 @@ $ conda activate MAESTRO
 ### Step 1. Configure the MAESTRO workflow
 Initialize the MAESTRO integration workflow using `MAESTRO scATAC-init` command. This will install a Snakefile and a config file in this directory.
 ```bash
-$ MAESTRO integrate-init --rna-object /home1/wangchenfei/Project/SingleCell/scRNA/Analysis/MAESTRO_tutorial/10X_PBMC_8k_MAESTRO_V110/Result/Analysis/10X_PBMC_8k_scRNA_Object.rds \
---atac-object /home1/wangchenfei/Project/SingleCell/scATAC/Analysis/MAESTRO_tutorial/10X_PBMC_10k_MAESTRO_V110/Result/Analysis/10X_PBMC_10k_scATAC_Object.rds \
+$ MAESTRO integrate-init --rna-object MAESTRO_tutorial/10X_PBMC_8k_MAESTRO_V110/Result/Analysis/10X_PBMC_8k_scRNA_Object.rds \
+--atac-object MAESTRO_tutorial/10X_PBMC_10k_MAESTRO_V110/Result/Analysis/10X_PBMC_10k_scATAC_Object.rds \
 --directory 10X_PBMC_8kRNA_10kATAC_MAESTRO_V110 --outprefix 10X_PBMC_8kRNA_10kATAC
 ```
 
@@ -109,8 +109,8 @@ By default, MAESTRO will label the top 10 regulators using TF enrichment from GI
                              cluster.2 = 0,
                              type = "Integrated", 
                              SeuratObj = pbmc.RNA.res$RNA, 
-                             LISA.table = "/home1/wangchenfei/Project/SingleCell/scRNA/Analysis/MAESTRO_tutorial/10X_PBMC_8k_MAESTRO_V110/10X_PBMC_8k_lisa.txt",
-                             GIGGLE.table = "/home1/wangchenfei/Project/SingleCell/scATAC/Analysis/MAESTRO_tutorial/10X_PBMC_10k_MAESTRO_V110/10X_PBMC_10k_giggle.txt",
+                             LISA.table = "MAESTRO_tutorial/10X_PBMC_8k_MAESTRO_V110/10X_PBMC_8k_lisa.txt",
+                             GIGGLE.table = "MAESTRO_tutorial/10X_PBMC_10k_MAESTRO_V110/10X_PBMC_10k_giggle.txt",
                              visual.totalnumber = 100, 
                              name = "10X_PBMC_integrated_Monocyte_top") 
 ```

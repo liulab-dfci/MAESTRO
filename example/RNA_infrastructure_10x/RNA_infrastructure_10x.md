@@ -83,7 +83,7 @@ Arguments  |  Description
 Arguments  |  Description
 ---------  |  -----------
 `--mapindex` | Genome index directory for STAR. Users can just download the index file from [here](http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz) and decompress it. Then specify the index directory for STAR, for example, `--mapindex Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_STAR_2.7.3a`.
-`--rsem` | The prefix of transcript references for RSEM used by rsem-prepare-reference (Only required when the platform is Smartseq2). Users can directly download the reference file for [huamn](http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz) and [mouse](http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCm38_1.1.0.tar.gz) from CistromeDB and decompress them. Then specify the prefix for RSEM, for example, `--rsem Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_RSEM_1.3.2/GRCh38`.
+`--rsem` | The prefix of transcript references for RSEM used by rsem-prepare-reference (Only required when the platform is Smartseq2). Users can directly download the reference file for [human](http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz) and [mouse](http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCm38_1.1.0.tar.gz) from CistromeDB and decompress them. Then specify the prefix for RSEM, for example, `--rsem Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_RSEM_1.3.2/GRCh38`.
 
 **Barcode arguments, for platform of 'Dropseq' or '10x-genomics':**
 
