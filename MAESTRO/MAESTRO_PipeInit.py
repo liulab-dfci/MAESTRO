@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:40:27
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-03-24 16:32:13
+# @Last Modified time: 2020-04-13 01:38:27
 
 
 import os
@@ -27,7 +27,7 @@ def scatac_parser(subparsers):
     group_input.add_argument("--platform", dest = "platform", default = "10x-genomics", 
         choices = ["10x-genomics", "sci-ATAC-seq", "microfluidic"], 
         help = "Platform of single cell ATAC-seq. DEFAULT: 10x-genomics.")
-    group_input.add_argument("--fastq-dir", dest = "fastq_dir", type = str, default = "", 
+    group_input.add_argument("--fastq-dir", dest = "fastq_dir", type = str, required = True, 
         help = "Directory where fastq files are stored.")
     group_input.add_argument("--fastq-prefix", dest = "fastq_prefix", type = str, default = "", 
         help = "Sample name of fastq file (required for the platform of '10x-genomics' or 'sci-ATAC-seq'). "
@@ -40,13 +40,13 @@ def scatac_parser(subparsers):
         "In this way, read1, barcode and read2 are associated with R1, R2, R3, respectively.")
     group_input.add_argument("--species", dest = "species", default = "GRCh38",
         choices = ["GRCh38", "GRCm38"], type = str, 
-        help = "Species (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
+        help = "Specify the genome assembly (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
 
     # Output arguments
     group_output = workflow.add_argument_group("Output arguments")
     group_output.add_argument("--cores", dest = "cores", default = 8, 
         type = int, help = "Number of cores to use. DEFAULT: 8.")
-    group_output.add_argument("-d", "--directory", dest = "directory", type = str, default = "MAESTRO", 
+    group_output.add_argument("--directory", "-d",  dest = "directory", type = str, default = "MAESTRO", 
         help = "Path to the directory where the workflow shall be initialized and results shall be stored. DEFAULT: MAESTRO.")
     group_output.add_argument("--outprefix", dest = "outprefix", type = str, default = "MAESTRO", 
         help = "Prefix of output files. DEFAULT: MAESTRO.")
@@ -72,8 +72,9 @@ def scatac_parser(subparsers):
     group_reference.add_argument("--fasta", dest = "fasta", 
         required = True,
         help = "Genome fasta file for minimap2. "
-        "Users can just download the fasta file from "
-        "http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz and decompress it. "
+        "Users can just download the fasta file for huamn and mouse from "
+        "http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz and "
+        "http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCm38_1.1.0.tar.gz, respectively and decompress them. "
         "For example, 'Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa'.")
 
     # Barcode library arguments
@@ -116,7 +117,8 @@ def scatac_parser(subparsers):
         help = "Cell signature file used to annotate cell types. MAESTRO provides several sets of built-in cell signatures. "
         "Users can choose from ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']. "
         "Custom cell signatures are also supported. In this situation, users need to provide the file location of cell signatures, "
-        "and the signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene.")
+        "and the signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene. "
+        "DEFAULT: human.immune.CIBERSORT.")
         
     return
 
@@ -135,7 +137,7 @@ def scrna_parser(subparsers):
     group_input.add_argument("--platform", dest = "platform", default = "10x-genomics", 
         choices = ["10x-genomics", "Dropseq", "Smartseq2"], 
         help = "Platform of single cell RNA-seq. DEFAULT: 10x-genomics.")
-    group_input.add_argument("--fastq-dir", dest = "fastq_dir", type = str, default = "",  
+    group_input.add_argument("--fastq-dir", dest = "fastq_dir", type = str, required = True,  
         help = "Directory where fastq files are stored")
     group_input.add_argument("--fastq-prefix", dest = "fastq_prefix", type = str, default = "", 
         help = "Sample name of fastq file, only for the platform of '10x-genomics'. "
@@ -150,7 +152,7 @@ def scrna_parser(subparsers):
         "For example, --fastq-barcode test1_2.fastq,test2_2.fastq")
     group_input.add_argument("--species", dest = "species", default = "GRCh38",
         choices = ["GRCh38", "GRCm38"], type = str, 
-        help = "Species (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
+        help = "Specify the genome assembly (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
 
     # Output arguments
     group_output = workflow.add_argument_group("Running and output arguments")
@@ -160,7 +162,7 @@ def scrna_parser(subparsers):
         help = "Whether or not to run RSeQC. "
         "If set, the pipeline will include the RSeQC part and then takes a longer time. "
         "By default (not set), the pipeline will skip the RSeQC part.")
-    group_output.add_argument("-d", "--directory", dest = "directory", type = str, default = "MAESTRO", 
+    group_output.add_argument("--directory", "-d", dest = "directory", type = str, default = "MAESTRO", 
         help = "Path to the directory where the workflow shall be initialized and results shall be stored. DEFAULT: MAESTRO.")
     group_output.add_argument("--outprefix", dest = "outprefix", type = str, default = "MAESTRO", 
         help = "Prefix of output files. DEFAULT: MAESTRO.")
@@ -178,13 +180,15 @@ def scrna_parser(subparsers):
     group_reference = workflow.add_argument_group("Reference genome arguments")
     group_reference.add_argument("--mapindex", dest = "mapindex", 
         required = True, 
-        help = "Genome index directory for STAR. Users can just download the index file "
-        "from http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz and decompress it. "
+        help = "Genome index directory for STAR. Users can just download the index file for human and mouse "
+        "from http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz and "
+        "http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCm38_1.1.0.tar.gz, respectively, and decompress them. "
         "Then specify the index directory for STAR, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_STAR_2.7.3a'.")
-    group_reference.add_argument("--rsem", dest = "rsem", 
+    group_reference.add_argument("--rsem", dest = "rsem", default = "",
         help = "The prefix of transcript references for RSEM used by rsem-prepare-reference (Only required when the platform is Smartseq2). "
-        "Users can directly download the annotation file from "
-        "http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz and decompress it."
+        "Users can directly download the annotation file for huamn and mouse from "
+        "http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz and "
+        "http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCm38_1.1.0.tar.gz, respectively, and decompress them. "
         "Then specify the prefix for RSEM, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_RSEM_1.3.2/GRCh38'.")
 
     # Barcode arguments
@@ -209,13 +213,16 @@ def scrna_parser(subparsers):
 
     # Regulator identification
     group_regulator = workflow.add_argument_group("Regulator identification arguments")
+    # group_regulator.add_argument("--method", dest = "method", type = str, 
+    #     choices = ["RABIT", "LISA"], default = "LISA",
+    #     help = "Method to predict driver regulators.")
     group_regulator.add_argument("--method", dest = "method", type = str, 
-        choices = ["RABIT", "LISA"], default = "LISA",
+        choices = ["LISA"], default = "LISA",
         help = "Method to predict driver regulators.")
-    group_regulator.add_argument("--rabitlib", dest = "rabitlib", type = str,
-        help = "Path of the rabit annotation file required for regulator identification (only required if method is set to RABIT). "
-        "Please download the annotation file from "
-        "http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz and decompress it.")
+    # group_regulator.add_argument("--rabitlib", dest = "rabitlib", type = str,
+    #     help = "Path of the rabit annotation file required for regulator identification (only required if method is set to RABIT). "
+    #     "Please download the annotation file from "
+    #     "http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz and decompress it.")
     group_regulator.add_argument("--lisamode", dest = "lisamode", type = str, default = "local", choices = ["local", "web"],
         help = "Mode to Run LISA, 'local' or 'web'. If the mode is set as 'local', "
         "please install LISA (https://github.com/qinqian/lisa) and download pre-computed datasets following the instructions. "
@@ -225,7 +232,7 @@ def scrna_parser(subparsers):
         "and specify the directory where miniconda or anaconda is installed through --condadir. DEFAULT: local.")
     group_regulator.add_argument("--lisaenv", dest = "lisaenv", type = str, default = "lisa",
         help = "Name of LISA environment (required if method is set to lisa and lisamode is set to local). DEFAULT: lisa.")
-    group_regulator.add_argument("--condadir", dest = "condadir", type = str, 
+    group_regulator.add_argument("--condadir", dest = "condadir", type = str, required = True,
         help = "Directory where miniconda or anaconda is installed "
         "(required if method is set to lisa and lisamode is set to local). For example, '/home/user/miniconda3'.")
 
@@ -235,7 +242,8 @@ def scrna_parser(subparsers):
         help = "Cell signature file used to annotate cell types. MAESTRO provides several sets of built-in cell signatures. "
         "Users can choose from ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']. "
         "Custom cell signatures are also supported. In this situation, users need to provide the file location of cell signatures, "
-        "and the signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene.")
+        "and the signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene. "
+        "DEFAULT: human.immune.CIBERSORT.")
     
     return
 
@@ -258,7 +266,7 @@ def integrate_parser(subparsers):
 
     # Output arguments
     group_output = workflow.add_argument_group("Running and output arguments")
-    group_output.add_argument("-d", "--directory", dest = "directory", default = "MAESTRO", 
+    group_output.add_argument("--directory", "-d", dest = "directory", default = "MAESTRO", 
         help = "Path to the directory where the workflow shall be initialized and results shall be stored. DEFAULT: MAESTRO.")
     group_output.add_argument("--outprefix", dest = "outprefix", type = str, default = "MAESTRO", 
         help = "Prefix of output files. DEFAULT: MAESTRO.")
@@ -283,26 +291,31 @@ def scatac_config(args):
     template_file = os.path.join(pkgpath, "scATAC", "config_template.yaml")
     configfile = os.path.join(args.directory, "config.yaml")
     config_template = Template(open(template_file, "r").read(), trim_blocks=True, lstrip_blocks=True)
+    if args.signature not in ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
+        signature = os.path.abspath(args.signature)
+    else:
+        signature = args.signature
+
     with open(configfile, "w") as configout:
         configout.write(config_template.render(
-            fastqdir = args.fastq_dir, 
+            fastqdir = os.path.abspath(args.fastq_dir), 
             fastqprefix = args.fastq_prefix,
             species = args.species,
             platform = args.platform,
             outprefix = args.outprefix,
-            whitelist = args.whitelist,
+            whitelist = os.path.abspath(args.whitelist),
             cores = args.cores,
             peak = args.peak_cutoff,
             count = args.count_cutoff,
             frip = args.frip_cutoff,
             cell = args.cell_cutoff,
-            signature = args.signature,
+            signature = signature,
             custompeaks = args.custompeak,
-            custompeaksloc = args.custompeak_file,
+            custompeaksloc = os.path.abspath(args.custompeak_file),
             shortpeaks = args.shortpeak,
             genedistance = args.genedistance,
-            giggleannotation = args.giggleannotation,
-            fasta = args.fasta))
+            giggleannotation = os.path.abspath(args.giggleannotation),
+            fasta = os.path.abspath(args.fasta)))
     
     source = os.path.join(pkgpath, "scATAC", "Snakefile")
     target = os.path.join(args.directory, "Snakefile")
@@ -325,9 +338,14 @@ def scrna_config(args):
     template_file = os.path.join(pkgpath, "scRNA", "config_template.yaml")
     configfile = os.path.join(args.directory, "config.yaml")
     config_template = Template(open(template_file, "r").read(), trim_blocks=True, lstrip_blocks=True)
+    if args.signature not in ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
+        signature = os.path.abspath(args.signature)
+    else:
+        signature = args.signature
+
     with open(configfile, "w") as configout:
         configout.write(config_template.render(
-            fastqdir = args.fastq_dir, 
+            fastqdir = os.path.abspath(args.fastq_dir), 
             fastqprefix = args.fastq_prefix,
             species = args.species,
             platform = args.platform,
@@ -337,15 +355,15 @@ def scrna_config(args):
             count = args.count_cutoff,
             gene = args.gene_cutoff,
             cell = args.cell_cutoff,
-            signature = args.signature,
+            signature = signature,
             method = args.method,
-            rabitlib = args.rabitlib,
+            # rabitlib = os.path.abspath(args.rabitlib),
             lisamode = args.lisamode,
             lisaenv = args.lisaenv,
-            condadir = args.condadir,
-            mapindex = args.mapindex,
-            rsem = args.rsem,
-            whitelist = args.whitelist,
+            condadir = os.path.abspath(args.condadir),
+            mapindex = os.path.abspath(args.mapindex),
+            rsem = os.path.abspath(args.rsem),
+            whitelist = os.path.abspath(args.whitelist),
             barcodestart = args.barcode_start,
             barcodelength = args.barcode_length,
             umistart = args.umi_start,
@@ -376,8 +394,8 @@ def integrate_config(args):
     config_template = Template(open(template_file, "r").read(), trim_blocks=True, lstrip_blocks=True)
     with open(configfile, "w") as configout:
         configout.write(config_template.render(
-            rnaobject = args.rna_object, 
-            atacobject = args.atac_object,
+            rnaobject = os.path.abspath(args.rna_object), 
+            atacobject = os.path.abspath(args.atac_object),
             outprefix = args.outprefix))
 
     source = os.path.join(pkgpath, "integrate", "Snakefile")

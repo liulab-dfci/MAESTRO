@@ -35,7 +35,8 @@ ENV PATH=/root/miniconda3/bin:${PATH}
 # add conda channels and install softwares
 RUN conda config --add channels defaults && conda config --add channels conda-forge && \
 conda config --add channels bioconda && conda install -c dongqingsun maestro=1.1.0 && \
-conda install mamba -c conda-forge && mamba create -n lisa -c qinqian lisa
+conda install mamba -c conda-forge && mamba create -n lisa -c qinqian lisa=1.0
+
 
 # install giggle and rabit
 # RUN apt install -y gcc make autoconf zlib1g-dev libbz2-dev libcurl4-openssl-dev libssl-dev ruby && \
