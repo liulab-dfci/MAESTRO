@@ -24,8 +24,8 @@ if config["platform"] == "microfluidic":
     rule scatac_map:
         input:
             fasta = config["genome"]["fasta"],
-            fastq1 = "%s/{fastqid}_1.fastq" %(config["fastqdir"]),
-            fastq2 = "%s/{fastqid}_2.fastq" %(config["fastqdir"])
+            fastq1 = os.path.join(config["fastqdir"], "{fastqid}_1.fastq"),
+            fastq2 = os.path.join(config["fastqdir"], "{fastqid}_2.fastq")
         output:
             bam = temp("Result/minimap2/{fastqid}.sortedByPos.bam")
         threads:
@@ -297,9 +297,9 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
                 fastqs = config["fastqdir"],
                 fasta = config["genome"]["fasta"]
             output:
-                r1cat = "%s/%s_R1.fastq" %(config["fastqdir"], config["fastqprefix"]),
-                r2cat = "%s/%s_R2.fastq" %(config["fastqdir"], config["fastqprefix"]),
-                r3cat = "%s/%s_R3.fastq" %(config["fastqdir"], config["fastqprefix"]),
+                r1cat = os.path.join(config["fastqdir"], "%s_R1.fastq" %(config["fastqprefix"])),
+                r2cat = os.path.join(config["fastqdir"], "%s_R2.fastq" %(config["fastqprefix"])),
+                r3cat = os.path.join(config["fastqdir"], "%s_R3.fastq" %(config["fastqprefix"])),
             params:
                 r1 = getfastq_10x(config["fastqdir"], config["fastqprefix"])["r1"],
                 r2 = getfastq_10x(config["fastqdir"], config["fastqprefix"])["barcode"],
@@ -346,12 +346,12 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
         rule scatac_preprocess:
             input:
                 fasta = config["genome"]["fasta"],
-                fastq1 = "%s/%s_1.fastq" %(config["fastqdir"], config["fastqprefix"]),
-                fastq2 = "%s/%s_2.fastq" %(config["fastqdir"], config["fastqprefix"]),
+                fastq1 = os.path.join(config["fastqdir"], "%s_1.fastq" %(config["fastqprefix"])),
+                fastq2 = os.path.join(config["fastqdir"], "%s_2.fastq" %(config["fastqprefix"])),
             output:
-                r1 = "%s/%s_R1.fastq" %(config["fastqdir"], config["fastqprefix"]),
-                r2 = "%s/%s_R2.fastq" %(config["fastqdir"], config["fastqprefix"]),
-                r3 = "%s/%s_R3.fastq" %(config["fastqdir"], config["fastqprefix"]),
+                r1 = os.path.join(config["fastqdir"], "%s_R1.fastq" %(config["fastqprefix"])),
+                r2 = os.path.join(config["fastqdir"], "%s_R2.fastq" %(config["fastqprefix"])),
+                r3 = os.path.join(config["fastqdir"], "%s_R3.fastq" %(config["fastqprefix"])),
             params:
                 outdir = config["fastqdir"]
             benchmark:
@@ -362,8 +362,8 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
     rule scatac_map:
         input:
             fasta = config["genome"]["fasta"],
-            r1 = "%s/%s_R1.fastq" %(config["fastqdir"], config["fastqprefix"]),
-            r3 = "%s/%s_R3.fastq" %(config["fastqdir"], config["fastqprefix"]),
+            r1 = os.path.join(config["fastqdir"], "%s_R1.fastq" %(config["fastqprefix"])),
+            r3 = os.path.join(config["fastqdir"], "%s_R3.fastq" %(config["fastqprefix"])),
         output:
             bam = temp("Result/minimap2/%s.sortedByPos.bam" %(config["outprefix"])),
         threads:
@@ -378,7 +378,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
     rule scatac_fragmentgenerate:
         input:
             bam = "Result/minimap2/%s.sortedByPos.bam" %(config["outprefix"]),
-            r2 = "%s/%s_R2.fastq" %(config["fastqdir"], config["fastqprefix"]),
+            r2 = os.path.join(config["fastqdir"], "%s_R2.fastq" %(config["fastqprefix"])),
         output:
             fragments = "Result/minimap2/fragments.tsv"
         params:
@@ -391,7 +391,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
     if config["whitelist"]:
         rule scatac_barcodecorrect:
             input:
-                r2 = "%s/%s_R2.fastq" %(config["fastqdir"], config["fastqprefix"]),
+                r2 = os.path.join(config["fastqdir"], "%s_R2.fastq" %(config["fastqprefix"])),
                 whitelist = config["whitelist"],
             output:
                 bc_correct = "Result/minimap2/barcode_correct.txt"
@@ -404,7 +404,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
     else:
         rule scatac_barcodecorrect:
             input:
-                r2 = "%s/%s_R2.fastq" %(config["fastqdir"], config["fastqprefix"]),
+                r2 = os.path.join(config["fastqdir"], "%s_R2.fastq" %(config["fastqprefix"])),
             output:
                 bc_correct = "Result/minimap2/barcode_correct.txt"
             params:
