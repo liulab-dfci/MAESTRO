@@ -117,8 +117,8 @@ if config["platform"] == "Smartseq2":
     rule scrna_map:
         input:
             mapindex = config["genome"]["mapindex"],
-            fastq1 = "%s/{fastqid}_1.fastq" %(config["fastqdir"]),
-            fastq2 = "%s/{fastqid}_2.fastq" %(config["fastqdir"]),
+            fastq1 = os.path.join(config["fastqdir"], "{fastqid}_1.fastq"),
+            fastq2 = os.path.join(config["fastqdir"], "{fastqid}_2.fastq")
         output:
             genomebam = "Result/STAR/{fastqid}Aligned.sortedByCoord.out.bam",
             transbam = "Result/STAR/{fastqid}Aligned.toTranscriptome.out.bam"

@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:44:05
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-03-04 13:34:28
+# @Last Modified time: 2020-03-31 20:28:55
 
 
 import os
@@ -191,7 +191,7 @@ def read_10X_mtx(matrix_file, feature_file, barcode_file, datatype, gene_column 
     """Convert 10x mtx as matrix."""
 
     matrix = scipy.io.mmread(matrix_file)
-    matrix = sp_sparse.csc_matrix(matrix, dtype=numpy.int32)
+    matrix = sp_sparse.csc_matrix(matrix, dtype=numpy.float32)
 
     if feature_file.split('.')[-1] == 'gz' or feature_file.split('.')[-1] == 'gzip':
         feature_in = gzip.open(feature_file, "r")
