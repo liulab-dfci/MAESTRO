@@ -7,10 +7,10 @@
 #' @rdname RNAAssemblyConvert
 #'
 #' @param countMat Input count matrix, with genes as rows and cells as columns.
-#' @param from The genome assembly of input genes. For human, "GRCh37" and "GRCh38" are supported.
-#' For mouse, "NCBIM37" and "GRCm38" are supported. Default is "GRCh37".
-#' @param to The genome assembly of output genes. For human, "GRCh37" and "GRCh38" are supported.
-#' For mouse, "NCBIM37" and "GRCm38" are supported. Default is "GRCh38".
+#' @param from The genome assembly of input genes. For human, "GRCh37" (hg19) and "GRCh38" (hg38) are supported.
+#' For mouse, "NCBIM37" (mm9) and "GRCm38" (mm10) are supported. Default is "GRCh37".
+#' @param to The genome assembly of output genes. For human, "GRCh37" (hg19) and "GRCh38" (hg38) are supported.
+#' For mouse, "NCBIM37" (mm9) and "GRCm38" (mm10)" are supported. Default is "GRCh38".
 #' @param organism Ogranism used, currently only support "Human" and "Mouse". Default is "Human".
 #'
 #' @author Dongqing Sun

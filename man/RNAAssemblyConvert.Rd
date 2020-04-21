@@ -15,11 +15,11 @@ RNAAssemblyConvert(
 \arguments{
 \item{countMat}{Input count matrix, with genes as rows and cells as columns.}
 
-\item{from}{The genome assembly of input genes. For human, "GRCh37" and "GRCh38" are supported.
-For mouse, "NCBIM37" and "GRCm38" are supported. Default is "GRCh37".}
+\item{from}{The genome assembly of input genes. For human, "GRCh37" (hg19) and "GRCh38" (hg38) are supported.
+For mouse, "NCBIM37" (mm9) and "GRCm38" (mm10) are supported. Default is "GRCh37".}
 
-\item{to}{The genome assembly of output genes. For human, "GRCh37" and "GRCh38" are supported.
-For mouse, "NCBIM37" and "GRCm38" are supported. Default is "GRCh38".}
+\item{to}{The genome assembly of output genes. For human, "GRCh37" (hg19) and "GRCh38" (hg38) are supported.
+For mouse, "NCBIM37" (mm9) and "GRCm38" (mm10)" are supported. Default is "GRCh38".}
 
 \item{organism}{Ogranism used, currently only support "Human" and "Mouse". Default is "Human".}
 }
