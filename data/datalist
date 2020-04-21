@@ -1,3 +1,5 @@
+GRCh37.ensembl
+GRCh37.GRCh38
 GRCh38.CistromeDB.genescore
 GRCh38.ensembl.genescore
 GRCh38.ensembl
@@ -10,6 +12,8 @@ mouce.brain.ALLEN
 mouse.all.droplet.TabulaMuris
 mouse.all.facs.TabulaMuris
 mouse.tf.family: MOUSE.TFFamily
+NCBIM37.ensembl
+NCBIM37.GRCm38
 pbmc.ATAC
 pbmc.RNA
 pbmc.RP
