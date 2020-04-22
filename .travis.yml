@@ -1,7 +1,6 @@
 # .travis.yml using container-based infrastructure
 
-# use c as catch-all language
-language: c
+language: python
 
 os:
   - linux
@@ -58,3 +57,9 @@ install:
   - conda info -a
   - conda install mamba -c conda-forge
   - mamba create -n MAESTRO maestro -c liulab-dfci
+  - conda activate MAESTRO
+
+
+
+
+
