@@ -1,9 +1,6 @@
 # .travis.yml using container-based infrastructure
 
 language: python
-python:
-  # We don't actually use the Travis Python, but this keeps it organized.
-  - "3.7"
 matrix:
   include:
     - python: 3.7
