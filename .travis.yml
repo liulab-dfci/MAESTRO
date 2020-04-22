@@ -63,7 +63,9 @@ install:
   - mamba create -n MAESTRO maestro -c liulab-dfci
   - conda activate MAESTRO
 
-
+scripts:
+  - R CMD build . --no-manual
+  - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
 
 
 
