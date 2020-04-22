@@ -7,6 +7,7 @@
 #' @rdname RNARunSeurat
 #'
 #' @param inputMat Input unnormalized matrix, with genes as rows and cells as columns. Could be count matrix or TPM, FPKM matrix.
+#' @param type Type of the input matrix. Default is "matrix". Set to "object" if the input is Seurat object.
 #' @param project Output project name. Default is "MAESTRO.scRNA.Seurat".
 #' @param orig.ident Orginal identity for the input cells. If supplied, should keep the same order with the column name of the gene x cell matrix.
 #' @param min.c Minimum number of cells required for a gene. Will exclude the genes from input matrix if they only expressed in 
@@ -48,13 +49,14 @@
 #' @importFrom Gmisc fastDoCall
 #' @export
 
-RNARunSeurat <- function(inputMat, project = "MAESTRO.scRNA.Seurat", orig.ident = NULL, min.c = 10, min.g = 200, mito = FALSE, mito.cutoff = 0.05, 
+RNARunSeurat <- function(inputMat, type = "matrix", project = "MAESTRO.scRNA.Seurat", orig.ident = NULL, min.c = 10, min.g = 200, mito = FALSE, mito.cutoff = 0.05, 
                          variable.genes = 2000, organism = "GRCh38", dims.use = 1:15, cluster.res = 0.6, only.pos = FALSE, genes.test.use = "presto", 
                          genes.cutoff = 1E-5, genes.pct = 0.1, genes.logfc = 0.25,
                          runpca.agrs = list(), findneighbors.args = list(), 
                          findclusters.args = list(), ...)
 {
-  SeuratObj <- CreateSeuratObject(inputMat, project = project, min.cells = min.c, min.features = min.g)
+  if(type == "matrix"){SeuratObj <- CreateSeuratObject(inputMat, project = project, min.cells = min.c, min.features = min.g)}
+  if(type == "object"){SeuratObj <- inputMat}
 
   #=========Mitochondria and Spike-in========  
   if(mito){

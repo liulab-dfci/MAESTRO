@@ -5,15 +5,8 @@
 \alias{VisualizeVlnplot}
 \title{Violin plot to show expression level or regulatory potential of genes}
 \usage{
-VisualizeVlnplot(
-  genes,
-  type,
-  SeuratObj,
-  ncol = NULL,
-  width = 6,
-  height = 4,
-  name = "MultipleVlnPlot"
-)
+VisualizeVlnplot(genes, type, SeuratObj, ncol = NULL, width = 6,
+  height = 4, name = "MultipleVlnPlot")
 }
 \arguments{
 \item{genes}{Genes to plot.}

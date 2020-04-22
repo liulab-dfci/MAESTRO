@@ -5,12 +5,8 @@
 \alias{RNAAssemblyConvert}
 \title{Assembly Conversion}
 \usage{
-RNAAssemblyConvert(
-  countMat,
-  from = "GRCh37",
-  to = "GRCh38",
-  organism = "Human"
-)
+RNAAssemblyConvert(countMat, from = "GRCh37", to = "GRCh38",
+  organism = "Human")
 }
 \arguments{
 \item{countMat}{Input count matrix, with genes as rows and cells as columns.}

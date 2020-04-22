@@ -5,13 +5,8 @@
 \alias{ATACRunscABC}
 \title{Clustering analysis for scATAC-seq data using scABC}
 \usage{
-ATACRunscABC(
-  inputMat,
-  project = "MAESTRO.scATAC.scABC",
-  min.c = 50,
-  min.p = 500,
-  cluster.number = 10
-)
+ATACRunscABC(inputMat, project = "MAESTRO.scATAC.scABC", min.c = 50,
+  min.p = 500, cluster.number = 10)
 }
 \arguments{
 \item{inputMat}{Input unnormalized count matrix, with peaks as rows and cells as columns. Rownames should be like "chromosome_peakstart_peakend",

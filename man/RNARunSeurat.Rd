@@ -5,31 +5,19 @@
 \alias{RNARunSeurat}
 \title{Clustering analysis for scRNA-seq data using Seurat}
 \usage{
-RNARunSeurat(
-  inputMat,
-  project = "MAESTRO.scRNA.Seurat",
-  orig.ident = NULL,
-  min.c = 10,
-  min.g = 200,
-  mito = FALSE,
-  mito.cutoff = 0.05,
-  variable.genes = 2000,
-  organism = "GRCh38",
-  dims.use = 1:15,
-  cluster.res = 0.6,
-  only.pos = FALSE,
-  genes.test.use = "presto",
-  genes.cutoff = 1e-05,
-  genes.pct = 0.1,
-  genes.logfc = 0.25,
-  runpca.agrs = list(),
-  findneighbors.args = list(),
-  findclusters.args = list(),
-  ...
-)
+RNARunSeurat(inputMat, type = "matrix",
+  project = "MAESTRO.scRNA.Seurat", orig.ident = NULL, min.c = 10,
+  min.g = 200, mito = FALSE, mito.cutoff = 0.05,
+  variable.genes = 2000, organism = "GRCh38", dims.use = 1:15,
+  cluster.res = 0.6, only.pos = FALSE, genes.test.use = "presto",
+  genes.cutoff = 1e-05, genes.pct = 0.1, genes.logfc = 0.25,
+  runpca.agrs = list(), findneighbors.args = list(),
+  findclusters.args = list(), ...)
 }
 \arguments{
 \item{inputMat}{Input unnormalized matrix, with genes as rows and cells as columns. Could be count matrix or TPM, FPKM matrix.}
+
+\item{type}{Type of the input matrix. Default is "matrix". Set to "object" if the input is Seurat object.}
 
 \item{project}{Output project name. Default is "MAESTRO.scRNA.Seurat".}
 

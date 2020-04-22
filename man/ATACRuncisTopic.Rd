@@ -5,14 +5,9 @@
 \alias{ATACRuncisTopic}
 \title{Clustering analysis for scATAC-seq data using cisTopic}
 \usage{
-ATACRuncisTopic(
-  inputMat,
-  project = "MAESTRO.scATAC.cisTopic",
-  min.c = 50,
-  min.p = 500,
-  topics.number = c(5, 10, 20, 30),
-  topic.select = 30
-)
+ATACRuncisTopic(inputMat, project = "MAESTRO.scATAC.cisTopic",
+  min.c = 50, min.p = 500, topics.number = c(5, 10, 20, 30),
+  topic.select = 30)
 }
 \arguments{
 \item{inputMat}{Input unnormalized count matrix, with peaks as rows and cells as columns. Rownames should be like "chromosome_peakstart_peakend",
