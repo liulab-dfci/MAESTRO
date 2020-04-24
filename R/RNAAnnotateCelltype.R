@@ -35,8 +35,11 @@
 RNAAnnotateCelltype <- function(RNA, genes, signatures = "human.immune.CIBERSORT", min.score = 0, orig.ident = NULL){
     if(is.null(orig.ident)){
         if(class(signatures) == "character"){
+            signatures_name = signatures
             data(list = signatures)
             signatures = get(signatures)
+        } else {
+            signatures_name = ""
         }
         celltypes <- as.character(unique(signatures[,1]))
         signature_list <- sapply(1:length(celltypes),function(x){
@@ -62,6 +65,15 @@ RNAAnnotateCelltype <- function(RNA, genes, signatures = "human.immune.CIBERSORT
         RNA@meta.data$assign.ident = Idents(RNA)[rownames(RNA@meta.data)]
         RNA@meta.data$assign.ident = plyr::mapvalues(x = RNA@meta.data$assign.ident,
                                                            from = current.cluster.ids, to = new.cluster.ids)
+        if(signatures_name == "human.immune.CIBERSORT") {
+            current.cluster.ids = sort(celltypes)
+            new.cluster.ids = c("DC", "Mast", "CD4Tconv", "NK", "CD8T", "Endothelial",
+                                "Eosinophils", "Fibroblasts", "Mono/Macro", "Mono/Macro", "Mono/Macro", "B",
+                                "Mono/Macro", "Myofibroblasts", "B", "CD4Tconv", "Neutrophils", "Plasma",
+                                "DC", "Mast", "CD4Tconv", "NK", "CD4Tconv", "Treg")
+            RNA@meta.data$assign.ident = plyr::mapvalues(x = RNA@meta.data$assign.ident,
+                                                         from = current.cluster.ids, to = new.cluster.ids)
+        }
         p = DimPlot(object = RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3, repel = T)
         ggsave(paste0(RNA@project.name, "_annotated.png"), p, width=6, height=4)}
     else{

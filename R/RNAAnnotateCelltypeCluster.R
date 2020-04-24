@@ -43,5 +43,5 @@ RNAAnnotateCelltypeCluster <- function(genes, signatures = "human.immune.CIBERSO
                     score = sum(avglogFC[x], na.rm = TRUE) / log2(length(x))
                     return(score)
     })
-    return(sort(score_cluster, decreasing=T))    
+    return(sort(score_cluster, decreasing=T)) 
 }
