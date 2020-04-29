@@ -27,10 +27,10 @@ RNAAssemblyConvert <- function(countMat, from = "GRCh37", to = "GRCh38", organis
     data(GRCh37.GRCh38)
     ensembl = GRCh37.GRCh38
     if (from == "GRCh37" & to == "GRCh38") {
-      genes_convert = ensembl[na.omit(match(genes_original, ensembl$Gene.name.GRCh37)),"Gene.name.GRCh38"]
+      genes_convert = ensembl[match(genes_original, ensembl$Gene.name.GRCh37),"Gene.name.GRCh38"]
     }
     if (from == "GRCh38" & to == "GRCh37") {
-      genes_convert = ensembl[na.omit(match(genes_original, ensembl$Gene.name.GRCh38)),"Gene.name.GRCh37"]
+      genes_convert = ensembl[match(genes_original, ensembl$Gene.name.GRCh38),"Gene.name.GRCh37"]
     }
   }
   
@@ -38,10 +38,10 @@ RNAAssemblyConvert <- function(countMat, from = "GRCh37", to = "GRCh38", organis
     data(NCBIM37.GRCm38)
     ensembl = NCBIM37.GRCm38
     if (from == "NCBIM37" & to == "GRCm38") {
-      genes_convert = ensembl[na.omit(match(genes_original, ensembl$Gene.name.NCBIM37)),"Gene.name.GRCm38"]
+      genes_convert = ensembl[match(genes_original, ensembl$Gene.name.NCBIM37),"Gene.name.GRCm38"]
     }
     if (from == "GRCm38" & to == "NCBIM37") {
-      genes_convert = ensembl[na.omit(match(genes_original, ensembl$Gene.name.GRCm38)),"Gene.name.NCBIM37"]
+      genes_convert = ensembl[match(genes_original, ensembl$Gene.name.GRCm38),"Gene.name.NCBIM37"]
     }
   }
   count_index = which((!duplicated(genes_convert)) & (!is.na(genes_convert)))
