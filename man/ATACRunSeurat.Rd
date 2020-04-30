@@ -5,13 +5,27 @@
 \alias{ATACRunSeurat}
 \title{Clustering analysis for scATAC-seq data using Seurat}
 \usage{
-ATACRunSeurat(inputMat, type = "matrix",
-  project = "MAESTRO.scATAC.Seurat", orign.ident = NULL, min.c = 10,
-  min.p = 100, method = "LSI", dims.use = 1:30, cluster.res = 0.6,
-  only.pos = FALSE, peaks.test.use = "presto", peaks.cutoff = 1e-05,
-  peaks.pct = 0.1, peaks.logfc = 0.2, runlsi.args = list(),
-  runpca.args = list(), findneighbors.args = list(),
-  findclusters.args = list(), ...)
+ATACRunSeurat(
+  inputMat,
+  type = "matrix",
+  project = "MAESTRO.scATAC.Seurat",
+  orign.ident = NULL,
+  min.c = 10,
+  min.p = 100,
+  method = "LSI",
+  dims.use = 1:30,
+  cluster.res = 0.6,
+  only.pos = FALSE,
+  peaks.test.use = "presto",
+  peaks.cutoff = 1e-05,
+  peaks.pct = 0.1,
+  peaks.logfc = 0.2,
+  runlsi.args = list(),
+  runpca.args = list(),
+  findneighbors.args = list(),
+  findclusters.args = list(),
+  ...
+)
 }
 \arguments{
 \item{inputMat}{Input unnormalized count matrix, with peaks as rows and cells as columns. Rownames should be like "chromosome_peakstart_peakend",

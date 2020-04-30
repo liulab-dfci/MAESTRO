@@ -5,8 +5,13 @@
 \alias{ATACRunchromVAR}
 \title{Evaluate the transcription factor enrichment in scATAC-seq using chromVAR}
 \usage{
-ATACRunchromVAR(inputMat, project = "MAESTRO.scATAC.chromVAR",
-  min.c = 50, min.p = 500, organism = "GRCh38")
+ATACRunchromVAR(
+  inputMat,
+  project = "MAESTRO.scATAC.chromVAR",
+  min.c = 50,
+  min.p = 500,
+  organism = "GRCh38"
+)
 }
 \arguments{
 \item{inputMat}{Input unnormalized count matrix, with peaks as rows and cells as columns. Rownames should be like "chromosome_peakstart_peakend",

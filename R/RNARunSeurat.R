@@ -15,9 +15,8 @@
 #' @param min.g Minimum number of genes required for a cell. Will exclude the cells from input matrix if less than \code{min.g}
 #' genes are deteced in one cell. Default is 200. See \code{\link{CreateSeuratObject}} for details.
 #' @param mito Whether or not to check and normalized accroding to the fraction of mitochondria reads and ercc spike-in reads.
+#' If \code{mito} is True, those cells with mitochondria reads or ercc spike-in reads higher than 0.05 will be filtered.
 #' Default is FALSE.
-#' @param mito.cutoff If \code{mito} is True, filter those cells with mitochondria reads or ercc spike-in reads higher than \code{mito.cutoff}.
-#' Default is 0.05.
 #' @param variable.genes Number of variable genes considered in the clustering analysis. Default is 2000. See \code{\link{FindVariableFeatures}} for details.
 #' @param organism Organism for the dataset. Only support "GRCh38" and "GRCm38". Default is "GRCh38".
 #' @param dims.use Number of dimensions used for UMAP analysis. Default is 1:15, use the first 15 PCs.
@@ -49,7 +48,7 @@
 #' @importFrom Gmisc fastDoCall
 #' @export
 
-RNARunSeurat <- function(inputMat, type = "matrix", project = "MAESTRO.scRNA.Seurat", orig.ident = NULL, min.c = 10, min.g = 200, mito = FALSE, mito.cutoff = 0.05, 
+RNARunSeurat <- function(inputMat, type = "matrix", project = "MAESTRO.scRNA.Seurat", orig.ident = NULL, min.c = 10, min.g = 200, mito = FALSE, 
                          variable.genes = 2000, organism = "GRCh38", dims.use = 1:15, cluster.res = 0.6, only.pos = FALSE, genes.test.use = "presto", 
                          genes.cutoff = 1E-5, genes.pct = 0.1, genes.logfc = 0.25,
                          runpca.agrs = list(), findneighbors.args = list(), 
@@ -73,8 +72,8 @@ RNARunSeurat <- function(inputMat, type = "matrix", project = "MAESTRO.scRNA.Seu
     SeuratObj$percent.ercc <- percent.ercc
     p1 = VlnPlot(SeuratObj, c("percent.mito","percent.ercc"), ncol = 2)
     ggsave(paste0(SeuratObj@project.name, ".spikein.png"), p1,  width=6, height=4.5)
-    SeuratObj <- subset(x = SeuratObj, subset = percent.mito < (mito.cutoff))
-    SeuratObj <- subset(x = SeuratObj, subset = percent.ercc < (mito.cutoff))
+    SeuratObj <- subset(x = SeuratObj, subset = percent.mito < 0.05)
+    SeuratObj <- subset(x = SeuratObj, subset = percent.ercc < 0.05)
     vars.to.regress = c("nCount_RNA","percent.mito","percent.ercc")}
   else{
     vars.to.regress = "nCount_RNA"}

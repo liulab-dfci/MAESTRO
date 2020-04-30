@@ -6,10 +6,20 @@
 \title{Scatter plot to show the enrichment of TFs 
 Draw a scatter plot to show the enrichment of TFs in specific clusters, based on cluster-specific TFs or cluster-specific peaks. Currently only support LISA for scRNA-seq analysis and GIGGLE for scATAC-seq analysis.}
 \usage{
-VisualizeTFenrichment(TFs = NULL, cluster.1, cluster.2 = NULL,
-  type = "RNA", SeuratObj, visual.topnumber = 10,
-  visual.totalnumber = 100, LISA.table = NULL, GIGGLE.table = NULL,
-  width = 5, height = 4.5, name = "TFEnrichmentPlot")
+VisualizeTFenrichment(
+  TFs = NULL,
+  cluster.1,
+  cluster.2 = NULL,
+  type = "RNA",
+  SeuratObj,
+  visual.topnumber = 10,
+  visual.totalnumber = 100,
+  LISA.table = NULL,
+  GIGGLE.table = NULL,
+  width = 5,
+  height = 4.5,
+  name = "TFEnrichmentPlot"
+)
 }
 \arguments{
 \item{TFs}{TFs to plot.  If no TFs is given, by default visualize the top \code{visual.topnumber} regulators in that cluster. For "Incorparated" result, is no TFs is given,

@@ -5,14 +5,28 @@
 \alias{RNARunSeurat}
 \title{Clustering analysis for scRNA-seq data using Seurat}
 \usage{
-RNARunSeurat(inputMat, type = "matrix",
-  project = "MAESTRO.scRNA.Seurat", orig.ident = NULL, min.c = 10,
-  min.g = 200, mito = FALSE, mito.cutoff = 0.05,
-  variable.genes = 2000, organism = "GRCh38", dims.use = 1:15,
-  cluster.res = 0.6, only.pos = FALSE, genes.test.use = "presto",
-  genes.cutoff = 1e-05, genes.pct = 0.1, genes.logfc = 0.25,
-  runpca.agrs = list(), findneighbors.args = list(),
-  findclusters.args = list(), ...)
+RNARunSeurat(
+  inputMat,
+  type = "matrix",
+  project = "MAESTRO.scRNA.Seurat",
+  orig.ident = NULL,
+  min.c = 10,
+  min.g = 200,
+  mito = FALSE,
+  variable.genes = 2000,
+  organism = "GRCh38",
+  dims.use = 1:15,
+  cluster.res = 0.6,
+  only.pos = FALSE,
+  genes.test.use = "presto",
+  genes.cutoff = 1e-05,
+  genes.pct = 0.1,
+  genes.logfc = 0.25,
+  runpca.agrs = list(),
+  findneighbors.args = list(),
+  findclusters.args = list(),
+  ...
+)
 }
 \arguments{
 \item{inputMat}{Input unnormalized matrix, with genes as rows and cells as columns. Could be count matrix or TPM, FPKM matrix.}
@@ -30,10 +44,8 @@ less than \code{min.c} cells. Default is 10. See \code{\link{CreateSeuratObject}
 genes are deteced in one cell. Default is 200. See \code{\link{CreateSeuratObject}} for details.}
 
 \item{mito}{Whether or not to check and normalized accroding to the fraction of mitochondria reads and ercc spike-in reads.
+If \code{mito} is True, those cells with mitochondria reads or ercc spike-in reads higher than 0.05 will be filtered.
 Default is FALSE.}
-
-\item{mito.cutoff}{If \code{mito} is True, filter those cells with mitochondria reads or ercc spike-in reads higher than \code{mito.cutoff}.
-Default is 0.05.}
 
 \item{variable.genes}{Number of variable genes considered in the clustering analysis. Default is 2000. See \code{\link{FindVariableFeatures}} for details.}
 
