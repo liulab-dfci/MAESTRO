@@ -73,8 +73,8 @@ RNARunSeurat <- function(inputMat, type = "matrix", project = "MAESTRO.scRNA.Seu
     SeuratObj$percent.ercc <- percent.ercc
     p1 = VlnPlot(SeuratObj, c("percent.mito","percent.ercc"), ncol = 2)
     ggsave(paste0(SeuratObj@project.name, ".spikein.png"), p1,  width=6, height=4.5)
-    SeuratObj <- subset(x = SeuratObj, subset = percent.mito < high.threshold)
-    SeuratObj <- subset(x = SeuratObj, subset = percent.ercc < high.threshold)
+    SeuratObj <- subset(x = SeuratObj, subset = percent.mito < mito.cutoff)
+    SeuratObj <- subset(x = SeuratObj, subset = percent.ercc < mito.cutoff)
     vars.to.regress = c("nCount_RNA","percent.mito","percent.ercc")}
   else{
     vars.to.regress = "nCount_RNA"}
