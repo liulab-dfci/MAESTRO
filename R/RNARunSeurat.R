@@ -89,8 +89,8 @@ RNARunSeurat <- function(inputMat, type = "matrix", project = "MAESTRO.scRNA.Seu
   message("PCA analysis ...")
   SeuratObj <- fastDoCall("RunPCA", c(object = SeuratObj, features = VariableFeatures(SeuratObj), runpca.agrs))
   # SeuratObj <- RunPCA(object = SeuratObj, features = VariableFeatures(SeuratObj))
-  p2 = ElbowPlot(object = SeuratObj)
-  ggsave(file.path(paste0(SeuratObj@project.name, "_PCElbowPlot.png")), p2,  width=5, height=4)
+  p2 = ElbowPlot(object = SeuratObj, ndims = max(dims.use) + 5)
+  ggsave(file.path(paste0(SeuratObj@project.name, "_PCElbowPlot.png")), p2,  width=10, height=4)
   
   #=========UMAP===========
   message("UMAP analysis ...")
