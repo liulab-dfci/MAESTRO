@@ -21,9 +21,14 @@
 #' @examples
 #' 
 #' @importFrom Seurat DefaultAssay DimPlot FindClusters FindIntegrationAnchors FindNeighbors FindVariableFeatures IntegrateData NormalizeData RunPCA RunUMAP ScaleData SplitObject
+#' @importFrom ggplot2 ggplot ggsave
+#' @importFrom Gmisc fastDoCall
 #' @export
 
-RNABatchCorrect <- function(RNA, batch, nfeatures = 2000, dims.use = 1:15, cluster.res = 0.6){
+RNABatchCorrect <- function(RNA, batch, nfeatures = 2000, dims.use = 1:15, cluster.res = 0.6, only.pos = FALSE, genes.test.use = "presto", 
+                            genes.cutoff = 1E-5, genes.pct = 0.1, genes.logfc = 0.25,
+                            runpca.agrs = list(), findneighbors.args = list(), 
+                            findclusters.args = list(), ...){
     RNA@meta.data$batch <- batch
     data.list <- SplitObject(RNA, split.by = "batch")
     for(i in 1:length(data.list)){
@@ -37,17 +42,21 @@ RNABatchCorrect <- function(RNA, batch, nfeatures = 2000, dims.use = 1:15, clust
     DefaultAssay(RNA.integrated) <- "integrated"
     
     RNA.integrated <- ScaleData(RNA.integrated, verbose = FALSE)
-    RNA.integrated <- RunPCA(RNA.integrated, npcs = 30, verbose = FALSE)
-    RNA.integrated <- RunUMAP(RNA.integrated, reduction = "pca", dims = dims.use)
-    RNA.integrated <- FindNeighbors(object = RNA.integrated, reduction = "pca", dims = dims.use)
-    RNA.integrated <- FindClusters(object = RNA.integrated, resolution = cluster.res)
-    p = DimPlot(object = RNA.integrated, label = TRUE, pt.size = 0.2)
-    ggsave(file.path(paste0(RNA.integrated@project.name, "_cluster.png")), p,  width=5, height=4)
-    p = DimPlot(object = RNA.integrated, group = 'batch', label = TRUE, pt.size = 0.2)
-    ggsave(file.path(paste0(RNA.integrated@project.name, "_batch.png")), p,  width=5.5, height=4)
+    RNA.integrated <- fastDoCall("RunPCA", c(object = RNA.integrated, runpca.agrs))
+    p = ElbowPlot(object = RNA.integrated, ndims = max(dims.use) + 5)
+    ggsave(file.path(paste0(RNA.integrated@project.name, "_PCElbowPlot.png")), p,  width=10, height=4)
+    
+    RNA.integrated <- RunUMAP(object = RNA.integrated, reduction = "pca", dims = dims.use, ...)
+    RNA.integrated <- fastDoCall("FindNeighbors", c(object = RNA.integrated, reduction = "pca", dims = dims.use, findneighbors.args))
+    RNA.integrated <- fastDoCall("FindClusters", c(object = RNA.integrated, resolution = cluster.res, findclusters.args))
 
-    cluster.genes <- FindAllMarkersMAESTRO(object = RNA.integrated, only.pos = TRUE, min.pct = 0.1)
-    cluster.genes <- cluster.genes[cluster.genes$p_val_adj<1E-5, ]
+    p = DimPlot(object = RNA.integrated, label = TRUE, pt.size = 0.2)
+    ggsave(file.path(paste0(RNA.integrated@project.name, "_cluster.png")), p, width=5, height=4)
+    p = DimPlot(object = RNA.integrated, group = 'batch', label = TRUE, pt.size = 0.2)
+    ggsave(file.path(paste0(RNA.integrated@project.name, "_batch.png")), p, width=5.5, height=4)
+
+    cluster.genes <- FindAllMarkersMAESTRO(object = RNA.integrated, only.pos = only.pos, min.pct = genes.pct, test.use = genes.test.use, logfc.threshold = genes.logfc)
+    cluster.genes <- cluster.genes[cluster.genes$p_val_adj < genes.cutoff, ]
     write.table(cluster.genes, paste0(RNA.integrated@project.name, "_DiffGenes.tsv"), quote = F, sep = "\t")
 
     return(list(RNA=RNA.integrated, genes=cluster.genes))
