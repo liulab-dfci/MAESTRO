@@ -43,7 +43,7 @@ RNABatchCorrect <- function(RNA, batch, nfeatures = 2000, dims.use = 1:15, clust
     
     RNA.integrated <- ScaleData(RNA.integrated, verbose = FALSE)
     RNA.integrated <- fastDoCall("RunPCA", c(object = RNA.integrated, runpca.agrs))
-    p = ElbowPlot(object = RNA.integrated, ndims = max(dims.use) + 5)
+    p = ElbowPlot(object = RNA.integrated, ndims = RNA.integrated@commands$RunPCA.integrated@params$npcs)
     ggsave(file.path(paste0(RNA.integrated@project.name, "_PCElbowPlot.png")), p,  width=10, height=4)
     
     RNA.integrated <- RunUMAP(object = RNA.integrated, reduction = "pca", dims = dims.use, ...)
