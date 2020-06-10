@@ -10,7 +10,16 @@ RNABatchCorrect(
   batch,
   nfeatures = 2000,
   dims.use = 1:15,
-  cluster.res = 0.6
+  cluster.res = 0.6,
+  only.pos = FALSE,
+  genes.test.use = "presto",
+  genes.cutoff = 1e-05,
+  genes.pct = 0.1,
+  genes.logfc = 0.25,
+  runpca.agrs = list(),
+  findneighbors.args = list(),
+  findclusters.args = list(),
+  ...
 )
 }
 \arguments{
