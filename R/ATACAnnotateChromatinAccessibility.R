@@ -60,7 +60,7 @@ ATACAnnotateChromatinAccessibility <- function(ATAC, peaks, project = ATAC@proje
       write.table(ipeaks, outputBed, sep="\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
       targetDf = RunGiggle(peakbed = outputBed, giggle.path = giggle.path, organism = organism, antFile = antFile, type = 'ca')}
       else{
-      targetDf = read.delim(paste0(outputDir, "/", icluster, ".peaks.bed.giggle.res.cas.txt"))
+      targetDf = read.delim(paste0(outputDir, "/", icluster, ".peaks.bed.giggle.res.cas.txt"), stringsAsFactors = FALSE)
       }
       if(nrow(targetDf) >= top.ca){
       # png(paste0(outputDir, "/", icluster, ".peaks.bed.giggle.res.cas.png"), width=7,height=4, res=300)

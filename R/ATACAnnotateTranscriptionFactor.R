@@ -94,7 +94,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
       write.table(ipeaks, outputBed, sep="\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
       targetDf = RunGiggle(peakbed = outputBed, giggle.path = giggle.path, organism = organism, antFile = antFile, type = 'tf')}
       else{
-      targetDf = read.delim(paste0(outputDir, "/", icluster, ".peaks.bed.giggle.res.tfs.txt"))
+      targetDf = read.delim(paste0(outputDir, "/", icluster, ".peaks.bed.giggle.res.tfs.txt"), stringsAsFactors = FALSE)
       }
       if(nrow(targetDf) > 0){
         rownames(targetDf) = targetDf$factor
@@ -111,7 +111,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
       fileName=paste0(outputDir,"/", icluster, ".peaks.bed.giggle.res.tfs.txt")
       if (file.exists(fileName))
       {
-        tf_p=read.delim(fileName)
+        tf_p=read.delim(fileName, stringsAsFactors = FALSE)
         tf_temp=data.frame(tf_p$giggle)
         rownames(tf_temp)=tf_p$factor
         colnames(tf_temp)=icluster

@@ -58,9 +58,15 @@
                                     <a class="nav-link" href="#celltype" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Celltype annotation</a>
                                 </li>
                                 <li>
+                                    <a class="nav-link" href="#chromatin" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Chromatin Accessibility annotation</a>
+                                </li>
+                                <li>
                                     <a class="nav-link" href="#regulator" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Regulator annotation</a>
                                 </li>
                             </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="pill" href="#genetrack" style="font-size: 1rem">Gene Track</a>
                         </li>
                     </ul>
                 </div>
@@ -211,12 +217,31 @@
                                                 <p class="collapse" id="rpannotate" style="font-size: 0.925rem">
                                                     UMAP visualization of annotated clusters. Colors represent different cell types. The cell type information for each cluster is annotated using the regulatory potential of marker genes.
                                                 </p>
-                                                <a href=%(rpannotate)s><img src=%(rpannotate)s width="580" height="400" class="float-left"></a>
+                                                <a href=%(rpannotate)s><img src=%(rpannotate)s width="600" height="400" class="float-left"></a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row" style="padding-top: 15px">
+                                <div class="row">
+                                    <div class="container-fluid">
+                                        <h2 class="h3" id="chromatin">Chromatin accessibility annotation</h2>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3 class="h5">
+                                                   Chromatin accessibility annotation
+                                                    <svg t="1581181133804" class="icon" data-toggle="collapse" href="#rpannotate" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                        <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                        </path>
+                                                    </svg>
+                                                </h3>
+                                                <p class="collapse" id="rpannotate" style="font-size: 0.925rem">
+                                                    UMAP visualization of cells. Colors represent different biological sources. The biological source information for each cluster is inferred based on cluster-specific peaks.
+                                                </p>
+                                                <a href=%(caannotate)s><img src=%(caannotate)s width="700" height="400" class="float-left"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div class="row">
                                     <div class="container-fluid">
@@ -246,6 +271,31 @@
 %(regtable)s
                                                     </tbody>
                                                 </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid tab-pane fade" id="genetrack">
+                                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                    <h1 class="h2" id="clustering">Gene Track</h1>
+                                </div>
+                                <div class="row">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3 class="h5">
+                                                    Gene track plot for each cluster
+                                                    <svg t="1581181133804" class="icon" data-toggle="collapse" href="#genetrackanno" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                        <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                        </path>
+                                                    </svg>
+                                                </h3>
+                                                <p class="collapse" id="genetrackanno" style="font-size: 0.925rem">
+                                                    Gene track plot for each cluster. Here, CD3D nad MS4A1 are displayed as marker of T cells and B cells, respectively.
+                                                </p>
+                                                <a href=%(cd3dtrack)s><img src=%(cd3dtrack)s width="480" height="400" class="float-left"></a>
+                                                <a href=%(ms4a1track)s><img src=%(ms4a1track)s width="480" height="400" class="float-left"></a>
                                             </div>
                                         </div>
                                     </div>

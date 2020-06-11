@@ -142,6 +142,7 @@ ATACPlotCoverageByGroup<- function(chrom = NULL, start = NULL, end =NULL, gene_n
     gr<- GRanges(seq = chrom, IRanges(start = start, end = end ))
   }
   
+  gr<- GenomeInfoDb::keepStandardChromosomes(gr)
   
   #### read in the fragment.tsv.gz with "chr", "start", "end", "cell", "duplicate" columns. output from cellranger-atac ###
   #### or bam file with a CB tag for cell barcode ###############
@@ -264,7 +265,6 @@ ATACPlotCoverageByGroup<- function(chrom = NULL, start = NULL, end =NULL, gene_n
 #'
 #' @return An extended GRanges object
 #'
-#' @examples
 extend <- function(x, upstream=0, downstream=0)
 {
   if (any(strand(x) == "*"))
@@ -284,7 +284,6 @@ extend <- function(x, upstream=0, downstream=0)
 #'
 #' @return An GRanges object for all the genes with gene symbol in the metadata column
 #'
-#' @examples
 addGeneNameToTxdb<- function(txdb = TxDb.Hsapiens.UCSC.hg19.knownGene,
                              eg.db = org.Hs.eg.db){
   gene<- GenomicFeatures::genes(txdb)
