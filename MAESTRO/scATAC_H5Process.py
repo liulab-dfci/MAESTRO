@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:44:05
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-03-31 20:28:55
+# @Last Modified time: 2020-05-27 12:26:48
 
 
 import os
@@ -21,7 +21,7 @@ import pandas as pd
 
 def mtxtoh5_parser(subparsers):
     """
-    Add main function init-scatac argument parsers.
+    Add main function mtx-to-h5 argument parsers.
     """
 
     workflow = subparsers.add_parser("mtx-to-h5", 
@@ -48,13 +48,45 @@ def mtxtoh5_parser(subparsers):
     group_output = workflow.add_argument_group("Output arguments")
     group_output.add_argument("-d", "--directory", dest = "directory", default = "MAESTRO", 
         help = "Path to the directory where the result file shall be stored. DEFAULT: MAESTRO.")
-    group_output.add_argument("--outprefix", dest = "outprefix", default = "10x-genomics", 
+    group_output.add_argument("--outprefix", dest = "outprefix", default = "MAESTRO", 
+        help = "Prefix of output files. DEFAULT: MAESTRO.")
+
+def mtxtocount_parser(subparsers):
+    """
+    Add main function mtx-to-count argument parsers.
+    """
+
+    workflow = subparsers.add_parser("mtx-to-count", 
+        help = "Convert 10X mtx format matrix to plain text count table.")
+    group_input = workflow.add_argument_group("Input files arguments")
+    group_input.add_argument("--type", dest = "datatype", default = "Peak", 
+        choices = ["Peak", "Gene"], 
+        help = "Type of the count matrix (Peak for scATAC-seq and Gene for scRNA-seq). DEFAULT: Peak.")
+    group_input.add_argument("--matrix", dest = "matrix", default = "matrix.mtx", 
+        help = "Location of .mtx formatted matrix file. DEFAULT: matrix.mtx.")
+    group_input.add_argument("--feature", dest = "feature", default = "features.tsv", 
+        help = "Location of feature file (required for the format of 'mtx'). Features correspond to row indices of count matrix. "
+        "If the type is Peak, please provide the peak bed file with 3 columns. "
+        "If the type is Gene, each row should include gene name. DEFAULT: features.tsv.")
+    group_input.add_argument("--gene-column", dest = "gene_column", default = 2, type = int,
+        help = "If the type is 'Peak', please specify which column of the feature file to use for gene names. DEFAULT: 2.")
+    group_input.add_argument("--barcode", dest = "barcode", default = "barcodes.tsv", 
+        help = "Location of barcode file. Cell barcodes correspond to column indices of count matrix. DEFAULT: barcodes.tsv. ")
+    group_input.add_argument("--species", dest = "species", default = "GRCh38", 
+        choices = ["GRCh38", "GRCm38"], type = str, 
+        help = "Species (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
+    
+
+    group_output = workflow.add_argument_group("Output arguments")
+    group_output.add_argument("-d", "--directory", dest = "directory", default = "MAESTRO", 
+        help = "Path to the directory where the result file shall be stored. DEFAULT: MAESTRO.")
+    group_output.add_argument("--outprefix", dest = "outprefix", default = "MAESTRO", 
         help = "Prefix of output files. DEFAULT: MAESTRO.")
 
 
 def counttoh5_parser(subparsers):
     """
-    Add main function init-scatac argument parsers.
+    Add main function count-to-h5 argument parsers.
     """
 
     workflow = subparsers.add_parser("count-to-h5", 
@@ -65,9 +97,12 @@ def counttoh5_parser(subparsers):
         help = "Type of the count matrix (Peak for scATAC-seq and Gene for scRNA-seq). DEFAULT: Peak.")
     group_input.add_argument("--count", dest = "count", default = "", 
         help = "Location of plain text count table file. "
-        "The count file need to be tab-separated with column and row names. "
         "If the type is Peak, the row name should be like 'chromosome_peakstart_peakend'. "
         "For example, 'chr10_100020591_100020841'.")
+    group_input.add_argument("--separator", dest = "separator", default = "tab", 
+        choices = ["tab", "space", "comma"],
+        help = "The separating character (only for the format of 'plain'). "
+        "Values on each line of the plain matrix file will be separated by the character. DEFAULT: tab.")
     group_input.add_argument("--species", dest = "species", default = "GRCh38", 
         choices = ["GRCh38", "GRCm38"], type = str, 
         help = "Species (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
@@ -76,13 +111,37 @@ def counttoh5_parser(subparsers):
     group_output = workflow.add_argument_group("Output arguments")
     group_output.add_argument("-d", "--directory", dest = "directory", default = "MAESTRO", 
         help = "Path to the directory where the result file shall be stored. DEFAULT: MAESTRO.")
-    group_output.add_argument("--outprefix", dest = "outprefix", default = "10x-genomics", 
+    group_output.add_argument("--outprefix", dest = "outprefix", default = "MAESTRO", 
         help = "Prefix of output files. DEFAULT: MAESTRO.")
 
 
+def h5tocount_parser(subparsers):
+    """
+    Add main function h5-to-count argument parsers.
+    """
+
+    workflow = subparsers.add_parser("h5-to-count", 
+        help = "Convert HDF5 format to plain text count table.")
+    group_input = workflow.add_argument_group("Input files arguments")
+    group_input.add_argument("--type", dest = "datatype", default = "Peak", 
+        choices = ["Peak", "Gene"], 
+        help = "Type of the count matrix (Peak for scATAC-seq and Gene for scRNA-seq). DEFAULT: Peak.")
+    group_input.add_argument("--h5", dest = "h5", default = "", 
+        help = "Location of HDF5 format file. ")
+    group_input.add_argument("--species", dest = "species", default = "GRCh38", 
+        choices = ["GRCh38", "GRCm38"], type = str, 
+        help = "Species (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
+    
+
+    group_output = workflow.add_argument_group("Output arguments")
+    group_output.add_argument("-d", "--directory", dest = "directory", default = "MAESTRO", 
+        help = "Path to the directory where the result file shall be stored. DEFAULT: MAESTRO.")
+    group_output.add_argument("--outprefix", dest = "outprefix", default = "MAESTRO", 
+        help = "Prefix of output files. DEFAULT: MAESTRO.")
+
 def mergeh5_parser(subparsers):
     """
-    Add main function init-scatac argument parsers.
+    Add main function merge-h5 argument parsers.
     """
 
     workflow = subparsers.add_parser("merge-h5", 
@@ -100,9 +159,13 @@ def mergeh5_parser(subparsers):
     
 
     group_output = workflow.add_argument_group("Output arguments")
+    group_output.add_argument("--cellprefix", dest = "cellprefix_list", default = [], nargs = "+",
+        help = "Prefix to add to cell identities. Multiple prefixes should be separated by space "
+        "and the number should be equal to that of HDF5 files. "
+        "If not set, cell original cell identities will be kept.")
     group_output.add_argument("-d", "--directory", dest = "directory", default = "MAESTRO", 
         help = "Path to the directory where the result file shall be stored. DEFAULT: MAESTRO.")
-    group_output.add_argument("--outprefix", dest = "outprefix", default = "10x-genomics", 
+    group_output.add_argument("--outprefix", dest = "outprefix", default = "MAESTRO", 
         help = "Prefix of output files. DEFAULT: MAESTRO.")
 
 
@@ -155,7 +218,7 @@ def write_10X_h5(filename, matrix, features, barcodes, genome = 'GRCh38', dataty
     fet.create_dataset('name', data=P)
     f.close()
 
-def merge_10X_h5(directory, outprefix, h5list, genome = 'GRCh38', datatype = 'Gene'):
+def merge_10X_h5(directory, outprefix, h5list, prefixlist, genome = 'GRCh38', datatype = 'Gene'):
     """Merge 10X HDF5 files, h5 filenames should be provided as list."""
 
     try:
@@ -176,9 +239,14 @@ def merge_10X_h5(directory, outprefix, h5list, genome = 'GRCh38', datatype = 'Ge
     
     dflist = []
     for i in range(0,len(mlist)):
-        barcode_i = numpy.array([h5list[i].strip(".h5")+"@"+t.decode('UTF-8') for t in mlist[i].barcodes.tolist()], dtype='|S200')
-        dflist.append(pd.DataFrame(mlist[i].matrix.toarray(), index = mlist[i].ids, columns = barcode_i))
-
+        if prefixlist:
+            barcode_i = numpy.array([prefixlist[i] + "@" + t.decode('UTF-8') for t in mlist[i].barcodes.tolist()], dtype='|S200')
+        else:
+            barcode_i = numpy.array([t.decode('UTF-8') for t in mlist[i].barcodes.tolist()], dtype='|S200')
+        df = pd.DataFrame(mlist[i].matrix.toarray(), index = mlist[i].names, columns = barcode_i)
+        df = df.loc[~df.index.duplicated(),]
+        dflist.append(df)
+        
     dfmerge = pd.concat(dflist, axis = 1, join = "outer")
     dfmerge_numpy = dfmerge.fillna(0).to_numpy()
     features = dfmerge.index.tolist()
@@ -240,22 +308,90 @@ def mtx_2_h5(directory, outprefix, matrix_file, feature_file, barcode_file, gene
         features = matrix_dict["features"], barcodes = matrix_dict["barcodes"], genome = genome, datatype = datatype)
 
 
-def read_count(count_file):
+def mtx_2_count(directory, outprefix, matrix_file, feature_file, barcode_file, gene_column = 2, genome = 'GRCh38', datatype = 'Peak'):
+    """Convert 10x mtx format matrix to HDF5."""
+
+    try:
+        os.makedirs(directory)
+    except OSError:
+        # either directory exists (then we can ignore) or it will fail in the
+        # next step.
+        pass
+
+    if datatype == "Peak":
+        filename = os.path.join(directory, outprefix + "_peak_count.txt")
+    else:
+        filename = os.path.join(directory, outprefix + "_gene_count.txt")
+
+    matrix_dict = read_10X_mtx(matrix_file = matrix_file, feature_file = feature_file, barcode_file = barcode_file, datatype = datatype, gene_column = gene_column)
+
+    write_count(filename = filename, matrix = matrix_dict["matrix"], features = matrix_dict["features"], barcodes = matrix_dict["barcodes"])
+
+
+def write_count(filename, matrix, features, barcodes):
+    """write matrix to count table from sparse matrix"""
+
+    df = pd.DataFrame.sparse.from_spmatrix(matrix, columns=barcodes, index=features)
+    df = df.sparse.to_dense()
+
+    df.to_csv(filename, sep = "\t", float_format='%.2f')
+
+
+def h5_2_count(directory, outprefix, h5_file, genome = 'GRCh38', datatype = 'Peak'):
+    """Convert 10x mtx format matrix to HDF5."""
+
+    try:
+        os.makedirs(directory)
+    except OSError:
+        # either directory exists (then we can ignore) or it will fail in the
+        # next step.
+        pass
+
+    scrna_count = read_10X_h5(h5_file)
+    rawmatrix = scrna_count.matrix
+    features = scrna_count.names.tolist()
+    barcodes = scrna_count.barcodes.tolist()
+
+    if type(features[0]) == bytes:
+        features = [i.decode() for i in features]
+    if type(barcodes[0]) == bytes:
+        barcodes = [i.decode() for i in barcodes]
+
+    if datatype == "Peak":
+        filename = os.path.join(directory, outprefix + "_peak_count.txt")
+    else:
+        filename = os.path.join(directory, outprefix + "_gene_count.txt")
+
+    write_count(filename = filename, matrix = rawmatrix, features = features, barcodes = barcodes)
+
+
+def read_count(count_file, separator = "tab"):
     """Read count table as matrix."""
 
+    if separator == "tab":
+        sep = "\t"
+    elif separator == "space":
+        sep = " "
+    elif separator == "comma":
+        sep = ","
+    else:
+        raise Exception("Invalid separator!")
+
     infile = open(count_file, 'r').readlines()
-    barcodes = infile[0].strip().split('\t')
+    barcodes = infile[0].strip().split(sep)
     features = []
     matrix = []
     for line in infile[1:]:
-        line = line.strip().split('\t')
+        line = line.strip().split(sep)
         features.append(line[0])
         matrix.append([float(t) for t in line[1:]])
+    if len(barcodes) == len(matrix[0]) + 1:
+        barcodes = barcodes[1:]
 
     return {"matrix": matrix, "features": features, "barcodes": barcodes}
 
 
-def count_2_h5(directory, outprefix, count_file, genome = 'GRCh38', datatype = 'Peak'):
+def count_2_h5(directory, outprefix, count_file, separator, genome = 'GRCh38', datatype = 'Peak'):
     """Convert plain text count table to HDF5."""
 
     try:
@@ -270,7 +406,7 @@ def count_2_h5(directory, outprefix, count_file, genome = 'GRCh38', datatype = '
     else:
         filename = os.path.join(directory, outprefix + "_gene_count.h5")
 
-    matrix_dict = read_count(count_file)
+    matrix_dict = read_count(count_file, separator)
 
 
     write_10X_h5(filename = filename, matrix = matrix_dict["matrix"], 

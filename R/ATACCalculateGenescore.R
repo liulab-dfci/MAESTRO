@@ -11,6 +11,13 @@
 #' this will result in significant memory and speed savings.
 #' @param project Output project name for the gene sore result.Default is "MAESTRO.scATAC".
 #' @param organism Organism for the dataset. Only support "GRCh38" and "GRCm38". Default is "GRCh38".
+#' @param decaydistance Gene score decay distance, could be optional from 1kb (promoter-based regulation) 
+#' to 10kb (enhancer-based regulation). Default is 10000.
+#' @param model The RP model to use to calaculate gene score, Simple or Adjusted. 
+#' For each gene, simple model summarizes the impact of all regulatory elements within the up/dowm-stream of TSS. 
+#' On the basis of simple model, adjusted model includes the regulatory elements within the exon region, 
+#' and also excludes the regulatory elements overlapped with another gene (the promoter and exon of a nearby gene). 
+#' See the MAESTRO paper for more details. Default is Adjusted.
 #'
 #' @author Dongqing Sun, Changxin Wan, Chenfei Wang
 #'
@@ -27,7 +34,8 @@
 #' @export 
 #' 
 
-ATACCalculateGenescore <- function(inputMat, project = "MAESTRO.scATAC", organism = "GRCh38"){
+ATACCalculateGenescore <- function(inputMat, project = "MAESTRO.scATAC", organism = "GRCh38", 
+                                   decaydistance = 10000, model = "Adjusted"){
   source_python(paste(system.file(package="MAESTRO"), "ATACCalculateGenescore.py", sep="/"))
   
   if(organism == "GRCh38"){
@@ -48,7 +56,7 @@ ATACCalculateGenescore <- function(inputMat, project = "MAESTRO.scATAC", organis
   }
   
   rp_result = calculate_RP_score(cell_peaks = inputMat, peaks_list = peaks_list, genes_info = ensembl.genescore, 
-                                 genes_list = genes_list, decay = 10000)
+                                 genes_list = genes_list, decay = decaydistance, model = model)
   rp_matrix = rp_result[[1]]
   rownames(rp_matrix) = rp_result[[2]]
   colnames(rp_matrix) = colnames(inputMat)

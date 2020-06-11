@@ -53,12 +53,24 @@ custompeaksloc: {{ custompeaksloc }}
 # If not (by default), the pipeline will only use peaks called from all fragments.
 shortpeaks: {{ shortpeaks }}
 
+# The RP model to use to calaculate gene score. [Simple, Adjusted]
+# For each gene, simple model summarizes the impact of all regulatory elements within the up/dowm-stream of TSS. 
+# On the basis of simple model, adjusted model includes the regulatory elements within the exon region, 
+# and also excludes the regulatory elements overlapped with another gene (the promoter and exon of a nearby gene). 
+# See the MAESTRO paper for more details. DEFAULT: Adjusted.
+rpmodel: {{ rpmodel }}
+
 # Gene score decay distance, could be optional from 1kb (promoter-based regulation) and 10kb(enhancer-based regulation), default is 10kb
 genedistance: {{ genedistance }}
 
 # Path of the giggle annotation file required for regulator identification. 
 # Please download the annotation file from http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz and decompress it.
 giggleannotation: {{ giggleannotation }}
+
+# Whether or not to call peaks by cluster [True, False]
+# If it's set True, MAESTRO will split the bam file according to clustering result, and then call peaks for each cluster.
+# By default (not set), MAESTRO will skip this step.
+clusterpeaks : {{ clusterpeaks }}
 
 
 # Quality control cutoff

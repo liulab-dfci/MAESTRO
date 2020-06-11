@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:40:27
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-04-13 01:38:27
+# @Last Modified time: 2020-06-11 22:19:45
 
 
 import os
@@ -104,9 +104,21 @@ def scatac_parser(subparsers):
         "MAESTRO will merge the peaks called from all fragments and those called from short fragments, "
         "and then use the merged peak file for further analysis. "
         "If not (by default), the pipeline will only use peaks called from all fragments.")
+    group_peak.add_argument("--clusterpeak", dest = "clusterpeak", action = "store_true", 
+        help = "Whether or not to call peaks by cluster. If set, "
+        "MAESTRO will split the bam file according to the clustering result, "
+        "and then call peaks for each cluster. "
+        "By default (not set), MAESTRO will skip this step.")
     
     # Gene score arguments
     group_genescore = workflow.add_argument_group("Gene score arguments")
+    group_genescore.add_argument("--rpmodel", dest = "rpmodel", default = "Adjusted", 
+        choices = ["Simple", "Adjusted"], 
+        help = "The RP model to use to calaculate gene score. "
+        "For each gene, simple model summarizes the impact of all regulatory elements within the up/dowm-stream of TSS. "
+        "On the basis of simple model, adjusted model includes the regulatory elements within the exon region, "
+        "and also excludes the regulatory elements overlapped with another gene (the promoter and exon of a nearby gene). "
+        "See the MAESTRO paper for more details. DEFAULT: Adjusted.")
     group_genescore.add_argument("--genedistance", dest = "genedistance", default = 10000, type = int, 
         help = "Gene score decay distance, could be optional from 1kb (promoter-based regulation) "
         "to 10kb (enhancer-based regulation). DEFAULT: 10000.")
@@ -313,6 +325,8 @@ def scatac_config(args):
             custompeaks = args.custompeak,
             custompeaksloc = os.path.abspath(args.custompeak_file),
             shortpeaks = args.shortpeak,
+            clusterpeaks = args.clusterpeak,
+            rpmodel = args.rpmodel,
             genedistance = args.genedistance,
             giggleannotation = os.path.abspath(args.giggleannotation),
             fasta = os.path.abspath(args.fasta)))

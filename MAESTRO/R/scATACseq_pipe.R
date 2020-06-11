@@ -5,6 +5,7 @@ library(future)
 library(future.apply)
 library(pbapply)
 library(optparse)
+library(ggplot2)
 
 
 option_list = list(
@@ -29,6 +30,9 @@ option_list = list(
   make_option(c("--gigglelib"), type = "character", default = "",
               action = "store", help = "Annotation to run rabit (only if method is set to rabit)."
   ),
+  make_option(c("--fragment"), type = "character", default = "fragments_corrected_count.tsv.gz",
+              action = "store", help = "Gzip-compressed fragment file."
+  ),
   make_option(c("--thread"), type = "integer", default = 1,
               action = "store", help = "Number of cores to use."
   )
@@ -44,6 +48,7 @@ thread = argue$thread
 sigfile = argue$signature
 gigglelib = argue$gigglelib
 species = argue$species
+fragment = argue$fragment
 
 # countmatrix = read.table(argue[1], sep = '\t', header = TRUE, row.names = 1, check.names = FALSE)
 # RPmatrix = read.table(argue[2], sep = '\t', header = TRUE, row.names = 1, check.names = FALSE)
@@ -62,4 +67,72 @@ result = ATACRunSeurat(inputMat = countmatrix, project = prefix, method = "LSI")
 result$ATAC = ATACAttachGenescore(ATAC = result$ATAC, RPmatrix = RPmatrix)
 result$ATAC = ATACAnnotateCelltype(result$ATAC, signatures = signatures)
 saveRDS(result, paste0(prefix, "_scATAC_Object.rds"))
-result.tfs = ATACAnnotateTranscriptionFactor(ATAC = result$ATAC, peaks = result$peaks, project = prefix, giggle.path = gigglelib, organism = species)
+result.tfs = ATACAnnotateTranscriptionFactor(ATAC = result$ATAC,
+                                             peaks = result$peaks, 
+                                             project = prefix, 
+                                             giggle.path = gigglelib, 
+                                             organism = species)
+result$ATAC <- ATACAnnotateChromatinAccessibility(ATAC = result$ATAC, 
+                                                         peaks = result$peaks, 
+                                                         project = prefix, 
+                                                         giggle.path = gigglelib,
+                                                         organism = species)
+
+p1 <- DimPlot(result$ATAC, label = TRUE, reduction = "umap", group.by = "biological_resource", repel=T, pt.size = 0.5)
+ggsave(file.path(paste0(result$ATAC@project.name, "_CistromeTop_annotated.png")), p1, width=7.5, height=4)
+
+
+if(species == "GRCh38"){
+  library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+  library(org.Hs.eg.db)
+  txdb = TxDb.Hsapiens.UCSC.hg38.knownGene
+  genome = "hg38"
+}
+if(species == "GRCm38"){
+  library(TxDb.Mmusculus.UCSC.mm10.knownGene)
+  library(org.Mm.eg.db)
+  txdb = TxDb.Mmusculus.UCSC.mm10.knownGene
+  genome = "mm10"
+}
+
+meta_info = data.frame(cell = rownames(result[["ATAC"]]@meta.data),
+                       cluster = result[["ATAC"]]@meta.data$seurat_clusters,
+                       depth = result[["ATAC"]]@meta.data$nCount_ATAC)
+group_file = paste0(prefix, "_grouping.txt")
+write.table(meta_info, group_file, sep = "\t", row.names = F, col.names = T, quote = F)
+
+
+gene = "MS4A1"
+genetrack_file = paste(prefix, gene, "genetrack.png", sep = "_")
+png(genetrack_file, units = "in", width = 6, height = 5, res = 300)
+ATACPlotCoverageByGroup(gene_name = gene, downstream = 8000, 
+                    yaxis_cex = 1,
+                    fragment = fragment,
+                    grouping = group_file,
+                    tick_label_cex = 1, tick.dist = 5000,
+                    track_cols = "blue", 
+                    label_cex = 1,
+                    minor.tick.dist = 1000, label.margin = -0.6,
+                    txdb = txdb,
+                    genome = genome)
+dev.off()
+
+gene = "CD3D"
+genetrack_file = paste(prefix, gene, "genetrack.png", sep = "_")
+png(genetrack_file, units = "in", width = 6, height = 5, res = 300)
+ATACPlotCoverageByGroup(gene_name = gene, downstream = 8000, 
+                    yaxis_cex = 1,
+                    fragment = fragment,
+                    grouping = group_file,
+                    tick_label_cex = 1, tick.dist = 5000,
+                    track_cols = "blue", 
+                    label_cex = 1,
+                    minor.tick.dist = 1000, label.margin = -0.6,
+                    txdb = txdb,
+                    genome = genome)
+dev.off()
+
+
+cluster_info = data.frame(Cell = rownames(result$ATAC@meta.data), Cluster = paste0("Cluster_", result$ATAC@meta.data$seurat_clusters), stringsAsFactors = FALSE)
+write.table(cluster_info, paste0(prefix, "_cell_cluster.txt"), sep  = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
+

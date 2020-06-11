@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-28 03:15:37
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-02-29 04:07:31
+# @Last Modified time: 2020-06-11 06:43:28
 
 
 import os,sys
@@ -62,6 +62,9 @@ def main():
     peakcluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_cluster.png"%outpre)
     rpannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_annotated.png"%outpre)
     readdistrplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scATAC_read_distr.png"%outpre)
+    caannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_CistromeTop_annotated.png"%outpre)
+    ms4a1track_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_MS4A1_genetrack.png"%outpre)
+    cd3dtrack_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_CD3D_genetrack.png"%outpre)
 
 
     td_list = []
@@ -73,7 +76,10 @@ def main():
             td_list.append(items_str)
     td_str = "\n".join(td_list)
 
-    report_html_instance = report_html_temp % {"outprefix":outpre, "fastqdir":fastqdir, "species":species, "platform":platform, "readdistr":readdistrplot_link, "fragment":fragplot_link, "frip":fripplot_link, "peakcluster":peakcluster_link, "rpannotate":rpannotate_link, "regtable":td_str}
+    report_html_instance = report_html_temp % {"outprefix":outpre, "fastqdir":fastqdir, "species":species, 
+    "platform":platform, "readdistr":readdistrplot_link, "fragment":fragplot_link, "frip":fripplot_link, 
+    "peakcluster":peakcluster_link, "rpannotate":rpannotate_link, "regtable":td_str,
+    "caannotate": caannotate_link, 'cd3dtrack': cd3dtrack_link, "ms4a1track": ms4a1track_link}
 
     report_html_instancefile = os.path.join(directory, outpre + "_scATAC_report.html")
     outf = open(report_html_instancefile,"w")

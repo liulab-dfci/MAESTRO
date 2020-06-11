@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-01-17 02:45:39
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-02-28 00:54:21
+# @Last Modified time: 2020-06-07 02:53:59
 
 
 import argparse
@@ -36,7 +36,7 @@ barcode_lib_dict = defaultdict(set)
 with open(barcode_correct, "r") as barcode_correct_in:
     for line in barcode_correct_in:
         line_list = line.strip().split("\t")
-        barcode_lib_dict[line_list[1]].add(line_list[2])
+        barcode_lib_dict[line_list[0]].add(line_list[2])
 end_time = time.time()
 print("End", end_time-start_time)
 
