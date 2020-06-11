@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Jun  4 13:10:51 2019
+# @Author: Dongqing Sun
+# @E-mail: Dongqingsun96@gmail.com
+# @Date:   2020-06-12 03:53:45
+# @Last Modified by:   Dongqing Sun
+# @Last Modified time: 2020-06-12 03:55:26
 
-@author: Chenfei Wang, Dongqing Sun
-"""
 
 import sys,os
 # from distutils.core import setup
@@ -42,15 +42,20 @@ def install_rpackage():
     os.system("Rscript MAESTRO/R/MAESTRO_install.R")
     print("Installation of required R packages is DONE")
 
+def install_sinto():
+    os.system("pip install sinto")
+    print("Installation of sinto is DONE")
+
 def main():
     # install_drseq()
     install_rpackage()
     install_giggle()
+    install_sinto()
     # install_rabit()
     
     setup(
         name = "MAESTRO",
-        version = "1.1.0",
+        version = "1.1.1",
         package_dir = {'MAESTRO':'MAESTRO'},
         packages = ['MAESTRO'],
         package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'Snakemake/integrate/*', 'R/*', 'annotations/*', 'html/*', '']},
@@ -81,5 +86,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
