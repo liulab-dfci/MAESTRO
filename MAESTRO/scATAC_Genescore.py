@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:48:03
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-06-11 22:19:59
+# @Last Modified time: 2020-06-13 03:12:28
 
 
 import os, sys
@@ -195,7 +195,7 @@ def RP_AddExonRemovePromoter(peaks_info, genes_info_full, genes_info_tss, decay)
     Sg = lambda x: 2**(-x)
     checkInclude = lambda x, y: all([x>=y[0], x<=y[1]])
     gene_distance = 15 * decay
-    genes_peaks_score_array = sp_sparse.dok_matrix((len(genes_info_full), len(peaks_info)), dtype=numpy.float64)
+    genes_peaks_score_array = sp_sparse.dok_matrix((len(genes_info_full), len(peaks_info)), dtype=np.float64)
     peaks_info_inbody = []
     peaks_info_outbody = []
     
@@ -411,7 +411,7 @@ def genescore(fileformat, directory, outprefix, peakcount, feature, barcode, gen
     if fileformat == "plain":
         matrix_dict = read_count(peakcount)
         peakmatrix = matrix_dict["matrix"]
-        peakmatrix = sp_sparse.csc_matrix(peakmatrix, dtype=numpy.int8)
+        peakmatrix = sp_sparse.csc_matrix(peakmatrix, dtype=np.int8)
         features = matrix_dict["features"]
         features = [f.encode() for f in features]
         barcodes = matrix_dict["barcodes"]

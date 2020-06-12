@@ -53,7 +53,6 @@ ATACCalculateGenescore <- function(inputMat, project = "MAESTRO.scATAC", organis
       refgenes.genescore = GRCm38.refgenes.genescore.simple
     }
     genes_list = refgenes.genescore[,4]
-    print(genes_list[1:2])
     refgenes.genescore = refgenes.genescore[,-4]
     
     rp_result = calculate_RP_score(cell_peaks = inputMat, peaks_list = peaks_list, gene_bed_df = refgenes.genescore, 

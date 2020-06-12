@@ -21,7 +21,7 @@ def all_input(wildcards):
         cluster=glob_wildcards(os.path.join(checkpoint_output, "{cluster}.bam")).cluster)
     # return checkpoint_output
 
-if config["clusterpeak"]:
+if config["clusterpeaks"]:
     rule all:
         input:
             summaryreport = "Result/" + config["outprefix"] + "_scATAC_report.html",
@@ -428,7 +428,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
         benchmark:
             "Result/Benchmark/%s_FragGenerate.benchmark" %(config["outprefix"])
         shell:
-            "python " + SCRIPT_PATH + "/scATAC_FragmentGenerate.py -B {input.bam} -O {params.outdir}"
+            "python " + SCRIPT_PATH + "/scATAC_FragmentGenerate.py -B {input.bam} -O {params.outdir} --addtag CR"
 
     if config["whitelist"]:
         rule scatac_barcodecorrect:
