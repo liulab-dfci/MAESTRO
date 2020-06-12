@@ -3,9 +3,13 @@ GRCh37.GRCh38
 GRCh38.CistromeDB.genescore
 GRCh38.ensembl.genescore
 GRCh38.ensembl
+GRCh38.refgenes.genescore.adjusted
+GRCh38.refgenes.genescore.simple
 GRCm38.CistromeDB.genescore
 GRCm38.ensembl.genescore
 GRCm38.ensembl
+GRCm38.refgenes.genescore.adjusted
+GRCm38.refgenes.genescore.simple
 human.immune.CIBERSORT
 human.tf.family: HUMAN.TFFamily
 mouce.brain.ALLEN

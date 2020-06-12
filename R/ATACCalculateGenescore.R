@@ -37,26 +37,41 @@
 ATACCalculateGenescore <- function(inputMat, project = "MAESTRO.scATAC", organism = "GRCh38", 
                                    decaydistance = 10000, model = "Adjusted"){
   source_python(paste(system.file(package="MAESTRO"), "ATACCalculateGenescore.py", sep="/"))
-  
-  if(organism == "GRCh38"){
-    data(GRCh38.ensembl.genescore)
-    ensembl.genescore = GRCh38.ensembl.genescore
-  }else{
-    data(GRCm38.ensembl.genescore)
-    ensembl.genescore = GRCm38.ensembl.genescore
-  }
-  
-  genes_list = ensembl.genescore[,4]
-  ensembl.genescore = ensembl.genescore[,-4]
-  
+
   peaks_list = rownames(inputMat)
   peaks_list = gsub(pattern = "\\W", replacement = "_", x = peaks_list)
   if(class(inputMat) != "dgCMatrix"){
     inputMat = as(as.matrix(inputMat), "dgCMatrix")
   }
   
-  rp_result = calculate_RP_score(cell_peaks = inputMat, peaks_list = peaks_list, genes_info = ensembl.genescore, 
-                                 genes_list = genes_list, decay = decaydistance, model = model)
+  if(model == "Simple"){
+    if(organism == "GRCh38"){
+      data(GRCh38.refgenes.genescore.simple)
+      refgenes.genescore = GRCh38.refgenes.genescore.simple
+    }else{
+      data(GRCm38.refgenes.genescore.simple)
+      refgenes.genescore = GRCm38.refgenes.genescore.simple
+    }
+    genes_list = refgenes.genescore[,4]
+    print(genes_list[1:2])
+    refgenes.genescore = refgenes.genescore[,-4]
+    
+    rp_result = calculate_RP_score(cell_peaks = inputMat, peaks_list = peaks_list, gene_bed_df = refgenes.genescore, 
+                                   genes_list = genes_list, decay = decaydistance, model = model)
+    
+  }
+  
+  if(model == "Adjusted"){
+    if(organism == "GRCh38"){
+      data(GRCh38.refgenes.genescore.adjusted)
+      refgenes.genescore = GRCh38.refgenes.genescore.adjusted
+    }else{
+      data(GRCm38.refgenes.genescore.adjusted)
+      refgenes.genescore = GRCm38.refgenes.genescore.adjusted
+    }
+    rp_result = calculate_RP_score(cell_peaks = inputMat, peaks_list = peaks_list, gene_bed_df = refgenes.genescore, 
+                                   genes_list = NULL, decay = decaydistance, model = model)
+  }
   rp_matrix = rp_result[[1]]
   rownames(rp_matrix) = rp_result[[2]]
   colnames(rp_matrix) = colnames(inputMat)
