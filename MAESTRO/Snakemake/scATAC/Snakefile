@@ -996,9 +996,9 @@ rule scatac_analysis:
         annotateplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
         tflist = "Result/Analysis/%s.PredictedTFTop10.txt" %(config["outprefix"]),
         cellcluster = "Result/Analysis/%s_cell_cluster.txt" %(config["outprefix"]),
-        acannotateplot = "Result/Analysis/%s_CistromeTop_annotated.png" %(config["outprefix"]),
-        ms4a1trackplot = "Result/Analysis/%s_MS4A1_genetrack.png" %(config["outprefix"]),
-        cd3dtrackplot = "Result/Analysis/%s_CD3D_genetrack.png" %(config["outprefix"]),
+        # acannotateplot = "Result/Analysis/%s_CistromeTop_annotated.png" %(config["outprefix"]),
+        # ms4a1trackplot = "Result/Analysis/%s_MS4A1_genetrack.png" %(config["outprefix"]),
+        # cd3dtrackplot = "Result/Analysis/%s_CD3D_genetrack.png" %(config["outprefix"]),
     params:
         outdir = "Result/Analysis",
         genescore = "%s_gene_score.h5" %(config["outprefix"]),
@@ -1071,10 +1071,9 @@ rule scatac_report:
         annotateplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
         genescore = "Result/Analysis/%s_gene_score.h5" %(config["outprefix"]),
         tflist = "Result/Analysis/%s.PredictedTFTop10.txt" %(config["outprefix"]),
-        acannotateplot = "Result/Analysis/%s_CistromeTop_annotated.png" %(config["outprefix"]),
-        ms4a1trackplot = "Result/Analysis/%s_MS4A1_genetrack.png" %(config["outprefix"]),
-        cd3dtrackplot = "Result/Analysis/%s_CD3D_genetrack.png" %(config["outprefix"]),
-        # clusterpeak = all_input
+        # acannotateplot = "Result/Analysis/%s_CistromeTop_annotated.png" %(config["outprefix"]),
+        # ms4a1trackplot = "Result/Analysis/%s_MS4A1_genetrack.png" %(config["outprefix"]),
+        # cd3dtrackplot = "Result/Analysis/%s_CD3D_genetrack.png" %(config["outprefix"]),
     output:
         summaryreport = "Result/%s_scATAC_report.html" %(config["outprefix"]),
     params:

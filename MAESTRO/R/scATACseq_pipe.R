@@ -77,9 +77,10 @@ result$ATAC <- ATACAnnotateChromatinAccessibility(ATAC = result$ATAC,
                                                          project = prefix, 
                                                          giggle.path = gigglelib,
                                                          organism = species)
-
-p1 <- DimPlot(result$ATAC, label = TRUE, reduction = "umap", group.by = "biological_resource", repel=T, pt.size = 0.5)
-ggsave(file.path(paste0(result$ATAC@project.name, "_CistromeTop_annotated.png")), p1, width=7.5, height=4)
+if ("biological_resource" %in% result$ATAC@meta.data) {
+  p1 <- DimPlot(result$ATAC, label = TRUE, reduction = "umap", group.by = "biological_resource", repel=T, pt.size = 0.5)
+  ggsave(file.path(paste0(result$ATAC@project.name, "_CistromeTop_annotated.png")), p1, width=7.5, height=4)
+}
 
 
 if(species == "GRCh38"){
@@ -101,36 +102,28 @@ meta_info = data.frame(cell = rownames(result[["ATAC"]]@meta.data),
 group_file = paste0(prefix, "_grouping.txt")
 write.table(meta_info, group_file, sep = "\t", row.names = F, col.names = T, quote = F)
 
+GeneTrack = function(prefix, gene, fragment, group_file, txdb, genome){
+  genetrack_file = paste(prefix, gene, "genetrack.png", sep = "_")
+  tryCatch(expr = {
+    png(genetrack_file, units = "in", width = 6, height = 5, res = 300)
+    ATACPlotCoverageByGroup(gene_name = gene, downstream = 8000, 
+                        yaxis_cex = 1,
+                        fragment = fragment,
+                        grouping = group_file,
+                        tick_label_cex = 1, tick.dist = 5000,
+                        track_cols = "blue", 
+                        label_cex = 1,
+                        minor.tick.dist = 1000, label.margin = -0.6,
+                        txdb = txdb,
+                        genome = genome)
+    dev.off()
+  }, error = function(e){
+    print(e)
+  })
+}
 
-gene = "MS4A1"
-genetrack_file = paste(prefix, gene, "genetrack.png", sep = "_")
-png(genetrack_file, units = "in", width = 6, height = 5, res = 300)
-ATACPlotCoverageByGroup(gene_name = gene, downstream = 8000, 
-                    yaxis_cex = 1,
-                    fragment = fragment,
-                    grouping = group_file,
-                    tick_label_cex = 1, tick.dist = 5000,
-                    track_cols = "blue", 
-                    label_cex = 1,
-                    minor.tick.dist = 1000, label.margin = -0.6,
-                    txdb = txdb,
-                    genome = genome)
-dev.off()
-
-gene = "CD3D"
-genetrack_file = paste(prefix, gene, "genetrack.png", sep = "_")
-png(genetrack_file, units = "in", width = 6, height = 5, res = 300)
-ATACPlotCoverageByGroup(gene_name = gene, downstream = 8000, 
-                    yaxis_cex = 1,
-                    fragment = fragment,
-                    grouping = group_file,
-                    tick_label_cex = 1, tick.dist = 5000,
-                    track_cols = "blue", 
-                    label_cex = 1,
-                    minor.tick.dist = 1000, label.margin = -0.6,
-                    txdb = txdb,
-                    genome = genome)
-dev.off()
+GeneTrack(prefix, "MS4A1", fragment, group_file, txdb, genome)
+GeneTrack(prefix, "CD3D", fragment, group_file, txdb, genome)
 
 
 cluster_info = data.frame(Cell = rownames(result$ATAC@meta.data), Cluster = paste0("Cluster_", result$ATAC@meta.data$seurat_clusters), stringsAsFactors = FALSE)
