@@ -92,8 +92,11 @@ ATACAnnotateChromatinAccessibility <- function(ATAC, peaks, project = ATAC@proje
       dev.off()
 
       ATAC@meta.data[ATAC@meta.data$seurat_clusters==icluster,'biological_resource'] = as.character(targetDf[1,'biological_resource'])
+      ATAC@meta.data[ATAC@meta.data$seurat_clusters==icluster,'biological_resource'] = gsub("None", "", ATAC@meta.data[ATAC@meta.data$seurat_clusters==icluster,'biological_resource'])
+      ATAC@meta.data[ATAC@meta.data$seurat_clusters==icluster,'biological_resource'] = gsub("^;", "", ATAC@meta.data[ATAC@meta.data$seurat_clusters==icluster,'biological_resource'])
+      ATAC@meta.data[ATAC@meta.data$seurat_clusters==icluster,'biological_resource'] = gsub(";$", "", ATAC@meta.data[ATAC@meta.data$seurat_clusters==icluster,'biological_resource'])
       ATAC@meta.data[ATAC@meta.data$seurat_clusters==icluster,'CistromeCluster'] = as.character(targetDf[1,'CistromeCluster'])
-      ATAC@meta.data[ATAC@meta.data$seurat_clusters==icluster,'CistromeClusterInfo'] = as.character(targetDf[1,'CistromeClusterInfo']) 
+      ATAC@meta.data[ATAC@meta.data$seurat_clusters==icluster,'CistromeClusterInfo'] = as.character(targetDf[1,'CistromeClusterInfo'])
       }}
       else{
       message(paste("Skip identifying enriched CAs for cluster ", icluster, " because peak number is less than", min.peaks,"..."))

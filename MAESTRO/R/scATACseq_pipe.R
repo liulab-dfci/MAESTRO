@@ -77,9 +77,9 @@ result$ATAC <- ATACAnnotateChromatinAccessibility(ATAC = result$ATAC,
                                                          project = prefix, 
                                                          giggle.path = gigglelib,
                                                          organism = species)
-if ("biological_resource" %in% result$ATAC@meta.data) {
-  p1 <- DimPlot(result$ATAC, label = TRUE, reduction = "umap", group.by = "biological_resource", repel=T, pt.size = 0.5)
-  ggsave(file.path(paste0(result$ATAC@project.name, "_CistromeTop_annotated.png")), p1, width=7.5, height=4)
+if ("biological_resource" %in% colnames(result$ATAC@meta.data)) {
+  p1 <- DimPlot(result$ATAC, label = TRUE, reduction = "umap", group.by = "biological_resource", repel=T, pt.size = 0.5, label.size = 2.5)
+  ggsave(file.path(paste0(result$ATAC@project.name, "_CistromeTop_annotated.png")), p1, width=8, height=4)
 }
 
 
