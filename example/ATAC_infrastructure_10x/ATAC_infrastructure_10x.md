@@ -20,22 +20,21 @@ $ conda activate MAESTRO
 Initialize the MAESTRO scATAC-seq workflow using `MAESTRO scATAC-init` command. This will install a Snakefile and a config file in this directory.
 ```bash
 $ MAESTRO scatac-init --platform 10x-genomics --species GRCh38 \
---fastq-dir /home1/wangchenfei/Project/SingleCell/scATAC/Analysis/MAESTRO_tutorial/Data/atac_v1_pbmc_10k_fastqs --fastq-prefix atac_v1_pbmc_10k \
+--fastq-dir Data/atac_v1_pbmc_10k_fastqs --fastq-prefix atac_v1_pbmc_10k \
 --cores 8 --directory 10X_PBMC_10k_MAESTRO_V110 --outprefix 10X_PBMC_10k \
 --peak-cutoff 100 --count-cutoff 1000 --frip-cutoff 0.2 --cell-cutoff 50 \
---giggleannotation /home1/wangchenfei/annotations/MAESTRO/giggle \
---fasta /home1/wangchenfei/annotations/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa \
---whitelist /home1/wangchenfei/Tool/cellranger-atac-1.1.0/cellranger-atac-cs/1.1.0/lib/python/barcodes/737K-cratac-v1.txt
+--giggleannotation annotations/MAESTRO/giggle \
+--fasta annotations/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa \
+--whitelist Data/barcodes/737K-cratac-v1.txt --signature human.immune.CIBERSORT
 ```
 
 To get a full description of command-line options, please use the command `MAESTRO scatac-init -h`.
 ```bash
 usage: MAESTRO scatac-init [-h]
                            [--platform {10x-genomics,sci-ATAC-seq,microfluidic}]
-                           [--fastq-dir FASTQ_DIR]
-                           [--fastq-prefix FASTQ_PREFIX]
+                           --fastq-dir FASTQ_DIR [--fastq-prefix FASTQ_PREFIX]
                            [--species {GRCh38,GRCm38}] [--cores CORES]
-                           [-d DIRECTORY] [--outprefix OUTPREFIX]
+                           [--directory DIRECTORY] [--outprefix OUTPREFIX]
                            [--peak-cutoff PEAK_CUTOFF]
                            [--count-cutoff COUNT_CUTOFF]
                            [--frip-cutoff FRIP_CUTOFF]
@@ -43,8 +42,8 @@ usage: MAESTRO scatac-init [-h]
                            GIGGLEANNOTATION --fasta FASTA
                            [--whitelist WHITELIST] [--custompeak]
                            [--custompeak-file CUSTOMPEAK_FILE] [--shortpeak]
-                           [--genedistance GENEDISTANCE] [--signature]
-                           [--signature-file SIGNATURE_FILE]
+                           [--genedistance GENEDISTANCE]
+                           [--signature SIGNATURE]
 ```
 
 Here we list all the arguments and their description.
@@ -56,7 +55,7 @@ Arguments  |  Description
 `--platform` | {10x-genomics,Dropseq,Smartseq2} Platform of single cell RNA-seq. DEFAULT: 10x-genomics.
 `--fastq-dir` | Directory where fastq files are stored.
 `--fastq-prefix` | Sample name of fastq file (required for the platform of '10x-genomics' or 'sci-ATAC-seq'). When the platform is '10x-genomics', if there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the prefix is 'pbmc_1k_v2'. If the platform is 'sci-ATAC-seq', there are two ways to provide fastq files. The first is to provide pair-end sequencing results that contain two fastq files -- prefix_1.fastq and prefix_2.fastq. If in this way, the barcode for each read needs to be included in the reads ID (the first line of each read) in the format of '@ReadName:CellBarcode:OtherInformation'. For example, @rd.1:TCTCCCGCCGAGGCTGACTGCATAAGGCGAAT:SHEN-MISEQ02:1:1101:15311:1341. The other way is to provide 10x-like fastq files which should contain three fastq files -- prefix_R1.fastq, prefix_R2.fastq and prefix_R3.fastq. In this way, read1, barcode and read2 are associated with R1, R2, R3, respectively.
-`--species` | {GRCh38,GRCm38} Species (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.
+`--species` | {GRCh38,GRCm38} Specify the genome assembly (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.
 
 **Running and output arguments:**
 
@@ -80,7 +79,7 @@ Arguments  |  Description
 Arguments  |  Description
 ---------  |  -----------
 `--giggleannotation` | Path of the giggle annotation file required for regulator identification. Please download the annotation file from [here](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz) and decompress it.
-`--fasta` | Genome fasta file for minimap2. Users can just download the fasta file from [here](http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz) and decompress it. For example, `--fasta Refdata_scATAC_MAESTR O_GRCh38_1.1.0/GRCh38_genome.fa`.
+`--fasta` | Genome fasta file for minimap2. Users can just download the fasta file for [human](http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz) and [mouse](http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCm38_1.1.0.tar.gz) from CistromDB and decompress them. For example, `--fasta Refdata_scATAC_MAESTR O_GRCh38_1.1.0/GRCh38_genome.fa`.
 
 **Barcode library arguments, only for the platform of 'sci-ATAC-seq':**
 
@@ -106,8 +105,7 @@ Arguments  |  Description
 
 Arguments  |  Description
 ---------  |  -----------
-`--signature` | Whether or not to provide custom cell signatures. If set, users need to provide the file location of cell signatures through `--signature-file`. By default (not set), the pipeline will use the built-in immune cell signature adapted from CIBERSORT.
-`--signature-file` | If `--signature` is set, please provide the file location of custom cell signatures. The signature file is tab-separated without header. The first column is the cell type, and the second column is the signature gene.
+`--signature` | Cell signature file used to annotate cell types. MAESTRO provides several sets of built-in cell signatures. Users can choose from ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']. Custom cell signatures are also supported. In this situation, users need to provide the file location of cell signatures, and the signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene. DEFAULT: human.immune.CIBERSORT.
 
 
 ### Step 2. Run MAESTRO
