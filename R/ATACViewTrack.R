@@ -3,8 +3,8 @@
 #' Reads in the fragments.tsv.gz or bam file for only the given region (gene), and plot using \href{http://bioconductor.org/packages/release/bioc/html/karyoploteR.html}{karyoploteR} package
 #' 
 #' @docType methods
-#' @name ATACPlotCoverageByGroup
-#' @rdname ATACPlotCoverageByGroup
+#' @name ATACViewTrack
+#' @rdname ATACViewTrack
 #' 
 #' @param chrom chromosome
 #' @param start chromosome start
@@ -17,7 +17,7 @@
 #' @param bam path to the bam file
 #' @param cellbarcode_tag The cell barcode tag in the bam file, default is "CB" as in the 10x output
 #' @param mapqFilter the mapq quality score filter for reads from bam file, default is 30,
-#' @param grouping path to a tsv file with three columns: "cell", "cluster", "depth". "cell" is the
+#' @param grouping path to a tsv file or a dataframe object with three columns: "cell", "cluster", "depth". "cell" is the
 #' cell barcode, "cluster" is the cluster id for each cell, and "depth" is the number of reads in that cell.
 #' @param clusters_to_plot A character vector containing clusters to plot in the tracks from bottom to top. default is all clusters
 #' @param genome hg19, hg38 or mm9, mm10
@@ -37,9 +37,10 @@
 #' @param minor.tick.dist minor chromosome tick distance to mark, default 2000 bp
 #' @param tick_label_cex size of the tick label
 #'
-#' @author Ming Tang
+#' @author Ming Tang, Dongqing Sun
 #' 
 #' @return A karyoploteR object
+#' @importFrom dplyr %>%
 #' @export
 #'
 #' @examples
@@ -51,25 +52,25 @@
 #' chrom<-  "chr12"
 #' start<-  69730394
 #' end<- 69760971
-#' ATACPlotCoverageByGroup(chrom = chrom, start = start, end = end, fragment = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k_fragments.tsv.gz",
-#'                     grouping = "data/atac_viz/grouping.txt", track_cols = "red")
+#' ATACViewTrack(chrom = chrom, start = start, end = end, fragment = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k_fragments.tsv.gz",
+#'                     grouping = group_data, track_cols = "red")
 
-#' ATACPlotCoverageByGroup(gene_name = "NKG7", fragment = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k_fragments.tsv.gz",
+#' ATACViewTrack(gene_name = "NKG7", fragment = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k_fragments.tsv.gz",
 #'                     grouping = "data/atac_viz/grouping.txt", tick_label_cex = 1, tick.dist = 5000,
 #'                     minor.tick.dist = 1000)
 #'
-#' ATACPlotCoverageByGroup(gene_name = "NKG7", fragment = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k_fragments.tsv.gz",
+#' ATACViewTrack(gene_name = "NKG7", fragment = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k_fragments.tsv.gz",
 #'                     grouping = "data/atac_viz/grouping.txt", tick_label_cex = 1, tick.dist = 5000,
 #'                     minor.tick.dist = 1000, track_cols = c("red", "blue", ""cadetblue2"),
 #'                     clusters_to_plot = c("1", "3, "4"))
 #'
-#' ATACPlotCoverageByGroup(gene_name = "NKG7", bam = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k.bam",
+#' ATACViewTrack(gene_name = "NKG7", bam = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k.bam",
 #'                     cellbarcode_tag= "CB", mapqFilter = 30,
 #'                     grouping = "data/atac_viz/grouping.txt", tick_label_cex = 1, tick.dist = 5000,
 #'                     minor.tick.dist = 1000)
 #'}
 
-ATACPlotCoverageByGroup<- function(chrom = NULL, start = NULL, end =NULL, gene_name = NULL,
+ATACViewTrack <- function(chrom = NULL, start = NULL, end =NULL, gene_name = NULL,
                                upstream = 2000, downstream = 2000, fragment = NULL,
                                bam = NULL,
                                cellbarcode_tag = "CB",
@@ -87,10 +88,20 @@ ATACPlotCoverageByGroup<- function(chrom = NULL, start = NULL, end =NULL, gene_n
 ){
   
   ######## read in the clustering information ##################
-  grouping<- readr::read_tsv(grouping)
-  if(! all(c("cell", "cluster", "depth") %in% colnames(grouping))) {
-    stop('Grouping dataframe must have cell, cluster, and depth columns.')
+  if (class(grouping) == "data.frame") {
+    if(! all(c("cell", "cluster", "depth") %in% colnames(grouping))) {
+      stop('Grouping dataframe must have cell, cluster, and depth columns.')
+    }
+    grouping$cell = as.character(grouping$cell)
+    grouping$cluster = as.character(grouping$cluster)
+    grouping = as_tibble(grouping)
+  } else {
+    grouping<- readr::read_tsv(grouping)
+    if(! all(c("cell", "cluster", "depth") %in% colnames(grouping))) {
+      stop('Grouping dataframe must have cell, cluster, and depth columns.')
+    }
   }
+
   ## get number of reads per group for normalization.
   ## not furthur normalize by the cell number in each group.
   message("reading in the grouping/clustering information and calculate
