@@ -20,22 +20,21 @@ $ conda activate MAESTRO
 Initialize the MAESTRO scATAC-seq workflow using `MAESTRO scATAC-init` command. This will install a Snakefile and a config file in this directory.
 ```bash
 $ MAESTRO scatac-init --platform 10x-genomics --species GRCh38 \
---fastq-dir /home1/wangchenfei/Project/SingleCell/scATAC/Analysis/MAESTRO_tutorial/Data/atac_v1_pbmc_10k_fastqs --fastq-prefix atac_v1_pbmc_10k \
+--fastq-dir Data/atac_v1_pbmc_10k_fastqs --fastq-prefix atac_v1_pbmc_10k \
 --cores 8 --directory 10X_PBMC_10k_MAESTRO_V110 --outprefix 10X_PBMC_10k \
 --peak-cutoff 100 --count-cutoff 1000 --frip-cutoff 0.2 --cell-cutoff 50 \
---giggleannotation /home1/wangchenfei/annotations/MAESTRO/giggle \
---fasta /home1/wangchenfei/annotations/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa \
---whitelist /home1/wangchenfei/Tool/cellranger-atac-1.1.0/cellranger-atac-cs/1.1.0/lib/python/barcodes/737K-cratac-v1.txt
+--giggleannotation annotations/MAESTRO/giggle \
+--fasta annotations/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa \
+--whitelist Data/barcodes/737K-cratac-v1.txt --signature human.immune.CIBERSORT
 ```
 
 To get a full description of command-line options, please use the command `MAESTRO scatac-init -h`.
 ```bash
 usage: MAESTRO scatac-init [-h]
                            [--platform {10x-genomics,sci-ATAC-seq,microfluidic}]
-                           [--fastq-dir FASTQ_DIR]
-                           [--fastq-prefix FASTQ_PREFIX]
+                           --fastq-dir FASTQ_DIR [--fastq-prefix FASTQ_PREFIX]
                            [--species {GRCh38,GRCm38}] [--cores CORES]
-                           [-d DIRECTORY] [--outprefix OUTPREFIX]
+                           [--directory DIRECTORY] [--outprefix OUTPREFIX]
                            [--peak-cutoff PEAK_CUTOFF]
                            [--count-cutoff COUNT_CUTOFF]
                            [--frip-cutoff FRIP_CUTOFF]
@@ -43,8 +42,9 @@ usage: MAESTRO scatac-init [-h]
                            GIGGLEANNOTATION --fasta FASTA
                            [--whitelist WHITELIST] [--custompeak]
                            [--custompeak-file CUSTOMPEAK_FILE] [--shortpeak]
-                           [--genedistance GENEDISTANCE] [--signature]
-                           [--signature-file SIGNATURE_FILE]
+                           [--clusterpeak] [--rpmodel {Simple,Adjusted}]
+                           [--genedistance GENEDISTANCE]
+                           [--signature SIGNATURE]
 ```
 
 Here we list all the arguments and their description.
@@ -95,11 +95,13 @@ Arguments  |  Description
 `--custompeak` | Whether or not to provide custom peaks. If set, users need to provide the file location of peak file through `--custompeak-file` and then MAESTRO will merge the custom peak file and the peak file called from all fragments using MACS2. By default (not set), the pipeline will use the peaks called using MACS2.
 `--custompeak-file` | If `--custompeak` is set, please provide the file location of custom peak file. The peak file is BED formatted with tab-separated. The first column is the chromosome, the second is chromStart, and the third is chromEnd.
 `--shortpeak` | Whether or not to call peaks from short fragments (shorter than 150bp). If set, MAESTRO will merge the peaks called from all fragments and those called from short fragments, and then use the merged peak file for further analysis. If not (by default), the pipeline will only use peaks called from all fragments.
+`--clusterpeak` | Whether or not to call peaks by cluster. If set, MAESTRO will split the bam file according to the clustering result, and then call peaks for each cluster. By default (not set), MAESTRO will skip this step.
 
 **Gene score arguments:**
 
 Arguments  |  Description
 ---------  |  -----------
+`--rpmodel` | {Simple,Adjusted} The RP model to use to calaculate gene score. For each gene, simple model summarizes the impact of all regulatory elements within the up/dowm-stream of TSS. On the basis of simple model, adjusted model gives the regulatory elements within the exon region a higher weight, and also excludes the regulatory elements overlapped with another gene (the promoter and exon of a nearby gene). See the MAESTRO paper for more details. DEFAULT: Adjusted.
 `--genedistance` | Gene score decay distance, could be optional from 1kb (promoter-based regulation) to 10kb (enhancer-based regulation). DEFAULT: 10000.
 
 **Cell signature arguments:**
@@ -248,7 +250,7 @@ MAESTRO adopts a [wilcox-test](https://www.tandfonline.com/doi/abs/10.1080/01621
 <img src="./10X_PBMC_10k_cluster.png" width="525" height="420" /> 
 
 ### Step 2. Annotate cell types 
-We next try to annotate different clusters based on their marker genes. For scATAC, MAESTRO performs the cell type annotation using the gene regulatory potential to represent gene expression. So, we first need to use `ATACAttachGenescore()` to pass the gene regulatory potential matrix to the clustering result, and then perform differential gene analysis for each cluster on the gene RPscore matrix and identify the marker genes. We use public immune signatures like [CIBERSORT](https://www.nature.com/articles/nmeth.3337) to annotate the clusters. Users can also use their own signatures to annotate the clusters. Cell type information is stored in `Object@meta.data$assign.ident`.
+We next try to annotate different clusters based on their marker genes. For scATAC, MAESTRO provides two methods to annotate cell types. One is based on inferred gene activity. MAESTRO uses the gene regulatory potential (RP model, see the paper for more details) to quantify gene expression. So, we first need to use `ATACAttachGenescore()` to pass the gene regulatory potential matrix to the clustering result, and then perform differential gene analysis for each cluster on the gene RPscore matrix and identify the marker genes. We use public immune signatures like [CIBERSORT](https://www.nature.com/articles/nmeth.3337) to annotate the clusters. Users can also use their own signatures to annotate the clusters. Cell type information is stored in `Object@meta.data$assign.ident`.
 
 ```R
 > pbmc.ATAC.res$ATAC <- ATACAttachGenescore(ATAC = pbmc.ATAC.res$ATAC, RPmatrix = pbmc.gene)
@@ -284,6 +286,20 @@ AAACGAAGTCAGGCTC NaiveCD4Tcells
 
 <img src="./10X_PBMC_10k_annotated.png" width="630" height="420" /> 
 
+Another method `ATACAnnotateChromatinAccessibility` to annotate scATAC-seq data is based on chromatin accessibility directly. MAESTRO incorporates public bulk chromatin accessibility data (DNase-seq and ATAC-seq) from Cistrome database. All the datesets are clustered into 80 clusters and the cluster identities are determined by the cell-type or tissue type information of datasets within each cluster. For scATAC-seq clusters, MAESTRO utilizes giggle to evaluate the enrichment of bulk chromatin accessibility peaks on cluster-specific peaks from scATAC-seq data. Then the Cistrome cluster identity from the most enriched bulk chromatin accessibility data is used to represent the cell-type annotation for the scATAC-seq cluster. Giggle has been installed in the MAESTRO conda environment. If users only installed the stand-alone R pcakage, please install [giggle](https://github.com/ryanlayer/giggle) first. Users need to download the giggle index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz), and provide the file location of the index to `ATACAnnotateChromatinAccessibility`. Cell type annotation based on bulk chromatin accessibility data is stored in `Object@meta.data$biological_resource`.
+
+```R
+result$ATAC <- ATACAnnotateChromatinAccessibility(ATAC = pbmc.ATAC.res$ATAC, 
+                                                  peaks = pbmc.ATAC.res$peaks, 
+                                                  project = "10X_PBMC_10k", 
+                                                  giggle.path = "~/annotations/MAESTRO/giggle.all",
+                                                  organism = "GRCh38")
+p <- DimPlot(result$ATAC, label = TRUE, reduction = "umap", group.by = "biological_resource", repel=T, pt.size = 0.5, label.size = 2.5)
+ggsave(file.path(paste0(result$ATAC@project.name, "_CistromeTop_annotated.png")), p, width=7.5, height=4)
+```
+
+<img src="./10X_PBMC_10k_CistromeTop_annotated.png" width="787.5" height="420" /> 
+
 All the reduction results are stored in `Object@reductions`. For example, users can use `Object@reductions$umap@cell.embeddings` to extract the cell embedding result of UMAP for custom plotting. Or users can directly use `DimPlot()` from Seurat and other functions like `theme()` from ggplot2 to generate a prettier plot.
 
 ```R
@@ -299,14 +315,15 @@ All the reduction results are stored in `Object@reductions`. For example, users 
 <img src="./10X_PBMC_10k_annotated_nolegend.png" width="420" height="420" />
 
 ### Step 3. Identify driver transcription regulators  
-To identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilizes giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster-specific peaks. Giggle has been installed in the MAESTRO conda environment. If users only installed the stand-alone R pcakage, please install [giggle](https://github.com/ryanlayer/giggle) first. Users need to download the giggle index from [Cistrome website](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz), and provide the file location of the index to `ATACAnnotateTranscriptionFactor`.   
+To identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilizes giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster-specific peaks.
+
 After identifying enriched transcription regulators, MAESTRO also provides the potential target gene list of the top 10 transcription factors for each cluster, which are based on the ChIP-seq profiles from [CistromeDB](http://cistrome.org/db/#/). The target genes will be generated in the `project.GIGGLE` directory.
 
 ```R
 > pbmc.ATAC.tfs <- ATACAnnotateTranscriptionFactor(ATAC = pbmc.ATAC.res$ATAC, 
                                                    peaks = pbmc.ATAC.res$peaks, 
                                                    project = "10X_PBMC_10k", 
-                                                   giggle.path = "/home1/wangchenfei/annotations/MAESTRO/giggle")
+                                                   giggle.path = "~/annotations/MAESTRO/giggle.all")
 > pbmc.ATAC.tfs[["0"]]
  [1] "RARA | ESRRA | NR4A1 | NR4A2 | NR4A3 | RXRA | NR1I3 | THRA | RXRB | RARG | VDR | NR2F6 | NR1H3 | PPARD | PPARA | PPARG | THRB | ESR2 | NR2C1 | NR2F1 | ESR1 | NR5A2 | NR1I2 | RXRG | NR2F2 | HNF4A | HNF4G | ESRRB | NR1H4 | RARB | NR5A1"
  [2] "IRF1 | IRF3 | SPI1 | STAT3 | BCL11A | BCL6 | STAT2 | IRF2 | STAT1 | IRF8 | STAT5A | SPIB | STAT5B | PRDM1 | IRF4 | STAT4"
@@ -328,7 +345,7 @@ Besides indentifying TFs for all the clusters, we also support the differential 
                                                             peaks = de.peakset,
                                                             cluster = c(0,2,10,12),
                                                             project = "10X_PBMC_10k_Monocyte", 
-                                                            giggle.path = "/home1/wangchenfei/annotations/MAESTRO/giggle")
+                                                            giggle.path = "~/annotations/MAESTRO/giggle.all")
 ```
 
 ### Step 4. Visualize driver transcription factors for each cluster
@@ -385,6 +402,33 @@ To further filter the regulators, users may want to visualize the expression lev
 <img src="./10X_PBMC_10k_Monocyte_umapplot.png" width="900" height="350" /> 
 
 Based on the regulatory potential of TFs, we can see that SPI1 is highly expressed in the Monocytes from PBMC, while RARA is generally distributed among all cell-types. 
+
+MAESTRO can also provide a genome browser function `ATACViewTrack` for visualizing the scATAC-seq signal for different clusters. The fragment file `fragments_corrected_count.tsv.gz` and its index `fragments_corrected_count.tsv.gz.tbi` are needed for this function. If users start from the output of 10x Cell Ranger pipeline, `fragments.tsv.gz` and `fragments.tsv.gz.tbi` are the substitutes.
+
+```R
+library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+library(org.Hs.eg.db)
+txdb = TxDb.Hsapiens.UCSC.hg38.knownGene
+genome = "hg38"
+fragment = "../minimap2/fragments_corrected_count.tsv.gz"
+
+meta_info = data.frame(cell = rownames(pbmc.ATAC.res[["ATAC"]]@meta.data),
+                       cluster = pbmc.ATAC.res[["ATAC"]]@meta.data$seurat_clusters,
+                       depth = pbmc.ATAC.res[["ATAC"]]@meta.data$nCount_ATAC)
+
+ATACViewTrack(gene_name = "SPI1", downstream = 8000, 
+              yaxis_cex = 1,
+              fragment = fragment,
+              grouping = meta_info,
+              tick_label_cex = 1, tick.dist = 5000,
+              track_cols = "blue", 
+              label_cex = 1,
+              minor.tick.dist = 1000, label.margin = -0.6,
+              txdb = txdb,
+              genome = genome)
+```
+
+<img src="./10X_PBMC_10k_SPI1_genetrack.png" width="504" height="420" /> 
 
 ### Step 5. Save the project for future analysis
 Finally, users can save the R project, including the raw data, normalized data, clustering result, and meta information for future analysis.
