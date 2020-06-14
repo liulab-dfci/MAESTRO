@@ -41,6 +41,7 @@
 #' 
 #' @return A karyoploteR object
 #' @importFrom dplyr %>%
+#' @importFrom tibble as_tibble
 #' @export
 #'
 #' @examples
