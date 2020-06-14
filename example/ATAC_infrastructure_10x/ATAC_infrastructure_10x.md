@@ -449,7 +449,7 @@ The differential peaks, predicted TFs, and target genes and all the figures have
  [6] "10X_PBMC_10k_Monocyte_umapplot.png"
  [7] "10X_PBMC_10k_Monocyte_vlnplot.png"
  [8] "10X_PBMC_10k_cluster.png"
- [0] "10X_PBMC_10k_DiffPeaks.tsv"
+ [9] "10X_PBMC_10k_DiffPeaks.tsv"
 [10] "10X_PBMC_10k_giggle.txt"
 [11] "10X_PBMC_10k_Monocyte_giggle.txt"
 [12] "10X_PBMC_10k_Monocyte.GIGGLE"
