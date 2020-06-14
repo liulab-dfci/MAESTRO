@@ -312,7 +312,7 @@ All the reduction results are stored in `Object@reductions`. For example, users 
 > ggsave(file.path(paste0(pbmc.ATAC.res$ATAC@project.name, "_annotated_nolegend.png")), p, width=4.5, height=4.5)
 ```
 
-<img src="./10X_PBMC_10k_annotated_nolegend.png" width="420" height="420" />
+<img src="./10X_PBMC_10k_annotated_nolegend.png" width="429" height="420" />
 
 ### Step 3. Identify driver transcription regulators  
 To identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilizes giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster-specific peaks.
