@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-06-12 03:53:45
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-06-12 03:55:26
+# @Last Modified time: 2020-06-15 21:58:56
 
 
 import sys,os
@@ -55,7 +55,7 @@ def main():
     
     setup(
         name = "MAESTRO",
-        version = "1.1.1",
+        version = "1.2.0",
         package_dir = {'MAESTRO':'MAESTRO'},
         packages = ['MAESTRO'],
         package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'Snakemake/integrate/*', 'R/*', 'annotations/*', 'html/*', '']},

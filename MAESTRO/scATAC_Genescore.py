@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:48:03
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-06-13 03:12:28
+# @Last Modified time: 2020-06-15 21:54:58
 
 
 import os, sys
@@ -55,8 +55,8 @@ def genescore_parser(subparsers):
     group_input.add_argument("--model", dest = "model", default = "Adjusted", 
         choices = ["Simple", "Adjusted"], type = str, 
         help = "The RP model to use to calaculate gene score. "
-        "For each gene, simple model summarizes the impact of all regulatory elements within the up/dowm-stream of TSS. "
-        "On the basis of simple model, adjusted model includes the regulatory elements within the exon region, "
+        "For each gene, simple model sums over the impact of all regulatory elements within the up/dowm-stream of TSS. "
+        "On the basis of simple model, adjusted model gives the regulatory elements within the exon region a higher weight, "
         "and also excludes the regulatory elements overlapped with another gene (the promoter and exon of a nearby gene). "
         "See the MAESTRO paper for more details. DEFAULT: Adjusted.")
 

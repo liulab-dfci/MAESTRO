@@ -101,7 +101,7 @@ Arguments  |  Description
 
 Arguments  |  Description
 ---------  |  -----------
-`--rpmodel` | {Simple,Adjusted} The RP model to use to calaculate gene score. For each gene, simple model summarizes the impact of all regulatory elements within the up/dowm-stream of TSS. On the basis of simple model, adjusted model gives the regulatory elements within the exon region a higher weight, and also excludes the regulatory elements overlapped with another gene (the promoter and exon of a nearby gene). See the MAESTRO paper for more details. DEFAULT: Adjusted.
+`--rpmodel` | {Simple,Adjusted} The RP model to use to calaculate gene score. For each gene, simple model sums over the impact of all regulatory elements within the up/dowm-stream of TSS. On the basis of simple model, adjusted model gives the regulatory elements within the exon region a higher weight, and also excludes the regulatory elements overlapped with another gene (the promoter and exon of a nearby gene). See the MAESTRO paper for more details. DEFAULT: Adjusted.
 `--genedistance` | Gene score decay distance, could be optional from 1kb (promoter-based regulation) to 10kb (enhancer-based regulation). DEFAULT: 10000.
 
 **Cell signature arguments:**
