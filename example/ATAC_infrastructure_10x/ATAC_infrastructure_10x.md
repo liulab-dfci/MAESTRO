@@ -23,7 +23,7 @@ $ MAESTRO scatac-init --platform 10x-genomics --species GRCh38 \
 --fastq-dir Data/atac_v1_pbmc_10k_fastqs --fastq-prefix atac_v1_pbmc_10k \
 --cores 8 --directory 10X_PBMC_10k_MAESTRO_V110 --outprefix 10X_PBMC_10k \
 --peak-cutoff 100 --count-cutoff 1000 --frip-cutoff 0.2 --cell-cutoff 50 \
---giggleannotation annotations/MAESTRO/giggle \
+--giggleannotation annotations/MAESTRO/giggle.all \
 --fasta annotations/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa \
 --whitelist Data/barcodes/737K-cratac-v1.txt --signature human.immune.CIBERSORT
 ```
@@ -79,7 +79,7 @@ Arguments  |  Description
 
 Arguments  |  Description
 ---------  |  -----------
-`--giggleannotation` | Path of the giggle annotation file required for regulator identification. Please download the annotation file from [here](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz) and decompress it.
+`--giggleannotation` | Path of the giggle annotation file required for regulator identification. Please download the annotation file from [here](http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz) and decompress it.
 `--fasta` | Genome fasta file for minimap2. Users can just download the fasta file from [here](http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz) and decompress it. For example, `--fasta Refdata_scATAC_MAESTR O_GRCh38_1.1.0/GRCh38_genome.fa`.
 
 **Barcode library arguments, only for the platform of 'sci-ATAC-seq':**
