@@ -79,7 +79,7 @@ result$ATAC <- ATACAnnotateChromatinAccessibility(ATAC = result$ATAC,
                                                          organism = species)
 if ("biological_resource" %in% colnames(result$ATAC@meta.data)) {
   p1 <- DimPlot(result$ATAC, label = TRUE, reduction = "umap", group.by = "biological_resource", repel=T, pt.size = 0.5, label.size = 2.5)
-  ggsave(file.path(paste0(result$ATAC@project.name, "_CistromeTop_annotated.png")), p1, width=8, height=4)
+  ggsave(file.path(paste0(result$ATAC@project.name, "_CistromeTop_annotated.png")), p1, width=7.5, height=4)
 }
 
 
@@ -99,14 +99,12 @@ if(species == "GRCm38"){
 meta_info = data.frame(cell = rownames(result[["ATAC"]]@meta.data),
                        cluster = result[["ATAC"]]@meta.data$seurat_clusters,
                        depth = result[["ATAC"]]@meta.data$nCount_ATAC)
-group_file = paste0(prefix, "_grouping.txt")
-write.table(meta_info, group_file, sep = "\t", row.names = F, col.names = T, quote = F)
 
 GeneTrack = function(prefix, gene, fragment, group_file, txdb, genome){
   genetrack_file = paste(prefix, gene, "genetrack.png", sep = "_")
   tryCatch(expr = {
     png(genetrack_file, units = "in", width = 6, height = 5, res = 300)
-    ATACPlotCoverageByGroup(gene_name = gene, downstream = 8000, 
+    ATACViewTrack(gene_name = gene, downstream = 8000, 
                         yaxis_cex = 1,
                         fragment = fragment,
                         grouping = group_file,
@@ -122,8 +120,8 @@ GeneTrack = function(prefix, gene, fragment, group_file, txdb, genome){
   })
 }
 
-GeneTrack(prefix, "MS4A1", fragment, group_file, txdb, genome)
-GeneTrack(prefix, "CD3D", fragment, group_file, txdb, genome)
+GeneTrack(prefix, "MS4A1", fragment, meta_info, txdb, genome)
+GeneTrack(prefix, "CD3D", fragment, meta_info, txdb, genome)
 
 
 cluster_info = data.frame(Cell = rownames(result$ATAC@meta.data), Cluster = paste0("Cluster_", result$ATAC@meta.data$seurat_clusters), stringsAsFactors = FALSE)
