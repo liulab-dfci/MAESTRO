@@ -7,7 +7,8 @@
 #' @rdname ATACRunSeurat
 #'
 #' @param inputMat Input unnormalized count matrix, with peaks as rows and cells as columns. Rownames should be like "chromosome_peakstart_peakend",
-#' for example "chr10_100020591_100020841".
+#' for example "chr10_100020591_100020841". 
+#' @param type Type of the input matrix. Default is "matrix". Set to "object" if the input is Seurat object.
 #' @param project Output project name. Default is "MAESTRO.scATAC.Seurat".
 #' @param orign.ident Orginal identity for the input cells. If supplied, should keep the same order with the column name of the peak x cell matrix.
 #' @param method Methods for dimension reduction, available options are LSI and PCA. Default is "LSI".
@@ -47,14 +48,16 @@
 #' @importFrom Gmisc fastDoCall
 #' @export
 
-ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ident = NULL, 
+ATACRunSeurat <- function(inputMat, type = "matrix", project = "MAESTRO.scATAC.Seurat", orign.ident = NULL, 
                           min.c = 10, min.p = 100, method = "LSI", dims.use = 1:30, 
                           cluster.res = 0.6, only.pos = FALSE, peaks.test.use = "presto", 
                           peaks.cutoff = 1E-5, peaks.pct = 0.1, peaks.logfc = 0.2, 
                           runlsi.args = list(), runpca.args = list(), 
                           findneighbors.args = list(), findclusters.args = list(),...)
 {
-  SeuratObj <- CreateSeuratObject(inputMat, project = project, min.cells = min.c, min.features = min.p, assay = "ATAC")
+  if(type == "matrix"){SeuratObj <- CreateSeuratObject(inputMat, project = project, min.cells = min.c, min.features = min.p, assay = "ATAC")}
+  if(type == "object"){SeuratObj <- inputMat}
+
   if(method == "LSI"){    
   #============ LSI ============
   message("LSI analysis ...")
@@ -62,7 +65,6 @@ ATACRunSeurat <- function(inputMat, project = "MAESTRO.scATAC.Seurat", orign.ide
   # SeuratObj <- RunLSI(object = SeuratObj, scale.max = NULL) 
   SeuratObj <- fastDoCall("RunLSI", c(object = SeuratObj, runlsi.args)) 
   
-    
   #============ UMAP ============
   message("UMAP analysis ...")
   #SeuratObj <- fastDoCall("RunUMAP", c(object = SeuratObj, dims = dims.use, reduction = "lsi", runumap.args))

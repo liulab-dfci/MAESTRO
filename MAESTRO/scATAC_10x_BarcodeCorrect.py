@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-01-16 19:44:48
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-02-28 01:02:30
+# @Last Modified time: 2020-06-07 15:11:46
 
 
 import argparse
@@ -37,7 +37,10 @@ def GenerateMimatchDict(whitelist):
             barcode = line.strip().split("\t")[0]
             barcode_mut_list = GenerateMimatch(barcode)
             for seq in barcode_mut_list:
-                barcode_dict[seq].add(barcode)
+                if len(barcode_dict[seq]) == 0:
+                    barcode_dict[seq].add(barcode)
+                else:
+                    continue
     for bc in barcode_list:
         barcode_dict[bc] = {bc}
     return(barcode_dict, barcode_list)
@@ -83,7 +86,7 @@ def main():
             name = reads.name
             if barcode in barcode_lib_dict:
                 for bc_value in list(barcode_lib_dict[barcode]):
-                    outstr = name + "\t" + barcode + "\t" + bc_value + "\n"
+                    outstr = barcode + "\t" + "CB" + "\t" + bc_value + "\n"
                     barcode_correct_file_out.write(outstr)
             else:
                 continue

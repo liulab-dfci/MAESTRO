@@ -1,6 +1,6 @@
 package:
   name: maestro
-  version: "1.1.0"
+  version: "1.2.0"
 source:
   git_url: https://github.com/chenfeiwang/MAESTRO.git
 # source:
@@ -17,8 +17,7 @@ requirements:
     - h5py =2.10.0
     - pytables =3.6.1
     - setuptools
-    - rpy2 =3.1.0
-    - snakemake =5.10.0
+    - snakemake =5.14
     - rseqc =3.0.0
     - star =2.7.3a
     - minimap2 =2.17
@@ -28,7 +27,7 @@ requirements:
     - picard =2.22.0
     - macs2 =2.2.6
     - umap-learn
-    - r-base=3.6.2
+    - r-base=3.6.3
     - r-BiocManager
     - r-devtools
     - r-hdf5r
@@ -56,6 +55,8 @@ requirements:
     - bioconductor-genefilter
     - bioconductor-GOSemSim
     - bioconductor-DESeq2
+    - bioconductor-TxDb.Hsapiens.UCSC.hg38.knownGene
+    - bioconductor-TxDb.Mmusculus.UCSC.mm10.knownGene
   run:
     - xorg-libxrender
     - python =3.7
@@ -64,7 +65,6 @@ requirements:
     - h5py =2.10.0
     - pytables =3.6.1
     - setuptools
-    - rpy2 =3.1.0
     - snakemake =5.10.0
     - rseqc =3.0.0
     - star =2.7.3a
@@ -103,8 +103,10 @@ requirements:
     - bioconductor-genefilter
     - bioconductor-GOSemSim
     - bioconductor-DESeq2
+    - bioconductor-TxDb.Hsapiens.UCSC.hg38.knownGene
+    - bioconductor-TxDb.Mmusculus.UCSC.mm10.knownGene
 
 about:
-  home: https://github.com/chenfeiwang/MAESTRO
+  home: https://github.com/liulab-dfci/MAESTRO
   license: GPL-3.0
   summary: MAESTRO(Model-based AnalysEs of Single-cell Transcriptome and RegulOme) is a comprehensive single-cell RNA-seq and ATAC-seq analysis suit built using snakemake. 

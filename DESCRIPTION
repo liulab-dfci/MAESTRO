@@ -1,18 +1,19 @@
 Package: MAESTRO
 Type: Package
 Title: Model-based Analyses of Single-cell Transcriptome and Regulome
-Version: 1.1.0
-Date: 2020-3-10
+Version: 1.2.0
+Date: 2020-6-11
 Author: Chenfei Wang, Dongqing Sun
 Maintainer: Dongqing Sun<dongqingsun96@gmail.com>
 Description: MAESTRO is an intergrative analysis pipeline to support downstream analysis of single-cell RNA-seq and single-cell ATAC-seq dataset. MAESTRO provides funtion for quality control, normalization, clustering, differential gene and peak analysis, marker gene based annotation, transcription factor identification using Cistome toolkit, and intergrative analysis for scRNA-seq and scATACseq. 
 URL: https://github.com/LiuLab-dfci/MAESTRO
 Depends: R (>= 3.6.1)
 Imports: Seurat (== 3.1.2), ggplot2 (>= 3.0.0), ggrepel, cowplot, Matrix (>= 
-         1.2.14), dplyr, png, RColorBrewer, scales, grid, pheatmap, MAGeCKFlute, DESeq2, Gmisc
+         1.2.14), dplyr, png, RColorBrewer, scales, grid, pheatmap, MAGeCKFlute, DESeq2, Gmisc,
+         karyoploteR
 Suggests: knitr, pagoda2, RCA, MAST, scABC, devtools, uwot, cisTopic, chromVAR, motifmatchr,
           SummarizedExperiment, BSgenome.Hsapiens.UCSC.hg38, BSgenome.Mmusculus.UCSC.mm10,
-          chromVARmotifs
+          chromVARmotifs, TxDb.Hsapiens.UCSC.hg38.knownGene, TxDb.Mmusculus.UCSC.mm10.knownGene
 Remotes: git::https://github.com/immunogenomics/presto.git
 VignetteBuilder: knitr
 License: GPL (>=3)

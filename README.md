@@ -7,7 +7,7 @@
 
 **MAESTRO**(**M**odel-based **A**nalys**E**s of **S**ingle-cell **T**ranscriptome and **R**egul**O**me) is a comprehensive single-cell RNA-seq and ATAC-seq analysis suit built using [snakemake](https://bitbucket.org/snakemake/snakemake/wiki/Home). MAESTRO combines several dozen tools and packages to create an integrative pipeline, which enables scRNA-seq and scATAC-seq analysis from raw sequencing data (fastq files) all the way through alignment, quality control, cell filtering, normalization, unsupervised clustering, differential expression and peak calling, celltype annotation and transcription regulation analysis. Currently, MAESTRO support [Smart-seq2](https://www.ncbi.nlm.nih.gov/pubmed/24385147), [10x-genomics](https://www.10xgenomics.com/solutions/single-cell/), [Drop-seq](https://www.cell.com/abstract/S0092-8674(15)00549-8), [SPLiT-seq](https://science.sciencemag.org/content/360/6385/176) for scRNA-seq protocols; [microfudics-based](https://www.ncbi.nlm.nih.gov/pubmed/26083756), [10x-genomics](https://www.10xgenomics.com/solutions/single-cell-atac/) and [sci-ATAC-seq](https://science.sciencemag.org/content/348/6237/910) for scATAC-seq protocols.       
         
-## ChangeLog
+## Change Log
 
 ### v1.0.0
 * Release MAESTRO.
@@ -18,13 +18,19 @@
 ### v1.1.0
 * Change the default alignment method of MAESTRO from cellranger to [starsolo](https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md) and [minimap2](https://github.com/lh3/minimap2) for accelerating the mapping time.
 * Improve the memory efficiency of scATAC gene score calculation.
-* Incorporate the installation of giggle into MAESTRO, add web API for LISA function, all the core MAESTRO function can be installed through the conda environment now!
+* Incorporate the installation of giggle into MAESTRO, and add web API for LISA function. All the core MAESTRO function can be installed through the conda environment now!
 * Provide more documents for the QC parameters and add flexibility for other parameters in the workflow.
+### v1.2.0
+* Modify the regulatory potential model by removing the interfering peaks from adjacent genes and adjusting the weight of exon peaks. The "adjusted RP model" is set as the default gene activity scoring model with original "simple RP model" as a option.
+* Modify the integration function of MAESTRO. The new function can output more intermediate figures and log files for diagnosing the possible failure in integrating rare populations.
+* Add the function for annotating cell-types for scATAC-seq clusters based on public bulk chromatin accessibility data from Cistrome database.
+* Provide the function of generating genome browser tracks at cluster level for scATAC-seq dataset visualization. 
+* Support peak calling at the cluster level now!
 
 ## System requirements
 * Linux/Unix
 * Python (>= 3.0) for MAESTRO snakemake workflow
-* R (>= 3.5.1) for MAESTRO R package
+* R (>= 3.6.1) for MAESTRO R package
 
 ## Installation
 
@@ -44,7 +50,7 @@ $ conda config --add channels bioconda
 $ conda config --add channels conda-forge
 # To make the installation faster, we recommend using mamba
 $ conda install mamba -c conda-forge
-$ mamba create -n MAESTRO maestro -c liulab-dfci
+$ mamba create -n MAESTRO maestro=1.2.0 -c liulab-dfci
 # Activate the environment 
 $ conda activate MAESTRO
 ```
@@ -64,7 +70,7 @@ $ R
 
 * MAESTRO utilizes LISA to evaluate the enrichment of transcription factors based on the marker genes from scRNA-seq clusters. By default, users can choose the "web" option, which will use the API function in MAESTRO to perform LISA analysis. However, if users want to use the local version of LISA, they need to install [LISA](https://github.com/qinqian/lisa) locally, build the annotation files according to the LISA document, and provide the path of LISA to MAESTRO when using the RNAAnnotateTranscriptionFactor function.
 
-* MAESTRO utilizes giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster-specific peaks. By default [giggle](https://github.com/ryanlayer/giggle) is installed in MAESTRO environment. The giggle index for Cistrome database can be download [here](http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz). Users need to download the file and provide the location of the giggle annotation to MAESTRO when using the ATACAnnotateTranscriptionFactor function.
+* MAESTRO utilizes giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster-specific peaks. By default [giggle](https://github.com/ryanlayer/giggle) is installed in MAESTRO environment. The giggle index for Cistrome database can be downloaded [here](http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz). Users need to download the file and provide the location of the giggle annotation to MAESTRO when using the ATACAnnotateTranscriptionFactor function.
 
 ## Usage
 ```

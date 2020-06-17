@@ -1,15 +1,23 @@
+GRCh37.ensembl
+GRCh37.GRCh38
 GRCh38.CistromeDB.genescore
 GRCh38.ensembl.genescore
 GRCh38.ensembl
+GRCh38.refgenes.genescore.adjusted
+GRCh38.refgenes.genescore.simple
 GRCm38.CistromeDB.genescore
 GRCm38.ensembl.genescore
 GRCm38.ensembl
+GRCm38.refgenes.genescore.adjusted
+GRCm38.refgenes.genescore.simple
 human.immune.CIBERSORT
 human.tf.family: HUMAN.TFFamily
 mouce.brain.ALLEN
 mouse.all.droplet.TabulaMuris
 mouse.all.facs.TabulaMuris
 mouse.tf.family: MOUSE.TFFamily
+NCBIM37.ensembl
+NCBIM37.GRCm38
 pbmc.ATAC
 pbmc.RNA
 pbmc.RP

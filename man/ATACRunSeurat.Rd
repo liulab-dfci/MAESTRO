@@ -7,6 +7,7 @@
 \usage{
 ATACRunSeurat(
   inputMat,
+  type = "matrix",
   project = "MAESTRO.scATAC.Seurat",
   orign.ident = NULL,
   min.c = 10,
@@ -29,6 +30,8 @@ ATACRunSeurat(
 \arguments{
 \item{inputMat}{Input unnormalized count matrix, with peaks as rows and cells as columns. Rownames should be like "chromosome_peakstart_peakend",
 for example "chr10_100020591_100020841".}
+
+\item{type}{Type of the input matrix. Default is "matrix". Set to "object" if the input is Seurat object.}
 
 \item{project}{Output project name. Default is "MAESTRO.scATAC.Seurat".}
 

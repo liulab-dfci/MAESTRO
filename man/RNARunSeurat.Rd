@@ -7,12 +7,12 @@
 \usage{
 RNARunSeurat(
   inputMat,
+  type = "matrix",
   project = "MAESTRO.scRNA.Seurat",
   orig.ident = NULL,
   min.c = 10,
   min.g = 200,
   mito = FALSE,
-  mito.cutoff = 0.05,
   variable.genes = 2000,
   organism = "GRCh38",
   dims.use = 1:15,
@@ -31,6 +31,8 @@ RNARunSeurat(
 \arguments{
 \item{inputMat}{Input unnormalized matrix, with genes as rows and cells as columns. Could be count matrix or TPM, FPKM matrix.}
 
+\item{type}{Type of the input matrix. Default is "matrix". Set to "object" if the input is Seurat object.}
+
 \item{project}{Output project name. Default is "MAESTRO.scRNA.Seurat".}
 
 \item{orig.ident}{Orginal identity for the input cells. If supplied, should keep the same order with the column name of the gene x cell matrix.}
@@ -42,10 +44,8 @@ less than \code{min.c} cells. Default is 10. See \code{\link{CreateSeuratObject}
 genes are deteced in one cell. Default is 200. See \code{\link{CreateSeuratObject}} for details.}
 
 \item{mito}{Whether or not to check and normalized accroding to the fraction of mitochondria reads and ercc spike-in reads.
+If \code{mito} is True, those cells with mitochondria reads or ercc spike-in reads higher than 0.05 will be filtered.
 Default is FALSE.}
-
-\item{mito.cutoff}{If \code{mito} is True, filter those cells with mitochondria reads or ercc spike-in reads higher than \code{mito.cutoff}.
-Default is 0.05.}
 
 \item{variable.genes}{Number of variable genes considered in the clustering analysis. Default is 2000. See \code{\link{FindVariableFeatures}} for details.}
 
