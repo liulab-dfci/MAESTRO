@@ -67,8 +67,10 @@ install:
   - conda config --add channels bioconda
   - conda config --add channels conda-forge
   - conda install mamba -c conda-forge
+  # install the python codes
   - mamba create -n MAESTRO maestro -c liulab-dfci
   - conda activate MAESTRO
+  # install the R scripts
   - R -e 'devtools::install_github("liulab-dfci/MAESTRO")'
 
 scripts:
