@@ -1,4 +1,4 @@
-MAESTROFindAllMarkersInSubset <- function(seuratObject, min.pct = 0.1, logfc.threshold = 0.25, p.val.adj.cutoff = 1e-5, test.use = "presto", only.pos = FALSE, subset.orig.ident = "condition1", subset.clusters = NULL) {
+MAESTROFindAllMarkersInSubset <- function(seuratObject, subset.clusters, min.pct = 0.1, logfc.threshold = 0.25, p.val.adj.cutoff = 1e-5, test.use = "presto", only.pos = FALSE ) {
     subset.object <- SubsetData(object=seuratObject, subset.name = "orig.ident", accept.value = subset.orig.ident, ident.use = subset.clusters)
     res <- data.frame()
     for ( c1 in subset.clusters ) {
@@ -16,7 +16,7 @@ MAESTROFindAllMarkersInSubset <- function(seuratObject, min.pct = 0.1, logfc.thr
 
 # example of usage
 
-#res.0w <- MAESTROFindAllMarkersInSubset(rna.aftercc$RNA, min.pct = genes.pct, logfc.threshold = genes.logfc, p.val.adj.cutoff = genes.cutoff, test.use = genes.test.use, only.pos = only.pos, subset.orig.ident = "0W", subset.clusters = cluster.0w)
+#res.0w <- MAESTROFindAllMarkersInSubset(rna.aftercc$RNA, min.pct = genes.pct, logfc.threshold = genes.logfc, p.val.adj.cutoff = genes.cutoff, test.use = genes.test.use, only.pos = only.pos, subset.clusters = cluster.0w)
 #top10.0w <- res.0w$genes %>% group_by(cluster) %>% top_n(n = 10, wt = avg_logFC)
 
 
