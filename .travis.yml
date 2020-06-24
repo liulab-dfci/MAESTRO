@@ -69,6 +69,7 @@ install:
   - conda install mamba -c conda-forge
   - mamba create -n MAESTRO maestro -c liulab-dfci
   - conda activate MAESTRO
+  - R -e 'devtools::install_github("liulab-dfci/MAESTRO")'
 
 scripts:
   - R CMD build . --no-manual
