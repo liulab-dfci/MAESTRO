@@ -1,0 +1,78 @@
+# .travis.yml using container-based infrastructure
+
+language: python
+python:
+  # We don't actually use the Travis Python, but this keeps it organized.
+  - "3.7"
+matrix:
+  include:
+    - python: 3.7
+      dist: xenial
+      sudo: true
+
+os:
+  - linux
+
+# use containers
+sudo: false
+
+# only run for pushes to master branch
+branches:
+  only:
+   - master
+
+# cache local R libraries directory:
+cache:
+  directories:
+    - ~/miniconda
+
+before_install:
+  # Set conda path info
+  - MINICONDA_PATH=$HOME/miniconda;
+  - MINICONDA_SUB_PATH=$MINICONDA_PATH/bin;
+  # Obtain miniconda installer
+  - if [[ -f $HOME/download/miniconda.sh ]]; then
+        echo "miniconda.sh for posix already available from cache";
+      else
+        mkdir -p $HOME/download;
+        if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+          echo "downloading miniconda.sh for linux";
+          wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $HOME/download/miniconda.sh;
+        elif  [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+          echo "downloading miniconda.sh for osx";
+          wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O $HOME/download/miniconda.sh;
+        fi;
+    fi;
+
+# install the package and dependencies:
+# - install devtools if not already installed
+# - update all installed packages
+# - install package with dependencies
+install:
+  # Install miniconda
+  - if [[ -d $MINICONDA_SUB_PATH ]]; then
+        echo "miniconda for posix already available from cache";
+      else
+        echo "installing miniconda for posix";
+        bash $HOME/download/miniconda.sh -b -u -p $MINICONDA_PATH;
+    fi;
+  - export PATH="$MINICONDA_PATH:$MINICONDA_SUB_PATH:$PATH";
+  - source "$MINICONDA_PATH/etc/profile.d/conda.sh"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  # Useful for debugging any issues with conda
+  - conda info -a
+  - conda config --add channels defaults
+  - conda config --add channels bioconda
+  - conda config --add channels conda-forge
+  - conda install mamba -c conda-forge
+  - mamba create -n MAESTRO maestro -c liulab-dfci
+  - conda activate MAESTRO
+
+scripts:
+  - R CMD build . --no-manual
+  - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
+
+
+

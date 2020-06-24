@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 21:14:12
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-03-12 23:35:02
+# @Last Modified time: 2020-04-25 04:12:10
 
 import os
 import argparse as ap
@@ -32,6 +32,10 @@ def scrnaqc_parser(subparsers):
         help = "Location of count matrix file. "
         "If the format is 'h5' or 'plain', users need to specify the name of the count matrix file. "
         "If the format is 'mtx', the 'matrix' should be the name of .mtx formatted matrix file, such as 'matrix.mtx'.")
+    group_input.add_argument("--separator", dest = "separator", default = "tab", 
+        choices = ["tab", "space", "comma"],
+        help = "The separating character (only for the format of 'plain'). "
+        "Values on each line of the plain matrix file will be separated by the character. DEFAULT: tab.")
     group_input.add_argument("--feature", dest = "feature", default = "features.tsv", 
         help = "Location of feature file (required for the format of 'mtx'). "
         "Features correspond to row indices of count matrix. DEFAULT: features.tsv.")
@@ -81,7 +85,9 @@ def Filter(rawmatrix, feature, barcode, count_cutoff, gene_cutoff, cell_cutoff, 
     passed_gene = np.transpose(passed_gene)
 
     # gene = [True]*rawmatrix.shape[0]
-    passed_cell_matrix = rawmatrix[np.ix_(passed_gene.tolist()[0], passed_cell.tolist()[0])]
+    # passed_cell_matrix = rawmatrix[np.ix_(passed_gene.tolist()[0], passed_cell.tolist()[0])]
+    passed_cell_matrix = rawmatrix[np.where(passed_gene.flatten())[0], :]
+    passed_cell_matrix = passed_cell_matrix[:, np.where(passed_cell.flatten())[0]]
 
     passed_barcodes = np.array(barcode)[passed_cell.tolist()[0]].tolist()
     passed_genes = np.array(feature)[passed_gene.tolist()[0]].tolist()
@@ -93,7 +99,7 @@ def Filter(rawmatrix, feature, barcode, count_cutoff, gene_cutoff, cell_cutoff, 
     return(statfile)
 
 
-def scrna_qc(directory, outprefix, fileformat, matrix, feature, gene_column, barcode, count_cutoff, gene_cutoff, cell_cutoff, species):
+def scrna_qc(directory, outprefix, fileformat, matrix, separator, feature, gene_column, barcode, count_cutoff, gene_cutoff, cell_cutoff, species):
 
     try:
         os.makedirs(directory)
@@ -103,7 +109,7 @@ def scrna_qc(directory, outprefix, fileformat, matrix, feature, gene_column, bar
         pass
 
     if fileformat == "plain":
-        matrix_dict = read_count(matrix)
+        matrix_dict = read_count(matrix, separator)
         rawmatrix = matrix_dict["matrix"]
         rawmatrix = sp_sparse.csc_matrix(rawmatrix, dtype=numpy.float32)
         features = matrix_dict["features"]

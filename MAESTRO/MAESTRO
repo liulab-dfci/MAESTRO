@@ -18,6 +18,7 @@ from MAESTRO.scATAC_Genescore import genescore_parser, genescore
 from MAESTRO.scATAC_10x_PeakCount import peakcount_parser, peakcount
 from MAESTRO.scRNA_QC import scrnaqc_parser, scrna_qc
 from MAESTRO.scATAC_QC import scatacqc_parser, scatac_qc
+from MAESTRO.scRNA_AnalysisPipeline import scrna_analysis_parser, scrna_analysis
 
 def main():
     """
@@ -33,16 +34,18 @@ def main():
     integrate_parser(subparsers)
 
     mtxtoh5_parser(subparsers)
+    mtxtocount_parser(subparsers)
     counttoh5_parser(subparsers)
+    h5tocount_parser(subparsers)
     mergeh5_parser(subparsers)
-
-    scrnaqc_parser(subparsers)
-    scatacqc_parser(subparsers)
 
     peakcount_parser(subparsers)
     genescore_parser(subparsers)
 
+    scrnaqc_parser(subparsers)
+    scatacqc_parser(subparsers)
     
+    scrna_analysis_parser(subparsers)
 
     logging.basicConfig(format="%(message)s", level=logging.INFO, stream=sys.stderr)
 
@@ -63,24 +66,32 @@ def main():
     elif args.subcommand == "mtx-to-h5":
         mtx_2_h5(directory = args.directory, outprefix = args.outprefix, matrix_file = args.matrix, feature_file = args.feature, barcode_file = args.barcode, gene_column = args.gene_column, genome = args.species, datatype = args.datatype)
 
+    elif args.subcommand == "mtx-to-count":
+        mtx_2_count(directory = args.directory, outprefix = args.outprefix, matrix_file = args.matrix, feature_file = args.feature, barcode_file = args.barcode, gene_column = args.gene_column, genome = args.species, datatype = args.datatype)
+
     elif args.subcommand == "count-to-h5":
-        count_2_h5(directory = args.directory, outprefix = args.outprefix, count_file = args.count, genome = args.species, datatype = args.datatype)
+        count_2_h5(directory = args.directory, outprefix = args.outprefix, count_file = args.count, separator = args.separator, genome = args.species, datatype = args.datatype)
+
+    elif args.subcommand == "h5-to-count":
+        h5_2_count(directory = args.directory, outprefix = args.outprefix, h5_file = args.h5, genome = args.species, datatype = args.datatype)
 
     elif args.subcommand == "merge-h5":
-        merge_10X_h5(directory = args.directory, outprefix = args.outprefix, h5list = args.h5_list, genome = args.species, datatype = args.datatype)
-    
-    elif args.subcommand == "scrna-qc":
-        scrna_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, matrix = args.matrix, feature = args.feature, gene_column = args.gene_column, barcode = args.barcode, count_cutoff = args.count_cutoff, gene_cutoff = args.gene_cutoff, cell_cutoff = args.cell_cutoff, species = args.species)
-   
-    elif args.subcommand == "scatac-qc":
-        scatac_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, peakcount = args.peakcount, feature = args.feature, barcode = args.barcode, single_stat = args.single_stat, peak_cutoff = args.peak_cutoff, count_cutoff = args.count_cutoff, frip_cutoff = args.frip_cutoff, cell_cutoff = args.cell_cutoff, species = args.species)
+        merge_10X_h5(directory = args.directory, outprefix = args.outprefix, h5list = args.h5_list, prefixlist = args.cellprefix_list, genome = args.species, datatype = args.datatype)
 
     elif args.subcommand == "scatac-peakcount":
         peakcount(directory = args.directory, outprefix = args.outprefix, peak = args.peak, fragment = args.fragment, barcode = args.barcode, count_cutoff = args.count_cutoff, cores = args.cores, species = args.species)
 
     elif args.subcommand == "scatac-genescore":
-        genescore(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, peakcount = args.peakcount, feature = args.feature, barcode = args.barcode, genedistance = args.genedistance, species = args.species)
+        genescore(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, peakcount = args.peakcount, feature = args.feature, barcode = args.barcode, genedistance = args.genedistance, species = args.species, model = args.model)
 
+    elif args.subcommand == "scrna-qc":
+        scrna_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, matrix = args.matrix, separator = args.separator, feature = args.feature, gene_column = args.gene_column, barcode = args.barcode, count_cutoff = args.count_cutoff, gene_cutoff = args.gene_cutoff, cell_cutoff = args.cell_cutoff, species = args.species)
+    
+    elif args.subcommand == "scatac-qc":
+        scatac_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, peakcount = args.peakcount, feature = args.feature, barcode = args.barcode, single_stat = args.single_stat, peak_cutoff = args.peak_cutoff, count_cutoff = args.count_cutoff, frip_cutoff = args.frip_cutoff, cell_cutoff = args.cell_cutoff, species = args.species)
+
+    elif args.subcommand == "scrna-analysis":
+        scrna_analysis(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, matrix = args.matrix, separator = args.separator, feature = args.feature, gene_column = args.gene_column, gene_idtype = args.gene_idtype, barcode = args.barcode, meta_file = args.meta_file, meta_sep = args.meta_sep, meta_cell = args.meta_cell, count_cutoff = args.count_cutoff, gene_cutoff = args.gene_cutoff, cell_cutoff = args.cell_cutoff, assembly = args.assembly)
     else:
         parser.print_help()
         exit(1)
@@ -89,5 +100,11 @@ def main():
 
 
 if __name__ == "__main__":
+    """
+    python /Users/dongqing/Documents/Project/SingleCell/scATAC/Code/Snakemake/scATAC/config_parser.py init-scatac -d config_test --fastq-dir /home1/wangchenfei/Project/SingleCell/scATAC/Analysis/10X_PBMC_1k/Data/atac_pbmc_1k_v1_fastqs --fastq-prefix atac_pbmc_1k_v1 --outprefix 10X_PBMC_1k_MAESTRO_V102
+    python /Users/dongqing/Documents/Project/SingleCell/scATAC/Code/Snakemake/scATAC/config_parser.py init-scrna -d config_test_rna --fastq-dir /mnt/Storage/home/sundongqing/Project/Single_cell/Analysis/10xPBMC_1k/pbmc_1k_v2_fastqs --fastq-prefix pbmc_1k_v2 --outprefix pbmc_1k_v2
+    python /Users/dongqing/Documents/Project/SingleCell/scATAC/Code/Snakemake/scATAC/config_parser.py init-integrate -d config_test --rna-object --atac-object --outprefix
+    """
+
     main()
 

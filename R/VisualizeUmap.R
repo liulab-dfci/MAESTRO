@@ -38,15 +38,28 @@
 VisualizeUmap <- function(genes, type, SeuratObj, ncol = NULL, width = 6, height = 4, name = "MultipleUmapPlot"){
   if(type == "ATAC"){
     genes = intersect(rownames(SeuratObj$ACTIVITY),unique(genes))
+    if(length(genes) == 0){
+      stop("The input genes are not detected!")
+    }
     gene_expr = GetAssayData(object = SeuratObj$ACTIVITY)[genes, ]
   }
   if(type == "RNA"){
     genes = intersect(rownames(SeuratObj),unique(genes))
+    if(length(genes) == 0){
+      stop("The input genes are not detected!")
+    }
     gene_expr = GetAssayData(object = SeuratObj)[genes, ]
+  }
+  if (length(genes) == 1){
+    gene_expr_mat = matrix(gene_expr, nrow = 1)
+    colnames(gene_expr_mat) = names(gene_expr)
+    rownames(gene_expr_mat) = genes
+  } else {
+    gene_expr_mat = gene_expr
   }
   umap_df = SeuratObj@reductions$umap@cell.embeddings
   umapplots = lapply(genes, function(x){
-    umap_expr = merge(umap_df, as.data.frame(gene_expr[x, ]), by.x = 0, by.y = 0)
+    umap_expr = merge(umap_df, as.data.frame(gene_expr_mat[x, ]), by.x = 0, by.y = 0)
     row.names(umap_expr) = umap_expr[,1]
     umap_expr = umap_expr[,-1]
     colnames(umap_expr)[3] = "Gene"

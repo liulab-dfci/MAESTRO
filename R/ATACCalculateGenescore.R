@@ -11,6 +11,13 @@
 #' this will result in significant memory and speed savings.
 #' @param project Output project name for the gene sore result.Default is "MAESTRO.scATAC".
 #' @param organism Organism for the dataset. Only support "GRCh38" and "GRCm38". Default is "GRCh38".
+#' @param decaydistance Gene score decay distance, could be optional from 1kb (promoter-based regulation) 
+#' to 10kb (enhancer-based regulation). Default is 10000.
+#' @param model The RP model to use to calaculate gene score, Simple or Adjusted. 
+#' For each gene, simple model summarizes the impact of all regulatory elements within the up/dowm-stream of TSS. 
+#' On the basis of simple model, adjusted model includes the regulatory elements within the exon region, 
+#' and also excludes the regulatory elements overlapped with another gene (the promoter and exon of a nearby gene). 
+#' See the MAESTRO paper for more details. Default is Adjusted.
 #'
 #' @author Dongqing Sun, Changxin Wan, Chenfei Wang
 #'
@@ -27,28 +34,43 @@
 #' @export 
 #' 
 
-ATACCalculateGenescore <- function(inputMat, project = "MAESTRO.scATAC", organism = "GRCh38"){
+ATACCalculateGenescore <- function(inputMat, project = "MAESTRO.scATAC", organism = "GRCh38", 
+                                   decaydistance = 10000, model = "Adjusted"){
   source_python(paste(system.file(package="MAESTRO"), "ATACCalculateGenescore.py", sep="/"))
-  
-  if(organism == "GRCh38"){
-    data(GRCh38.ensembl.genescore)
-    ensembl.genescore = GRCh38.ensembl.genescore
-  }else{
-    data(GRCm38.ensembl.genescore)
-    ensembl.genescore = GRCm38.ensembl.genescore
-  }
-  
-  genes_list = ensembl.genescore[,4]
-  ensembl.genescore = ensembl.genescore[,-4]
-  
+
   peaks_list = rownames(inputMat)
   peaks_list = gsub(pattern = "\\W", replacement = "_", x = peaks_list)
   if(class(inputMat) != "dgCMatrix"){
     inputMat = as(as.matrix(inputMat), "dgCMatrix")
   }
   
-  rp_result = calculate_RP_score(cell_peaks = inputMat, peaks_list = peaks_list, genes_info = ensembl.genescore, 
-                                 genes_list = genes_list, decay = 10000)
+  if(model == "Simple"){
+    if(organism == "GRCh38"){
+      data(GRCh38.refgenes.genescore.simple)
+      refgenes.genescore = GRCh38.refgenes.genescore.simple
+    }else{
+      data(GRCm38.refgenes.genescore.simple)
+      refgenes.genescore = GRCm38.refgenes.genescore.simple
+    }
+    genes_list = refgenes.genescore[,4]
+    refgenes.genescore = refgenes.genescore[,-4]
+    
+    rp_result = calculate_RP_score(cell_peaks = inputMat, peaks_list = peaks_list, gene_bed_df = refgenes.genescore, 
+                                   genes_list = genes_list, decay = decaydistance, model = model)
+    
+  }
+  
+  if(model == "Adjusted"){
+    if(organism == "GRCh38"){
+      data(GRCh38.refgenes.genescore.adjusted)
+      refgenes.genescore = GRCh38.refgenes.genescore.adjusted
+    }else{
+      data(GRCm38.refgenes.genescore.adjusted)
+      refgenes.genescore = GRCm38.refgenes.genescore.adjusted
+    }
+    rp_result = calculate_RP_score(cell_peaks = inputMat, peaks_list = peaks_list, gene_bed_df = refgenes.genescore, 
+                                   genes_list = NULL, decay = decaydistance, model = model)
+  }
   rp_matrix = rp_result[[1]]
   rownames(rp_matrix) = rp_result[[2]]
   colnames(rp_matrix) = colnames(inputMat)
