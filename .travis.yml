@@ -16,11 +16,6 @@ os:
 # use containers
 sudo: false
 
-# only run for pushes to master branch
-branches:
-  only:
-   - master
-
 # cache local R libraries directory:
 cache:
   directories:
