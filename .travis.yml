@@ -74,7 +74,9 @@ install:
   - conda activate MAESTRO
   
   # install the MAESTRO/R codes
-  - R -e 'devtools::install_github("liulab-dfci/MAESTRO", quiet=TRUE)'
+  # This process will last longer time
+  # So I set the max time to 30mins
+  - travis_wait 30 R -e 'devtools::install_github("liulab-dfci/MAESTRO", quiet=TRUE)'
 
   # the following tests to install giggle/rabbit/lisa are currently disabled.
   
