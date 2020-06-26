@@ -48,22 +48,38 @@ install:
   - source "$MINICONDA_PATH/etc/profile.d/conda.sh"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
+
+  # need conda-build to test building conda package
+  - conda install conda-build
   - conda update -q conda
+
   # Useful for debugging any issues with conda
   - conda info -a
   - conda config --add channels defaults
   - conda config --add channels bioconda
   - conda config --add channels conda-forge
   - conda install mamba -c conda-forge
-  # install the python codes
-  - mamba create -n MAESTRO maestro -c liulab-dfci
+
+ # build conda package
+  - mkdir bld-dir
+  - conda build -q conda/MAESTRO --python=$TRAVIS_PYTHON_VERSION --output-folder bld-dir
+  
+  # Now add this folder as a highest priority channel
+  - conda config --add channels "file://`pwd`/bld-dir"
+
+  # install the python part from newly built package
+  - mamba create -n MAESTRO maestro
+
+  # Activate this environment
   - conda activate MAESTRO
+  
   # install the R scripts
   - R -e 'devtools::install_github("liulab-dfci/MAESTRO")'
 
 script:
   - R CMD build . --no-manual
   - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
-
+  # We also need some testing here!
+  
 
 

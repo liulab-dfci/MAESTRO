@@ -75,7 +75,7 @@ requirements:
     - picard =2.22.0
     - macs2 =2.2.6
     - umap-learn
-    - r-base=3.6.4
+    - r-base=3.6.3
     - r-BiocManager
     - r-devtools
     - r-hdf5r
