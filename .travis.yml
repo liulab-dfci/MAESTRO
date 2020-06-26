@@ -2,11 +2,11 @@
 
 dist: xenial
 os: linux
+language: python
 
 jobs:
   include:
     - name: standard_py3.7
-      language: python
       python: 3.7
 
 # cache local R libraries directory:
@@ -50,7 +50,7 @@ install:
   - conda config --set always_yes yes --set changeps1 no
 
   # need conda-build to test building conda package
-  - conda install conda-build
+  - conda install -q conda-build
   - conda update -q conda
 
   # Useful for debugging any issues with conda
@@ -58,7 +58,7 @@ install:
   - conda config --add channels defaults
   - conda config --add channels bioconda
   - conda config --add channels conda-forge
-  - conda install mamba -c conda-forge
+  - conda install -q mamba -c conda-forge
 
  # build conda package
   - mkdir bld-dir
@@ -68,18 +68,50 @@ install:
   - conda config --add channels "file://`pwd`/bld-dir"
 
   # install the python part from newly built package
-  - mamba create -n MAESTRO maestro
+  - mamba create -q -n MAESTRO maestro
 
   # Activate this environment
   - conda activate MAESTRO
   
-  # install the R scripts
-  - R -e 'devtools::install_github("liulab-dfci/MAESTRO")'
+  # install the MAESTRO/R codes
+  - R -e 'devtools::install_github("liulab-dfci/MAESTRO", quiet=TRUE)'
+
+  # the following tests to install giggle/rabbit/lisa are currently disabled.
+  
+  # install giggle
+  #- mamba install autoconf
+  #- cd $TRAVIS_BUILD_DIR/refpkg/giggle/
+  #- autoheader
+  #- autoconf
+  #- ./configure --disable-bz2 --disable-lzma --enable-libcurl
+  #- cd $TRAVIS_BUILD_DIR/refpkg/giggle/
+  #- make
+  #- cp bin/giggle $CONDA_PREFIX/bin
+  #- giggle
+
+  # install Rabbit
+
+  # install LISA
+
 
 script:
   - R CMD build . --no-manual
   - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
   # We also need some testing here!
-  
 
+# the following codes will upload when all the above is successful and
+# the test is triggered within "liulab-dfci/MAESTRO" repo and
+# the test is triggered with a tag value, e.g. 1.1.0 or 1.2.0 and
+# the CONDA_UPLOAD_TOKEN should match the one retrieved under anaconda account
+
+#after_success:
+#  # Install the command line API for CONDA uploads
+#  - mamba install anaconda-client
+#  - |
+#    # Only upload builds from tags
+#    if [[ $TRAVIS_PULL_REQUEST == false && $TRAVIS_REPO_SLUG == "liulab-dfci/MAESTRO"
+#          && $TRAVIS_BRANCH == $TRAVIS_TAG  && $TRAVIS_TAG != '' ]]; then
+#      export ANACONDA_API_TOKEN=$CONDA_UPLOAD_TOKEN
+#      anaconda upload bld-dir/**/PACKAGENAME-*.tar.bz2
+#    fi
 
