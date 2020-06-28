@@ -76,7 +76,7 @@ install:
   # install the MAESTRO/R codes
   # This process will last longer time
   # So I set the max time to 30mins
-  - travis_wait 30 R -e 'devtools::install_github("liulab-dfci/MAESTRO", quiet=TRUE)'
+  - travis_wait 30 R -e 'devtools::install_github("liulab-dfci/MAESTRO", upgrade_dependencies=FALSE)'
 
   # the following tests to install giggle/rabbit/lisa are currently disabled.
   
