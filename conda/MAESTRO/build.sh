@@ -3,11 +3,6 @@
 # install MAESTRO/python
 $PYTHON setup.py install
 
-# install Dr.seq
-cd refpkg/Dr.seq.1.2.0
-$PYTHON setup.py install
-cd ../..
-
 # install giggle
 cd refpkg/giggle
 make
