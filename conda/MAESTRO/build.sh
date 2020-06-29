@@ -11,7 +11,7 @@ cd ../..
 
 # install rabit
 cd refpkg/Rabit
-./configure --prefix=$PREFIX
+./configure --prefix=$PREFIX CFLAGS=-I${PREFIX}/include
 make
 make install
 cd ../..
