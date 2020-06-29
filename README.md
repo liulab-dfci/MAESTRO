@@ -34,7 +34,11 @@
 
 ## Installation
 
-**Installing the full solution of MAESTRO workflow** 
+### Install MAESTRO
+
+There are two ways to install MAESTRO -- to install the full workflow through [Anaconda cloud](https://www.anaconda.com/); or to install only the R codes for exploring the processed data.
+
+#### Installing the full solution of MAESTRO workflow through conda
 
 MAESTRO uses the [Miniconda3](http://conda.pydata.org/miniconda.html) package management system to harmonize all of the software packages. Users can install the full solution of MAESTRO using the conda environment.
 
@@ -55,7 +59,7 @@ $ mamba create -n MAESTRO maestro=1.2.0 -c liulab-dfci
 $ conda activate MAESTRO
 ```
 
-**Installing the MAESTRO R package** 
+#### Installing the MAESTRO R package from source code
 
 If users already have the processed datasets, like cell by gene or cell by peak matrix generate by Cell Ranger. Users can install the MAESTRO R package alone to perform the analysis from processed datasets.
 ``` bash
@@ -64,13 +68,15 @@ $ R
 > install_github("liulab-dfci/MAESTRO")
 ```
 
-**Required annotations for MAESTRO workflow**
+### Required annotations for MAESTRO workflow
 
-* MAESTRO depends on [starsolo](https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md) and [minimap2](https://github.com/lh3/minimap2) for mapping scRNA-seq and scATAC-seq dataset. Users need to generate the reference files for the alignment software and specify the path of the annotations to MAESTRO through command line options.
+The full MAESTRO workflow requires extra annotation files and tools:
 
-* MAESTRO utilizes LISA to evaluate the enrichment of transcription factors based on the marker genes from scRNA-seq clusters. By default, users can choose the "web" option, which will use the API function in MAESTRO to perform LISA analysis. However, if users want to use the local version of LISA, they need to install [LISA](https://github.com/qinqian/lisa) locally, build the annotation files according to the LISA document, and provide the path of LISA to MAESTRO when using the RNAAnnotateTranscriptionFactor function.
+* MAESTRO depends on [starsolo](https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md) and [minimap2](https://github.com/lh3/minimap2) for mapping scRNA-seq and scATAC-seq dataset. Users need to generate **the reference files** for the alignment software and specify the path of the annotations to MAESTRO through command line options.
 
-* MAESTRO utilizes giggle to identify enrichment of transcription factor peaks in scATAC-seq cluster-specific peaks. By default [giggle](https://github.com/ryanlayer/giggle) is installed in MAESTRO environment. The giggle index for Cistrome database can be downloaded [here](http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz). Users need to download the file and provide the location of the giggle annotation to MAESTRO when using the ATACAnnotateTranscriptionFactor function.
+* MAESTRO utilizes **LISA** to evaluate the enrichment of transcription factors based on the marker genes from scRNA-seq clusters. By default, users can choose the "web" option, which will use the API function in MAESTRO to perform LISA analysis. However, if users want to use the local version of LISA, they need to install [LISA](https://github.com/qinqian/lisa) locally, build the annotation files according to the LISA document, and provide the path of LISA to MAESTRO when using the RNAAnnotateTranscriptionFactor function.
+
+* MAESTRO utilizes **giggle** to identify enrichment of transcription factor peaks in scATAC-seq cluster-specific peaks. By default [giggle](https://github.com/ryanlayer/giggle) is installed in MAESTRO environment. The giggle index for Cistrome database can be downloaded [here](http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz). Users need to download the file and provide the location of the giggle annotation to MAESTRO when using the ATACAnnotateTranscriptionFactor function.
 
 ## Usage
 ```
