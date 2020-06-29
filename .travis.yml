@@ -1,5 +1,3 @@
-# .travis.yml using container-based infrastructure
-
 dist: xenial
 os: linux
 language: python
@@ -33,9 +31,6 @@ before_install:
     fi;
 
 # install the package and dependencies:
-# - install devtools if not already installed
-# - update all installed packages
-# - install package with dependencies
 install:
   # Install miniconda
   - if [[ -d $MINICONDA_SUB_PATH ]]; then
@@ -49,19 +44,21 @@ install:
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
 
-  # need conda-build to test building conda package
+  # need conda-build/verify to test building conda package
   - conda install -q conda-build
   - conda install -q conda-verify
   - conda update -q conda
 
   # Useful for debugging any issues with conda
   - conda info -a
+
+  # configure the channels
   - conda config --add channels defaults
   - conda config --add channels bioconda
   - conda config --add channels conda-forge
   - conda install -q mamba -c conda-forge
 
- # build conda package
+  # build conda package
   - mkdir bld-dir
   - conda build -q conda/MAESTRO --python=$TRAVIS_PYTHON_VERSION --output-folder bld-dir
   

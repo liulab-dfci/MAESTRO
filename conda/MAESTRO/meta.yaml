@@ -2,7 +2,7 @@ package:
   name: maestro
   version: "1.2.0"
 #source:
-#  git_url: https://github.com/chenfeiwang/MAESTRO.git
+#  git_url: https://github.com/liulab-dfci/MAESTRO.git
 source:
   path: ../../
 # build:
