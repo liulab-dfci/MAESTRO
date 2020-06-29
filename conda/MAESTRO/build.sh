@@ -17,8 +17,8 @@ make install
 cd ../..
 
 # install sinto
-pip install --upgrade pip
-pip install sinto
+$PYTHON -m pip install --upgrade pip
+$PYTHON -m pip install sinto
 
 # install MAESTRO/R
 $R CMD INSTALL

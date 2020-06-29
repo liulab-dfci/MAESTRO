@@ -10,6 +10,7 @@ requirements:
   build:
     - xorg-libxrender
     - python =3.7
+    - pip
     - numpy =1.17.3
     - scipy =1.4.1
     - h5py =2.10.0
