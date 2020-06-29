@@ -4,7 +4,6 @@
 $PYTHON setup.py install
 
 # install Dr.seq
-
 cd refpkg/Dr.seq.1.2.0
 $PYTHON setup.py install
 cd ../..
@@ -12,6 +11,7 @@ cd ../..
 # install giggle
 cd refpkg/giggle
 make
+cp bin/giggle $PREFIX/bin/
 cd ../..
 
 # install rabit
