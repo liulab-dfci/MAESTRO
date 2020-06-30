@@ -38,23 +38,27 @@ requirements:
     - r-numDeriv
     - r-cluster
     - r-Seurat =3.1.2
-    - r-ggplot2 >=3.0.0 # -----
-    - r-ggrepel         # Although the following will be installed through the dependencies of other tools
-    - r-cowplot         # They have been explicitly defined in DESCRIPTION. 
+    # Although the following will be installed through the dependencies of other tools
+    # They have been explicitly defined in DESCRIPTION. 
+    - r-ggplot2 >=3.0.0 
+    - r-ggrepel         
+    - r-cowplot         
     - r-matrix
     - r-dplyr
     - r-png
     - r-rcolorbrewer
     - r-scales
-    - r-grid
     - r-pheatmap
-    - r-mageckflute
+    - r-gridbase
+    - bioconductor-mageckflute
     - bioconductor-karyoploter
-    - r-gmisc           # -----
+    # -----
     - bioconductor-multtest
     - bioconductor-biomaRt
     - bioconductor-MAST
     - bioconductor-AnnotationDbi
+    - bioconductor-org.hs.eg.db
+    - bioconductor-org.mm.eg.db
     - bioconductor-BiocGenerics
     - bioconductor-GO.db
     - bioconductor-pcaMethods
@@ -99,23 +103,27 @@ requirements:
     - r-numDeriv
     - r-cluster
     - r-Seurat =3.1.2
-    - r-ggplot2 >=3.0.0 # -----
-    - r-ggrepel         # Although the following will be installed through the dependencies of other tools
-    - r-cowplot         # They have been explicitly defined in DESCRIPTION. 
+    # Although the following will be installed through the dependencies of other tools
+    # They have been explicitly defined in DESCRIPTION. 
+    - r-ggplot2 >=3.0.0 
+    - r-ggrepel         
+    - r-cowplot         
     - r-matrix
     - r-dplyr
     - r-png
     - r-rcolorbrewer
     - r-scales
-    - r-grid
     - r-pheatmap
-    - r-mageckflute
+    - r-gridbase
+    - bioconductor-mageckflute
     - bioconductor-karyoploter
-    - r-gmisc           # -----    
+    # -----
     - bioconductor-multtest
     - bioconductor-biomaRt
     - bioconductor-MAST
     - bioconductor-AnnotationDbi
+    - bioconductor-org.hs.eg.db
+    - bioconductor-org.mm.eg.db
     - bioconductor-BiocGenerics
     - bioconductor-GO.db
     - bioconductor-pcaMethods

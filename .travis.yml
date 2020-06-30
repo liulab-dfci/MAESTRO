@@ -81,7 +81,8 @@ script:
   # - sinto -h
   - MAESTRO
   - R -e "library(MAESTRO);library(Seurat)"
-  # We also need some testing here!
+  - R -e "library(org.Hs.eg.db);library(org.Mm.eg.db)"
+  # We also need more testing here!
 
 # the following codes will upload when all the above is successful and
 # the test is triggered within "liulab-dfci/MAESTRO" repo and
