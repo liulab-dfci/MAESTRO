@@ -78,7 +78,7 @@ script:
   # test some command line tools
   - giggle search
   - Rabit -help
-  - sinto -h
+  # - sinto -h
   - MAESTRO
   - R -e "library(MAESTRO);library(Seurat)"
   # We also need some testing here!
