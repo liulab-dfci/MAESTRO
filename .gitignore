@@ -7,3 +7,9 @@ dist/*
 *~
 .DS_Store
 .Rproj.user
+*.a
+*.o
+*.tar.gz
+*.tar.bz2
+*.dylib
+*.tmp

@@ -2,9 +2,7 @@ package:
   name: maestro
   version: "1.2.0"
 source:
-  git_url: https://github.com/chenfeiwang/MAESTRO.git
-# source:
-#   path: ../../
+  path: ../../
 # build:
 #   entry_points:
 #     - strap = strap:main
@@ -12,6 +10,7 @@ requirements:
   build:
     - xorg-libxrender
     - python =3.7
+    - pip
     - numpy =1.17.3
     - scipy =1.4.1
     - h5py =2.10.0
@@ -27,6 +26,7 @@ requirements:
     - picard =2.22.0
     - macs2 =2.2.6
     - umap-learn
+    - pysam # this is needed by sinto
     - r-base=3.6.3
     - r-BiocManager
     - r-devtools
@@ -39,10 +39,27 @@ requirements:
     - r-numDeriv
     - r-cluster
     - r-Seurat =3.1.2
+    # Although the following will be installed through the dependencies of other tools
+    # They have been explicitly defined in DESCRIPTION. 
+    - r-ggplot2 >=3.0.0 
+    - r-ggrepel         
+    - r-cowplot         
+    - r-matrix
+    - r-dplyr
+    - r-png
+    - r-rcolorbrewer
+    - r-scales
+    - r-pheatmap
+    - r-gridbase
+    - bioconductor-mageckflute
+    - bioconductor-karyoploter
+    # -----
     - bioconductor-multtest
     - bioconductor-biomaRt
     - bioconductor-MAST
     - bioconductor-AnnotationDbi
+    - bioconductor-org.hs.eg.db
+    - bioconductor-org.mm.eg.db
     - bioconductor-BiocGenerics
     - bioconductor-GO.db
     - bioconductor-pcaMethods
@@ -65,7 +82,7 @@ requirements:
     - h5py =2.10.0
     - pytables =3.6.1
     - setuptools
-    - snakemake =5.10.0
+    - snakemake =5.14
     - rseqc =3.0.0
     - star =2.7.3a
     - minimap2 =2.17
@@ -74,8 +91,9 @@ requirements:
     - rsem =1.3.2
     - picard =2.22.0
     - macs2 =2.2.6
-    - umap-learn
-    - r-base=3.6.2
+    - umap-learn 
+    - pysam # this is needed by sinto   
+    - r-base=3.6.3
     - r-BiocManager
     - r-devtools
     - r-hdf5r
@@ -87,10 +105,27 @@ requirements:
     - r-numDeriv
     - r-cluster
     - r-Seurat =3.1.2
+    # Although the following will be installed through the dependencies of other tools
+    # They have been explicitly defined in DESCRIPTION. 
+    - r-ggplot2 >=3.0.0 
+    - r-ggrepel         
+    - r-cowplot         
+    - r-matrix
+    - r-dplyr
+    - r-png
+    - r-rcolorbrewer
+    - r-scales
+    - r-pheatmap
+    - r-gridbase
+    - bioconductor-mageckflute
+    - bioconductor-karyoploter
+    # -----
     - bioconductor-multtest
     - bioconductor-biomaRt
     - bioconductor-MAST
     - bioconductor-AnnotationDbi
+    - bioconductor-org.hs.eg.db
+    - bioconductor-org.mm.eg.db
     - bioconductor-BiocGenerics
     - bioconductor-GO.db
     - bioconductor-pcaMethods

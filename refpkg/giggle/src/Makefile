@@ -2,16 +2,10 @@ BIN=../bin
 OBJ=../obj
 LIBD=../lib
 HTS_ROOT=$(LIBD)/htslib
-LIBMHD_INCLUDES=$(HOME)/usr/local/include
-LIBMHD_LIBS=$(HOME)/usr/local/lib
-CFLAGS=-O2 -D_FILE_OFFSET_BITS=64 -Werror -Wuninitialized
-#CFLAGS=-g -D_FILE_OFFSET_BITS=64 -Werror -Wuninitialized
-CFLAGS+=-DBLOCK_STORE 
+CFLAGS+=-DBLOCK_STORE  -O2 -D_FILE_OFFSET_BITS=64 -Werror -Wuninitialized
 INCLUDES=-I$(HTS_ROOT)
 LIBS=-ldl -lz -lm -pthread -lcurl
 LIBS+=-lcrypto
-CC=gcc
-
 
 LIB=bpt.o \
     disk_store.o \
@@ -40,39 +34,28 @@ OBJS=$(addprefix $(OBJ)/, $(LIB))
 
 .SECONDARY: $(OBJS)
 
-
-PROG=giggle \
-     api_test \
-     offset_idx_lookup
+PROG=giggle
 
 LIST=$(addprefix $(BIN)/, $(PROG))
 
-
 all: check-env $(LIST) library
-
-server: INCLUDES+=-I$(LIBMHD_INCLUDES) -L$(LIBMHD_LIBS)
-server: LIBS+=-lmicrohttpd 
-server: $(BIN)/server_enrichment
 
 library: $(OBJS)
 	ar -cvq $(LIBD)/libgiggle.a $(OBJS)
 
-$(OBJ)/%.o: %.c 
+$(OBJ)/%.o: %.c
 	$(CC) -c $(CFLAGS) -o $@ $< \
 		-I$(HTS_ROOT)
-
 
 $(BIN)/%: %.c $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ \
 		$(INCLUDES) \
 		-DSAMTOOLS=1 \
 		$(HTS_ROOT)/libhts.a \
-		$(LIBS)
-
+		$(LIBS) $(LDFLAGS)
 
 check-env:
 ifdef TRAVIS_BUILD_DIR
 HTS_ROOT=$(TRAVIS_BUILD_DIR)/htslib
 endif
-
 

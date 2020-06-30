@@ -15,51 +15,14 @@ try:
 except ImportError:
     print("Could not load setuptools. Please install the setuptools package.")
 
-def install_drseq():
-    curdir = os.getcwd()
-    os.chdir("refpkg/Dr.seq.1.2.0")
-    os.system("python setup.py install")
-    os.chdir(curdir)
-    print("Installation of Dr.seq is DONE")
-
-def install_giggle():
-    curdir = os.getcwd()
-    os.chdir("refpkg/giggle")
-    os.system("make")
-    os.chdir(curdir)
-    print("Installation of GIGGLE is DONE")
-
-def install_rabit():
-    curdir = os.getcwd()
-    os.chdir("refpkg/Rabit")
-    os.system("./configure --prefix=" + curdir)
-    os.system("make")
-    os.system("make install")
-    os.chdir(curdir)
-    print("Installation of Rabit is DONE")
-
-def install_rpackage():
-    os.system("Rscript MAESTRO/R/MAESTRO_install.R")
-    print("Installation of required R packages is DONE")
-
-def install_sinto():
-    os.system("pip install sinto")
-    print("Installation of sinto is DONE")
-
 def main():
-    # install_drseq()
-    install_rpackage()
-    install_giggle()
-    install_sinto()
-    # install_rabit()
-    
     setup(
         name = "MAESTRO",
         version = "1.2.0",
         package_dir = {'MAESTRO':'MAESTRO'},
         packages = ['MAESTRO'],
         package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'Snakemake/integrate/*', 'R/*', 'annotations/*', 'html/*', '']},
-        data_files = [(os.path.join(sys.prefix,'bin'), ['refpkg/giggle/bin/giggle'])],
+        #data_files = [(os.path.join(sys.prefix,'bin'), ['refpkg/giggle/bin/giggle'])],
         scripts = ['MAESTRO/MAESTRO'],
         include_package_data = True,
         
@@ -80,7 +43,9 @@ def main():
             "Natural Language :: English",
             "Programming Language :: Python :: 3",
             "Topic :: Scientific/Engineering :: Bio-Informatics"
-        ]
+        ],
+        #install_requires=["sinto>=0.7.1",],
+        #setup_requires=["sinto>=0.7.1",],        
     )
 
 
