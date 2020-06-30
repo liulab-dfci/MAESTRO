@@ -75,8 +75,12 @@ install:
 
 
 script:
-  - R CMD build . --no-manual
-  - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
+  # test some command line tools
+  - giggle search
+  - Rabit -help
+  - sinto -h
+  - MAESTRO
+  - R -e "library(MAESTRO);library(Seurat)"
   # We also need some testing here!
 
 # the following codes will upload when all the above is successful and
