@@ -21,4 +21,6 @@ cd ../..
 #$PYTHON -m pip install sinto
 
 # install MAESTRO/R
-$R CMD INSTALL
+$R CMD INSTALL .
+
+
