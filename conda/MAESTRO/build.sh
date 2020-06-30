@@ -20,7 +20,12 @@ cd ../..
 #$PYTHON -m pip install --upgrade pip
 #$PYTHON -m pip install sinto
 
+# there are two dependencies in R DESCRIPTION
+# that can't be found in conda-forge or bioconda
+# channel. They are grid and Gmisc
+# 
+
 # install MAESTRO/R
-$R CMD INSTALL .
+$R -e 'devtools::install(".", upgrade="never")'
 
 

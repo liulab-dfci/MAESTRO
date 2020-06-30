@@ -14,11 +14,11 @@ Imports: Seurat (== 3.1.2), ggplot2 (>= 3.0.0), ggrepel, cowplot, Matrix (>=
 Suggests: knitr, pagoda2, RCA, MAST, scABC, devtools, uwot, cisTopic, chromVAR, motifmatchr,
           SummarizedExperiment, BSgenome.Hsapiens.UCSC.hg38, BSgenome.Mmusculus.UCSC.mm10,
           chromVARmotifs, TxDb.Hsapiens.UCSC.hg38.knownGene, TxDb.Mmusculus.UCSC.mm10.knownGene,
-Remotes: github::immunogenomics/presto@7f63f9606953f8ab643809fad6eb4daea7c471d0
-	 github::hms-dbmi/pagoda2@v0.1.1
-	 github::SUwonglab/scABC@v0.1
-	 github::GreenleafLab/chromVARmotifs@38bed559c1f4770b6c91c80bf3f8ea965da26076
-	 github::gforge/Gmisc@v1.10.0
+Remotes: github::immunogenomics/presto@7f63f9606953f8ab643809fad6eb4daea7c471d0,
+	 github::hms-dbmi/pagoda2@v0.1.1,
+	 github::SUwonglab/scABC@v0.1,
+	 github::GreenleafLab/chromVARmotifs@38bed559c1f4770b6c91c80bf3f8ea965da26076,
+	 github::gforge/Gmisc@1.10.0
 VignetteBuilder: knitr
 License: GPL (>=3)
 Encoding: UTF-8
