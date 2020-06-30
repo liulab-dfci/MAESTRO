@@ -73,13 +73,15 @@ install:
 
   # install LISA
 
+  # list conda env packages for reference
+  - conda list
 
 script:
   # test some command line tools
   - giggle search
   - Rabit -help
   # - sinto -h
-  - MAESTRO
+  - MAESTRO -v
   - R -e "library(MAESTRO);library(Seurat)"
   - R -e "library(org.Hs.eg.db);library(org.Mm.eg.db)"
   # We also need more testing here!
