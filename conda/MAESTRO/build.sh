@@ -16,9 +16,13 @@ make
 make install
 cd ../..
 
-# install sinto
-#$PYTHON -m pip install --upgrade pip --no-deps
-$PYTHON -m pip install sinto --no-deps
+# install sinto, the pypi version is not useful, let's
+# do it through git
+git clone https://github.com/timoast/sinto
+cd sinto
+git checkout 32d8733be9ba79372001318174d3612dc73c28b0 # for version 0.7.1
+$PYTHON setup.py install
+cd ../
 
 # there are two dependencies in R DESCRIPTION
 # that can't be found in conda-forge or bioconda
