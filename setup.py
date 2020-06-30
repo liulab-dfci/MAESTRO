@@ -43,7 +43,9 @@ def main():
             "Natural Language :: English",
             "Programming Language :: Python :: 3",
             "Topic :: Scientific/Engineering :: Bio-Informatics"
-        ]
+        ],
+        install_requires=["sinto>=0.7.1",],
+        setup_requires=["sinto>=0.7.1",],        
     )
 
 
