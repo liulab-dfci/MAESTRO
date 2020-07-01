@@ -1,25 +1,11 @@
-# .travis.yml using container-based infrastructure
-
+dist: xenial
+os: linux
 language: python
-python:
-  # We don't actually use the Travis Python, but this keeps it organized.
-  - "3.7"
-matrix:
+
+jobs:
   include:
-    - python: 3.7
-      dist: xenial
-      sudo: true
-
-os:
-  - linux
-
-# use containers
-sudo: false
-
-# only run for pushes to master branch
-branches:
-  only:
-   - master
+    - name: standard_py3.7
+      python: 3.7
 
 # cache local R libraries directory:
 cache:
@@ -45,9 +31,6 @@ before_install:
     fi;
 
 # install the package and dependencies:
-# - install devtools if not already installed
-# - update all installed packages
-# - install package with dependencies
 install:
   # Install miniconda
   - if [[ -d $MINICONDA_SUB_PATH ]]; then
@@ -60,19 +43,62 @@ install:
   - source "$MINICONDA_PATH/etc/profile.d/conda.sh"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
+
+  # need conda-build/verify to test building conda package
+  - conda install -q conda-build
+  - conda install -q conda-verify
   - conda update -q conda
+
   # Useful for debugging any issues with conda
   - conda info -a
+
+  # configure the channels
   - conda config --add channels defaults
   - conda config --add channels bioconda
   - conda config --add channels conda-forge
-  - conda install mamba -c conda-forge
-  - mamba create -n MAESTRO maestro -c liulab-dfci
+  - conda install -q mamba -c conda-forge
+
+  # build conda package
+  - mkdir bld-dir
+  - conda build -q conda/MAESTRO --python=$TRAVIS_PYTHON_VERSION --output-folder bld-dir
+  
+  # Now add this folder as a highest priority channel
+  - conda config --add channels "file://`pwd`/bld-dir"
+
+  # install the python part from newly built package
+  - mamba create -q -n MAESTRO maestro
+
+  # Activate this environment
   - conda activate MAESTRO
 
-scripts:
-  - R CMD build . --no-manual
-  - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
+  # install LISA
 
+  # list conda env packages for reference
+  - conda list
 
+script:
+  # test some command line tools
+  - giggle search 
+  - Rabit -help
+  - sinto -h
+  - MAESTRO -v
+  - R -e "library(MAESTRO);library(Seurat)"
+  - R -e "library(org.Hs.eg.db);library(org.Mm.eg.db)"
+  # We also need more testing here!
+
+# the following codes will upload when all the above is successful and
+# the test is triggered within "liulab-dfci/MAESTRO" repo and
+# the test is triggered with a tag value, e.g. 1.1.0 or 1.2.0 and
+# the CONDA_UPLOAD_TOKEN should match the one retrieved under anaconda account
+
+#after_success:
+#  # Install the command line API for CONDA uploads
+#  - mamba install anaconda-client
+#  - |
+#    # Only upload builds from tags
+#    if [[ $TRAVIS_PULL_REQUEST == false && $TRAVIS_REPO_SLUG == "liulab-dfci/MAESTRO"
+#          && $TRAVIS_BRANCH == $TRAVIS_TAG  && $TRAVIS_TAG != '' ]]; then
+#      export ANACONDA_API_TOKEN=$CONDA_UPLOAD_TOKEN
+#      anaconda upload bld-dir/**/PACKAGENAME-*.tar.bz2
+#    fi
 

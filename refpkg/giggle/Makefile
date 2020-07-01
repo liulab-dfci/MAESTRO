@@ -14,7 +14,7 @@ htslib:
 server:
 	@mkdir -p $(OBJ)
 	@mkdir -p $(BIN)
-	cd src; $(MAKE) server
+	cd src; $(MAKE)
 
 clean:
 	rm -rf $(BIN)/*
