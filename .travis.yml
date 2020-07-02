@@ -91,14 +91,14 @@ script:
 # the test is triggered with a tag value, e.g. 1.1.0 or 1.2.0 and
 # the CONDA_UPLOAD_TOKEN should match the one retrieved under anaconda account
 
-#after_success:
-#  # Install the command line API for CONDA uploads
-#  - mamba install anaconda-client
-#  - |
-#    # Only upload builds from tags
-#    if [[ $TRAVIS_PULL_REQUEST == false && $TRAVIS_REPO_SLUG == "liulab-dfci/MAESTRO"
-#          && $TRAVIS_BRANCH == $TRAVIS_TAG  && $TRAVIS_TAG != '' ]]; then
-#      export ANACONDA_API_TOKEN=$CONDA_UPLOAD_TOKEN
-#      anaconda upload bld-dir/**/PACKAGENAME-*.tar.bz2
-#    fi
+after_success:
+  # Install the command line API for CONDA uploads
+  - mamba install anaconda-client
+  - |
+    # Only upload builds from tags
+    if [[ $TRAVIS_PULL_REQUEST == false && $TRAVIS_REPO_SLUG == "liulab-dfci/MAESTRO"
+          && $TRAVIS_BRANCH == $TRAVIS_TAG  && $TRAVIS_TAG != '' ]]; then
+      export ANACONDA_API_TOKEN=$CONDA_UPLOAD_TOKEN
+      anaconda upload bld-dir/**/PACKAGENAME-*.tar.bz2
+    fi
 
