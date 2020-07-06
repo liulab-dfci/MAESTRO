@@ -29,12 +29,12 @@ def peakcount_parser(subparsers):
     workflow = subparsers.add_parser("scatac-peakcount", 
         help = "Generate peak-cell binary count matrix. ")
     group_input = workflow.add_argument_group("Input arguments")
-    group_input.add_argument("--peak", dest = "peak", default = "", type = str,
-        help = "Location of peak file. "
+    group_input.add_argument("--peak", dest = "peak", type = str,
+        help = "Location of peak file. REQUIRED."
         "The peak file is BED formatted with tab seperated. "
         "The first column is chromsome, the second is chromStart, and the third is chromEnd.")
-    group_input.add_argument("--fragment", dest = "fragment", default = "", type = str, 
-        help = "Location of fragments.tsv file. "
+    group_input.add_argument("--fragment", dest = "fragment", type = str, 
+        help = "Location of fragments.tsv file. REQUIRED."
         "The fragments.tsv contains one line per unique fragment, with tab-separated fields as described below. "
         "Each row has 5 columns, representing chrom, chromStart, chromEnd, barcode and duplicateCount, respectively. "
         "In MAESTOR output, the file should be fragments_corrected_count.tsv. In Cell Ranger ATAC output, the file should be fragments.tsv. ")   
