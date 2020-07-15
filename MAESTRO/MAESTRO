@@ -5,7 +5,7 @@
 # @Last Modified by:   Dongqing Sun
 # @Last Modified time: 2020-02-28 13:58:10
 
-version = "1.1.0"
+version = "1.2.1"
 
 import logging
 import sys, os
