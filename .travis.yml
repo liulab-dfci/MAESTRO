@@ -89,16 +89,22 @@ script:
 # the following codes will upload when all the above is successful and
 # the test is triggered within "liulab-dfci/MAESTRO" repo and
 # the test is triggered with a tag value, e.g. 1.1.0 or 1.2.0 and
-# the CONDA_UPLOAD_TOKEN should match the one retrieved under anaconda account
+# the CONDA_UPLOAD_TOKEN must match the one retrieved under anaconda account
+#
+# To do so:
+# 1. Please get the token from anaconda at your account Settings -> Access
+# 2. Paste the token at travis-ci.com site under your account and the specific
+#    repository as an environmental variable named CONDA_UPLOAD_TOKEN.
+# 3. Tag a release at github site
 
-#after_success:
-#  # Install the command line API for CONDA uploads
-#  - mamba install anaconda-client
-#  - |
-#    # Only upload builds from tags
-#    if [[ $TRAVIS_PULL_REQUEST == false && $TRAVIS_REPO_SLUG == "liulab-dfci/MAESTRO"
-#          && $TRAVIS_BRANCH == $TRAVIS_TAG  && $TRAVIS_TAG != '' ]]; then
-#      export ANACONDA_API_TOKEN=$CONDA_UPLOAD_TOKEN
-#      anaconda upload bld-dir/**/PACKAGENAME-*.tar.bz2
-#    fi
+after_success:
+  # Install the command line API for CONDA uploads
+  - mamba install anaconda-client
+  - |
+    # Only upload builds from tags
+    if [[ $TRAVIS_PULL_REQUEST == false && $TRAVIS_REPO_SLUG == "liulab-dfci/MAESTRO"
+          && $TRAVIS_BRANCH == $TRAVIS_TAG  && $TRAVIS_TAG != '' ]]; then
+      export ANACONDA_API_TOKEN=$CONDA_UPLOAD_TOKEN
+      anaconda upload bld-dir/**/PACKAGENAME-*.tar.bz2
+    fi
 
