@@ -1,0 +1,17 @@
+Metadata-Version: 1.1
+Name: MAESTRO
+Version: 1.2.0
+Summary: MAESTRO(Model-based AnalysEs of Single-cell Transcriptome and RegulOme) is a comprehensive single-cell RNA-seq and ATAC-seq analysis suit built using snakemake.
+Home-page: https://github.com/chenfeiwang/MAESTRO
+Author: Chenfei Wang, Dongqing Sun
+Author-email: UNKNOWN
+License: GPL-3.0
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: GPL License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
