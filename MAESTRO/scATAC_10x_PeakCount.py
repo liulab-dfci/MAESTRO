@@ -15,7 +15,6 @@ import numpy as np
 import scipy.sparse as sp_sparse
 from collections import defaultdict
 from functools import partial
-import gzip
 
 from MAESTRO.scATAC_utility import *
 from MAESTRO.scATAC_H5Process import *

@@ -11,6 +11,7 @@ import logging
 import subprocess
 import random, string
 import re
+import gzip
 from subprocess import call as subpcall
 from pkg_resources import resource_filename
 
