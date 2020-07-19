@@ -31,7 +31,7 @@ def GenerateMismatch(seq):
 def GenerateMismatchDict(whitelist):
     barcode_dict = defaultdict(set)
 
-    filein = universal_open( whitelist, "r" )
+    filein = universal_open( whitelist, "rt" )
     barcode_list = filein.readlines()
     filein.close()
     

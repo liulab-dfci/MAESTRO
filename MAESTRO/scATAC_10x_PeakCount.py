@@ -69,7 +69,7 @@ def filter_fragment_file(barcode_file, frag_file, count_cutoff = 1000):
     if barcode_file == "":
         # no barcode file
         # read fragment file to get barcode
-        fhd = universal_open( frag_file, "r" )
+        fhd = universal_open( frag_file, "rt" )
 
         for line in fhd:
             line = line.strip().split('\t')
@@ -84,14 +84,14 @@ def filter_fragment_file(barcode_file, frag_file, count_cutoff = 1000):
 
     else:
         # read barcode file
-        fhd = universal_open( barcode_file, "r" )
+        fhd = universal_open( barcode_file, "rt" )
                 
         for line in fhd:
             barcode_list.append(line.strip())
             barcode_out[line.strip()] = []
         fhd.close()
 
-        fhd = universal_open( frag_file, "r" )
+        fhd = universal_open( frag_file, "rt" )
 
         for line in fhd:
             line = line.strip().split('\t')
@@ -139,7 +139,7 @@ def merge_binary_file(peak_file, count_list, count_file, cores, genome = 'GRCh38
     
     peak_list = []
 
-    fhd = universal_open( peak_file, "r" )
+    fhd = universal_open( peak_file, "rt" )
     for line in fhd:
         line = line.strip().split('\t')
         peak_list.append(line[0]+'_'+line[1]+'_'+line[2])

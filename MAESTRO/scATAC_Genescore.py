@@ -294,7 +294,7 @@ def calculate_RP_score(peakmatrix, features, barcodes, gene_bed, decay, score_fi
     # peaks_list = [peak for peak in cell_peaks.index if peak.split("_")[1].isdigit()]
     # cell_peaks = sp_sparse.csc_matrix(cell_peaks.loc[peaks_list, :].values)
     if model == "Simple":
-        fhd = universal_open(gene_bed, 'r')
+        fhd = universal_open(gene_bed, 'rt')
         for line in fhd:
             line = line.strip().split('\t')
             if not line[0].startswith('#'):
