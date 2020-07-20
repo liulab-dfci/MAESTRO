@@ -21,7 +21,6 @@ from pkg_resources import resource_filename
 from MAESTRO.scATAC_utility import *
 from MAESTRO.scATAC_H5Process import *
 
-
 def genescore_parser(subparsers):
     """
     Add main function init-scatac argument parsers.
@@ -295,7 +294,8 @@ def calculate_RP_score(peakmatrix, features, barcodes, gene_bed, decay, score_fi
     # peaks_list = [peak for peak in cell_peaks.index if peak.split("_")[1].isdigit()]
     # cell_peaks = sp_sparse.csc_matrix(cell_peaks.loc[peaks_list, :].values)
     if model == "Simple":
-        for line in open(gene_bed, 'r'):
+        fhd = universal_open(gene_bed, 'rt')
+        for line in fhd:
             line = line.strip().split('\t')
             if not line[0].startswith('#'):
                 if line[3] == "+":
@@ -303,6 +303,7 @@ def calculate_RP_score(peakmatrix, features, barcodes, gene_bed, decay, score_fi
                 else:
                     genes_info.append(("chr" + line[2], int(line[5]), 1, "%s@%s@%s" % (line[12], "chr" + line[2], line[5])))
                     # gene_info [chrom, tss, 1, gene_unique]
+        fhd.close()
         genes_info = list(set(genes_info))
         for igene in range(len(genes_info)):
             tmp_gene = list(genes_info[igene])

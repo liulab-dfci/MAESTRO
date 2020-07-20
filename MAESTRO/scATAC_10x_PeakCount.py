@@ -29,25 +29,25 @@ def peakcount_parser(subparsers):
     workflow = subparsers.add_parser("scatac-peakcount", 
         help = "Generate peak-cell binary count matrix. ")
     group_input = workflow.add_argument_group("Input arguments")
-    group_input.add_argument("--peak", dest = "peak", default = "", type = str,
-        help = "Location of peak file. "
+    group_input.add_argument("--peak", dest = "peak", type = str, required = True,
+        help = "Location of peak file. Support gzipped file."
         "The peak file is BED formatted with tab seperated. "
         "The first column is chromsome, the second is chromStart, and the third is chromEnd.")
-    group_input.add_argument("--fragment", dest = "fragment", default = "", type = str, 
-        help = "Location of fragments.tsv file. "
+    group_input.add_argument("--fragment", dest = "fragment", type = str, required = True,
+        help = "Location of fragments.tsv file. Support gzipped file."
         "The fragments.tsv contains one line per unique fragment, with tab-separated fields as described below. "
         "Each row has 5 columns, representing chrom, chromStart, chromEnd, barcode and duplicateCount, respectively. "
         "In MAESTOR output, the file should be fragments_corrected_count.tsv. In Cell Ranger ATAC output, the file should be fragments.tsv. ")   
-    group_input.add_argument("--barcode", dest = "barcode", default = "", type = str, 
-        help = "Location of valid cell barcode file (optional). "
+    group_input.add_argument("--barcode", dest = "barcode", default = "", type = str, required = False,
+        help = "Location of valid cell barcode file (optional). Support gzipped file."
         "Each line of the file represents a valid barcode. "
         "If not set, the barcodes with enough read count (> --count-cutoff) "
         "in the fragment file will be used to generate peak-cell binary count matrix.")
-    group_input.add_argument("--count-cutoff", dest = "count_cutoff", default = 1000, type = int, 
+    group_input.add_argument("--count-cutoff", dest = "count_cutoff", default = 1000, type = int, required = False,
         help = "Cutoff for the number of count in each cell. DEFAULT: 1000.")
-    group_input.add_argument("--species", dest = "species", default = "GRCh38", 
+    group_input.add_argument("--species", dest = "species", default = "GRCh38", required = False,
         choices = ["GRCh38", "GRCm38"], type = str, 
-        help = "Species (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
+        help = "Genome assembly of either 'GRCh38' for human or 'GRCm38' for mouse. DEFAULT: GRCh38.")
     
 
     group_output = workflow.add_argument_group("Output and running arguments")
@@ -67,23 +67,36 @@ def filter_fragment_file(barcode_file, frag_file, count_cutoff = 1000):
     barcode_count = defaultdict(lambda: 0)
 
     if barcode_file == "":
-        for line in open(frag_file, 'r'):
+        # no barcode file
+        # read fragment file to get barcode
+        fhd = universal_open( frag_file, "rt" )
+
+        for line in fhd:
             line = line.strip().split('\t')
             barcode_out[line[3]].append(line[0]+'\t'+line[1]+'\t'+line[2])
             barcode_count[line[3]] += int(line[4])
+
+        fhd.close()
 
         for k in barcode_count:
             if barcode_count[k] >= count_cutoff:
                 barcode_list.append(k)
 
     else:
-        for line in open(barcode_file,'r'):
+        # read barcode file
+        fhd = universal_open( barcode_file, "rt" )
+                
+        for line in fhd:
             barcode_list.append(line.strip())
             barcode_out[line.strip()] = []
+        fhd.close()
 
-        for line in open(frag_file, 'r'):
+        fhd = universal_open( frag_file, "rt" )
+
+        for line in fhd:
             line = line.strip().split('\t')
             barcode_out[line[3]].append(line[0]+'\t'+line[1]+'\t'+line[2])
+        fhd.close()
     
     for k in barcode_list:
         outf = open(tmp+"/"+k,'w')
@@ -125,9 +138,12 @@ def merge_binary_file(peak_file, count_list, count_file, cores, genome = 'GRCh38
     """Merge the intersectBed result into binary count table."""
     
     peak_list = []
-    for line in open(peak_file, 'r'):
+
+    fhd = universal_open( peak_file, "rt" )
+    for line in fhd:
         line = line.strip().split('\t')
         peak_list.append(line[0]+'_'+line[1]+'_'+line[2])
+    fhd.close()
     peak_list = sorted(peak_list)
 
     count_list_split = []
