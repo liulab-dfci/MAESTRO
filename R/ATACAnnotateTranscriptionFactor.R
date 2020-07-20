@@ -32,7 +32,7 @@
 #' pbmc.tfs <- ATACAnnotateTranscriptionFactor(ATAC = pbmc.ATAC.res$ATAC, peaks = pbmc.ATAC.res$peaks, project = "PBMC.scATAC.TF", giggle.path = "/home/annotations/giggle")
 #' pbmc.tfs
 #'
-#' @importFrom Seurat GetAssayData Idents
+#' @importFrom Seurat GetAssayData Idents DefaultAssay
 #' @export
 
 ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project = ATAC@project.name, giggle.path, organism = "GRCh38", top.tf = 10, target.genes = FALSE, min.peaks = 10)

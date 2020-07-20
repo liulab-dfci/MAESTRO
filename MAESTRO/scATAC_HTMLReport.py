@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-28 03:15:37
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-07-17 16:44:21
+# @Last Modified time: 2020-07-17 22:34:37
 
 
 import os,sys
@@ -76,6 +76,7 @@ def main():
         cd3dtrack_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_CD3D_genetrack.png"%outpre)
     else:
         cd3dtrack_link = ""
+    print(ms4a1track_link)
 
     td_list = []
     for line in open(cluster_regulator_file,"r").readlines():

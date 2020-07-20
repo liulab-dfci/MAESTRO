@@ -46,6 +46,22 @@ whitelist: {{ whitelist }}
 # The core number
 cores: {{ cores }}
 
+# Whether or not to perform ccell-type annotation.
+# By default (not set), MAESTRO will skip the step of cell-type annotation. 
+# If set, please specify the method of cell-type annotation through method.
+annotation: {{ annotation }}
+
+# Method to annotate cell types [RP-based, peak-based, both]. 
+# MAESTRO provides two strategies to annotate cell types for scATAC-seq data. 
+# Users can choose from 'RP-based' and 'peak-based', or choose to run both of them. 
+# One is based on gene regulatory potential predicted by RP model. Another is based on the bulk chromatin accessibility data from Cistrome database. 
+# If 'RP-based' is set, MAESTRO performs the cell-type annotation using the gene regulatory potential to represent gene expression, 
+# and the logFC of gene regulatory potential between one cluster and all the other cells is used to calculate the gene signature scores. 
+# If 'peak-based' is set, MAESTRO utilizes GIGGLE to evaluate the enrichment of bulk chromatin accessibility peaks on cluster-specific peaks from scATAC-seq data, 
+# and then transfers the Cistrome cluster identity from the most enriched bulk chromatin accessibility data as the cell-type annotation for the scATAC-seq cluster. 
+# See the MAESTRO paper for more details. DEFAULT: RP-based.
+method: {{ method }}
+
 # Cell signature file used to annotate cell types. MAESTRO provides several sets of built-in cell signatures. 
 # Users can choose from ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']. 
 # Custom cell signatures are also supported. In this situation, users need to provide the file location of cell signatures, 

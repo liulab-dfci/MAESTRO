@@ -434,7 +434,7 @@ rule scrna_analysis:
         species = config["species"],
         outpre = config["outprefix"],
         outdir = "Result/Analysis",
-        method = config["method"],
+        method = "LISA",
         rabitlib = config["rabitlib"],
         lisamode = config["lisamode"],
         lisaenv = config["lisaenv"],

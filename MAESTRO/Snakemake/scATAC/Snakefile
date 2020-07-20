@@ -693,7 +693,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
             shell:
                 "frag_num=`wc -l {input.frag} | awk '{{print $1}}'`;"
                 "frag_num_sample=`expr $frag_num / 100`;"
-                "shuf -n $frag_num_sample {input.frag} > {output.fragbed}"
+                "shuf -n $frag_num_sample {input.frag} | awk '{{print ($3-$2)}}' > {output.fragbed}"
 
         rule scatac_allpeakcall:
             input:
@@ -1122,7 +1122,6 @@ else:
             fragbed = "Result/QC/%s_frag.bed" %(config["outprefix"]),
             single_stat = "Result/QC/singlecell.txt",
         output:
-            readdistr = "Result/QC/" + config["outprefix"] + "_scATAC_read_distr.png",
             qcfrag = "Result/QC/" + config["outprefix"] + "_scATAC_fragment_size.png",
             qcfrip = "Result/QC/" + config["outprefix"] + "_scATAC_cell_filtering.png",
             validbarcode = "Result/QC/" + config["outprefix"] + "_scATAC_validcells.txt",
@@ -1208,14 +1207,16 @@ rule scatac_analysis:
         fraggz = "../minimap2/fragments_corrected_count.tsv.gz",
         giggleannotation = config["giggleannotation"],
         species = config["species"],
-        signature = config["signature"]
+        signature = config["signature"],
+        method = config["method"],
+        annotation = config["annotation"],
     threads:
         config["cores"]
     benchmark:
         "Result/Benchmark/%s_Analysis.benchmark" %(config["outprefix"])
     shell:
         "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R --peakcount {params.count} --rpmatrix {params.genescore} "
-        "--species {params.species} --prefix {params.outpre} --signature {params.signature} "
+        "--species {params.species} --prefix {params.outpre} --annotation {params.annotation} --method {params.method} --signature {params.signature} "
         "--gigglelib {params.giggleannotation} --fragment {params.fraggz} --outdir {params.outdir} --thread {threads}"
 
 if config["format"] != "fragments":
