@@ -108,3 +108,19 @@ def randomString(stringLength=10):
     """Generate a random string of fixed length """
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(stringLength))
+
+def is_gzip ( filename ):
+    """Check if the file is gzipped.
+    """
+    with gzip.open( filename, 'r' ) as f:
+        try:
+            f.read(1)
+        except OSError:
+            return False
+    return True
+
+def universal_open ( filename, mode ):
+    if is_gzip( filename ):
+        return gzip.open( filename, mode )
+    else:
+        return open( filename, mode )

@@ -84,6 +84,10 @@ script:
   - MAESTRO -v
   - R -e "library(MAESTRO);library(Seurat)"
   - R -e "library(org.Hs.eg.db);library(org.Mm.eg.db)"
+  # test python utility scripts
+  - cd test
+  - bash test.sh
+  - cd ..
   # We also need more testing here!
 
 # the following codes will upload when all the above is successful and
