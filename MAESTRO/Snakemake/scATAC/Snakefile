@@ -8,7 +8,7 @@ import yaml
 import sys
 import os
 
-from MAESTRO.scATAC_utility import get_fastqlist, ENV_PATH, SCRIPT_PATH, RSCRIPT_PATH, getfastq_10x
+from MAESTRO.scATAC_utility import is_gzip, get_fastqlist, ENV_PATH, SCRIPT_PATH, RSCRIPT_PATH, getfastq_10x
 
 # def qcplot_input(wildcards):
 #     checkpoint_output = checkpoints.scatac_samsplit.get(**wildcards).output[0]
@@ -517,7 +517,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
                 input:
                     bam = "Result/minimap2/%s.sortedByPos.CRadded.bam" %(config["outprefix"]),
                 output:
-                    bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam" %(config["outprefix"]),
+                    bam = "Result/minimap2/%s.sortedByPos.CRadded.rmdp.bam" %(config["outprefix"]),
                     metric = "Result/minimap2/%s.rmdp.txt" %(config["outprefix"]),
                     fragbed = "Result/QC/%s_frag.bed" %(config["outprefix"]),
                 params:
@@ -650,7 +650,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
                     "macs2 callpeak -f BAMPE -g {params.genome} --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.shortbam}"
 
     else:
-        if config["frag"].endswith(".gz"):
+        if is_gzip(config["frag"]):
             rule scatac_fragmentcp:
                 input:
                     frag = config["frag"]

@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-28 03:15:37
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-07-17 22:34:37
+# @Last Modified time: 2020-07-20 20:48:50
 
 
 import os,sys
@@ -61,10 +61,17 @@ def main():
     # mapplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scATAC_mapping_summary.png"%outpre)[0]
     fripplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scATAC_cell_filtering.png"%outpre)
     peakcluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_cluster.png"%outpre)
-    rpannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_annotated.png"%outpre)
+    if os.path.exists("Result/Analysis/%s_annotated.png"%outpre):
+        rpannodisplay = "inline"
+        rpannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_annotated.png"%outpre)
+    else:
+        rpannodisplay = "none"
+        rpannotate_link = ""
     if os.path.exists("Result/Analysis/%s_CistromeTop_annotated.png"%outpre):
+        caannodisplay = "inline"
         caannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_CistromeTop_annotated.png"%outpre)
     else:
+        caannodisplay = "none"
         caannotate_link = ""
 
     if os.path.exists("Result/Analysis/%s_MS4A1_genetrack.png"%outpre):
@@ -76,7 +83,6 @@ def main():
         cd3dtrack_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_CD3D_genetrack.png"%outpre)
     else:
         cd3dtrack_link = ""
-    print(ms4a1track_link)
 
     td_list = []
     for line in open(cluster_regulator_file,"r").readlines():
@@ -98,8 +104,8 @@ def main():
 
         report_html_instance = report_html_temp % {"outprefix":outpre, "inputformat":inputformat, "inputpath":input_path, "species":species, 
         "platform":platform, "readdistr":readdistrplot_link, "fragment":fragplot_link, "frip":fripplot_link, 
-        "peakcluster":peakcluster_link, "rpannotate":rpannotate_link, "regtable":td_str,
-        "caannotate": caannotate_link, 'cd3dtrack': cd3dtrack_link, "ms4a1track": ms4a1track_link}
+        "peakcluster":peakcluster_link, "rpannodisplay": rpannodisplay, "rpannotate":rpannotate_link, "regtable":td_str,
+        "caannodisplay": caannodisplay, "caannotate": caannotate_link, 'cd3dtrack': cd3dtrack_link, "ms4a1track": ms4a1track_link}
     else:
         inputformat = "Fragment Path"
         report_html_tempfile = os.path.join(SCRIPT_PATH, "html", "scATAC_nomappability_template.html")
@@ -107,8 +113,8 @@ def main():
 
         report_html_instance = report_html_temp % {"outprefix":outpre, "inputformat":inputformat, "inputpath":input_path, "species":species, 
         "platform":platform, "fragment":fragplot_link, "frip":fripplot_link, 
-        "peakcluster":peakcluster_link, "rpannotate":rpannotate_link, "regtable":td_str,
-        "caannotate": caannotate_link, 'cd3dtrack': cd3dtrack_link, "ms4a1track": ms4a1track_link}
+        "peakcluster":peakcluster_link, "rpannodisplay": rpannodisplay, "rpannotate":rpannotate_link, "regtable":td_str,
+        "caannodisplay": caannodisplay, "caannotate": caannotate_link, 'cd3dtrack': cd3dtrack_link, "ms4a1track": ms4a1track_link}
 
     report_html_instancefile = os.path.join(directory, outpre + "_scATAC_report.html")
     outf = open(report_html_instancefile,"w")

@@ -11,6 +11,7 @@ import logging
 import subprocess
 import random, string
 import re
+import gzip
 from subprocess import call as subpcall
 from pkg_resources import resource_filename
 
@@ -65,7 +66,7 @@ def getfastq_10x(fastqdir, fastqprefix):
         r1 = " ".join(r1_fastq)
     else:
         print("Invalid fastq files!")
-    if r1_fastq[0].endswith("gz"):
+    if is_gzip(r1_fastq[0]):
         command = "zcat"
     else:
         command = "cat"
@@ -107,4 +108,3 @@ def randomString(stringLength=10):
     """Generate a random string of fixed length """
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(stringLength))
-
