@@ -195,13 +195,14 @@ if config["platform"] == "microfluidic":
             peak = "Result/Analysis/%s_all_peaks.narrowPeak" %(config["outprefix"]),
             bdg = "Result/Analysis/%s_all_treat_pileup.bdg" %(config["outprefix"]),
         params:
-            name = "%s_all" %(config["outprefix"])
+            name = "%s_all" %(config["outprefix"]),
+            genome = "hs" if config["species"] == "GRCh38" else "mm"
         log:
             "Result/Log/%s_macs2_allpeak.log" %(config["outprefix"])
         benchmark:
             "Result/Benchmark/%s_AllPeakCall.benchmark" %(config["outprefix"])
         shell:
-            "macs2 callpeak -g hs --outdir Result/Analysis/ -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.bam}"
+            "macs2 callpeak -g {params.genome} --outdir Result/Analysis/ -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.bam}"
     
     if config["shortpeaks"]:
         rule scatac_shortfragment:
@@ -224,13 +225,14 @@ if config["platform"] == "microfluidic":
             output:
                 bed = "Result/Analysis/%s_150bp_peaks.narrowPeak" %(config["outprefix"])
             params:
-                name = "%s_150bp" %(config["outprefix"])
+                name = "%s_150bp" %(config["outprefix"]),
+                genome = "hs" if config["species"] == "GRCh38" else "mm"
             log:
                 "Result/Log/" + config["outprefix"] + "_macs2_shortpeak.log"
             benchmark:
                 "Result/Benchmark/%s_ShortPeakCall.benchmark" %(config["outprefix"])
             shell:
-                "macs2 callpeak -g hs --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.shortbam}"
+                "macs2 callpeak -g {params.genome} --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.shortbam}"
     
     if config["custompeaks"] and config["shortpeaks"]:
         rule scatac_mergepeak:
@@ -565,13 +567,14 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
             peak = "Result/Analysis/%s_all_peaks.narrowPeak" %(config["outprefix"]),
             bdg = "Result/Analysis/%s_all_treat_pileup.bdg" %(config["outprefix"]),
         params:
-            name = "%s_all" %(config["outprefix"])
+            name = "%s_all" %(config["outprefix"]),
+            genome = "hs" if config["species"] == "GRCh38" else "mm"
         log:
             "Result/Log/%s_macs2_allpeak.log" %(config["outprefix"])
         benchmark:
             "Result/Benchmark/%s_AllPeakCall.benchmark" %(config["outprefix"])
         shell:
-            "macs2 callpeak -g hs --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.bam}"
+            "macs2 callpeak -g {params.genome} --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.bam}"
 
     rule scatac_qcstat_bulk:
         input:
@@ -616,13 +619,14 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
             output:
                 bed = "Result/Analysis/%s_150bp_peaks.narrowPeak" %(config["outprefix"])
             params:
-                name = "%s_150bp" %(config["outprefix"])
+                name = "%s_150bp" %(config["outprefix"]),
+                genome = "hs" if config["species"] == "GRCh38" else "mm"
             log:
                 "Result/Log/%s_macs2_shortpeak.log" %(config["outprefix"])
             benchmark:
                 "Result/Benchmark/%s_ShortPeakCall.benchmark" %(config["outprefix"])
             shell:
-                "macs2 callpeak -g hs --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.shortbam}"
+                "macs2 callpeak -g {params.genome} --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.shortbam}"
     
     if config["custompeaks"] and config["shortpeaks"]:
         rule scatac_mergepeak:
@@ -1052,13 +1056,14 @@ rule scatac_clusterpeakcall:
         bdg = "Result/Analysis/Cluster/{cluster}_treat_pileup.bdg",
     params:
         name = "{cluster}",
-        outdir = "Result/Analysis/Cluster"
+        outdir = "Result/Analysis/Cluster",
+        genome = "hs" if config["species"] == "GRCh38" else "mm"
     log:
         "Result/Log/{cluster}_macs2_allpeak.log"
     benchmark:
         "Result/Benchmark/{cluster}_AllPeakCall.benchmark"
     shell:
-        "macs2 callpeak -g hs --outdir {params.outdir} -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.bam}"
+        "macs2 callpeak -g {params.genome} --outdir {params.outdir} -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.bam}"
 
 rule scatac_report:
     input:
