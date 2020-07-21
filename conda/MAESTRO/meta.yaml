@@ -27,7 +27,7 @@ requirements:
     - macs2 =2.2.6
     - umap-learn
     - pysam # this is needed by sinto
-    - r-base=3.6.3
+    - r-base =3.6.2
     - r-BiocManager
     - r-devtools
     - r-hdf5r
@@ -93,7 +93,7 @@ requirements:
     - macs2 =2.2.6
     - umap-learn 
     - pysam # this is needed by sinto   
-    - r-base=3.6.3
+    - r-base =3.6.2
     - r-BiocManager
     - r-devtools
     - r-hdf5r

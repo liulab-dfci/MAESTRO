@@ -24,6 +24,12 @@ option_list = list(
   make_option(c("--species"), type = "character", default = "GRCh38",
               action = "store", help = "The platform of scRNA-seq."
   ),
+  make_option(c("--annotation"), type = "character", default = "False",
+              action = "store", help = "Whether or not to annotate cell types. Default is False."
+  ),
+  make_option(c("--method"), type = "character", default = "RP-based",
+              action = "store", help = "Method to annotate cell types. ['RP-based', 'peak-based', 'both']"
+  ),
   make_option(c("--signature"), type = "character", default = "",
               action = "store", help = "The cell signature file for celltype annotation. Default is built-in CIBERSORT immune cell signature."
   ),
@@ -49,6 +55,8 @@ sigfile = argue$signature
 gigglelib = argue$gigglelib
 species = argue$species
 fragment = argue$fragment
+annotation = argue$annotation
+method = argue$method
 
 # countmatrix = read.table(argue[1], sep = '\t', header = TRUE, row.names = 1, check.names = FALSE)
 # RPmatrix = read.table(argue[2], sep = '\t', header = TRUE, row.names = 1, check.names = FALSE)
@@ -65,23 +73,41 @@ if(sigfile %in% c("human.immune.CIBERSORT", "mouce.brain.ALLEN", "mouse.all.facs
 }
 result = ATACRunSeurat(inputMat = countmatrix, project = prefix, method = "LSI")
 result$ATAC = ATACAttachGenescore(ATAC = result$ATAC, RPmatrix = RPmatrix)
-result$ATAC = ATACAnnotateCelltype(result$ATAC, signatures = signatures)
 saveRDS(result, paste0(prefix, "_scATAC_Object.rds"))
+if (annotation == "True") {
+  if (method == "RP-based") {
+    result$ATAC = ATACAnnotateCelltype(result$ATAC, signatures = signatures)
+
+  }
+  if (method == "peak-based") {
+    result$ATAC <- ATACAnnotateChromatinAccessibility(ATAC = result$ATAC, 
+                                                      peaks = result$peaks, 
+                                                      project = prefix, 
+                                                      giggle.path = gigglelib,
+                                                      organism = species)
+  }
+  if (method == "both") {
+    result$ATAC <- ATACAnnotateChromatinAccessibility(ATAC = result$ATAC, 
+                                                      peaks = result$peaks, 
+                                                      project = prefix, 
+                                                      giggle.path = gigglelib,
+                                                      organism = species)
+    result$ATAC = ATACAnnotateCelltype(result$ATAC, signatures = signatures)
+
+  }
+  if ("assign.biological_resource" %in% colnames(result$ATAC@meta.data)) {
+    p1 <- DimPlot(result$ATAC, label = TRUE, reduction = "umap", group.by = "assign.biological_resource", repel=T, pt.size = 0.5, label.size = 2.5)
+    ggsave(file.path(paste0(result$ATAC@project.name, "_CistromeTop_annotated.png")), p1, width=7.5, height=4)
+  }
+}
+
 result.tfs = ATACAnnotateTranscriptionFactor(ATAC = result$ATAC,
                                              peaks = result$peaks, 
                                              project = prefix, 
                                              giggle.path = gigglelib, 
                                              organism = species)
-result$ATAC <- ATACAnnotateChromatinAccessibility(ATAC = result$ATAC, 
-                                                         peaks = result$peaks, 
-                                                         project = prefix, 
-                                                         giggle.path = gigglelib,
-                                                         organism = species)
-if ("biological_resource" %in% colnames(result$ATAC@meta.data)) {
-  p1 <- DimPlot(result$ATAC, label = TRUE, reduction = "umap", group.by = "biological_resource", repel=T, pt.size = 0.5, label.size = 2.5)
-  ggsave(file.path(paste0(result$ATAC@project.name, "_CistromeTop_annotated.png")), p1, width=7.5, height=4)
-}
 
+saveRDS(result, paste0(prefix, "_scATAC_Object.rds"))
 
 if(species == "GRCh38"){
   library(TxDb.Hsapiens.UCSC.hg38.knownGene)

@@ -105,36 +105,6 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <h3 class="h5">
-                                                    Mappability
-                                                    <svg t="1581181133804" class="icon" data-toggle="collapse" href="#readdistr" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
-                                                        <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
-                                                        </path>
-                                                    </svg>
-                                                </h3>
-                                                <div class="collapse" id="readdistr">
-                                                    <p style="font-size: 0.925rem">
-                                                        Read mappability, duplicated reads percentage, fraction of reads mapped to mitochondrial genes, peak regions or promoter regions. 
-                                                    </p>
-                                                    <ul>
-                                                        <li>
-                                                            The <strong>percentage of duplicate reads</strong> shows whether the library is over-amplified due to limited starting material. For human or mouse, if the percentage of duplicate reads is more than 50%%, there may be something wrong during the library preparation.
-                                                        </li>
-                                                        <li>
-                                                            The <strong>percentage of uniquely mapped reads</strong> is usually more than 50%%. If the percentage is less than 50%%, it might be due to inadequate sequencing depth or excessive PCR amplification.
-                                                        </li>
-                                                        <li>
-                                                            <strong>Reads derived from mitochondrial DNA</strong> represent noise in ATAC-seq data, and should be discarded in the downstream analysis. The mitochondrial read fraction shows a large degree of variation across different species and cell types. 
-                                                        </li>
-                                                        <li>
-                                                            The <strong>fraction of reads in peak or promoter regions</strong> is used to evaluate the signal-to-noise ratio of ATAC-seq data quality. At the bulk level, if the values are less than 2%%, it might indicate that the ATAC-seq assay does not capture strong signals.
-                                                        </li>
-                                                    </ul>
-                                                    
-                                                </div>
-                                                <a href=%(readdistr)s><img src=%(readdistr)s width="375" height="400" class="float-left"></a>
-                                            </div>
-                                            <div class="col-6">
-                                                <h3 class="h5">
                                                     Fragment size distribution
                                                     <svg t="1581181133804" class="icon" data-toggle="collapse" href="#fragment" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
                                                         <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
@@ -203,7 +173,7 @@
                                     <div class="container-fluid">
                                         <h2 class="h3" id="celltype">Celltype annotation</h2>
                                         <div class="row">
-                                            <div class="col-12" style="display: %(rpannodisplay)s">
+                                            <div class="col-12">
                                                 <h3 class="h5">
                                                     Celltype annotation based on RP and DE genes
                                                     <svg t="1581181133804" class="icon" data-toggle="collapse" href="#rpannotate" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
@@ -216,15 +186,15 @@
                                                 </p>
                                                 <a href=%(rpannotate)s><img src=%(rpannotate)s width="600" height="400" class="float-left"></a>
                                             </div>
-                                            <div class="col-12" style="display: %(caannodisplay)s">
+                                            <div class="col-12">
                                                 <h3 class="h5">
                                                    Celltype annotation based on bulk chromatin accessibility data
-                                                    <svg t="1581181133804" class="icon" data-toggle="collapse" href="#caannotate" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                    <svg t="1581181133804" class="icon" data-toggle="collapse" href="#rpannotate" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
                                                         <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
                                                         </path>
                                                     </svg>
                                                 </h3>
-                                                <p class="collapse" id="caannotate" style="font-size: 0.925rem">
+                                                <p class="collapse" id="rpannotate" style="font-size: 0.925rem">
                                                     UMAP visualization of cells. Colors represent different biological sources. The biological source information for each cluster is inferred based on cluster-specific peaks.
                                                 </p>
                                                 <a href=%(caannotate)s><img src=%(caannotate)s width="750" height="400" class="float-left"></a>

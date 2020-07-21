@@ -5,7 +5,7 @@
 # @Last Modified by:   Dongqing Sun
 # @Last Modified time: 2020-02-28 13:58:10
 
-version = "1.1.0"
+version = "1.2.1"
 
 import logging
 import sys, os
@@ -13,6 +13,7 @@ import shutil
 import argparse as ap
 
 from MAESTRO.MAESTRO_PipeInit import *
+from MAESTRO.MAESTRO_ParameterValidate import *
 from MAESTRO.scATAC_H5Process import *
 from MAESTRO.scATAC_Genescore import genescore_parser, genescore
 from MAESTRO.scATAC_10x_PeakCount import peakcount_parser, peakcount
@@ -47,7 +48,7 @@ def main():
     
     scrna_analysis_parser(subparsers)
 
-    logging.basicConfig(format="%(message)s", level=logging.INFO, stream=sys.stderr)
+    logging.basicConfig(format="%(levelname)s: %(message)s", stream=sys.stderr)
 
     args = parser.parse_args()
 
@@ -55,9 +56,11 @@ def main():
         print(version)
         exit(0)
     elif args.subcommand == "scatac-init":
+        scatac_validator(args)
         scatac_config(args)
 
     elif args.subcommand == "scrna-init":
+        scrna_validator(args)
         scrna_config(args)
 
     elif args.subcommand == "integrate-init":

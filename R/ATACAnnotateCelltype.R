@@ -48,5 +48,6 @@ ATACAnnotateCelltype <- function(ATAC, signatures = "human.immune.CIBERSORT", mi
      write.table(cluster.genes, paste0(ATAC@project.name, "_RPDiffGenes.tsv"), quote = F, sep = "\t")}
   
   ATAC <- RNAAnnotateCelltype(ATAC, cluster.genes, signatures, min.score = min.score, orig.ident = orig.ident)
+  ATAC@meta.data$assign.celltype = ATAC@meta.data$assign.ident
   return(ATAC)
 }

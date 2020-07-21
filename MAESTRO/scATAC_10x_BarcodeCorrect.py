@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-01-16 19:44:48
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-06-07 15:11:46
+# @Last Modified time: 2020-07-21 14:50:25
 
 
 import argparse
@@ -11,15 +11,17 @@ import pysam
 import time, os
 from collections import defaultdict
 
+from MAESTRO.scATAC_utility import *
+
 def CommandLineParser():
     parser=argparse.ArgumentParser(description = "This is a description of input args")
-    parser.add_argument("-b","--barcodefq",dest = "barcode_fastq",default = "",help = "The barcode fastq file (for 10x genomics, R2)")
-    parser.add_argument("-B","--barcodelib",dest = "barcode_library",default = "",help = "The barcode library, in which the first column is the valid barcode combinations included in experiment.")
+    parser.add_argument("-b","--barcodefq",dest = "barcode_fastq",default = "",help = "The barcode fastq file (for 10x genomics, R2). Support gzipped fastq file.")
+    parser.add_argument("-B","--barcodelib",dest = "barcode_library",default = "",help = "The barcode library, in which the first column is the valid barcode combinations included in experiment. Support gzipped file.")
     parser.add_argument("-O", "--outdir", dest = "outdir",default = "",help = "The output directory.")
 
     return parser.parse_args()
 
-def GenerateMimatch(seq):
+def GenerateMismatch(seq):
     base_list = ["A", "T", "C", "G"]
     seq_mut_list = []
     for i in range(len(seq)):
@@ -28,19 +30,22 @@ def GenerateMimatch(seq):
         seq_mut_list = seq_mut_list + seq_mut
     return(seq_mut_list)
 
-def GenerateMimatchDict(whitelist):
+def GenerateMismatchDict(whitelist):
     barcode_dict = defaultdict(set)
-    barcode_list = open(whitelist, "r").readlines()
+
+    filein = universal_open( whitelist, "rt" )
+    barcode_list = filein.readlines()
+    filein.close()
+    
     barcode_list = [bc.strip() for bc in barcode_list]
-    with open(whitelist, "r") as filein:
-        for line in filein:
-            barcode = line.strip().split("\t")[0]
-            barcode_mut_list = GenerateMimatch(barcode)
-            for seq in barcode_mut_list:
-                if len(barcode_dict[seq]) == 0:
-                    barcode_dict[seq].add(barcode)
-                else:
-                    continue
+    for line in barcode_list:
+        barcode = line.strip().split("\t")[0]
+        barcode_mut_list = GenerateMismatch(barcode)
+        for seq in barcode_mut_list:
+            if len(barcode_dict[seq]) == 0:
+                barcode_dict[seq].add(barcode)
+            else:
+                continue
     for bc in barcode_list:
         barcode_dict[bc] = {bc}
     return(barcode_dict, barcode_list)
@@ -72,7 +77,7 @@ def main():
         # Expand the barcode library
         start_time = time.time()
         print("Start to read barcode library file",time.strftime("%a %b %d %H:%M:%S %Y", time.localtime()))
-        barcode_lib_dict, barcode_lib_list = GenerateMimatchDict(barcode_lib)
+        barcode_lib_dict, barcode_lib_list = GenerateMismatchDict(barcode_lib)
         end_time = time.time()
         print("End", end_time-start_time)
 
