@@ -56,7 +56,7 @@ before_install:
     else
       cd $TEST_DATA_PATH;
       echo "downloading giggle index";
-      wget http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz;
+      wget -q http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz;
       echo "decompressing giggle index";
       tar -xvzf giggle.all.tar.gz;
       rm giggle.all.tar.gz;
