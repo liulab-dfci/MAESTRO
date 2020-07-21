@@ -3,13 +3,15 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-01-16 19:44:48
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-06-07 15:11:46
+# @Last Modified time: 2020-07-21 14:50:25
 
 
 import argparse
 import pysam
 import time, os
 from collections import defaultdict
+
+from MAESTRO.scATAC_utility import *
 
 def CommandLineParser():
     parser=argparse.ArgumentParser(description = "This is a description of input args")

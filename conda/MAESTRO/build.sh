@@ -30,6 +30,6 @@ cd ../
 # 
 
 # install MAESTRO/R
-$R -e 'devtools::install(".", upgrade="never")'
+$R -e 'Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS="true");devtools::install(".", upgrade="never")'
 
 

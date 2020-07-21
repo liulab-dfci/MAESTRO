@@ -11,6 +11,7 @@ jobs:
 cache:
   directories:
     - ~/miniconda
+    - ~/Data
 
 before_install:
   # Set conda path info
@@ -28,6 +29,49 @@ before_install:
           echo "downloading miniconda.sh for osx";
           wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O $HOME/download/miniconda.sh;
         fi;
+    fi;
+  # download test data for scatac
+  - TEST_DATA_PATH=$HOME/Data;
+  - TEST_DATA_SCATAC_PATH=$TEST_DATA_PATH/atac_pbmc_500_v1_fastqs_sampling;
+  - TEST_DATA_GIGGLE_PATH=$TEST_DATA_PATH/giggle.all;
+  - TEST_DATA_SCATAC_REFERENCE_PATH=$TEST_DATA_PATH/Refdata_scATAC_MAESTRO_GRCh38_1.1.0;
+  - if [[ -d $TEST_DATA_PATH ]]; then
+      echo "Directory Data already exists";
+    else
+      mkdir -p $TEST_DATA_PATH;
+    fi;
+  - if [[ -d $TEST_DATA_SCATAC_PATH ]]; then
+      echo "scATAC test data already available from cache";
+    else
+      cd $TEST_DATA_PATH;
+      echo "downloading scatac test data";
+      wget http://cistrome.org/~chenfei/MAESTRO/atac_pbmc_500_v1_fastqs_sampling.tar.gz;
+      echo "decompressing scatac test data";
+      tar -xvzf atac_pbmc_500_v1_fastqs_sampling.tar.gz;
+      rm atac_pbmc_500_v1_fastqs_sampling.tar.gz;
+      cd ../;
+    fi;
+  - if [[ -d $TEST_DATA_GIGGLE_PATH ]]; then
+      echo "scATAC giggle index data already available from cache";
+    else
+      cd $TEST_DATA_PATH;
+      echo "downloading giggle index";
+      wget http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz;
+      echo "decompressing giggle index";
+      tar -xvzf giggle.all.tar.gz;
+      rm giggle.all.tar.gz;
+      cd ../;
+    fi;
+  - if [[ -d $TEST_DATA_SCATAC_REFERENCE_PATH ]]; then
+      echo "scATAC reference genome data already available from cache";
+    else
+      cd $TEST_DATA_PATH;
+      echo "downloading reference genome";
+      wget http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz;
+      echo "decompressing reference genome";
+      tar -xvzf Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz;
+      rm Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz;
+      cd ../;
     fi;
 
 # install the package and dependencies:
@@ -106,7 +150,7 @@ after_success:
   - mamba install anaconda-client
   - |
     # Only upload builds from tags
-    if [[ $TRAVIS_PULL_REQUEST == false && $TRAVIS_REPO_SLUG == "liulab-dfci/MAESTRO"
+    if [[ $TRAVIS_PULL_REQUEST == false && $TRAVIS_REPO_SLUG == "dongqingsun/MAESTRO"
           && $TRAVIS_BRANCH == $TRAVIS_TAG  && $TRAVIS_TAG != '' ]]; then
       export ANACONDA_API_TOKEN=$CONDA_UPLOAD_TOKEN
       anaconda upload bld-dir/**/PACKAGENAME-*.tar.bz2

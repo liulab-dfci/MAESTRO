@@ -435,7 +435,6 @@ rule scrna_analysis:
         outpre = config["outprefix"],
         outdir = "Result/Analysis",
         method = "LISA",
-        rabitlib = config["rabitlib"],
         lisamode = config["lisamode"],
         lisaenv = config["lisaenv"],
         condadir = config["condadir"],
@@ -446,7 +445,7 @@ rule scrna_analysis:
         config["cores"]
     shell:
         "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R --expression {params.expression} --species {params.species} "
-        "--prefix {params.outpre} --method {params.method} --signature {params.signature} --rabitlib {params.rabitlib} "
+        "--prefix {params.outpre} --method {params.method} --signature {params.signature} "
         "--lisamode {params.lisamode} --condadir {params.condadir} --lisaenv {params.lisaenv} --outdir {params.outdir} --thread {threads}"
 
 if config["rseqc"]:
