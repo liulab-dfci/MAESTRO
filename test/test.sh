@@ -50,17 +50,21 @@ TEST1_STD_OUTPUT=${STD_OUTPUT_DIR}/${TEST_PREFIX}_peak_count.h5
 
 MAESTRO scatac-init --format fastq --platform 10x-genomics --species GRCh38 \
 --fastq-dir $TEST_FASTQ_DIR --fastq-prefix $TEST_FASTQ_PREFIX \
---cores 16 --directory $TEST_OUTPUT_DIRDIR --outprefix TEST_PREFIX \
+--cores 8 --directory $TEST_OUTPUT_DIRDIR --outprefix TEST_PREFIX \
 --peak-cutoff 10 --count-cutoff 100 --frip-cutoff 0.1 --cell-cutoff 10 \
 --giggleannotation $TEST_GIGGLE_DIR \
 --fasta $TEST_REFERENCE_PATH \
 --whitelist TEST_WHITELIST_PATH \
 --annotation --method both --signature human.immune.CIBERSORT --clusterpeak --rpmodel Adjusted
 
+cd $TEST_OUTPUT_DIRDIR;
+snakemake --cores 8
+cd ../
+
 echo "1. Check if the report html exists"
 # Check if the report html exists
 TEST_HTML_PATH=$TEST_OUTPUT_DIRDIR/Result/${TEST_PREFIX}_scATAC_report.html
-if [ -z "$d" ]; then
+if [ -e $TEST_HTML_PATH ]; then
     echo " ... succeed!"
 else
     echo " ... failed!"
