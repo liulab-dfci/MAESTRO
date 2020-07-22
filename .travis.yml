@@ -125,7 +125,7 @@ install:
 script:
   # test some command line tools
   - giggle search 
-  - Rabit -help
+  # - Rabit -help
   - sinto -h
   - MAESTRO -v
   - R -e "library(MAESTRO);library(Seurat)"
