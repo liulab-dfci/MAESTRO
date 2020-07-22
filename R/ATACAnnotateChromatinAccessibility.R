@@ -37,6 +37,7 @@ ATACAnnotateChromatinAccessibility <- function(ATAC, peaks, project = ATAC@proje
 {
   if(nrow(peaks)<=50){
     message("Not enough differential peaks input and no enriched chromatin accessibility dataset identified.")
+    ATAC@meta.data$assign.ident = "unknown"
     return(ATAC)
   }else{
     targetList <- list()
@@ -102,8 +103,10 @@ ATACAnnotateChromatinAccessibility <- function(ATAC, peaks, project = ATAC@proje
       message(paste("Skip identifying enriched CAs for cluster ", icluster, " because peak number is less than", min.peaks,"..."))
       }
     }
-     return(ATAC)
- }
+    ATAC@meta.data$assign.biological_resource = ATAC@meta.data$biological_resource
+    ATAC@meta.data$assign.ident = ATAC@meta.data$assign.biological_resource
+    return(ATAC)
+  }
 }
 
 RunGiggle <- function(peakbed, giggle.path, organism, antFile, type = 'tf'){

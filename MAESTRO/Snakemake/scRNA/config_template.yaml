@@ -28,13 +28,6 @@ cores: {{ cores }}
 # and the signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene.
 signature: {{ signature }}
 
-# The method to predict driver regulators [RABIT, LISA]
-method: {{ method }}
-
-# Path of the rabit annotation file required for regulator identification (only required if method is set to RABIT). 
-# Please download the annotation file from http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz and decompress it.
-rabitlib: {{ rabitlib }}
-
 # Mode to Run LISA, 'local' or 'web'. If the mode is set as 'local', 
 # please install LISA (https://github.com/qinqian/lisa) and download pre-computed datasets following the instructions. 
 # The 'web' mode is to run online version of LISA. In consideration of the connection issue and size of datasets, 

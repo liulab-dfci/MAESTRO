@@ -27,7 +27,7 @@ requirements:
     - macs2 =2.2.6
     - umap-learn
     - pysam # this is needed by sinto
-    - r-base=3.6.3
+    - r-base =4.0.2
     - r-BiocManager
     - r-devtools
     - r-hdf5r
@@ -38,10 +38,10 @@ requirements:
     - r-multcomp
     - r-numDeriv
     - r-cluster
-    - r-Seurat =3.1.2
+    - r-Seurat =3.1.5
     # Although the following will be installed through the dependencies of other tools
     # They have been explicitly defined in DESCRIPTION. 
-    - r-ggplot2 >=3.0.0 
+    - r-ggplot2
     - r-ggrepel         
     - r-cowplot         
     - r-matrix
@@ -93,7 +93,7 @@ requirements:
     - macs2 =2.2.6
     - umap-learn 
     - pysam # this is needed by sinto   
-    - r-base=3.6.3
+    - r-base =4.0.2
     - r-BiocManager
     - r-devtools
     - r-hdf5r
@@ -104,7 +104,7 @@ requirements:
     - r-multcomp
     - r-numDeriv
     - r-cluster
-    - r-Seurat =3.1.2
+    - r-Seurat =3.1.5
     # Although the following will be installed through the dependencies of other tools
     # They have been explicitly defined in DESCRIPTION. 
     - r-ggplot2 >=3.0.0 
