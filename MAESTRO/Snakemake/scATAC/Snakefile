@@ -1193,7 +1193,7 @@ rule scatac_analysis:
     output:
         specificpeak = "Result/Analysis/%s_DiffPeaks.tsv" %(config["outprefix"]),
         clusterplot = "Result/Analysis/%s_cluster.png" %(config["outprefix"]),
-        annotateplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
+        # annotateplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
         tflist = "Result/Analysis/%s.PredictedTFTop10.txt" %(config["outprefix"]),
         cellcluster = "Result/Analysis/%s_cell_cluster.txt" %(config["outprefix"]),
         # acannotateplot = "Result/Analysis/%s_CistromeTop_annotated.png" %(config["outprefix"]),

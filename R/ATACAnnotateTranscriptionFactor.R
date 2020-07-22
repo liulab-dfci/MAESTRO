@@ -71,6 +71,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
     reg_table_unique = unique.data.frame(reg_table)
     reg_df = reg_table_unique
     reg_df$TF = "No TFs identified."
+    reg_df$`log(Gigglescore)` = "NA"
     write.table(reg_df,paste0(project, ".PredictedTFTop", top.tf, ".txt"), col.names = TRUE, row.names = FALSE, sep = "\t", quote = FALSE)
     
     return(list())
