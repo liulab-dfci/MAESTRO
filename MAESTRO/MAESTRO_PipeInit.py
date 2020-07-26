@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:40:27
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-07-22 13:29:55
+# @Last Modified time: 2020-07-26 15:33:59
 
 
 import os
@@ -128,13 +128,13 @@ def scatac_parser(subparsers):
     
     # Gene score arguments
     group_genescore = workflow.add_argument_group("Gene score arguments")
-    group_genescore.add_argument("--rpmodel", dest = "rpmodel", default = "Adjusted", 
-        choices = ["Simple", "Adjusted"], 
+    group_genescore.add_argument("--rpmodel", dest = "rpmodel", default = "Enhanced", 
+        choices = ["Simple", "Enhanced"], 
         help = "The RP model to use to calaculate gene score. "
         "For each gene, simple model summarizes the impact of all regulatory elements within the up/dowm-stream of TSS. "
-        "On the basis of simple model, adjusted model includes the regulatory elements within the exon region, "
+        "On the basis of simple model, enhanced model includes the regulatory elements within the exon region, "
         "and also excludes the regulatory elements overlapped with another gene (the promoter and exon of a nearby gene). "
-        "See the MAESTRO paper for more details. DEFAULT: Adjusted.")
+        "See the MAESTRO paper for more details. DEFAULT: Enhanced.")
     group_genescore.add_argument("--genedistance", dest = "genedistance", default = 10000, type = int, 
         help = "Gene score decay distance, could be optional from 1kb (promoter-based regulation) "
         "to 10kb (enhancer-based regulation). DEFAULT: 10000.")
