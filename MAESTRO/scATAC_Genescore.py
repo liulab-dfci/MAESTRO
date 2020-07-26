@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:48:03
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-07-26 14:50:38
+# @Last Modified time: 2020-07-26 15:04:49
 
 
 import os, sys
@@ -331,8 +331,8 @@ def calculate_RP_score(peakmatrix, features, barcodes, gene_bed, decay, score_fi
             ### add index at the end of gene symbol
         genes = list(set([i.split("@")[0] for i in genes_list]))
         
-        print("genes_info_full", genes_info_full[:2])
-        print("genes_info_tss", genes_info_tss[:2])
+        # print("genes_info_full", genes_info_full[:2])
+        # print("genes_info_tss", genes_info_tss[:2])
         
         peaks_info = []
         
@@ -340,7 +340,7 @@ def calculate_RP_score(peakmatrix, features, barcodes, gene_bed, decay, score_fi
             peaks_tmp = peak.decode().rsplit("_", maxsplit=2)
             peaks_info.append([peaks_tmp[0], (int(peaks_tmp[1])+int(peaks_tmp[2]))/2.0, int(peaks_tmp[1]), int(peaks_tmp[2]), 0, peak, ipeak])
             # peaks_info [chrom, center, start, end, 0, uid, ipeak]
-        print("peaks_info", peaks_info[:2])
+        # print("peaks_info", peaks_info[:2])
         ### change here
         # if model == "Exon+":
         #     genes_peaks_score_dok = RP_AddExon(peaks_info, genes_info_full, genes_info_tss, decay)
