@@ -3,13 +3,14 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:48:03
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-06-15 21:54:58
+# @Last Modified time: 2020-07-26 13:50:00
 
 
 import os, sys
 import time
 import tables
 import h5py
+import re
 import collections
 import numpy as np
 import scipy.sparse as sp_sparse
@@ -421,6 +422,8 @@ def genescore(fileformat, directory, outprefix, peakcount, feature, barcode, gen
         scatac_count = read_10X_h5(peakcount)
         peakmatrix = scatac_count.matrix
         features = scatac_count.names.tolist()
+        features = [re.sub("\W", "_", feature.decode()) for feature in features]
+        features = [feature.encode() for feature in features]
         barcodes = scatac_count.barcodes.tolist()
 
     elif fileformat == "mtx":
