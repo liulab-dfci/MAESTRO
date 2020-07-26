@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:48:03
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-07-26 13:50:00
+# @Last Modified time: 2020-07-26 14:50:38
 
 
 import os, sys
@@ -52,13 +52,13 @@ def genescore_parser(subparsers):
     group_input.add_argument("--species", dest = "species", default = "GRCh38", 
         choices = ["GRCh38", "GRCm38"], type = str, 
         help = "Species (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
-    group_input.add_argument("--model", dest = "model", default = "Adjusted", 
-        choices = ["Simple", "Adjusted"], type = str, 
+    group_input.add_argument("--model", dest = "model", default = "Enhanced", 
+        choices = ["Simple", "Enhanced"], type = str, 
         help = "The RP model to use to calaculate gene score. "
         "For each gene, simple model sums over the impact of all regulatory elements within the up/dowm-stream of TSS. "
-        "On the basis of simple model, adjusted model gives the regulatory elements within the exon region a higher weight, "
+        "On the basis of simple model, enhanced model gives the regulatory elements within the exon region a higher weight, "
         "and also excludes the regulatory elements overlapped with another gene (the promoter and exon of a nearby gene). "
-        "See the MAESTRO paper for more details. DEFAULT: Adjusted.")
+        "See the MAESTRO paper for more details. DEFAULT: Enhanced.")
 
     group_output = workflow.add_argument_group("Output arguments")
     group_output.add_argument("-d", "--directory", dest = "directory", default = "MAESTRO", 
@@ -344,7 +344,7 @@ def calculate_RP_score(peakmatrix, features, barcodes, gene_bed, decay, score_fi
         ### change here
         # if model == "Exon+":
         #     genes_peaks_score_dok = RP_AddExon(peaks_info, genes_info_full, genes_info_tss, decay)
-        if model == "Adjusted":
+        if model == "Enhanced":
             genes_peaks_score_dok = RP_AddExonRemovePromoter(peaks_info, genes_info_full, genes_info_tss, decay)
 
 
@@ -395,7 +395,7 @@ def calculate_RP_score(peakmatrix, features, barcodes, gene_bed, decay, score_fi
     #     outf.write(symbol + "\t" + "\t".join(map(str, score_cells_dict_dedup[symbol])) + "\n")
     # outf.close()
 
-def genescore(fileformat, directory, outprefix, peakcount, feature, barcode, genedistance, species, model = "Exon+AdjacentGene-"):
+def genescore(fileformat, directory, outprefix, peakcount, feature, barcode, genedistance, species, model = "Enhanced"):
 
     try:
         os.makedirs(directory)
