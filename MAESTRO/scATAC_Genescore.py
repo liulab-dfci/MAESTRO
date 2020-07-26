@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:48:03
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-07-26 15:04:49
+# @Last Modified time: 2020-07-26 16:04:49
 
 
 import os, sys
@@ -39,13 +39,13 @@ def genescore_parser(subparsers):
         "If the format is 'h5' or 'plain', users need to specify the name of the count matrix file "
         "and row names should be like 'chromosome_peakstart_peakend', such as 'chr10_100020591_100020841'. "
         "If the format is 'mtx', the 'matrix' should be the name of .mtx formatted matrix file, such as 'matrix.mtx'.")
-    group_input.add_argument("--feature", dest = "feature", default = "peaks.bed", 
+    group_input.add_argument("--feature", dest = "feature", default = "", 
         help = "Location of feature file (required for the format of 'mtx'). "
         "Features correspond to row indices of count matrix. "
-        "The feature file should be the peak bed file with 3 columns. DEFAULT: peaks.bed.")
-    group_input.add_argument("--barcode", dest = "barcode", default = "barcodes.tsv", 
+        "The feature file should be the peak bed file with 3 columns. For example, peaks.bed.")
+    group_input.add_argument("--barcode", dest = "barcode", default = "", 
         help = "Location of barcode file (required for the format of 'mtx'). "
-        "Cell barcodes correspond to column indices of count matrix. DEFAULT: barcodes.tsv. ")
+        "Cell barcodes correspond to column indices of count matrix. For example, barcodes.tsv. ")
     group_input.add_argument("--genedistance", dest = "genedistance", default = 10000, type = int, 
         help = "Gene score decay distance, could be optional from 1kb (promoter-based regulation) "
         "to 10kb (enhancer-based regulation). DEFAULT: 10000.")
