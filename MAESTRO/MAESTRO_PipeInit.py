@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:40:27
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-07-20 16:47:23
+# @Last Modified time: 2020-07-22 13:29:55
 
 
 import os
@@ -338,6 +338,11 @@ def scatac_config(args):
     else:
         signature = args.signature
 
+    if args.whitelist != "":
+        whitelist = os.path.abspath(args.whitelist)
+    else:
+        whitelist = ""
+
     with open(configfile, "w") as configout:
         configout.write(config_template.render(
             platform = args.platform,
@@ -348,7 +353,7 @@ def scatac_config(args):
             frag = os.path.abspath(args.frag),
             species = args.species,
             outprefix = args.outprefix,
-            whitelist = os.path.abspath(args.whitelist),
+            whitelist = whitelist,
             cores = args.cores,
             peak = args.peak_cutoff,
             count = args.count_cutoff,

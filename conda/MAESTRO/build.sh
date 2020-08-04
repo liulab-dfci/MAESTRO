@@ -10,11 +10,11 @@ cp bin/giggle $PREFIX/bin/
 cd ../..
 
 # install rabit
-cd refpkg/Rabit
-./configure --prefix=$PREFIX CFLAGS=-I${PREFIX}/include
-make
-make install
-cd ../..
+# cd refpkg/Rabit
+# ./configure --prefix=$PREFIX CFLAGS=-I${PREFIX}/include
+# make
+# make install
+# cd ../..
 
 # install sinto, the pypi version is not useful, let's
 # do it through git

@@ -37,6 +37,7 @@ ATACAnnotateChromatinAccessibility <- function(ATAC, peaks, project = ATAC@proje
 {
   if(nrow(peaks)<=50){
     message("Not enough differential peaks input and no enriched chromatin accessibility dataset identified.")
+    ATAC@meta.data$assign.ident = "unknown"
     return(ATAC)
   }else{
     targetList <- list()

@@ -115,7 +115,7 @@
                                                     Fragment size distribution for 1%% reads sampled from scATAC-seq. Only fragments with insert size less than 1,000 are considered. Y-axis represents the number of fragments. The fragment size distribution should show a periodicity of approximately 200bp due to nucleosome protection of the chromatin to transposase cutting.
 
                                                 </p>
-                                                <a href=%(fragment)s><img src=%(fragment)s width="400" height="400" class="float-left"></a>
+                                                <a href="%(fragment)s"><img src="%(fragment)s" width="400" height="400" class="float-left"></a>
                                             </div>
                                         </div>
                                     </div>
@@ -135,7 +135,7 @@
                                                 <p class="collapse" id="frip" style="font-size: 0.925rem">
                                                     Cell filtering plot of scATAC-seq. The x-axis represents the number of unique reads present in each cell, and the y-axis represents the fraction of reads in promoter regions (defined as 2kb up/downstream of TSS).
                                                 </p>
-                                                <a href=%(frip)s><img src=%(frip)s width="400" height="400" class="float-left"></a>
+                                                <a href="%(frip)s"><img src="%(frip)s" width="400" height="400" class="float-left"></a>
                                             </div>
                                         </div>
                                     </div>
@@ -159,7 +159,7 @@
                                                 <p class="collapse" id="peakcluster" style="font-size: 0.925rem">
                                                     UMAP visualization of the clustering result. Colors represent different clusters with the cluster ID labeled.
                                                 </p>
-                                                <a href=%(peakcluster)s><img src=%(peakcluster)s width="500" height="400" class="float-left"></a>
+                                                <a href="%(peakcluster)s"><img src="%(peakcluster)s" width="500" height="400" class="float-left"></a>
                                             </div>
                                         </div>
                                     </div>
@@ -173,7 +173,7 @@
                                     <div class="container-fluid">
                                         <h2 class="h3" id="celltype">Celltype annotation</h2>
                                         <div class="row">
-                                            <div class="col-12">
+                                            <div class="col-12" style="display: %(rpannodisplay)s">
                                                 <h3 class="h5">
                                                     Celltype annotation based on RP and DE genes
                                                     <svg t="1581181133804" class="icon" data-toggle="collapse" href="#rpannotate" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
@@ -184,9 +184,9 @@
                                                 <p class="collapse" id="rpannotate" style="font-size: 0.925rem">
                                                     UMAP visualization of annotated clusters. Colors represent different cell types. The cell type information for each cluster is annotated using the regulatory potential of marker genes.
                                                 </p>
-                                                <a href=%(rpannotate)s><img src=%(rpannotate)s width="600" height="400" class="float-left"></a>
+                                                <a href="%(rpannotate)s"><img src="%(rpannotate)s" width="600" height="400" class="float-left"></a>
                                             </div>
-                                            <div class="col-12">
+                                            <div class="col-12" style="display: %(caannodisplay)s"> 
                                                 <h3 class="h5">
                                                    Celltype annotation based on bulk chromatin accessibility data
                                                     <svg t="1581181133804" class="icon" data-toggle="collapse" href="#rpannotate" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
@@ -197,7 +197,7 @@
                                                 <p class="collapse" id="rpannotate" style="font-size: 0.925rem">
                                                     UMAP visualization of cells. Colors represent different biological sources. The biological source information for each cluster is inferred based on cluster-specific peaks.
                                                 </p>
-                                                <a href=%(caannotate)s><img src=%(caannotate)s width="750" height="400" class="float-left"></a>
+                                                <a href="%(caannotate)s"><img src="%(caannotate)s" width="750" height="400" class="float-left"></a>
                                             </div>
                                         </div>
                                     </div>
@@ -253,8 +253,14 @@
                                                 <p class="collapse" id="genetrackanno" style="font-size: 0.925rem">
                                                     Gene track plot for each cluster. Here, CD3D nad MS4A1 are displayed as markers of T cells and B cells, respectively.
                                                 </p>
-                                                <a href=%(cd3dtrack)s><img src=%(cd3dtrack)s width="480" height="400" class="float-left"></a>
-                                                <a href=%(ms4a1track)s><img src=%(ms4a1track)s width="480" height="400" class="float-left"></a>
+                                                <div class="row">
+                                                    <div class="col-6" style="display: %(cd3ddisplay)s">
+                                                        <a href="%(cd3dtrack)s"><img src="%(cd3dtrack)s" width="480" height="400" class="float-left"></a>
+                                                    </div>
+                                                    <div class="col-6" style="display: %(ms4a1display)s">
+                                                        <a href="%(ms4a1track)s"><img src="%(ms4a1track)s" width="480" height="400" class="float-left"></a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
