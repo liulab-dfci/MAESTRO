@@ -26,6 +26,12 @@
 * Add the function for annotating cell-types for scATAC-seq clusters based on public bulk chromatin accessibility data from Cistrome database.
 * Provide the function of generating genome browser tracks at cluster level for scATAC-seq dataset visualization. 
 * Support peak calling at the cluster level now!
+### v1.2.1
+* For scATAC, MAESTRO can support fastq, bam, fragments.tsv.gz as the input of the scATAC-seq workflow.
+* For scATAC, MAESTRO provides an option for users to skip the cell-type annotation step in the pipeline, and an option to choose the strategy for cell-type annotation (`RP-based` and `peak-based`).
+* Provide small test data for test [scRNA-seq](http://cistrome.org/~chenfei/MAESTRO/pbmc_1k_v3_fastqs_sampling.tar.gz) and [scATAC-seq](http://cistrome.org/~chenfei/MAESTRO/atac_pbmc_500_v1_fastqs_sampling.tar.gz) pipeline (sampling from 10x fastq files).
+* Add parameter validation before initializing the pipeline and provide more gracious error messages.
+* Update R in MAESTRO conda package from 3.6.3 to 4.0.2, and Seurat from 3.1.2 to 3.1.5.
 
 ## System requirements
 * Linux/Unix
@@ -54,7 +60,7 @@ $ conda config --add channels bioconda
 $ conda config --add channels conda-forge
 # To make the installation faster, we recommend using mamba
 $ conda install mamba -c conda-forge
-$ mamba create -n MAESTRO maestro=1.2.0 -c liulab-dfci
+$ mamba create -n MAESTRO maestro=1.2.1 -c liulab-dfci
 # Activate the environment 
 $ conda activate MAESTRO
 ```
