@@ -21,7 +21,7 @@
 * Incorporate the installation of giggle into MAESTRO, and add web API for LISA function. All the core MAESTRO function can be installed through the conda environment now!
 * Provide more documents for the QC parameters and add flexibility for other parameters in the workflow.
 ### v1.2.0
-* Modify the regulatory potential model by removing the interfering peaks from adjacent genes and adjusting the weight of exon peaks. The "adjusted RP model" is set as the default gene activity scoring model with original "simple RP model" as a option.
+* Modify the regulatory potential model by removing the interfering peaks from adjacent genes and adjusting the weight of exon peaks. The "enhanced RP model" is set as the default gene activity scoring model with original "simple RP model" as a option.
 * Modify the integration function of MAESTRO. The new function can output more intermediate figures and log files for diagnosing the possible failure in integrating rare populations.
 * Add the function for annotating cell-types for scATAC-seq clusters based on public bulk chromatin accessibility data from Cistrome database.
 * Provide the function of generating genome browser tracks at cluster level for scATAC-seq dataset visualization. 
@@ -114,6 +114,7 @@ COMMAND -h` to see the detail description for each option of each module.
 [<img src="./image/ATAC.10x.png" width="297" height="378" />](./example/ATAC_infrastructure_10x/ATAC_infrastructure_10x.md)  
 [<img src="./image/integration.10x.png" width="297" height="378" />](./example/Integration/Integration.md)
 [<img src="./image/integration.large.png" width="297" height="378" />](./example/Integration_large/Integration_large.md)
+[<img src="./image/gene.activity.png" width="297" height="378" />](./example/Gene_activity_modelling/Gene_activity_modelling.md)
 
 ## Citation
 
