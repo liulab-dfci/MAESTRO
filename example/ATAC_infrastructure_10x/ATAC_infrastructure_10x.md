@@ -17,7 +17,7 @@ $ conda activate MAESTRO
 ```
 
 ### Step 1. Configure the MAESTRO workflow
-Initialize the MAESTRO scATAC-seq workflow using `MAESTRO scATAC-init` command. This will install a Snakefile and a config file in this directory.
+Initialize the MAESTRO scATAC-seq workflow using `MAESTRO scATAC-init` command. This will install a Snakefile and a config file in this directory. Here we take the 10X PBMC data as an example. Considering MAESTRO provides built-in immune cell markers, it's recommended to choose the `RP-based` cell-type annotation strategy. If the data is not immune-related, users can choose to provide their own marker gene list, or choose to annotate cell types through the `peak-based` method (see the following argument description for more details), or they can directly skip the annotation step by not setting `--annotation`.
 ```bash
 $ MAESTRO scatac-init --platform 10x-genomics --format fastq --species GRCh38 \
 --fastq-dir Data/atac_v1_pbmc_10k_fastqs --fastq-prefix atac_v1_pbmc_10k \
@@ -27,10 +27,10 @@ $ MAESTRO scatac-init --platform 10x-genomics --format fastq --species GRCh38 \
 --fasta annotations/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa \
 --whitelist Data/barcodes/737K-cratac-v1.txt \
 --rpmodel Enhanced \
---annotation --method both --signature human.immune.CIBERSORT
+--annotation --method RP-based --signature human.immune.CIBERSORT
 ```
 
-MAESTRO also allow users to start with bam files with 'CB' tag. Here the bam file `atac_pbmc_10k_v1_possorted_bam.bam` can be downloaded from [10X Genomics](https://support.10xgenomics.com/single-cell-atac/datasets/1.1.0/atac_pbmc_10k_v1).
+MAESTRO also allow users to start with bam files with 'CB' tag. Here the bam file `atac_pbmc_10k_v1_possorted_bam.bam` can be downloaded from [10X Genomics](https://support.10xgenomics.com/single-cell-atac/datasets/1.1.0/atac_pbmc_10k_v1). 
 ```bash
 $ MAESTRO scatac-init --platform 10x-genomics --format bam --species GRCh38 \
 --bam Data/atac_pbmc_10k_v1_possorted_bam.bam \
