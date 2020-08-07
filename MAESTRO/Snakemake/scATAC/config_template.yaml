@@ -85,11 +85,11 @@ custompeaksloc: {{ custompeaksloc }}
 # If not (by default), the pipeline will only use peaks called from all fragments.
 shortpeaks: {{ shortpeaks }}
 
-# The RP model to use to calaculate gene score. [Simple, Adjusted]
+# The RP model to use to calaculate gene score. [Simple, Enhanced]
 # For each gene, simple model sums over the impact of all regulatory elements within the up/dowm-stream of TSS. 
-# On the basis of simple model, adjusted model gives the regulatory elements within the exon region a higher weight, 
+# On the basis of simple model, enhanced model gives the regulatory elements within the exon region a higher weight, 
 # and also excludes the regulatory elements overlapped with another gene (the promoter and exon of a nearby gene). 
-# See the MAESTRO paper for more details. DEFAULT: Adjusted.
+# See the MAESTRO paper for more details. DEFAULT: Enhanced.
 rpmodel: {{ rpmodel }}
 
 # Gene score decay distance, could be optional from 1kb (promoter-based regulation) and 10kb(enhancer-based regulation), default is 10kb
