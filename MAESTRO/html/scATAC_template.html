@@ -81,8 +81,8 @@
                                             <td>%(outprefix)s</td>
                                         </tr>
                                         <tr>
-                                            <th scope="row">FASTQ Path</th>
-                                            <td>%(fastqdir)s</td>
+                                            <th scope="row">%(inputformat)s</th>
+                                            <td>%(inputpath)s</td>
                                         </tr>
                                         <tr>
                                             <th scope="row">Species</th>
@@ -131,7 +131,7 @@
                                                     </ul>
                                                     
                                                 </div>
-                                                <a href=%(readdistr)s><img src=%(readdistr)s width="375" height="400" class="float-left"></a>
+                                                <a href="%(readdistr)s"><img src="%(readdistr)s" width="375" height="400" class="float-left"></a>
                                             </div>
                                             <div class="col-6">
                                                 <h3 class="h5">
@@ -145,7 +145,7 @@
                                                     Fragment size distribution for 1%% reads sampled from scATAC-seq. Only fragments with insert size less than 1,000 are considered. Y-axis represents the number of fragments. The fragment size distribution should show a periodicity of approximately 200bp due to nucleosome protection of the chromatin to transposase cutting.
 
                                                 </p>
-                                                <a href=%(fragment)s><img src=%(fragment)s width="400" height="400" class="float-left"></a>
+                                                <a href="%(fragment)s"><img src="%(fragment)s" width="400" height="400" class="float-left"></a>
                                             </div>
                                         </div>
                                     </div>
@@ -165,7 +165,7 @@
                                                 <p class="collapse" id="frip" style="font-size: 0.925rem">
                                                     Cell filtering plot of scATAC-seq. The x-axis represents the number of unique reads present in each cell, and the y-axis represents the fraction of reads in promoter regions (defined as 2kb up/downstream of TSS).
                                                 </p>
-                                                <a href=%(frip)s><img src=%(frip)s width="400" height="400" class="float-left"></a>
+                                                <a href="%(frip)s"><img src="%(frip)s" width="400" height="400" class="float-left"></a>
                                             </div>
                                         </div>
                                     </div>
@@ -189,7 +189,7 @@
                                                 <p class="collapse" id="peakcluster" style="font-size: 0.925rem">
                                                     UMAP visualization of the clustering result. Colors represent different clusters with the cluster ID labeled.
                                                 </p>
-                                                <a href=%(peakcluster)s><img src=%(peakcluster)s width="500" height="400" class="float-left"></a>
+                                                <a href="%(peakcluster)s"><img src="%(peakcluster)s" width="500" height="400" class="float-left"></a>
                                             </div>
                                         </div>
                                     </div>
@@ -203,7 +203,7 @@
                                     <div class="container-fluid">
                                         <h2 class="h3" id="celltype">Celltype annotation</h2>
                                         <div class="row">
-                                            <div class="col-12">
+                                            <div class="col-12" style="display: %(rpannodisplay)s">
                                                 <h3 class="h5">
                                                     Celltype annotation based on RP and DE genes
                                                     <svg t="1581181133804" class="icon" data-toggle="collapse" href="#rpannotate" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
@@ -214,20 +214,20 @@
                                                 <p class="collapse" id="rpannotate" style="font-size: 0.925rem">
                                                     UMAP visualization of annotated clusters. Colors represent different cell types. The cell type information for each cluster is annotated using the regulatory potential of marker genes.
                                                 </p>
-                                                <a href=%(rpannotate)s><img src=%(rpannotate)s width="600" height="400" class="float-left"></a>
+                                                <a href="%(rpannotate)s"><img src="%(rpannotate)s" width="600" height="400" class="float-left"></a>
                                             </div>
-                                            <div class="col-12">
+                                            <div class="col-12" style="display: %(caannodisplay)s">
                                                 <h3 class="h5">
                                                    Celltype annotation based on bulk chromatin accessibility data
-                                                    <svg t="1581181133804" class="icon" data-toggle="collapse" href="#rpannotate" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                    <svg t="1581181133804" class="icon" data-toggle="collapse" href="#caannotate" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
                                                         <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
                                                         </path>
                                                     </svg>
                                                 </h3>
-                                                <p class="collapse" id="rpannotate" style="font-size: 0.925rem">
+                                                <p class="collapse" id="caannotate" style="font-size: 0.925rem">
                                                     UMAP visualization of cells. Colors represent different biological sources. The biological source information for each cluster is inferred based on cluster-specific peaks.
                                                 </p>
-                                                <a href=%(caannotate)s><img src=%(caannotate)s width="750" height="400" class="float-left"></a>
+                                                <a href="%(caannotate)s"><img src="%(caannotate)s" width="750" height="400" class="float-left"></a>
                                             </div>
                                         </div>
                                     </div>
@@ -283,8 +283,14 @@
                                                 <p class="collapse" id="genetrackanno" style="font-size: 0.925rem">
                                                     Gene track plot for each cluster. Here, CD3D nad MS4A1 are displayed as markers of T cells and B cells, respectively.
                                                 </p>
-                                                <a href=%(cd3dtrack)s><img src=%(cd3dtrack)s width="480" height="400" class="float-left"></a>
-                                                <a href=%(ms4a1track)s><img src=%(ms4a1track)s width="480" height="400" class="float-left"></a>
+                                                <div class="row">
+                                                    <div class="col-6" style="display: %(cd3ddisplay)s">
+                                                        <a href="%(cd3dtrack)s"><img src="%(cd3dtrack)s" width="480" height="400" class="float-left"></a>
+                                                    </div>
+                                                    <div class="col-6" style="display: %(ms4a1display)s">
+                                                        <a href="%(ms4a1track)s"><img src="%(ms4a1track)s" width="480" height="400" class="float-left"></a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -329,4 +335,4 @@
     </script>
 </body>
 
-</html>ƒ
+</html>

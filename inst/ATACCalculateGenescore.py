@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-06-12 04:13:17
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-06-13 03:41:17
+# @Last Modified time: 2020-07-26 14:54:02
 
 import os, sys
 import time
@@ -268,7 +268,7 @@ def calculate_RP_score(cell_peaks, peaks_list, gene_bed_df, genes_list, decay, m
             peaks_info.append([peaks_tmp[0], (int(peaks_tmp[1])+int(peaks_tmp[2]))/2.0, int(peaks_tmp[1]), int(peaks_tmp[2]), 0, peak, ipeak])
             # peaks_info [chrom, center, start, end, 0, uid, ipeak]
         # print("peaks_info", peaks_info[:2])
-        if model == "Adjusted":
+        if model == "Enhanced":
             genes_peaks_score_dok = RP_AddExonRemovePromoter(peaks_info, genes_info_full, genes_info_tss, decay)
 
 

@@ -13,3 +13,4 @@ dist/*
 *.tar.bz2
 *.dylib
 *.tmp
+*.egg-info/*

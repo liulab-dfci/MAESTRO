@@ -66,7 +66,7 @@ def getfastq_10x(fastqdir, fastqprefix):
         r1 = " ".join(r1_fastq)
     else:
         print("Invalid fastq files!")
-    if r1_fastq[0].endswith("gz"):
+    if is_gzip(r1_fastq[0]):
         command = "zcat"
     else:
         command = "cat"

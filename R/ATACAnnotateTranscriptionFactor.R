@@ -32,7 +32,7 @@
 #' pbmc.tfs <- ATACAnnotateTranscriptionFactor(ATAC = pbmc.ATAC.res$ATAC, peaks = pbmc.ATAC.res$peaks, project = "PBMC.scATAC.TF", giggle.path = "/home/annotations/giggle")
 #' pbmc.tfs
 #'
-#' @importFrom Seurat GetAssayData Idents
+#' @importFrom Seurat GetAssayData Idents DefaultAssay
 #' @export
 
 ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project = ATAC@project.name, giggle.path, organism = "GRCh38", top.tf = 10, target.genes = FALSE, min.peaks = 10)
@@ -71,6 +71,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
     reg_table_unique = unique.data.frame(reg_table)
     reg_df = reg_table_unique
     reg_df$TF = "No TFs identified."
+    reg_df$`log(Gigglescore)` = "NA"
     write.table(reg_df,paste0(project, ".PredictedTFTop", top.tf, ".txt"), col.names = TRUE, row.names = FALSE, sep = "\t", quote = FALSE)
     
     return(list())

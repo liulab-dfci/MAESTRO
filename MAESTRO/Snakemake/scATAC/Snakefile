@@ -8,7 +8,7 @@ import yaml
 import sys
 import os
 
-from MAESTRO.scATAC_utility import get_fastqlist, ENV_PATH, SCRIPT_PATH, RSCRIPT_PATH, getfastq_10x
+from MAESTRO.scATAC_utility import is_gzip, get_fastqlist, ENV_PATH, SCRIPT_PATH, RSCRIPT_PATH, getfastq_10x
 
 # def qcplot_input(wildcards):
 #     checkpoint_output = checkpoints.scatac_samsplit.get(**wildcards).output[0]
@@ -21,12 +21,25 @@ def all_input(wildcards):
         cluster=glob_wildcards(os.path.join(checkpoint_output, "{cluster}.bam")).cluster)
     # return checkpoint_output
 
+def all_input_frag(wildcards):
+    checkpoint_output = checkpoints.scatac_fragcluster.get().output[0]
+    return expand("Result/Analysis/Cluster/{cluster}_treat_pileup.bdg",
+        cluster=glob_wildcards(os.path.join(checkpoint_output, "{cluster}.bed")).cluster)
+
+
+macs2_genome = "hs" if config["species"] == "GRCh38" else "mm"
+
 if config["clusterpeaks"]:
-    rule all:
-        input:
-            summaryreport = "Result/" + config["outprefix"] + "_scATAC_report.html",
-            peakcluster = all_input
-        # tfscore = "Result/Analysis/" + config["outprefix"] + "_tfscore.txt"
+    if config["format"] != "fragments":
+        rule all:
+            input:
+                summaryreport = "Result/" + config["outprefix"] + "_scATAC_report.html",
+                peakcluster = all_input
+    else:
+        rule all:
+            input:
+                summaryreport = "Result/" + config["outprefix"] + "_scATAC_report.html",
+                peakcluster = all_input_frag
 else:
     rule all:
         input:
@@ -195,13 +208,14 @@ if config["platform"] == "microfluidic":
             peak = "Result/Analysis/%s_all_peaks.narrowPeak" %(config["outprefix"]),
             bdg = "Result/Analysis/%s_all_treat_pileup.bdg" %(config["outprefix"]),
         params:
-            name = "%s_all" %(config["outprefix"])
+            name = "%s_all" %(config["outprefix"]),
+            genome = macs2_genome
         log:
             "Result/Log/%s_macs2_allpeak.log" %(config["outprefix"])
         benchmark:
             "Result/Benchmark/%s_AllPeakCall.benchmark" %(config["outprefix"])
         shell:
-            "macs2 callpeak -g hs --outdir Result/Analysis/ -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.bam}"
+            "macs2 callpeak -f BAMPE -g {params.genome} --outdir Result/Analysis/ -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.bam}"
     
     if config["shortpeaks"]:
         rule scatac_shortfragment:
@@ -224,13 +238,14 @@ if config["platform"] == "microfluidic":
             output:
                 bed = "Result/Analysis/%s_150bp_peaks.narrowPeak" %(config["outprefix"])
             params:
-                name = "%s_150bp" %(config["outprefix"])
+                name = "%s_150bp" %(config["outprefix"]),
+                genome = macs2_genome
             log:
                 "Result/Log/" + config["outprefix"] + "_macs2_shortpeak.log"
             benchmark:
                 "Result/Benchmark/%s_ShortPeakCall.benchmark" %(config["outprefix"])
             shell:
-                "macs2 callpeak -g hs --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.shortbam}"
+                "macs2 callpeak -f BAMPE -g {params.genome} --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.shortbam}"
     
     if config["custompeaks"] and config["shortpeaks"]:
         rule scatac_mergepeak:
@@ -317,28 +332,30 @@ if config["platform"] == "microfluidic":
             "--bam-dir {params.bamdir} --directory {params.outdir} --outprefix {params.outpre} --cores {threads} --species {params.species}"
             
 if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
-    if config["platform"] == "10x-genomics":
-        rule scatac_preprocess:
-            input:
-                fastqs = config["fastqdir"],
-                fasta = config["genome"]["fasta"]
-            output:
-                r1cat = temp(os.path.join(config["fastqdir"], "%s_R1.fastq" %(config["fastqprefix"]))),
-                r2cat = temp(os.path.join(config["fastqdir"], "%s_R2.fastq" %(config["fastqprefix"]))),
-                r3cat = temp(os.path.join(config["fastqdir"], "%s_R3.fastq" %(config["fastqprefix"]))),
-            params:
-                r1 = getfastq_10x(config["fastqdir"], config["fastqprefix"])["r1"],
-                r2 = getfastq_10x(config["fastqdir"], config["fastqprefix"])["barcode"],
-                r3 = getfastq_10x(config["fastqdir"], config["fastqprefix"])["r3"],
-                cmd = getfastq_10x(config["fastqdir"], config["fastqprefix"])["command"],
-            threads:
-                config["cores"]
-            benchmark:
-                "Result/Benchmark/%s_Preprocess.benchmark" %(config["outprefix"])
-            shell:
-                "{params.cmd} {params.r1} > {output.r1cat};"
-                "{params.cmd} {params.r2} > {output.r2cat};"
-                "{params.cmd} {params.r3} > {output.r3cat};"
+    if config["format"] == "fastq" or config["format"] == "bam":
+        if config["format"] == "fastq":
+            if config["platform"] == "10x-genomics":
+                rule scatac_preprocess:
+                    input:
+                        fastqs = config["fastqdir"],
+                        fasta = config["genome"]["fasta"]
+                    output:
+                        r1cat = temp(os.path.join("Result/Tmp", "%s_R1.fastq" %(config["fastqprefix"]))),
+                        r2cat = temp(os.path.join("Result/Tmp", "%s_R2.fastq" %(config["fastqprefix"]))),
+                        r3cat = temp(os.path.join("Result/Tmp", "%s_R3.fastq" %(config["fastqprefix"]))),
+                    params:
+                        r1 = getfastq_10x(config["fastqdir"], config["fastqprefix"])["r1"],
+                        r2 = getfastq_10x(config["fastqdir"], config["fastqprefix"])["barcode"],
+                        r3 = getfastq_10x(config["fastqdir"], config["fastqprefix"])["r3"],
+                        cmd = getfastq_10x(config["fastqdir"], config["fastqprefix"])["command"],
+                    threads:
+                        config["cores"]
+                    benchmark:
+                        "Result/Benchmark/%s_Preprocess.benchmark" %(config["outprefix"])
+                    shell:
+                        "{params.cmd} {params.r1} > {output.r1cat};"
+                        "{params.cmd} {params.r2} > {output.r2cat};"
+                        "{params.cmd} {params.r3} > {output.r3cat};"
 
 
 #     # rule scatac_bulk_unique:
@@ -368,114 +385,375 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
 #     #         "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.promoter} -u | wc -l >> {output.bulkqc};"
 #     #         "cut -f 1-3 {output.bed} | sort -k1,1 -k2,2n | uniq | grep -v 'chrM' | intersectBed -wa -a - -b {input.peak} -u | wc -l >> {output.bulkqc};"
 
-    if config["platform"] == "sci-ATAC-seq":
-        rule scatac_preprocess:
+            if config["platform"] == "sci-ATAC-seq":
+                # support pair-end sequencing fastqs (_1.fastq, _2.fastq)
+                rule scatac_preprocess:
+                    input:
+                        fasta = config["genome"]["fasta"],
+                        fastq1 = os.path.join(config["fastqdir"], "%s_1.fastq" %(config["fastqprefix"])),
+                        fastq2 = os.path.join(config["fastqdir"], "%s_2.fastq" %(config["fastqprefix"])),
+                    output:
+                        r1 = temp(os.path.join("Result/Tmp", "%s_R1.fastq" %(config["fastqprefix"]))),
+                        r2 = temp(os.path.join("Result/Tmp", "%s_R2.fastq" %(config["fastqprefix"]))),
+                        r3 = temp(os.path.join("Result/Tmp", "%s_R3.fastq" %(config["fastqprefix"]))),
+                    params:
+                        outdir = "Result/Tmp"
+                    benchmark:
+                        "Result/Benchmark/%s_Preprocess.benchmark" %(config["outprefix"])
+                    shell:
+                        "python " + SCRIPT_PATH + "/scATAC_sci_BarcodeExtract.py --R1 {input.fastq1} --R2 {input.fastq2} -O {params.outdir}"
+
+                # support 10-like input (_R1.fatsq, _R2.fastq, _R3.fastq)
+                rule scatac_preprocess_fastqrename:
+                    input:
+                        fasta = config["genome"]["fasta"],
+                        r1 = os.path.join(config["fastqdir"], "%s_R1.fastq" %(config["fastqprefix"])),
+                        r2 = os.path.join(config["fastqdir"], "%s_R2.fastq" %(config["fastqprefix"])),
+                        r3 = os.path.join(config["fastqdir"], "%s_R3.fastq" %(config["fastqprefix"])),
+                    output:
+                        r1 = temp(os.path.join("Result/Tmp", "%s_R1.fastq" %(config["fastqprefix"]))),
+                        r2 = temp(os.path.join("Result/Tmp", "%s_R2.fastq" %(config["fastqprefix"]))),
+                        r3 = temp(os.path.join("Result/Tmp", "%s_R3.fastq" %(config["fastqprefix"]))),
+                    params:
+                        outdir = "Result/Tmp"
+                    benchmark:
+                        "Result/Benchmark/%s_Preprocess.benchmark" %(config["outprefix"])
+                    shell:
+                        "cp {input.r1} {input.r2} {input.r3} {params.outdir};"
+
+            rule scatac_fqaddbarcode:
+                input:
+                    r1 = os.path.join("Result/Tmp", "%s_R1.fastq" %(config["fastqprefix"])),
+                    r2 = os.path.join("Result/Tmp", "%s_R2.fastq" %(config["fastqprefix"])),
+                    r3 = os.path.join("Result/Tmp", "%s_R3.fastq" %(config["fastqprefix"])),
+                output:
+                    r1 = temp(os.path.join("Result/Tmp", "%s_R1.barcoded.fastq" %(config["fastqprefix"]))),
+                    r3 = temp(os.path.join("Result/Tmp", "%s_R3.barcoded.fastq" %(config["fastqprefix"]))),
+                    # r1 = "%s/%s_R1.barcoded.fastq" %(config["fastqdir"], config["fastqprefix"]),
+                    # r3 = "%s/%s_R3.barcoded.fastq" %(config["fastqdir"], config["fastqprefix"]),
+                benchmark:
+                    "Result/Benchmark/%s_FqAddbarcode.benchmark" %(config["outprefix"])
+                shell:
+                    "base=`head -n 2 {input.r2} | tail -n 1 | wc -L`;"
+                    "sinto barcode --barcode_fastq {input.r2} --read1 {input.r1} --read2 {input.r3} -b $base;"
+
+            rule scatac_map:
+                input:
+                    fasta = config["genome"]["fasta"],
+                    r1 = os.path.join("Result/Tmp", "%s_R1.barcoded.fastq" %(config["fastqprefix"])),
+                    r3 = os.path.join("Result/Tmp", "%s_R3.barcoded.fastq" %(config["fastqprefix"])),
+                output:
+                    bam = temp("Result/minimap2/%s.sortedByPos.bam" %(config["outprefix"])),
+                threads:
+                    config["cores"]
+                benchmark:
+                    "Result/Benchmark/%s_Minimap2.benchmark" %(config["outprefix"])
+                shell:
+                    "minimap2 -ax sr -t {threads} {input.fasta} {input.r1} {input.r3} "
+                    "| samtools view --threads {threads} -b "
+                    "| samtools sort --threads {threads} -o {output.bam};"
+
+            rule scatac_fragmentgenerate:
+                input:
+                    bam = "Result/minimap2/%s.sortedByPos.bam" %(config["outprefix"]),
+                output:
+                    fragments = "Result/minimap2/fragments.tsv",
+                    bam = "Result/minimap2/%s.sortedByPos.CRadded.bam" %(config["outprefix"]),
+                params:
+                    outdir = "Result/minimap2"
+                benchmark:
+                    "Result/Benchmark/%s_FragGenerate.benchmark" %(config["outprefix"])
+                shell:
+                    "python " + SCRIPT_PATH + "/scATAC_FragmentGenerate.py -B {input.bam} -O {params.outdir} --addtag CR"
+
+            if config["whitelist"]:
+                rule scatac_barcodecorrect:
+                    input:
+                        r2 = os.path.join("Result/Tmp", "%s_R2.fastq" %(config["fastqprefix"])),
+                        whitelist = config["whitelist"],
+                    output:
+                        bc_correct = "Result/minimap2/barcode_correct.txt",
+                        bc_correct_uniq = "Result/minimap2/barcode_correct_uniq.txt",
+                    params:
+                        outdir = "Result/minimap2"
+                    benchmark:
+                        "Result/Benchmark/%s_BarcodeCorrect.benchmark" %(config["outprefix"])
+                    shell:
+                        "python " + SCRIPT_PATH + "/scATAC_10x_BarcodeCorrect.py -b {input.r2} -B {input.whitelist} -O {params.outdir};"
+                        "sort -k1,1 -k3,3 {output.bc_correct} | uniq > {output.bc_correct_uniq}"
+            else:
+                rule scatac_barcodecorrect:
+                    input:
+                        r2 = os.path.join("Result/Tmp", "%s_R2.fastq" %(config["fastqprefix"])),
+                    output:
+                        bc_correct = "Result/minimap2/barcode_correct.txt",
+                        bc_correct_uniq = "Result/minimap2/barcode_correct_uniq.txt",
+                    params:
+                        outdir = "Result/minimap2"
+                    benchmark:
+                        "Result/Benchmark/%s_BarcodeCorrect.benchmark" %(config["outprefix"])
+                    shell:
+                        "python " + SCRIPT_PATH + "/scATAC_10x_BarcodeCorrect.py -b {input.r2} -O {params.outdir};"
+                        "sort -k1,1 -k3,3 {output.bc_correct} | uniq > {output.bc_correct_uniq}"     
+
+            rule scatac_fragmentcorrect:
+                input:
+                    fragments = "Result/minimap2/fragments.tsv",
+                    bc_correct = "Result/minimap2/barcode_correct.txt"
+                output:
+                    frag_count = "Result/minimap2/fragments_corrected_count.tsv",
+                    frag_sort = "Result/minimap2/fragments_corrected_sorted.tsv"
+                params:
+                    outdir = "Result/minimap2",
+                    frag_correct = "Result/minimap2/fragments_corrected.tsv",
+                benchmark:
+                    "Result/Benchmark/%s_FragCorrect.benchmark" %(config["outprefix"])
+                shell:
+                    "python " + SCRIPT_PATH + "/scATAC_FragmentCorrect.py -F {input.fragments} -C {input.bc_correct} -O {params.outdir};"
+                    "sort -k1,1 -k2,2 -k3,3 -k4,4 -V {params.frag_correct} > {output.frag_sort};"
+                    "bedtools groupby -i {output.frag_sort} -g 1,2,3,4 -c 4 -o count > {output.frag_count}"
+
+            rule scatac_rmdp:
+                input:
+                    bam = "Result/minimap2/%s.sortedByPos.CRadded.bam" %(config["outprefix"]),
+                output:
+                    bam = "Result/minimap2/%s.sortedByPos.CRadded.rmdp.bam" %(config["outprefix"]),
+                    metric = "Result/minimap2/%s.rmdp.txt" %(config["outprefix"]),
+                    fragbed = "Result/QC/%s_frag.bed" %(config["outprefix"]),
+                params:
+                    sam = "Result/minimap2/%s.sortedByPos.CRadded.rmdp.sample.sam" %(config["outprefix"]),
+                    tmp = "Result/Tmp",
+                threads:
+                    int(config["cores"])-2
+                benchmark:
+                    "Result/Benchmark/%s_Rmdp.benchmark" %(config["outprefix"])
+                shell:
+                    "picard MarkDuplicates INPUT={input.bam} OUTPUT={output.bam} METRICS_FILE={output.metric} TMP_DIR={params.tmp};"
+                    "samtools view -@ {threads} -s 0.01 -o {params.sam} {input.bam};"
+                    "awk '{{if ($9>0) print $9}}' {params.sam} > {output.fragbed};"
+
+            rule scatac_bamaddCB:
+                input:
+                    bam = "Result/minimap2/%s.sortedByPos.CRadded.rmdp.bam" %(config["outprefix"]),
+                    bc_correct = "Result/minimap2/barcode_correct_uniq.txt"
+                output:
+                    bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam" %(config["outprefix"]),
+                params:
+                    outdir = "Result/minimap2",
+                    outprefix = "%s.sortedByPos.rmdp.CBadded" %(config["outprefix"])
+                threads:
+                    int(config["cores"])-2
+                benchmark:
+                    "Result/Benchmark/%s_BamAddCB.benchmark" %(config["outprefix"])
+                shell:
+                    "python " + SCRIPT_PATH + "/scATAC_BamAddTag.py -B {input.bam} -T {input.bc_correct} -C CR "
+                    "-O {params.outdir} -P {params.outprefix};"
+
+        if config["format"] == "bam":
+            rule scatac_fragmentgenerate:
+                input:
+                    bam = config["bam"],
+                output:
+                    fragments = "Result/minimap2/fragments_corrected_count.tsv",
+                params:
+                    outdir = "Result/minimap2",
+                benchmark:
+                    "Result/Benchmark/%s_FragGenerate.benchmark" %(config["outprefix"])
+                shell:
+                    "python " + SCRIPT_PATH + "/scATAC_FragmentGenerate.py -B {input.bam} -O {params.outdir} --CBtag CB --count;"
+
+            rule scatac_rmdp:
+                input:
+                    bam = config["bam"],
+                output:
+                    bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam" %(config["outprefix"]),
+                    metric = "Result/minimap2/%s.rmdp.txt" %(config["outprefix"]),
+                    fragbed = "Result/QC/%s_frag.bed" %(config["outprefix"]),
+                params:
+                    sam = "Result/minimap2/%s.sortedByPos.CRadded.rmdp.sample.sam" %(config["outprefix"]),
+                    tmp = "Result/Tmp",
+                threads:
+                    int(config["cores"])-2
+                benchmark:
+                    "Result/Benchmark/%s_Rmdp.benchmark" %(config["outprefix"])
+                shell:
+                    "picard MarkDuplicates INPUT={input.bam} OUTPUT={output.bam} METRICS_FILE={output.metric} TMP_DIR={params.tmp};"
+                    "samtools view -@ {threads} -s 0.01 -o {params.sam} {input.bam};"
+                    "awk '{{if ($9>0) print $9}}' {params.sam} > {output.fragbed};"
+
+        rule scatac_allpeakcall:
             input:
-                fasta = config["genome"]["fasta"],
-                fastq1 = os.path.join(config["fastqdir"], "%s_1.fastq" %(config["fastqprefix"])),
-                fastq2 = os.path.join(config["fastqdir"], "%s_2.fastq" %(config["fastqprefix"])),
+                bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam" %(config["outprefix"])
             output:
-                r1 = os.path.join(config["fastqdir"], "%s_R1.fastq" %(config["fastqprefix"])),
-                r2 = os.path.join(config["fastqdir"], "%s_R2.fastq" %(config["fastqprefix"])),
-                r3 = os.path.join(config["fastqdir"], "%s_R3.fastq" %(config["fastqprefix"])),
+                peak = "Result/Analysis/%s_all_peaks.narrowPeak" %(config["outprefix"]),
+                bdg = "Result/Analysis/%s_all_treat_pileup.bdg" %(config["outprefix"]),
             params:
-                outdir = config["fastqdir"]
+                name = "%s_all" %(config["outprefix"]),
+                genome = macs2_genome
+            log:
+                "Result/Log/%s_macs2_allpeak.log" %(config["outprefix"])
             benchmark:
-                "Result/Benchmark/%s_Preprocess.benchmark" %(config["outprefix"])
+                "Result/Benchmark/%s_AllPeakCall.benchmark" %(config["outprefix"])
             shell:
-                "python " + SCRIPT_PATH + "/scATAC_sci_BarcodeExtract.py --R1 {input.fastq1} --R2 {input.fastq2} -O {params.outdir}"
+                "macs2 callpeak -f BAMPE -g {params.genome} --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.bam}"
 
-    rule scatac_fqaddbarcode:
-        input:
-            r1 = os.path.join(config["fastqdir"], "%s_R1.fastq" %(config["fastqprefix"])),
-            r2 = os.path.join(config["fastqdir"], "%s_R2.fastq" %(config["fastqprefix"])),
-            r3 = os.path.join(config["fastqdir"], "%s_R3.fastq" %(config["fastqprefix"])),
-        output:
-            r1 = temp(os.path.join(config["fastqdir"], "%s_R1.barcoded.fastq" %(config["fastqprefix"]))),
-            r3 = temp(os.path.join(config["fastqdir"], "%s_R3.barcoded.fastq" %(config["fastqprefix"]))),
-            # r1 = "%s/%s_R1.barcoded.fastq" %(config["fastqdir"], config["fastqprefix"]),
-            # r3 = "%s/%s_R3.barcoded.fastq" %(config["fastqdir"], config["fastqprefix"]),
-        benchmark:
-            "Result/Benchmark/%s_FqAddbarcode.benchmark" %(config["outprefix"])
-        shell:
-            "base=`head -n 2 {input.r2} | tail -n 1 | wc -L`;"
-            "sinto barcode --barcode_fastq {input.r2} --read1 {input.r1} --read2 {input.r3} -b $base;"
-
-    rule scatac_map:
-        input:
-            fasta = config["genome"]["fasta"],
-            r1 = os.path.join(config["fastqdir"], "%s_R1.barcoded.fastq" %(config["fastqprefix"])),
-            r3 = os.path.join(config["fastqdir"], "%s_R3.barcoded.fastq" %(config["fastqprefix"])),
-        output:
-            bam = temp("Result/minimap2/%s.sortedByPos.bam" %(config["outprefix"])),
-        threads:
-            config["cores"]
-        benchmark:
-            "Result/Benchmark/%s_Minimap2.benchmark" %(config["outprefix"])
-        shell:
-            "minimap2 -ax sr -t {threads} {input.fasta} {input.r1} {input.r3} "
-            "| samtools view --threads {threads} -b "
-            "| samtools sort --threads {threads} -o {output.bam};"
-
-    rule scatac_fragmentgenerate:
-        input:
-            bam = "Result/minimap2/%s.sortedByPos.bam" %(config["outprefix"]),
-        output:
-            fragments = "Result/minimap2/fragments.tsv",
-            bam = "Result/minimap2/%s.sortedByPos.CRadded.bam" %(config["outprefix"]),
-        params:
-            outdir = "Result/minimap2"
-        benchmark:
-            "Result/Benchmark/%s_FragGenerate.benchmark" %(config["outprefix"])
-        shell:
-            "python " + SCRIPT_PATH + "/scATAC_FragmentGenerate.py -B {input.bam} -O {params.outdir} --addtag CR"
-
-    if config["whitelist"]:
-        rule scatac_barcodecorrect:
+        rule scatac_qcstat_bulk:
             input:
-                r2 = os.path.join(config["fastqdir"], "%s_R2.fastq" %(config["fastqprefix"])),
-                whitelist = config["whitelist"],
+                bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam" %(config["outprefix"]),
+                promoter = "%s/annotations/%s_promoter.bed" %(SCRIPT_PATH, config["species"]),
+                peak = "Result/Analysis/%s_all_peaks.narrowPeak" %(config["outprefix"]),
             output:
-                bc_correct = "Result/minimap2/barcode_correct.txt",
-                bc_correct_uniq = "Result/minimap2/barcode_correct_uniq.txt",
-            params:
-                outdir = "Result/minimap2"
+                bulk_stat = "Result/QC/flagstat.txt",
+                bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.unique.bam" %(config["outprefix"]),
+                bed = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.unique.bed" %(config["outprefix"])
+            threads:
+                config["cores"]
             benchmark:
-                "Result/Benchmark/%s_BarcodeCorrect.benchmark" %(config["outprefix"])
+                "Result/Benchmark/%s_BulkQCStat.benchmark" %(config["outprefix"])
             shell:
-                "python " + SCRIPT_PATH + "/scATAC_10x_BarcodeCorrect.py -b {input.r2} -B {input.whitelist} -O {params.outdir};"
-                "sort -k1,1 -k3,3 {output.bc_correct} | uniq > {output.bc_correct_uniq}"
+                "samtools flagstat --threads {threads} {input.bam} > {output.bulk_stat};"
+                "samtools view -F 2316 -f 0x2 -q 30 -b -o {output.bam} {input.bam};"
+                "samtools view {output.bam} -c >> {output.bulk_stat};"
+                "bedtools bamtobed -i {output.bam} > {output.bed};"
+                "grep 'chrM' {output.bed} -c >> {output.bulk_stat} || true;"
+                "grep -v 'chrM' {output.bed} | bedtools intersect -wa -a - -b {input.promoter} -u | wc -l >> {output.bulk_stat} || true;"
+                "grep -v 'chrM' {output.bed} | bedtools intersect -wa -a - -b {input.peak} -u | wc -l >> {output.bulk_stat} || true ;"
+
+        if config["shortpeaks"]:
+            rule scatac_shortfragment:
+                input:
+                    bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam" %(config["outprefix"])
+                output:
+                    shortbam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.150bp.bam" %(config["outprefix"])
+                threads:
+                    config["cores"]
+                benchmark:
+                    "Result/Benchmark/%s_ShortFrag.benchmark" %(config["outprefix"])
+                shell:
+                    "samtools view -@ {threads} -h {input.bam} | "
+                    "awk -F'\\t' 'function abs(x){{return ((x < 0.0) ? -x : x)}} {{if (abs($9)<=150) print}}' | "
+                    "samtools view -@ {threads} -b -o {output.shortbam}"
+            
+            rule scatac_shortpeakcall:
+                input:
+                    shortbam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.150bp.bam" %(config["outprefix"])
+                output:
+                    bed = "Result/Analysis/%s_150bp_peaks.narrowPeak" %(config["outprefix"])
+                params:
+                    name = "%s_150bp" %(config["outprefix"]),
+                    genome = macs2_genome
+                log:
+                    "Result/Log/%s_macs2_shortpeak.log" %(config["outprefix"])
+                benchmark:
+                    "Result/Benchmark/%s_ShortPeakCall.benchmark" %(config["outprefix"])
+                shell:
+                    "macs2 callpeak -f BAMPE -g {params.genome} --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.shortbam}"
+
     else:
-        rule scatac_barcodecorrect:
+        if is_gzip(config["frag"]):
+            rule scatac_fragmentcp:
+                input:
+                    frag = config["frag"]
+                output:
+                    frag = "Result/minimap2/fragments_corrected_count.tsv"
+                benchmark:
+                    "Result/Benchmark/%s_FragCP.benchmark" %(config["outprefix"])
+                shell:
+                    "gzip -c -d {input.frag} > {output.frag}"
+        else:
+            rule scatac_fragmentcp:
+                input:
+                    frag = config["frag"]
+                output:
+                    frag = "Result/minimap2/fragments_corrected_count.tsv"
+                benchmark:
+                    "Result/Benchmark/%s_FragCP.benchmark" %(config["outprefix"])
+                shell:
+                    "cp -T {input.frag} {output.frag}"
+
+        rule scatac_fragmentreshape:
             input:
-                r2 = os.path.join(config["fastqdir"], "%s_R2.fastq" %(config["fastqprefix"])),
+                frag = "Result/minimap2/fragments_corrected_count.tsv"
             output:
-                bc_correct = "Result/minimap2/barcode_correct.txt",
-                bc_correct_uniq = "Result/minimap2/barcode_correct_uniq.txt",
+                frag = "Result/minimap2/fragments_BEDPE.bed"
             params:
                 outdir = "Result/minimap2"
             benchmark:
-                "Result/Benchmark/%s_BarcodeCorrect.benchmark" %(config["outprefix"])
+                "Result/Benchmark/%s_FragReshape.benchmark" %(config["outprefix"])
             shell:
-                "python " + SCRIPT_PATH + "/scATAC_10x_BarcodeCorrect.py -b {input.r2} -O {params.outdir};"
-                "sort -k1,1 -k3,3 {output.bc_correct} | uniq > {output.bc_correct_uniq}"     
+                "python " + SCRIPT_PATH + "/scATAC_FragmentReshape.py -F {input.frag} -O {params.outdir}"
 
-    rule scatac_fragmentcorrect:
-        input:
-            fragments = "Result/minimap2/fragments.tsv",
-            bc_correct = "Result/minimap2/barcode_correct.txt"
-        output:
-            frag_count = "Result/minimap2/fragments_corrected_count.tsv",
-            frag_sort = "Result/minimap2/fragments_corrected_sorted.tsv"
-        params:
-            outdir = "Result/minimap2",
-            frag_correct = "Result/minimap2/fragments_corrected.tsv",
-        benchmark:
-            "Result/Benchmark/%s_FragCorrect.benchmark" %(config["outprefix"])
-        shell:
-            "python " + SCRIPT_PATH + "/scATAC_FragmentCorrect.py -F {input.fragments} -C {input.bc_correct} -O {params.outdir};"
-            "sort -k1,1 -k2,2 -k3,3 -k4,4 -V {params.frag_correct} > {output.frag_sort};"
-            "bedtools groupby -i {output.frag_sort} -g 1,2,3,4 -c 4 -o count > {output.frag_count}"
+        rule scatac_fragmentsample:
+            input:
+                frag = "Result/minimap2/fragments_BEDPE.bed"
+            output:
+                fragbed = "Result/QC/%s_frag.bed" %(config["outprefix"]),
+            benchmark:
+                "Result/Benchmark/%s_FragSample.benchmark" %(config["outprefix"])
+            shell:
+                "frag_num=`wc -l {input.frag} | awk '{{print $1}}'`;"
+                "frag_num_sample=`expr $frag_num / 100`;"
+                "shuf -n $frag_num_sample {input.frag} | awk '{{print ($3-$2)}}' > {output.fragbed}"
+
+        rule scatac_allpeakcall:
+            input:
+                frag = "Result/minimap2/fragments_BEDPE.bed"
+            output:
+                peak = "Result/Analysis/%s_all_peaks.narrowPeak" %(config["outprefix"]),
+                bdg = "Result/Analysis/%s_all_treat_pileup.bdg" %(config["outprefix"]),
+            params:
+                name = "%s_all" %(config["outprefix"]),
+                genome = macs2_genome
+            log:
+                "Result/Log/%s_macs2_allpeak.log" %(config["outprefix"])
+            benchmark:
+                "Result/Benchmark/%s_AllPeakCall.benchmark" %(config["outprefix"])
+            shell:
+                "macs2 callpeak -f BEDPE -g {params.genome} --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.frag}"
+
+        rule scatac_qcstat_bulk:
+            input:
+                frag = "Result/minimap2/fragments_BEDPE.bed",
+                promoter = "%s/annotations/%s_promoter.bed" %(SCRIPT_PATH, config["species"]),
+                peak = "Result/Analysis/%s_all_peaks.narrowPeak" %(config["outprefix"]),
+            output:
+                bulk_stat = "Result/QC/flagstat.txt",
+            threads:
+                config["cores"]
+            benchmark:
+                "Result/Benchmark/%s_BulkQCStat.benchmark" %(config["outprefix"])
+            shell:
+                "grep 'chrM' {input.frag} -c >> {output.bulk_stat} || true;"
+                "grep -v 'chrM' {input.frag} | bedtools intersect -wa -a - -b {input.promoter} -u | wc -l >> {output.bulk_stat} || true;"
+                "grep -v 'chrM' {input.frag} | bedtools intersect -wa -a - -b {input.peak} -u | wc -l >> {output.bulk_stat} || true ;"
+
+        if config["shortpeaks"]:
+            rule scatac_shortfragment:
+                input:
+                    frag = "Result/minimap2/fragments_BEDPE.bed"
+                output:
+                    shortfrag = "Result/minimap2/fragments_BEDPE_150bp.bed"
+                threads:
+                    config["cores"]
+                benchmark:
+                    "Result/Benchmark/%s_ShortFrag.benchmark" %(config["outprefix"])
+                shell:
+                    "awk -F'\\t' '{{if (($3-$2)<=150) print}}' {input.frag} > {output.shortfrag}"
+            
+            rule scatac_shortpeakcall:
+                input:
+                    shortfrag = "Result/minimap2/fragments_BEDPE_150bp.bed"
+                output:
+                    bed = "Result/Analysis/%s_150bp_peaks.narrowPeak" %(config["outprefix"])
+                params:
+                    name = "%s_150bp" %(config["outprefix"]),
+                    genome = macs2_genome
+                log:
+                    "Result/Log/%s_macs2_shortpeak.log" %(config["outprefix"])
+                benchmark:
+                    "Result/Benchmark/%s_ShortPeakCall.benchmark" %(config["outprefix"])
+                shell:
+                    "macs2 callpeak -f BEDPE -g {params.genome} --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.shortfrag}"
 
     rule scatac_qcstat_promoter:
         input:
@@ -522,108 +800,6 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
             "sort -k1,1 {input.promoter_stat} > {params.promoter_stat_sort};"
             "join --nocheck-order -t $'\t' -a1 -e'0' -o'1.1 1.2 2.2' -1 1 -2 1 {params.mapped_stat_sort} {params.promoter_stat_sort} > {output.single_stat}"
 
-    rule scatac_rmdp:
-        input:
-            bam = "Result/minimap2/%s.sortedByPos.CRadded.bam" %(config["outprefix"]),
-        output:
-            bam = "Result/minimap2/%s.sortedByPos.CRadded.rmdp.bam" %(config["outprefix"]),
-            metric = "Result/minimap2/%s.rmdp.txt" %(config["outprefix"]),
-            fragbed = "Result/QC/%s_frag.bed" %(config["outprefix"]),
-            tmp = temp(directory("Result/Tmp"))
-        params:
-            sam = "Result/minimap2/%s.sortedByPos.CRadded.rmdp.sample.sam" %(config["outprefix"])
-        threads:
-            int(config["cores"])-2
-        benchmark:
-            "Result/Benchmark/%s_Rmdp.benchmark" %(config["outprefix"])
-        shell:
-            "picard MarkDuplicates INPUT={input.bam} OUTPUT={output.bam} METRICS_FILE={output.metric} TMP_DIR={output.tmp};"
-            "samtools view -@ {threads} -s 0.01 -o {params.sam} {input.bam};"
-            "awk '{{if ($9>0) print $9}}' {params.sam} > {output.fragbed};"
-
-    rule scatac_bamaddCB:
-        input:
-            bam = "Result/minimap2/%s.sortedByPos.CRadded.rmdp.bam" %(config["outprefix"]),
-            bc_correct = "Result/minimap2/barcode_correct_uniq.txt"
-        output:
-            bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam" %(config["outprefix"]),
-        params:
-            outdir = "Result/minimap2",
-            outprefix = "%s.sortedByPos.rmdp.CBadded" %(config["outprefix"])
-        threads:
-            int(config["cores"])-2
-        benchmark:
-            "Result/Benchmark/%s_BamAddCB.benchmark" %(config["outprefix"])
-        shell:
-            "python " + SCRIPT_PATH + "/scATAC_BamAddTag.py -B {input.bam} -T {input.bc_correct} -C CR "
-            "-O {params.outdir} -P {params.outprefix};"
-
-    rule scatac_allpeakcall:
-        input:
-            bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam" %(config["outprefix"])
-        output:
-            peak = "Result/Analysis/%s_all_peaks.narrowPeak" %(config["outprefix"]),
-            bdg = "Result/Analysis/%s_all_treat_pileup.bdg" %(config["outprefix"]),
-        params:
-            name = "%s_all" %(config["outprefix"])
-        log:
-            "Result/Log/%s_macs2_allpeak.log" %(config["outprefix"])
-        benchmark:
-            "Result/Benchmark/%s_AllPeakCall.benchmark" %(config["outprefix"])
-        shell:
-            "macs2 callpeak -g hs --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.bam}"
-
-    rule scatac_qcstat_bulk:
-        input:
-            bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam" %(config["outprefix"]),
-            promoter = "%s/annotations/%s_promoter.bed" %(SCRIPT_PATH, config["species"]),
-            peak = "Result/Analysis/%s_all_peaks.narrowPeak" %(config["outprefix"]),
-        output:
-            bulk_stat = "Result/QC/flagstat.txt",
-            bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.unique.bam" %(config["outprefix"]),
-            bed = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.unique.bed" %(config["outprefix"])
-        threads:
-            config["cores"]
-        benchmark:
-            "Result/Benchmark/%s_BulkQCStat.benchmark" %(config["outprefix"])
-        shell:
-            "samtools flagstat --threads {threads} {input.bam} > {output.bulk_stat};"
-            "samtools view -F 2316 -f 0x2 -q 30 -b -o {output.bam} {input.bam};"
-            "samtools view {output.bam} -c >> {output.bulk_stat};"
-            "bedtools bamtobed -i {output.bam} > {output.bed};"
-            "grep 'chrM' {output.bed} -c >> {output.bulk_stat} || true;"
-            "grep -v 'chrM' {output.bed} | bedtools intersect -wa -a - -b {input.promoter} -u | wc -l >> {output.bulk_stat} || true;"
-            "grep -v 'chrM' {output.bed} | bedtools intersect -wa -a - -b {input.peak} -u | wc -l >> {output.bulk_stat} || true ;"
-
-    if config["shortpeaks"]:
-        rule scatac_shortfragment:
-            input:
-                bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam" %(config["outprefix"])
-            output:
-                shortbam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.150bp.bam" %(config["outprefix"])
-            threads:
-                config["cores"]
-            benchmark:
-                "Result/Benchmark/%s_ShortFrag.benchmark" %(config["outprefix"])
-            shell:
-                "samtools view -@ {threads} -h {input.bam} | "
-                "awk -F'\\t' 'function abs(x){{return ((x < 0.0) ? -x : x)}} {{if (abs($9)<=150) print}}' | "
-                "samtools view -@ {threads} -b -o {output.shortbam}"
-        
-        rule scatac_shortpeakcall:
-            input:
-                shortbam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.150bp.bam" %(config["outprefix"])
-            output:
-                bed = "Result/Analysis/%s_150bp_peaks.narrowPeak" %(config["outprefix"])
-            params:
-                name = "%s_150bp" %(config["outprefix"])
-            log:
-                "Result/Log/%s_macs2_shortpeak.log" %(config["outprefix"])
-            benchmark:
-                "Result/Benchmark/%s_ShortPeakCall.benchmark" %(config["outprefix"])
-            shell:
-                "macs2 callpeak -g hs --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.shortbam}"
-    
     if config["custompeaks"] and config["shortpeaks"]:
         rule scatac_mergepeak:
             input:
@@ -688,7 +864,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
                 "| sort -k1,1 -k2,2n | cut -f 1-4 > {params.catpeaksort};"
                 "mergeBed -i {params.catpeaksort} | grep -v '_' | grep -v 'chrEBV' > {output.finalpeak};"
                 "rm {params.catpeaksort}"
-     
+
     rule scatac_countpeak:
         input:
             finalpeak = "Result/Analysis/%s_final_peaks.bed" %(config["outprefix"]),
@@ -914,31 +1090,55 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
 #     #     shell:
 #     #         "python " + SCRIPT_PATH + "/scATAC_microfluidic_count.py {input.finalpeak} {input.validbarcode} {params.bamdir} {output.count} {threads} {params.species}"
 
-rule scatac_qcplot:
-    input:
-        fragbed = "Result/QC/%s_frag.bed" %(config["outprefix"]),
-        single_stat = "Result/QC/singlecell.txt",
-        bulk_stat = "Result/QC/flagstat.txt"
-    output:
-        readdistr = "Result/QC/" + config["outprefix"] + "_scATAC_read_distr.png",
-        qcfrag = "Result/QC/" + config["outprefix"] + "_scATAC_fragment_size.png",
-        qcfrip = "Result/QC/" + config["outprefix"] + "_scATAC_cell_filtering.png",
-        validbarcode = "Result/QC/" + config["outprefix"] + "_scATAC_validcells.txt",
-    params:
-        outdir = "Result/QC",
-        outpre = config["outprefix"],
-        fragbed = "%s_frag.bed" %(config["outprefix"]),
-        single_stat = "singlecell.txt",
-        bulk_stat = "flagstat.txt",
-        count = config["cutoff"]["count"],
-        frip = config["cutoff"]["frip"]
-    threads:
-        config["cores"]
-    benchmark:
-        "Result/Benchmark/%s_QCPlot.benchmark" %(config["outprefix"])
-    shell:
-        "Rscript " + RSCRIPT_PATH + "/scATACseq_qc.R --bulkstat {params.bulk_stat} --fragment {params.fragbed} --singlestat {params.single_stat} "
-        "--countcutoff {params.count} --fripcutoff {params.frip} --prefix {params.outpre} --outdir {params.outdir}"
+if config["format"] != "fragments":
+    rule scatac_qcplot:
+        input:
+            fragbed = "Result/QC/%s_frag.bed" %(config["outprefix"]),
+            single_stat = "Result/QC/singlecell.txt",
+            bulk_stat = "Result/QC/flagstat.txt"
+        output:
+            readdistr = "Result/QC/" + config["outprefix"] + "_scATAC_read_distr.png",
+            qcfrag = "Result/QC/" + config["outprefix"] + "_scATAC_fragment_size.png",
+            qcfrip = "Result/QC/" + config["outprefix"] + "_scATAC_cell_filtering.png",
+            validbarcode = "Result/QC/" + config["outprefix"] + "_scATAC_validcells.txt",
+        params:
+            outdir = "Result/QC",
+            outpre = config["outprefix"],
+            fragbed = "%s_frag.bed" %(config["outprefix"]),
+            single_stat = "singlecell.txt",
+            bulk_stat = "flagstat.txt",
+            count = config["cutoff"]["count"],
+            frip = config["cutoff"]["frip"]
+        threads:
+            config["cores"]
+        benchmark:
+            "Result/Benchmark/%s_QCPlot.benchmark" %(config["outprefix"])
+        shell:
+            "Rscript " + RSCRIPT_PATH + "/scATACseq_qc.R --bulkstat {params.bulk_stat} --fragment {params.fragbed} --singlestat {params.single_stat} "
+            "--countcutoff {params.count} --fripcutoff {params.frip} --prefix {params.outpre} --outdir {params.outdir}"
+else:
+    rule scatac_qcplot:
+        input:
+            fragbed = "Result/QC/%s_frag.bed" %(config["outprefix"]),
+            single_stat = "Result/QC/singlecell.txt",
+        output:
+            qcfrag = "Result/QC/" + config["outprefix"] + "_scATAC_fragment_size.png",
+            qcfrip = "Result/QC/" + config["outprefix"] + "_scATAC_cell_filtering.png",
+            validbarcode = "Result/QC/" + config["outprefix"] + "_scATAC_validcells.txt",
+        params:
+            outdir = "Result/QC",
+            outpre = config["outprefix"],
+            fragbed = "%s_frag.bed" %(config["outprefix"]),
+            single_stat = "singlecell.txt",
+            count = config["cutoff"]["count"],
+            frip = config["cutoff"]["frip"]
+        threads:
+            config["cores"]
+        benchmark:
+            "Result/Benchmark/%s_QCPlot.benchmark" %(config["outprefix"])
+        shell:
+            "Rscript " + RSCRIPT_PATH + "/scATACseq_qc.R --fragment {params.fragbed} --singlestat {params.single_stat} "
+            "--countcutoff {params.count} --fripcutoff {params.frip} --prefix {params.outpre} --outdir {params.outdir}"
 
 rule scatac_qcfilter:
     input:
@@ -993,7 +1193,7 @@ rule scatac_analysis:
     output:
         specificpeak = "Result/Analysis/%s_DiffPeaks.tsv" %(config["outprefix"]),
         clusterplot = "Result/Analysis/%s_cluster.png" %(config["outprefix"]),
-        annotateplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
+        # annotateplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
         tflist = "Result/Analysis/%s.PredictedTFTop10.txt" %(config["outprefix"]),
         cellcluster = "Result/Analysis/%s_cell_cluster.txt" %(config["outprefix"]),
         # acannotateplot = "Result/Analysis/%s_CistromeTop_annotated.png" %(config["outprefix"]),
@@ -1007,84 +1207,148 @@ rule scatac_analysis:
         fraggz = "../minimap2/fragments_corrected_count.tsv.gz",
         giggleannotation = config["giggleannotation"],
         species = config["species"],
-        signature = config["signature"]
+        signature = config["signature"],
+        method = config["method"],
+        annotation = config["annotation"],
     threads:
         config["cores"]
     benchmark:
         "Result/Benchmark/%s_Analysis.benchmark" %(config["outprefix"])
     shell:
         "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R --peakcount {params.count} --rpmatrix {params.genescore} "
-        "--species {params.species} --prefix {params.outpre} --signature {params.signature} "
+        "--species {params.species} --prefix {params.outpre} --annotation {params.annotation} --method {params.method} --signature {params.signature} "
         "--gigglelib {params.giggleannotation} --fragment {params.fraggz} --outdir {params.outdir} --thread {threads}"
 
-rule scatac_bamindex:
-    input:
-        bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam" %(config["outprefix"]),
-    output:
-        bai = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam.bai" %(config["outprefix"]),
-    threads:
-        config["cores"]
-    benchmark:
-        "Result/Benchmark/%s_BamIndex.benchmark" %(config["outprefix"])
-    shell:
-        "samtools index -@ {threads} {input.bam}"
+if config["format"] != "fragments":
+    rule scatac_bamindex:
+        input:
+            bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam" %(config["outprefix"]),
+        output:
+            bai = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam.bai" %(config["outprefix"]),
+        threads:
+            config["cores"]
+        benchmark:
+            "Result/Benchmark/%s_BamIndex.benchmark" %(config["outprefix"])
+        shell:
+            "samtools index -@ {threads} {input.bam}"
 
-checkpoint scatac_bamcluster:
-    input:
-        bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam" %(config["outprefix"]),
-        bai = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam.bai" %(config["outprefix"]),
-        cellcluster = "Result/Analysis/%s_cell_cluster.txt" %(config["outprefix"]),
-    output:
-        directory("Result/Analysis/Cluster/")
-    threads:
-        config["cores"]
-    benchmark:
-        "Result/Benchmark/%s_BamCluster.benchmark" %(config["outprefix"])
-    shell:
-        "sinto filterbarcodes -b {input.bam} -c {input.cellcluster} -p {threads} --barcodetag CB;"
-        "mv Cluster_*.bam {output}"
+    checkpoint scatac_bamcluster:
+        input:
+            bam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam" %(config["outprefix"]),
+            bai = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.bam.bai" %(config["outprefix"]),
+            cellcluster = "Result/Analysis/%s_cell_cluster.txt" %(config["outprefix"]),
+        output:
+            directory("Result/Analysis/Cluster/")
+        threads:
+            config["cores"]
+        benchmark:
+            "Result/Benchmark/%s_BamCluster.benchmark" %(config["outprefix"])
+        shell:
+            "sinto filterbarcodes -b {input.bam} -c {input.cellcluster} -p {threads} --barcodetag CB;"
+            "mv Cluster_*.bam {output}"
 
-rule scatac_clusterpeakcall:
-    input:
-        bam = "Result/Analysis/Cluster/{cluster}.bam"
-    output:
-        peak = "Result/Analysis/Cluster/{cluster}_peaks.narrowPeak",
-        bdg = "Result/Analysis/Cluster/{cluster}_treat_pileup.bdg",
-    params:
-        name = "{cluster}",
-        outdir = "Result/Analysis/Cluster"
-    log:
-        "Result/Log/{cluster}_macs2_allpeak.log"
-    benchmark:
-        "Result/Benchmark/{cluster}_AllPeakCall.benchmark"
-    shell:
-        "macs2 callpeak -g hs --outdir {params.outdir} -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.bam}"
+    rule scatac_clusterpeakcall:
+        input:
+            bam = "Result/Analysis/Cluster/{cluster}.bam"
+        output:
+            peak = "Result/Analysis/Cluster/{cluster}_peaks.narrowPeak",
+            bdg = "Result/Analysis/Cluster/{cluster}_treat_pileup.bdg",
+        params:
+            name = "{cluster}",
+            outdir = "Result/Analysis/Cluster",
+            genome = macs2_genome
+        log:
+            "Result/Log/{cluster}_macs2_allpeak.log"
+        benchmark:
+            "Result/Benchmark/{cluster}_AllPeakCall.benchmark"
+        shell:
+            "macs2 callpeak -f BAMPE -g {params.genome} --outdir {params.outdir} -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.bam}"
 
-rule scatac_report:
-    input:
-        # bulkqc = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
-        readdistr = "Result/QC/%s_scATAC_read_distr.png" %(config["outprefix"]),
-        qcfrag = "Result/QC/%s_scATAC_fragment_size.png" %(config["outprefix"]),
-        qcfrip = "Result/QC/%s_scATAC_cell_filtering.png" %(config["outprefix"]),
-        count = "Result/QC/%s_filtered_peak_count.h5" %(config["outprefix"]),
-        clusterplot = "Result/Analysis/%s_cluster.png" %(config["outprefix"]),
-        annotateplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
-        genescore = "Result/Analysis/%s_gene_score.h5" %(config["outprefix"]),
-        tflist = "Result/Analysis/%s.PredictedTFTop10.txt" %(config["outprefix"]),
-        # acannotateplot = "Result/Analysis/%s_CistromeTop_annotated.png" %(config["outprefix"]),
-        # ms4a1trackplot = "Result/Analysis/%s_MS4A1_genetrack.png" %(config["outprefix"]),
-        # cd3dtrackplot = "Result/Analysis/%s_CD3D_genetrack.png" %(config["outprefix"]),
-    output:
-        summaryreport = "Result/%s_scATAC_report.html" %(config["outprefix"]),
-    params:
-        outpre = config["outprefix"],
-        fastqdir = config["fastqdir"],
-        species = config["species"],
-        platform = config["platform"],
-        outdir = "Result"
-    benchmark:
-        "Result/Benchmark/%s_Report.benchmark" %(config["outprefix"])
-    shell:
-        # "cp {input.readdistr} {input.qcmap} {input.qcfrag} {input.qcfrip} {input.clusterplot} {input.annotateplot} {output.outdir};"
-        "python " + SCRIPT_PATH + "/scATAC_HTMLReport.py --directory {params.outdir} --outprefix {params.outpre} "
-        "--fastq-dir {params.fastqdir} --species {params.species} --platform {params.platform}"
+    rule scatac_report:
+        input:
+            # bulkqc = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
+            readdistr = "Result/QC/%s_scATAC_read_distr.png" %(config["outprefix"]),
+            qcfrag = "Result/QC/%s_scATAC_fragment_size.png" %(config["outprefix"]),
+            qcfrip = "Result/QC/%s_scATAC_cell_filtering.png" %(config["outprefix"]),
+            count = "Result/QC/%s_filtered_peak_count.h5" %(config["outprefix"]),
+            clusterplot = "Result/Analysis/%s_cluster.png" %(config["outprefix"]),
+            # annotateplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
+            genescore = "Result/Analysis/%s_gene_score.h5" %(config["outprefix"]),
+            tflist = "Result/Analysis/%s.PredictedTFTop10.txt" %(config["outprefix"]),
+            # acannotateplot = "Result/Analysis/%s_CistromeTop_annotated.png" %(config["outprefix"]),
+            # ms4a1trackplot = "Result/Analysis/%s_MS4A1_genetrack.png" %(config["outprefix"]),
+            # cd3dtrackplot = "Result/Analysis/%s_CD3D_genetrack.png" %(config["outprefix"]),
+        output:
+            summaryreport = "Result/%s_scATAC_report.html" %(config["outprefix"]),
+        params:
+            outpre = config["outprefix"],
+            inputpath = config["fastqdir"] if config["format"] == "fastq" else config["bam"],
+            species = config["species"],
+            platform = config["platform"],
+            inputformat = config["format"],
+            outdir = "Result"
+        benchmark:
+            "Result/Benchmark/%s_Report.benchmark" %(config["outprefix"])
+        shell:
+            # "cp {input.readdistr} {input.qcmap} {input.qcfrag} {input.qcfrip} {input.clusterplot} {input.annotateplot} {output.outdir};"
+            "python " + SCRIPT_PATH + "/scATAC_HTMLReport.py --directory {params.outdir} --outprefix {params.outpre} "
+            "--input-path {params.inputpath} --species {params.species} --platform {params.platform} --input-format {params.inputformat}"
+else:
+    checkpoint scatac_fragcluster:
+        input:
+            frag = "Result/minimap2/fragments_corrected_count.tsv",
+            cellcluster = "Result/Analysis/%s_cell_cluster.txt" %(config["outprefix"]),
+        output:
+            directory("Result/Analysis/Cluster/")
+        threads:
+            config["cores"]
+        benchmark:
+            "Result/Benchmark/%s_FragCluster.benchmark" %(config["outprefix"])
+        shell:
+            "python " + SCRIPT_PATH + "/scATAC_FragmentSplit.py --frag {input.frag} --cluster {input.cellcluster} --outdir {output}"
+
+    rule scatac_clusterpeakcall:
+        input:
+            frag = "Result/Analysis/Cluster/{cluster}.bed"
+        output:
+            peak = "Result/Analysis/Cluster/{cluster}_peaks.narrowPeak",
+            bdg = "Result/Analysis/Cluster/{cluster}_treat_pileup.bdg",
+        params:
+            name = "{cluster}",
+            outdir = "Result/Analysis/Cluster",
+            genome = macs2_genome
+        log:
+            "Result/Log/{cluster}_macs2_allpeak.log"
+        benchmark:
+            "Result/Benchmark/{cluster}_AllPeakCall.benchmark"
+        shell:
+            "macs2 callpeak -f BEDPE -g {params.genome} --outdir {params.outdir} -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.frag}"
+
+    rule scatac_report:
+        input:
+            # bulkqc = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
+            qcfrag = "Result/QC/%s_scATAC_fragment_size.png" %(config["outprefix"]),
+            qcfrip = "Result/QC/%s_scATAC_cell_filtering.png" %(config["outprefix"]),
+            count = "Result/QC/%s_filtered_peak_count.h5" %(config["outprefix"]),
+            clusterplot = "Result/Analysis/%s_cluster.png" %(config["outprefix"]),
+            # annotateplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
+            genescore = "Result/Analysis/%s_gene_score.h5" %(config["outprefix"]),
+            tflist = "Result/Analysis/%s.PredictedTFTop10.txt" %(config["outprefix"]),
+            # acannotateplot = "Result/Analysis/%s_CistromeTop_annotated.png" %(config["outprefix"]),
+            # ms4a1trackplot = "Result/Analysis/%s_MS4A1_genetrack.png" %(config["outprefix"]),
+            # cd3dtrackplot = "Result/Analysis/%s_CD3D_genetrack.png" %(config["outprefix"]),
+        output:
+            summaryreport = "Result/%s_scATAC_report.html" %(config["outprefix"]),
+        params:
+            outpre = config["outprefix"],
+            inputpath = config["frag"],
+            species = config["species"],
+            platform = config["platform"],
+            inputformat = config["format"],
+            outdir = "Result",
+        benchmark:
+            "Result/Benchmark/%s_Report.benchmark" %(config["outprefix"])
+        shell:
+            # "cp {input.readdistr} {input.qcmap} {input.qcfrag} {input.qcfrip} {input.clusterplot} {input.annotateplot} {output.outdir};"
+            "python " + SCRIPT_PATH + "/scATAC_HTMLReport.py --directory {params.outdir} --outprefix {params.outpre} "
+            "--input-path {params.inputpath} --species {params.species} --platform {params.platform} --input-format {params.inputformat}"

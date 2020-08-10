@@ -3,13 +3,15 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-01-16 19:44:48
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-06-07 15:11:46
+# @Last Modified time: 2020-07-22 14:05:10
 
 
 import argparse
 import pysam
 import time, os
 from collections import defaultdict
+
+from MAESTRO.scATAC_utility import *
 
 def CommandLineParser():
     parser=argparse.ArgumentParser(description = "This is a description of input args")
@@ -64,8 +66,7 @@ def main():
         barcode_correct_file_out = open(barcode_correct_file, "w")
         for reads in barcode_fq_in:
             barcode = reads.sequence
-            name = reads.name
-            outstr = name + "\t" + barcode + "\t" + barcode + "\n"
+            outstr = barcode + "\tCB\t" + barcode + "\n"
             barcode_correct_file_out.write(outstr)
         barcode_correct_file_out.close()
         end_time = time.time()
