@@ -155,6 +155,6 @@ after_success:
     if [[ $TRAVIS_PULL_REQUEST == false && $TRAVIS_REPO_SLUG == "liulab-dfci/MAESTRO"
           && $TRAVIS_BRANCH == $TRAVIS_TAG  && $TRAVIS_TAG != '' ]]; then
       export ANACONDA_API_TOKEN=$CONDA_UPLOAD_TOKEN
-      anaconda upload bld-dir/**/PACKAGENAME-*.tar.bz2
+      anaconda upload bld-dir/**/maestro-*.tar.bz2
     fi
 
