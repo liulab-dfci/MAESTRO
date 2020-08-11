@@ -3,16 +3,13 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-07-17 07:37:07
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-07-17 20:32:22
+# @Last Modified time: 2020-08-05 20:12:22
 
 
 import argparse
 import pysam
 import time, os
 from collections import defaultdict
-
-chr_list = ['chr'+str(i) for i in list(range(1,23))] 
-chr_list = chr_list + ['chrX', 'chrY']
 
 def CommandLineParser():
     parser=argparse.ArgumentParser(description = "Reshape the 10X fragment file to long fragment bed file.")

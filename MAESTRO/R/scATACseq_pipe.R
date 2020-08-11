@@ -130,7 +130,7 @@ GeneTrack = function(prefix, gene, fragment, group_file, txdb, genome){
   genetrack_file = paste(prefix, gene, "genetrack.png", sep = "_")
   tryCatch(expr = {
     png(genetrack_file, units = "in", width = 6, height = 5, res = 300)
-    ATACViewTrack(gene_name = gene, downstream = 8000, 
+    ATACViewTracks(gene_name = gene, downstream = 8000, 
                         yaxis_cex = 1,
                         fragment = fragment,
                         grouping = group_file,

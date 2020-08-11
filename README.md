@@ -4,6 +4,8 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/liulab-dfci/MAESTRO)
 [![Conda](https://img.shields.io/conda/dn/liulab-dfci/maestro?label=Conda%20downloads)](https://anaconda.org/liulab-dfci/maestro)
 [![Docker Pulls](https://img.shields.io/docker/pulls/winterdongqing/maestro)](https://hub.docker.com/repository/docker/winterdongqing/maestro)
+[![Build Status](https://travis-ci.com/liulab-dfci/MAESTRO.svg?branch=master)](https://travis-ci.com/liulab-dfci/MAESTRO)
+
 
 **MAESTRO**(**M**odel-based **A**nalys**E**s of **S**ingle-cell **T**ranscriptome and **R**egul**O**me) is a comprehensive single-cell RNA-seq and ATAC-seq analysis suit built using [snakemake](https://bitbucket.org/snakemake/snakemake/wiki/Home). MAESTRO combines several dozen tools and packages to create an integrative pipeline, which enables scRNA-seq and scATAC-seq analysis from raw sequencing data (fastq files) all the way through alignment, quality control, cell filtering, normalization, unsupervised clustering, differential expression and peak calling, celltype annotation and transcription regulation analysis. Currently, MAESTRO support [Smart-seq2](https://www.ncbi.nlm.nih.gov/pubmed/24385147), [10x-genomics](https://www.10xgenomics.com/solutions/single-cell/), [Drop-seq](https://www.cell.com/abstract/S0092-8674(15)00549-8), [SPLiT-seq](https://science.sciencemag.org/content/360/6385/176) for scRNA-seq protocols; [microfudics-based](https://www.ncbi.nlm.nih.gov/pubmed/26083756), [10x-genomics](https://www.10xgenomics.com/solutions/single-cell-atac/) and [sci-ATAC-seq](https://science.sciencemag.org/content/348/6237/910) for scATAC-seq protocols.       
         
@@ -21,11 +23,17 @@
 * Incorporate the installation of giggle into MAESTRO, and add web API for LISA function. All the core MAESTRO function can be installed through the conda environment now!
 * Provide more documents for the QC parameters and add flexibility for other parameters in the workflow.
 ### v1.2.0
-* Modify the regulatory potential model by removing the interfering peaks from adjacent genes and adjusting the weight of exon peaks. The "adjusted RP model" is set as the default gene activity scoring model with original "simple RP model" as a option.
+* Modify the regulatory potential model by removing the interfering peaks from adjacent genes and adjusting the weight of exon peaks. The "enhanced RP model" is set as the default gene activity scoring model with original "simple RP model" as a option.
 * Modify the integration function of MAESTRO. The new function can output more intermediate figures and log files for diagnosing the possible failure in integrating rare populations.
 * Add the function for annotating cell-types for scATAC-seq clusters based on public bulk chromatin accessibility data from Cistrome database.
 * Provide the function of generating genome browser tracks at cluster level for scATAC-seq dataset visualization. 
 * Support peak calling at the cluster level now!
+### v1.2.1
+* For scATAC, MAESTRO can support fastq, bam, fragments.tsv.gz as the input of the scATAC-seq workflow.
+* For scATAC, MAESTRO provides an option for users to skip the cell-type annotation step in the pipeline, and an option to choose the strategy for cell-type annotation (`RP-based` and `peak-based`).
+* Provide small test data for test [scRNA-seq](http://cistrome.org/~chenfei/MAESTRO/pbmc_1k_v3_fastqs_sampling.tar.gz) and [scATAC-seq](http://cistrome.org/~chenfei/MAESTRO/atac_pbmc_500_v1_fastqs_sampling.tar.gz) pipeline (sampling from 10x fastq files).
+* Add parameter validation before initializing the pipeline and provide more gracious error messages.
+* Update R in MAESTRO conda package from 3.6.3 to 4.0.2, and Seurat from 3.1.2 to 3.1.5.
 
 ## System requirements
 * Linux/Unix
@@ -54,7 +62,7 @@ $ conda config --add channels bioconda
 $ conda config --add channels conda-forge
 # To make the installation faster, we recommend using mamba
 $ conda install mamba -c conda-forge
-$ mamba create -n MAESTRO maestro=1.2.0 -c liulab-dfci
+$ mamba create -n MAESTRO maestro=1.2.1 -c liulab-dfci
 # Activate the environment 
 $ conda activate MAESTRO
 ```
@@ -108,6 +116,7 @@ COMMAND -h` to see the detail description for each option of each module.
 [<img src="./image/ATAC.10x.png" width="297" height="378" />](./example/ATAC_infrastructure_10x/ATAC_infrastructure_10x.md)  
 [<img src="./image/integration.10x.png" width="297" height="378" />](./example/Integration/Integration.md)
 [<img src="./image/integration.large.png" width="297" height="378" />](./example/Integration_large/Integration_large.md)
+[<img src="./image/gene.activity.png" width="297" height="378" />](./example/Gene_activity_modelling/Gene_activity_modelling.md)
 
 ## Citation
 

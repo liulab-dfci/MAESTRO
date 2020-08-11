@@ -3,8 +3,8 @@
 #' Reads in the fragments.tsv.gz or bam file for only the given region (gene), and plot using \href{http://bioconductor.org/packages/release/bioc/html/karyoploteR.html}{karyoploteR} package
 #' 
 #' @docType methods
-#' @name ATACViewTrack
-#' @rdname ATACViewTrack
+#' @name ATACViewTracks
+#' @rdname ATACViewTracks
 #' 
 #' @param chrom chromosome
 #' @param start chromosome start
@@ -53,25 +53,25 @@
 #' chrom<-  "chr12"
 #' start<-  69730394
 #' end<- 69760971
-#' ATACViewTrack(chrom = chrom, start = start, end = end, fragment = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k_fragments.tsv.gz",
+#' ATACViewTracks(chrom = chrom, start = start, end = end, fragment = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k_fragments.tsv.gz",
 #'                     grouping = group_data, track_cols = "red")
 
-#' ATACViewTrack(gene_name = "NKG7", fragment = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k_fragments.tsv.gz",
+#' ATACViewTracks(gene_name = "NKG7", fragment = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k_fragments.tsv.gz",
 #'                     grouping = "data/atac_viz/grouping.txt", tick_label_cex = 1, tick.dist = 5000,
 #'                     minor.tick.dist = 1000)
 #'
-#' ATACViewTrack(gene_name = "NKG7", fragment = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k_fragments.tsv.gz",
+#' ATACViewTracks(gene_name = "NKG7", fragment = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k_fragments.tsv.gz",
 #'                     grouping = "data/atac_viz/grouping.txt", tick_label_cex = 1, tick.dist = 5000,
 #'                     minor.tick.dist = 1000, track_cols = c("red", "blue", ""cadetblue2"),
 #'                     clusters_to_plot = c("1", "3, "4"))
 #'
-#' ATACViewTrack(gene_name = "NKG7", bam = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k.bam",
+#' ATACViewTracks(gene_name = "NKG7", bam = "data/atac_viz/10k_pbmc/atac_v1_pbmc_10k.bam",
 #'                     cellbarcode_tag= "CB", mapqFilter = 30,
 #'                     grouping = "data/atac_viz/grouping.txt", tick_label_cex = 1, tick.dist = 5000,
 #'                     minor.tick.dist = 1000)
 #'}
 
-ATACViewTrack <- function(chrom = NULL, start = NULL, end =NULL, gene_name = NULL,
+ATACViewTracks <- function(chrom = NULL, start = NULL, end =NULL, gene_name = NULL,
                                upstream = 2000, downstream = 2000, fragment = NULL,
                                bam = NULL,
                                cellbarcode_tag = "CB",
