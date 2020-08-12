@@ -27,14 +27,14 @@ winterdongqing/maestro   1.2.1               57f41ffbe200        4 hours ago    
 
 ### Run in the container
 
-To run the MAESTRO container, please use the following commands. The ```-v``` flag mounts the current directory ```/home1/wangchenfei``` into ```/root/MAESTRO``` in the container.
+To run the MAESTRO container, please use the following commands. The ```-v``` flag mounts the current directory ```/home1/user``` into ```/root/MAESTRO``` in the container.
 
 ```bash
 $ pwd
-/home1/wangchenfei
+/home1/user
 $ ls
 annotations  docker  miniconda3  ncbi  Project  R  tmp  Tool
-$ sudo docker run -v /home1/wangchenfei:/root/MAESTRO -it winterdongqing/maestro:1.2.1
+$ sudo docker run -v /home1/user:/root/MAESTRO -it winterdongqing/maestro:1.2.1
 ```
 
 ```#``` means that users have been in the container. There are four folders in the  ```root``` directory of the container. The ```Annotation``` directory stores the RABIT index and GIGGLE index. Users can access local data and locally installed softwares through the ```MAESTRO```.
