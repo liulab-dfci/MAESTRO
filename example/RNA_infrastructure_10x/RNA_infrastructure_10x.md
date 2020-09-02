@@ -226,7 +226,7 @@ The default differential expression method is [presto](https://github.com/immuno
 6     0  2.278404 0.976 0.143         0       0       FCN1
 ```
 
-`RNARunSeurat()` returns a list of a Seurat object `RNA` and dataframe `genes`. Please see [Seurat Github wiki](https://github.com/satijalab/seurat/wiki) for more details of the Seurat object structure. Users can use the `str()` command to get an intuitive understanding of the object.
+`RNARunSeurat()` generates plots of QC and clustering in the current working directory, and returns a list of a Seurat object `RNA` and dataframe `genes`. Please see [Seurat Github wiki](https://github.com/satijalab/seurat/wiki) for more details of the Seurat object structure. Users can use the `str()` command to get an intuitive understanding of the object.
 ```R
 > str(pbmc.RNA.res$RNA)
 ```
