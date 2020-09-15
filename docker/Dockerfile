@@ -34,8 +34,8 @@ ENV PATH=/root/miniconda3/bin:${PATH}
 
 # add conda channels and install softwares
 RUN conda config --add channels defaults && conda config --add channels conda-forge && \
-conda config --add channels bioconda && conda install -c liulab-dfci maestro=1.2.1 && \
-conda install mamba -c conda-forge && mamba create -n lisa -c qinqian lisa=1.0
+conda config --add channels bioconda && conda create -n MAESTRO -c liulab-dfci maestro=1.2.1 && \
+conda install mamba -c conda-forge && mamba create -n lisa -y -c qinqian lisa=1.0
 
 
 # install giggle and rabit
