@@ -94,7 +94,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project =
     tfList <- NULL
   }else{
     cluster_drivertf_list <- lapply(colnames(out_fdr_max_log), function(x){
-      return(data.frame(row.names = rownames(out_fdr_max_log)[order(out_fdr_max_log[,x],decreasing=T)], factor = rownames(out_fdr_max_log)[order(out_fdr_max_log[,x],decreasing=T)], score = sort(out_fdr_max_log[,x],decreasing=T), stringsAsFactors = FALSE))
+      return(data.frame(row.names = rownames(out_fdr_max_log)[order(out_fdr_max_log[,x],decreasing=T)], factor = rownames(out_fdr_max_log)[order(out_fdr_max_log[,x],decreasing=T)], score = sort(out_fdr_max_log[,x],decreasing=T, na.last = TRUE), stringsAsFactors = FALSE))
     })
     names(cluster_drivertf_list) <- colnames(out_fdr_max_log)
 
@@ -236,42 +236,42 @@ RunLISALocal <- function(genes, project, organism = "GRCh38", conda.dir = "", li
   for(i in names(cluster_markers_list))
   {
     cluster_marker = as.matrix(cluster_markers_list[[i]]$gene)
-    lisaDir <- paste0(outputDir, "/",i)
-    if (!file.exists(lisaDir)) dir.create(path=lisaDir)
-    write.table(cluster_marker,paste0(lisaDir,'/', i, ".txt"),sep='\t',col.names = F, row.names = F,quote = FALSE)
+    if (nrow(cluster_marker) > 500) {
+      cluster_marker = as.matrix(cluster_marker[1:500,])
+    }
+    write.table(cluster_marker,paste0(outputDir,'/', i, ".txt"),sep='\t',col.names = F, row.names = F,quote = FALSE)
   }
   
   message("Start to run Lisa.")
-  for(i in names(cluster_markers_list))
-  {
-    cmd = paste0(". ", conda.dir, "/etc/profile.d/conda.sh && conda activate ", lisa.envname, " && lisa model --method='all' --web=False --new_rp_h5=None --new_count_h5=None --species ",species, " --epigenome '['DNase','H3K27ac']' --cluster=False --covariates=False --random=True --prefix ",i,".txt"," --background=None --stat_background_number=500 --threads 8 ",outputDir,'/', i,'/',i,".txt")
-    system2("/bin/bash", args = c("-c", shQuote(cmd)))
-    message(paste0("Lisa in cluster ", i, " is done!"))
-  }
-  system("rm *.yml *.profile *.model")
+  cmd = paste0(". ", conda.dir, "/etc/profile.d/conda.sh && conda activate ", lisa.envname, " && lisa multi ", species, " ", outputDir, "/*.txt -o ", outputDir, "/ -c 8 -b 3000 --seed=0916")
+  system2("/bin/bash", args = c("-c", shQuote(cmd)))
+  message(paste0("Lisa in cluster ", i, " is done!"))
   message("Lisa is done.")
   
   tf_all = NULL
   for(i in names(cluster_markers_list))
   {
-    fileName = paste0(outputDir,'/', i,'/',i, '.txt_chipseq_cauchy_combine_dedup.csv')
+    fileName = paste0(outputDir,'/', i, '.txt.lisa.tsv')
     if (file.exists(fileName))
     {
-      tf_p = read.csv(fileName)
-      rownames(tf_p) = tf_p$TF
-      tf = as.vector(sort(tf_p$TF))
-      tf_temp = data.frame(tf_p[tf,2])
-      colnames(tf_temp) = paste0(i)
+      tf_p = read.table(fileName, header = TRUE, sep = "\t")
+      tf_p_dedup = tf_p[!duplicated(tf_p$factor),]
+      rownames(tf_p_dedup) = tf_p_dedup$factor
+      tf = as.vector(sort(tf_p_dedup$factor))
+      tf_temp = data.frame(-log10(tf_p_dedup[tf,"combined_p_value_adjusted"]), tf)
+      colnames(tf_temp) = c(paste0(i), "TF")
       tf_all = c(tf_all,list(tf_temp))
     }
   }
   
-  tf_all <- do.call(cbind, tf_all)
-  tf_all_log10 = -log10(tf_all)
+  tf_all_df <- Reduce(function(x, y) merge(x, y, by="TF", all = TRUE), tf_all)
+  
+  tf_all_log10 = tf_all_df
   if(organism == "GRCm38"){
-    tf = Hmisc::capitalize(tolower(tf))
+    tf_all_log10$TF= Hmisc::capitalize(tolower(tf_all_log10$TF))
   }
-  rownames(tf_all_log10)=tf
+  rownames(tf_all_log10)=tf_all_log10$TF
+  tf_all_log10 = tf_all_log10[, c(-1)]
   write.table(tf_all_log10,paste0(project,'_lisa.txt'),sep='\t',quote = F)
   return(tf_all_log10)
 }
