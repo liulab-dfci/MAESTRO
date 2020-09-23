@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-28 13:57:12
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-03-03 20:57:34
+# @Last Modified time: 2020-09-21 08:59:45
 
 
 import os,sys
@@ -56,10 +56,10 @@ def CommandLineParser():
 
 def bedtools_intersect(barcode, bam_dir, peak_bed):
     """Intersect bam file with peak file to genearate binary count output."""
-    if not os.path.isfile(bam_dir + "/" + barcode +".sortedByPos.rmdp.unique.bed"):
-        error(bam_dir+"/"+barcode+".sortedByPos.rmdp.unique.bed not exist!")
+    if not os.path.isfile(bam_dir + "/" + barcode +".sortedByPos.unique.bed"):
+        error(bam_dir+"/"+barcode+".sortedByPos.unique.bed not exist!")
     else:
-        os.system("bedtools intersect -wa -a " + peak_bed + " -b " + bam_dir + "/" + barcode + ".sortedByPos.rmdp.unique.bed -u > " + tmp + '/' + barcode + ".bed")
+        os.system("bedtools intersect -wa -a " + peak_bed + " -b " + bam_dir + "/" + barcode + ".sortedByPos.unique.bed -u > " + tmp + '/' + barcode + ".bed")
     return(tmp + "/" + barcode + ".bed")
 
 
