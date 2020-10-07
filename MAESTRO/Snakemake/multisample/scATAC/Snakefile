@@ -1,0 +1,52 @@
+"""
+A single cell ATACseq analysis pipeline.
+Author: Ming (Tommy) Tang  06/02/2020
+"""
+from MAESTRO.scATAC_utility import is_gzip, get_fastqlist, ENV_PATH, SCRIPT_PATH, RSCRIPT_PATH
+
+configfile: "config.yaml"
+
+#include: "rules/common.snakefile"
+# load the samples.json file
+FILES = json.load(open(config['SAMPLES_JSON']))
+ALL_SAMPLES = sorted(FILES.keys())
+
+
+TARGET = []
+
+BIGWIGS = expand("Result/Analysis/{sample}/{sample}.bw", sample = ALL_SAMPLES)
+PEAK_COUNT = expand("Result/Analysis/{sample}/{sample}_peak_count.h5", sample = ALL_SAMPLES)
+PEAK_BATCH_COUNT = expand("Result/Analysis/Batch/{sample}/{sample}_peak_count.h5", sample = ALL_SAMPLES)
+CLUSTER_ANNOTATION = expand("Result/Analysis/{sample}/{sample}_cell_cluster.txt", sample = ALL_SAMPLES)
+REPORTS = expand("Result/Report/{sample}_scATAC_report.html", sample = ALL_SAMPLES)
+
+TARGET.extend(BIGWIGS)
+TARGET.extend(PEAK_COUNT)
+TARGET.extend(REPORTS)
+
+if config.get("batch"):
+    TARGET.extend(PEAK_BATCH_COUNT)
+if config.get("annotation"):
+    TARGET.extend(CLUSTER_ANNOTATION)
+
+rule all:
+    input: TARGET
+
+if config["platform"] == "10x-genomics":
+    include: "rules/sc_atac_map.smk"
+    include: "rules/sc_atac_preprocess.smk"
+    include: "rules/sc_atac_fragment_generate.smk"
+    include: "rules/sc_atac_dedup.smk"
+    include: "rules/sc_atac_qc.smk"
+    include: "rules/sc_atac_peak_call.smk"
+    include: "rules/sc_atac_peak_count.smk"
+    if config.get("batch") and config.get("bulk_peaks") and not config.get("consensus_peaks"):
+        include: "rules/sc_atac_peak_count_batch_downsample.smk"
+    elif config.get("batch") and config.get("consensus_peaks") and not config.get("bulk_peaks"): 
+        include: "rules/sc_atac_peak_count_batch.smk"
+    if config.get("annotation"):
+        include: "rules/sc_atac_annotation.smk"
+    include: "rules/sc_atac_report.smk"
+
+
+
