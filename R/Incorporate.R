@@ -38,7 +38,7 @@
 #' @importFrom ggplot2 ggsave
 #' @export
 
-Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembedding", method = "MAESTRO", dims.use = 1:30, RNA.res = 0.6, ATAC.res = 0.6)
+Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembedding", method = "MAESTRO", annotation.file, dims.use = 1:30, RNA.res = 0.6, ATAC.res = 0.6)
 {
   require(Seurat)
   ATAC$tech <- "ATAC"
@@ -51,17 +51,20 @@ Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembeddi
      DefaultAssay(ATAC) <- "ACTIVITY"
      ATAC <- FindVariableFeatures(ATAC)
      ATAC <- NormalizeData(ATAC)
-     ATAC <- ScaleData(ATAC)}
-   if(method=="Seurat"){
-     activity.matrix <- CreateGeneActivityMatrix(peak.matrix = RPmatrix, annotation.file = "/homes/cwang/annotations/hg38/Homo_sapiens.GRCh38.98.gtf",  seq.levels = c(1:22, "X", "Y"), upstream = 2000, verbose = TRUE)
+     ATAC <- ScaleData(ATAC)
+  }
+  if(method=="Seurat"){
+     activity.matrix <- CreateGeneActivityMatrix(peak.matrix = GetAssayData(ATAC, slot = "counts", assay = "ATAC"), annotation.file = annotation.file,  seq.levels = c(1:22, "X", "Y"), upstream = 2000, verbose = TRUE)
      activity.matrix <- activity.matrix[,intersect(colnames(ATAC), colnames(activity.matrix))]
      ATAC <- SubsetData(ATAC, cells = intersect(colnames(ATAC), colnames(activity.matrix)))
      ATAC[["ACTIVITY"]] <- CreateAssayObject(counts = activity.matrix)
      DefaultAssay(ATAC) <- "ACTIVITY"
      ATAC <- FindVariableFeatures(ATAC)
      ATAC <- NormalizeData(ATAC)
-     ATAC <- ScaleData(ATAC)}
-  
+     ATAC <- ScaleData(ATAC)
+  }
+
+  DefaultAssay(ATAC) <- "ACTIVITY"
   transfer.anchors <- FindTransferAnchors(reference = RNA, query = ATAC, features = VariableFeatures(object = RNA), 
                       reference.assay = "RNA", query.assay = "ACTIVITY", reduction = "cca")
   celltype.predictions <- TransferData(anchorset = transfer.anchors, refdata = RNA$assign.ident, weight.reduction = ATAC[["lsi"]])
@@ -81,14 +84,14 @@ Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembeddi
 
   p1 <- DimPlot(CombinedObj, reduction = "umap", group.by = "tech", repel = TRUE)
   ggsave(file.path(paste0(CombinedObj@project.name, "_source.png")), p1, width=5, height=4)
-  p2 <- DimPlot(CombinedObj, reduction = "umap", group.by = "RNA_snn_res.0.6", cells = rownames(CombinedObj@meta.data[which(CombinedObj@meta.data[,'tech']=='RNA'),]), label = TRUE, repel = TRUE)
+  p2 <- DimPlot(CombinedObj, reduction = "umap", group.by = paste0("RNA_snn_res.", RNA.res), cells = rownames(CombinedObj@meta.data[which(CombinedObj@meta.data[,'tech']=='RNA'),]), label = TRUE, repel = TRUE)
   ggsave(file.path(paste0(CombinedObj@project.name, "_RNAonly.png")), p2, width=5, height=4)
-  p3 <- DimPlot(CombinedObj, reduction = "umap", group.by = "ATAC_snn_res.0.6", cells = rownames(CombinedObj@meta.data[which(CombinedObj@meta.data[,'tech']=='ATAC'),]), label = TRUE, repel = TRUE)
+  p3 <- DimPlot(CombinedObj, reduction = "umap", group.by = paste0("ATAC_snn_res.", ATAC.res), cells = rownames(CombinedObj@meta.data[which(CombinedObj@meta.data[,'tech']=='ATAC'),]), label = TRUE, repel = TRUE)
   ggsave(file.path(paste0(CombinedObj@project.name, "_ATAConly.png")), p3, width=5, height=4)
   p4 <- DimPlot(object = CombinedObj, pt.size = 0.15, group.by = "assign.ident", label = TRUE, label.size = 3, repel = TRUE)
   ggsave(file.path(paste0(CombinedObj@project.name, "_annotated.png")), p4, width=6, height=4)
   
-  write.table(CombinedObj@meta.data, file.path(paste0(CombinedObj@project.name, "_metadata.tsv")),quote=F,sep="\t")
+  write.table(CombinedObj@meta.data, file.path(paste0(CombinedObj@project.name, "_metadata.tsv")), quote=F, sep="\t")
   return(CombinedObj)
 }
 
