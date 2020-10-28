@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:48:03
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-10-21 15:59:32
+# @Last Modified time: 2020-10-28 15:51:08
 
 
 import os, sys
@@ -71,8 +71,7 @@ def ExtractGeneInfo(gene_bed):
     """Extract gene information from gene bed file."""
 
     bed = pd.read_csv(gene_bed, sep="\t", header=0, index_col=False)
-    bed['transcript'] = list(map(lambda x: x.strip().split(".")[0], bed['name'].tolist()))
-    bed["chrom"] = list(map(lambda x:"%s"%x, bed["chrom"]))
+    bed['transcript'] = [x.strip().split(".")[0] for x in bed['name'].tolist()]
     bed['tss'] = bed.apply(lambda x: x['txStart'] if x['strand']=='+' else x['txEnd'], axis=1)
 
     ### adjacent P+GB
