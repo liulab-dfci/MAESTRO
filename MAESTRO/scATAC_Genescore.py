@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:48:03
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-07-26 16:04:49
+# @Last Modified time: 2020-10-28 15:51:08
 
 
 import os, sys
@@ -71,8 +71,7 @@ def ExtractGeneInfo(gene_bed):
     """Extract gene information from gene bed file."""
 
     bed = pd.read_csv(gene_bed, sep="\t", header=0, index_col=False)
-    bed['transcript'] = list(map(lambda x: x.strip().split(".")[0], bed['name'].tolist()))
-    bed["chrom"] = list(map(lambda x:"chr%s"%x, bed["chrom"]))
+    bed['transcript'] = [x.strip().split(".")[0] for x in bed['name'].tolist()]
     bed['tss'] = bed.apply(lambda x: x['txStart'] if x['strand']=='+' else x['txEnd'], axis=1)
 
     ### adjacent P+GB
@@ -300,9 +299,9 @@ def calculate_RP_score(peakmatrix, features, barcodes, gene_bed, decay, score_fi
             line = line.strip().split('\t')
             if not line[0].startswith('#'):
                 if line[3] == "+":
-                    genes_info.append(("chr" + line[2], int(line[4]), 1, "%s@%s@%s" % (line[12], "chr" + line[2], line[4])))
+                    genes_info.append((line[2], int(line[4]), 1, "%s@%s@%s" % (line[12], line[2], line[4])))
                 else:
-                    genes_info.append(("chr" + line[2], int(line[5]), 1, "%s@%s@%s" % (line[12], "chr" + line[2], line[5])))
+                    genes_info.append((line[2], int(line[5]), 1, "%s@%s@%s" % (line[12], line[2], line[5])))
                     # gene_info [chrom, tss, 1, gene_unique]
         fhd.close()
         genes_info = list(set(genes_info))
