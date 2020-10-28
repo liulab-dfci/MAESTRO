@@ -43,7 +43,7 @@ rule scatac_batch_merge_fragment:
                 cat $i | awk -v prefix="$prefix" -v OFS="\t" '$4=prefix"@"$4' > Result/Tmp/${{prefix}}_fragment_tmp.tsv
             done
 
-        cat {params.tmp_fragments} | bgzip > {output}
+        cat {params.tmp_fragments} | sort -k1,1 -k2,2n | bgzip > {output}
         rm {params.tmp_fragments}
         tabix -p bed {output}
         """
