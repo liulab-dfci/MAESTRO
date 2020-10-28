@@ -1,6 +1,6 @@
 ### for multiple scATACseq samples, some samples maybe much more deeply sequenced
-### let's downsample every CB tag added bam file to a certain number, and call peaks
-### using all bam files by macs2 to get a peak set. Then go back to the original bam 
+### let's downsample every fragment file to a certain number, and call peaks
+### using all fragment files by macs2 to get a peak set. Then go back to the original fragment
 ### file to get the counts in the peak set.
 
 _downsample_threads = 4
@@ -8,7 +8,7 @@ _downsample_threads = 4
 
 rule scatac_downsample_batch:
     input: 
-        frag_dedup = get_fragments,
+        frag_dedup = "Result/minimap2/{sample}/fragments_corrected_dedup_count.tsv",
     output:
         frag_downsample = "Result/minimap2/{sample}/{sample}_fragment_corrected_downsample.tsv"
     threads:
@@ -59,7 +59,7 @@ rule scatac_countpeak_batch:
     input:
         finalpeak = "Result/Analysis/Batch/all_samples_peaks.narrowPeak",
         validbarcode = "Result/QC/{sample}/{sample}_scATAC_validcells.txt",
-        frag = get_fragments
+        frag = "Result/minimap2/{sample}/fragments_corrected_dedup_count.tsv"
     output:
         count = "Result/Analysis/Batch/{sample}/{sample}_peak_count.h5"
     params:

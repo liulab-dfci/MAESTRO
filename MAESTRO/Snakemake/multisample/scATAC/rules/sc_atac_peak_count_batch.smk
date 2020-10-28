@@ -5,7 +5,7 @@
 
 _countpeak_threads = 4
 
-
+## consensus peak calling.
 rule scatac_merge_peaks_batch:
     input: expand("Result/Analysis/{sample}/{sample}_final_peaks.bed", sample = ALL_SAMPLES)
     output: "Result/Analysis/Batch/all_samples_peaks.bed"

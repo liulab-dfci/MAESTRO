@@ -4,7 +4,7 @@ macs2_genome = "hs" if config["species"] == "GRCh38" else "mm"
 
 rule scatac_allpeakcall:
     input:
-        frag_dedup = get_fragments 
+        frag_dedup = "Result/minimap2/{sample}/fragments_corrected_dedup_count.tsv" 
     output:
         peak = "Result/Analysis/{sample}/{sample}_all_peaks.narrowPeak",
         bdg = "Result/Analysis/{sample}/{sample}_all_treat_pileup.bdg"
@@ -21,7 +21,7 @@ rule scatac_allpeakcall:
 if config["shortpeaks"]:
     rule scatac_shortfragment:
         input:
-            frag_dedup = get_fragments
+            frag_dedup = "Result/minimap2/{sample}/fragments_corrected_dedup_count.tsv"
         output:
             frag_short = "Result/minimap2/{sample}/fragments_corrected_150bp.tsv" 
         threads:

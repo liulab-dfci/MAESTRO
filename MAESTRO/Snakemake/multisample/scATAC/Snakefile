@@ -26,6 +26,7 @@ TARGET.extend(REPORTS)
 
 if config.get("batch"):
     TARGET.extend(PEAK_BATCH_COUNT)
+    TARGET.append("Result/Analysis/Batch/all_samples_cell_cluster.txt")
 if config.get("annotation"):
     TARGET.extend(CLUSTER_ANNOTATION)
 
@@ -46,6 +47,9 @@ if config["platform"] == "10x-genomics":
         include: "rules/sc_atac_peak_count_batch.smk"
     if config.get("annotation"):
         include: "rules/sc_atac_annotation.smk"
+    if config.get("batch"):
+        include: "rules/sc_atac_peak_count_batch_filter.smk"
+        include: "rules/sc_atac_batch_annotation.smk"
     include: "rules/sc_atac_report.smk"
 
 
