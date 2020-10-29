@@ -241,7 +241,7 @@ We next try to annotate different clusters based on their marker genes. We use p
 ```R
 > data(human.immune.CIBERSORT)
 > pbmc.RNA.res$RNA <- RNAAnnotateCelltype(RNA = pbmc.RNA.res$RNA, 
-                                          gene = pbmc.RNA.res$gene,
+                                          gene = pbmc.RNA.res$genes,
                                           signatures = human.immune.CIBERSORT, 
                                           min.score = 0.05)
 > head(pbmc.RNA.res$RNA@meta.data)
