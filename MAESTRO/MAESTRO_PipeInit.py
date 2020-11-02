@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:40:27
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-07-26 15:33:59
+# @Last Modified time: 2020-11-02 17:34:46
 
 
 import os
@@ -157,7 +157,7 @@ def scatac_parser(subparsers):
         "See the MAESTRO paper for more details. DEFAULT: RP-based. ")
     group_annotation.add_argument("--signature", dest = "signature", type = str, default = "human.immune.CIBERSORT", 
         help = "Cell signature file used to annotate cell types (required when method is set as 'RP-based'). MAESTRO provides several sets of built-in cell signatures. "
-        "Users can choose from ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']. "
+        "Users can choose from ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']. "
         "Custom cell signatures are also supported. In this situation, users need to provide the file location of cell signatures, "
         "and the signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene. "
         "DEFAULT: human.immune.CIBERSORT. ")
@@ -282,7 +282,7 @@ def scrna_parser(subparsers):
     group_signature = workflow.add_argument_group("Cell signature arguments")
     group_signature.add_argument("--signature", dest = "signature", type = str, default = "human.immune.CIBERSORT", 
         help = "Cell signature file used to annotate cell types. MAESTRO provides several sets of built-in cell signatures. "
-        "Users can choose from ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']. "
+        "Users can choose from ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']. "
         "Custom cell signatures are also supported. In this situation, users need to provide the file location of cell signatures, "
         "and the signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene. "
         "DEFAULT: human.immune.CIBERSORT.")
@@ -333,7 +333,7 @@ def scatac_config(args):
     template_file = os.path.join(pkgpath, "scATAC", "config_template.yaml")
     configfile = os.path.join(args.directory, "config.yaml")
     config_template = Template(open(template_file, "r").read(), trim_blocks=True, lstrip_blocks=True)
-    if args.signature not in ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
+    if args.signature not in ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
         signature = os.path.abspath(args.signature)
     else:
         signature = args.signature
@@ -392,7 +392,7 @@ def scrna_config(args):
     template_file = os.path.join(pkgpath, "scRNA", "config_template.yaml")
     configfile = os.path.join(args.directory, "config.yaml")
     config_template = Template(open(template_file, "r").read(), trim_blocks=True, lstrip_blocks=True)
-    if args.signature not in ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
+    if args.signature not in ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
         signature = os.path.abspath(args.signature)
     else:
         signature = args.signature

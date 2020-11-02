@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-07-19 17:20:32
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-07-20 13:49:05
+# @Last Modified time: 2020-11-02 17:35:25
 
 
 import sys
@@ -74,7 +74,7 @@ def scatac_validator(args):
             logging.error("Format of 'fragments' is supported only when the platform is '10x-genomics'.")
             exit(1)
 
-    if args.signature not in ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
+    if args.signature not in ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
         if os.path.exists(args.signature):
             pass
         else:
@@ -128,7 +128,7 @@ def scrna_validator(args):
             logging.error("--condadir is required when lisamode is 'local'. Please specify the directory where miniconda or anaconda is installed!")
             exit(1)
 
-    if args.signature not in ['human.immune.CIBERSORT', 'mouce.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
+    if args.signature not in ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
         if os.path.exists(args.signature):
             pass
         else:

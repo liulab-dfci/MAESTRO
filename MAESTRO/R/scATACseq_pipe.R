@@ -66,7 +66,7 @@ RPmatrix = Read10X_h5(rp_mat)
 plan("multiprocess", workers = as.integer(thread))
 options(future.globals.maxSize = 10*1024^3)
 
-if(sigfile %in% c("human.immune.CIBERSORT", "mouce.brain.ALLEN", "mouse.all.facs.TabulaMuris", "mouse.all.droplet.TabulaMuris")){
+if(sigfile %in% c("human.immune.CIBERSORT", "mouse.brain.ALLEN", "mouse.all.facs.TabulaMuris", "mouse.all.droplet.TabulaMuris")){
   signatures = sigfile
 }else{
   signatures = read.table(sigfile, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
