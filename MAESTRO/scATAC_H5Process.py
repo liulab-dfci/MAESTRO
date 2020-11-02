@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:44:05
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-05-27 12:26:48
+# @Last Modified time: 2020-11-02 22:31:18
 
 
 import os
@@ -232,27 +232,53 @@ def merge_10X_h5(directory, outprefix, h5list, prefixlist, genome = 'GRCh38', da
         filename = os.path.join(directory, outprefix + "_peak_count.h5")
     else:
         filename = os.path.join(directory, outprefix + "_gene_count.h5")
-    
+
     mlist = []
     for file in h5list:
         mlist.append(read_10X_h5(file))
-    
-    dflist = []
+
+    features_list = []
     for i in range(0,len(mlist)):
-        if prefixlist:
-            barcode_i = numpy.array([prefixlist[i] + "@" + t.decode('UTF-8') for t in mlist[i].barcodes.tolist()], dtype='|S200')
+        features = mlist[i].names
+        features_list.append(features)
+
+    if_features_same = True
+    for i in range(0, len(features_list)-1):
+        if if_features_same:
+            if_features_same = if_features_same & (features_list[i] == features_list[i+1]).all()
         else:
-            barcode_i = numpy.array([t.decode('UTF-8') for t in mlist[i].barcodes.tolist()], dtype='|S200')
-        df = pd.DataFrame(mlist[i].matrix.toarray(), index = mlist[i].names, columns = barcode_i)
-        df = df.loc[~df.index.duplicated(),]
-        dflist.append(df)
-        
-    dfmerge = pd.concat(dflist, axis = 1, join = "outer")
-    dfmerge_numpy = dfmerge.fillna(0).to_numpy()
-    features = dfmerge.index.tolist()
-    barcodes = dfmerge.columns.tolist()
-        
-    write_10X_h5(filename, dfmerge_numpy, features, barcodes, genome, datatype)
+            break
+
+    if if_features_same:
+        mat_list = []
+        barcode_list = []
+        for i in range(0,len(mlist)):
+            if prefixlist:
+                barcode_i = [prefixlist[i] + "@" + t.decode('UTF-8') for t in mlist[i].barcodes.tolist()]
+            else:
+                barcode_i = [t.decode('UTF-8') for t in mlist[i].barcodes.tolist()]
+            mat_list.append(mlist[i].matrix)
+            barcode_list = barcode_list + barcode_i
+        matmerge = sp_sparse.hstack(mat_list)
+
+        write_10X_h5(filename, matmerge, features, barcode_list, genome, datatype)
+
+    else:
+        dflist = []
+        for i in range(0,len(mlist)):
+            if prefixlist:
+                barcode_i = numpy.array([prefixlist[i] + "@" + t.decode('UTF-8') for t in mlist[i].barcodes.tolist()], dtype='|S200')
+            else:
+                barcode_i = numpy.array([t.decode('UTF-8') for t in mlist[i].barcodes.tolist()], dtype='|S200')
+            df = pd.DataFrame(mlist[i].matrix.toarray(), index = mlist[i].names, columns = barcode_i)
+            df = df.loc[~df.index.duplicated(),]
+            dflist.append(df)
+        dfmerge = pd.concat(dflist, axis = 1, join = "outer")
+        dfmerge_numpy = dfmerge.fillna(0).to_numpy()
+        features = dfmerge.index.tolist()
+        barcodes = dfmerge.columns.tolist()
+
+        write_10X_h5(filename, dfmerge_numpy, features, barcodes, genome, datatype)
 
 
 def read_10X_mtx(matrix_file, feature_file, barcode_file, datatype, gene_column = 2):
