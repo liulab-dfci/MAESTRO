@@ -12,7 +12,7 @@ GRCm38.refgenes.genescore.adjusted
 GRCm38.refgenes.genescore.simple
 human.immune.CIBERSORT
 human.tf.family: HUMAN.TFFamily
-mouce.brain.ALLEN
+mouse.brain.ALLEN
 mouse.all.droplet.TabulaMuris
 mouse.all.facs.TabulaMuris
 mouse.tf.family: MOUSE.TFFamily
