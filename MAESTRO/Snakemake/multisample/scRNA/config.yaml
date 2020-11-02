@@ -1,0 +1,49 @@
+# Platform of single cell RNA-seq [Smartseq2, 10x-genomics, Dropseq]
+platform: '10x-genomics'
+
+SAMPLES_JSON: 'samples.json'
+
+######## STARsolo parameters ############
+
+STARsolo_threads: 12
+
+# can specify "--soloFeatures FullGene" for single nuclei data
+STARsolo_custom: '--soloFeatures Gene'
+
+
+#########################################
+
+
+# Reference genome 
+genome:
+  # Genome index directory for STAR. Users can just download the index file 
+  # from http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz and decompress it. 
+  # Then specify the index directory for STAR, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_STAR_2.7.3a'.
+  mapindex: '/liulab/mtang/references/Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_STAR_2.7.3a'
+
+  gtf: '/liulab/mtang/references/Refdata_scRNA_MAESTRO_GRCh38_1.1.0/genes.gtf'
+  # The prefix of transcript references for RSEM used by rsem-prepare-reference (Only required when the platform is Smartseq2). 
+  # Users can directly download the annotation file from 
+  # http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz and decompress it.
+  # Then specify the prefix for RSEM, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_RSEM_1.3.2/GRCh38'.
+  rsem: 
+
+
+# Information about barcode (for platform of 'Dropseq' or '10x-genomics')
+barcode:
+  # If the platform is 'Dropseq' or '10x-genomics', please specify the barcode library (whitelist) 
+  # so that STARsolo can do the error correction and demultiplexing of cell barcodes. 
+  # The 10X Chromium whitelist file can be found inside the CellRanger distribution. 
+  # Please make sure that the whitelist is compatible with the specific version of the 10X chemistry: V2 or V3. 
+  # For example, in CellRanger 3.1.0, the V2 whitelist is 'cellranger-3.1.0/cellranger-cs/3.1.0/lib/python/cellranger/barcodes/737K-august-2016.txt'. 
+  # The V3 whitelist is 'cellranger-3.1.0/cellranger-cs/3.1.0/lib/python/cellranger/barcodes/3M-february-2018.txt'. 
+  whitelist: '10xv3_whitelist.txt'
+  # The start site of each barcode. DEFAULT: 1.
+  barcodestart: 1
+  # The length of cell barcode. For 10x-genomics, the length of barcode is 16. DEFAULT: 16. 
+  barcodelength: 16
+  # The start site of UMI. DEFAULT: 17.
+  umistart: 17
+  # The length of UMI. For 10x-genomics, the length of V2 chemistry is 10. 
+  # For 10X V3 chemistry, the length is 12. DEFAULT: 10. 
+  umilength: 12
