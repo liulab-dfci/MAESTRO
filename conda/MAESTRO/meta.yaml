@@ -1,6 +1,6 @@
 package:
   name: maestro
-  version: "1.2.2b"
+  version: "1.2.1.9999"
 source:
   path: ../../
 # build:
