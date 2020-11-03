@@ -34,7 +34,7 @@
 * Provide small test data for test [scRNA-seq](http://cistrome.org/~chenfei/MAESTRO/pbmc_1k_v3_fastqs_sampling.tar.gz) and [scATAC-seq](http://cistrome.org/~chenfei/MAESTRO/atac_pbmc_500_v1_fastqs_sampling.tar.gz) pipeline (sampling from 10x fastq files).
 * Add parameter validation before initializing the pipeline and provide more gracious error messages.
 * Update R in MAESTRO conda package from 3.6.3 to 4.0.2, and Seurat from 3.1.2 to 3.1.5.
-### v1.2.2-beta
+### v1.2.2b
 * Bug fixes (placeholder for v1.2.2 formal release)
 
 
@@ -65,7 +65,7 @@ $ conda config --add channels bioconda
 $ conda config --add channels conda-forge
 # To make the installation faster, we recommend using mamba
 $ conda install mamba -c conda-forge
-$ mamba create -n MAESTRO maestro=1.2.2-beta -c liulab-dfci
+$ mamba create -n MAESTRO maestro=1.2.2b -c liulab-dfci
 # Activate the environment 
 $ conda activate MAESTRO
 ```
