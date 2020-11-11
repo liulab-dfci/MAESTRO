@@ -216,7 +216,7 @@ if config["platform"] == "microfluidic":
             "Result/Benchmark/%s_AllPeakCall.benchmark" %(config["outprefix"])
         shell:
             "macs2 callpeak -f BAMPE -g {params.genome} --outdir Result/Analysis/ -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.bam}"
-    
+
     if config["shortpeaks"]:
         rule scatac_shortfragment:
             input:
@@ -231,10 +231,10 @@ if config["platform"] == "microfluidic":
                 "samtools view -@ {threads} -h {input.bam} | "
                 "awk -F'\\t' 'function abs(x){{return ((x < 0.0) ? -x : x)}} {{if (abs($9)<=150) print}}' | "
                 "samtools view -@ {threads} -b -o {output.shortbam}"
-        
+
         rule scatac_shortpeakcall:
             input:
-                shortbam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.150bp.bam" %(config["outprefix"])          
+                shortbam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.150bp.bam" %(config["outprefix"])
             output:
                 bed = "Result/Analysis/%s_150bp_peaks.narrowPeak" %(config["outprefix"])
             params:
@@ -246,7 +246,7 @@ if config["platform"] == "microfluidic":
                 "Result/Benchmark/%s_ShortPeakCall.benchmark" %(config["outprefix"])
             shell:
                 "macs2 callpeak -f BAMPE -g {params.genome} --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.shortbam}"
-    
+
     if config["custompeaks"] and config["shortpeaks"]:
         rule scatac_mergepeak:
             input:
@@ -272,9 +272,9 @@ if config["platform"] == "microfluidic":
             output:
                 finalpeak = "Result/Analysis/%s_final_peaks.bed" %(config["outprefix"])
             params:
-                catpeaksort = "Result/Analysis/%s_cat_peaks.bed" %(config["outprefix"]) 
+                catpeaksort = "Result/Analysis/%s_cat_peaks.bed" %(config["outprefix"])
             benchmark:
-                "Result/Benchmark/%s_PeakMerge.benchmark" %(config["outprefix"])             
+                "Result/Benchmark/%s_PeakMerge.benchmark" %(config["outprefix"])
             shell:
                 "cat {input.allpeak} {input.custompeaks} "
                 "| sort -k1,1 -k2,2n | cut -f 1-4 > {params.catpeaksort};"
@@ -317,7 +317,7 @@ if config["platform"] == "microfluidic":
             finalpeak = "Result/Analysis/%s_final_peaks.bed" %(config["outprefix"]),
             validbarcode = "Result/QC/%s_scATAC_validcells.txt" %(config["outprefix"])
         output:
-            count = "Result/Analysis/%s_peak_count.h5" %(config["outprefix"])
+            counts = "Result/Analysis/%s_peak_count.h5" %(config["outprefix"])
         threads:
             config["cores"]
         params:
@@ -330,7 +330,7 @@ if config["platform"] == "microfluidic":
         shell:
             "python " + SCRIPT_PATH + "/scATAC_microfluidic_PeakCount.py --peak {input.finalpeak} --barcode {input.validbarcode} "
             "--bam-dir {params.bamdir} --directory {params.outdir} --outprefix {params.outpre} --cores {threads} --species {params.species}"
-            
+
 if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
     if config["format"] == "fastq" or config["format"] == "bam":
         if config["format"] == "fastq":
@@ -494,7 +494,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
                         "Result/Benchmark/%s_BarcodeCorrect.benchmark" %(config["outprefix"])
                     shell:
                         "python " + SCRIPT_PATH + "/scATAC_10x_BarcodeCorrect.py -b {input.r2} -O {params.outdir};"
-                        "sort -k1,1 -k3,3 {output.bc_correct} | uniq > {output.bc_correct_uniq}"     
+                        "sort -k1,1 -k3,3 {output.bc_correct} | uniq > {output.bc_correct_uniq}"
 
             rule scatac_fragmentcorrect:
                 input:
@@ -633,7 +633,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
                     "samtools view -@ {threads} -h {input.bam} | "
                     "awk -F'\\t' 'function abs(x){{return ((x < 0.0) ? -x : x)}} {{if (abs($9)<=150) print}}' | "
                     "samtools view -@ {threads} -b -o {output.shortbam}"
-            
+
             rule scatac_shortpeakcall:
                 input:
                     shortbam = "Result/minimap2/%s.sortedByPos.rmdp.CBadded.150bp.bam" %(config["outprefix"])
@@ -739,7 +739,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
                     "Result/Benchmark/%s_ShortFrag.benchmark" %(config["outprefix"])
                 shell:
                     "awk -F'\\t' '{{if (($3-$2)<=150) print}}' {input.frag} > {output.shortfrag}"
-            
+
             rule scatac_shortpeakcall:
                 input:
                     shortfrag = "Result/minimap2/fragments_BEDPE_150bp.bed"
@@ -825,9 +825,9 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
             output:
                 finalpeak = "Result/Analysis/%s_final_peaks.bed" %(config["outprefix"])
             params:
-                catpeaksort = "Result/Analysis/%s_cat_peaks.bed" %(config["outprefix"])  
+                catpeaksort = "Result/Analysis/%s_cat_peaks.bed" %(config["outprefix"])
             benchmark:
-                "Result/Benchmark/%s_PeakMerge.benchmark" %(config["outprefix"])         
+                "Result/Benchmark/%s_PeakMerge.benchmark" %(config["outprefix"])
             shell:
                 "cat {input.allpeak} {input.custompeaks} "
                 "| sort -k1,1 -k2,2n | cut -f 1-4 > {params.catpeaksort};"
@@ -871,7 +871,8 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
             validbarcode = "Result/QC/%s_scATAC_validcells.txt" %(config["outprefix"]),
             frag = "Result/minimap2/fragments_corrected_count.tsv"
         output:
-            count = "Result/Analysis/" + config["outprefix"] + "_peak_count.h5"
+            #counts
+            counts = "Result/Analysis/" + config["outprefix"] + "_peak_count.h5"
         params:
             species = config["species"],
             outdir = "Result/Analysis",
@@ -1006,7 +1007,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
 #     #             "samtools view -@ {threads} -h {input.bam} | "
 #     #             "awk -F'\\t' 'function abs(x){{return ((x < 0.0) ? -x : x)}} {{if (abs($9)<=150) print}}' | "
 #     #             "samtools view -@ {threads} -b -o {output.shortbam}"
-        
+
 #     #     rule scatac_shortpeakcall:
 #     #         input:
 #     #             shortbam = "Result/BWA/" + config["outprefix"] + ".sortedByPos.rmdp.150bp.bam"
@@ -1018,7 +1019,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
 #     #             "Result/Log/" + config["outprefix"] + "_macs2_shortpeak.log"
 #     #         shell:
 #     #             "macs2 callpeak -g hs --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR -t {input.shortbam}"
-    
+
 #     # if config["custompeaks"] and config["shortpeaks"]:
 #     #     rule scatac_mergepeak:
 #     #         input:
@@ -1042,7 +1043,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
 #     #         output:
 #     #             finalpeak = "Result/Analysis/" + config["outprefix"] + "_final_peaks.bed"
 #     #         params:
-#     #             catpeaksort = "Result/Analysis/" + config["outprefix"] + "_cat_peaks.bed"                
+#     #             catpeaksort = "Result/Analysis/" + config["outprefix"] + "_cat_peaks.bed"
 #     #         shell:
 #     #             "cat {input.allpeak} {input.custompeaks} "
 #     #             "| sort -k1,1 -k2,2n | cut -f 1-4 > {params.catpeaksort};"
@@ -1107,7 +1108,7 @@ if config["format"] != "fragments":
             fragbed = "%s_frag.bed" %(config["outprefix"]),
             single_stat = "singlecell.txt",
             bulk_stat = "flagstat.txt",
-            count = config["cutoff"]["count"],
+            counts = config["cutoff"]["count"],
             frip = config["cutoff"]["frip"]
         threads:
             config["cores"]
@@ -1115,7 +1116,7 @@ if config["format"] != "fragments":
             "Result/Benchmark/%s_QCPlot.benchmark" %(config["outprefix"])
         shell:
             "Rscript " + RSCRIPT_PATH + "/scATACseq_qc.R --bulkstat {params.bulk_stat} --fragment {params.fragbed} --singlestat {params.single_stat} "
-            "--countcutoff {params.count} --fripcutoff {params.frip} --prefix {params.outpre} --outdir {params.outdir}"
+            "--countcutoff {params.counts} --fripcutoff {params.frip} --prefix {params.outpre} --outdir {params.outdir}"
 else:
     rule scatac_qcplot:
         input:
@@ -1130,7 +1131,7 @@ else:
             outpre = config["outprefix"],
             fragbed = "%s_frag.bed" %(config["outprefix"]),
             single_stat = "singlecell.txt",
-            count = config["cutoff"]["count"],
+            counts = config["cutoff"]["count"],
             frip = config["cutoff"]["frip"]
         threads:
             config["cores"]
@@ -1138,11 +1139,11 @@ else:
             "Result/Benchmark/%s_QCPlot.benchmark" %(config["outprefix"])
         shell:
             "Rscript " + RSCRIPT_PATH + "/scATACseq_qc.R --fragment {params.fragbed} --singlestat {params.single_stat} "
-            "--countcutoff {params.count} --fripcutoff {params.frip} --prefix {params.outpre} --outdir {params.outdir}"
+            "--countcutoff {params.counts} --fripcutoff {params.frip} --prefix {params.outpre} --outdir {params.outdir}"
 
 rule scatac_qcfilter:
     input:
-        count = "Result/Analysis/%s_peak_count.h5" %(config["outprefix"]),
+        counts = "Result/Analysis/%s_peak_count.h5" %(config["outprefix"]),
     output:
         filtercount = "Result/QC/%s_filtered_peak_count.h5" %(config["outprefix"]),
     params:
@@ -1153,7 +1154,7 @@ rule scatac_qcfilter:
     benchmark:
         "Result/Benchmark/%s_QCFilter.benchmark" %(config["outprefix"])
     shell:
-        "MAESTRO scatac-qc --format h5 --peakcount {input.count} --peak-cutoff {params.peak} --cell-cutoff {params.cell} "
+        "MAESTRO scatac-qc --format h5 --peakcount {input.counts} --peak-cutoff {params.peak} --cell-cutoff {params.cell} "
         "--directory {params.outdir} --outprefix {params.outpre}"
 
 rule scatac_genescore:
@@ -1184,7 +1185,7 @@ rule scatac_fragmentindex:
     shell:
         "bgzip -c {input.frag} > {output.fraggz};"
         "tabix -p bed {output.fraggz}"
-            
+
 rule scatac_analysis:
     input:
         filtercount = "Result/QC/%s_filtered_peak_count.h5" %(config["outprefix"]),
@@ -1203,7 +1204,7 @@ rule scatac_analysis:
         outdir = "Result/Analysis",
         genescore = "%s_gene_score.h5" %(config["outprefix"]),
         outpre = config["outprefix"],
-        count = "../QC/%s_filtered_peak_count.h5" %(config["outprefix"]),
+        counts = "../QC/%s_filtered_peak_count.h5" %(config["outprefix"]),
         fraggz = "../minimap2/fragments_corrected_count.tsv.gz",
         giggleannotation = config["giggleannotation"],
         species = config["species"],
@@ -1215,7 +1216,7 @@ rule scatac_analysis:
     benchmark:
         "Result/Benchmark/%s_Analysis.benchmark" %(config["outprefix"])
     shell:
-        "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R --peakcount {params.count} --rpmatrix {params.genescore} "
+        "Rscript " + RSCRIPT_PATH + "/scATACseq_pipe.R --peakcount {params.counts} --rpmatrix {params.genescore} "
         "--species {params.species} --prefix {params.outpre} --annotation {params.annotation} --method {params.method} --signature {params.signature} "
         "--gigglelib {params.giggleannotation} --fragment {params.fraggz} --outdir {params.outdir} --thread {threads}"
 
@@ -1270,7 +1271,7 @@ if config["format"] != "fragments":
             readdistr = "Result/QC/%s_scATAC_read_distr.png" %(config["outprefix"]),
             qcfrag = "Result/QC/%s_scATAC_fragment_size.png" %(config["outprefix"]),
             qcfrip = "Result/QC/%s_scATAC_cell_filtering.png" %(config["outprefix"]),
-            count = "Result/QC/%s_filtered_peak_count.h5" %(config["outprefix"]),
+            counts = "Result/QC/%s_filtered_peak_count.h5" %(config["outprefix"]),
             clusterplot = "Result/Analysis/%s_cluster.png" %(config["outprefix"]),
             # annotateplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
             genescore = "Result/Analysis/%s_gene_score.h5" %(config["outprefix"]),
@@ -1329,7 +1330,7 @@ else:
             # bulkqc = "Result/QC/" + config["outprefix"] + "_bam_stat.txt",
             qcfrag = "Result/QC/%s_scATAC_fragment_size.png" %(config["outprefix"]),
             qcfrip = "Result/QC/%s_scATAC_cell_filtering.png" %(config["outprefix"]),
-            count = "Result/QC/%s_filtered_peak_count.h5" %(config["outprefix"]),
+            counts = "Result/QC/%s_filtered_peak_count.h5" %(config["outprefix"]),
             clusterplot = "Result/Analysis/%s_cluster.png" %(config["outprefix"]),
             # annotateplot = "Result/Analysis/%s_annotated.png" %(config["outprefix"]),
             genescore = "Result/Analysis/%s_gene_score.h5" %(config["outprefix"]),
