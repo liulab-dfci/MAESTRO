@@ -37,7 +37,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
                 barcodestart = config["barcode"]["barcodestart"],
                 barcodelength = config["barcode"]["barcodelength"],
                 umistart = config["barcode"]["umistart"],
-                umilength = config["barcode"]["umilength"],            
+                umilength = config["barcode"]["umilength"],
             log:
                 "Result/Log/%s_STAR.log" %(config["outprefix"])
             benchmark:
@@ -74,7 +74,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
                 barcodestart = config["barcode"]["barcodestart"],
                 barcodelength = config["barcode"]["barcodelength"],
                 umistart = config["barcode"]["umistart"],
-                umilength = config["barcode"]["umilength"],            
+                umilength = config["barcode"]["umilength"],
             log:
                 "Result/Log/%s_STAR.log" %(config["outprefix"])
             threads:
@@ -102,7 +102,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
             filtermatrix = "Result/QC/%s_filtered_gene_count.h5" %(config["outprefix"]),
             rnafilterplot = "Result/QC/%s_scRNA_cell_filtering.png" %(config["outprefix"]),
         params:
-            count = config["cutoff"]["count"],
+            counts = config["cutoff"]["count"],
             gene = config["cutoff"]["gene"],
             outpre = config["outprefix"],
             outdir = "Result/QC",
@@ -111,7 +111,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
             "Result/Benchmark/%s_QC.benchmark" %(config["outprefix"])
         shell:
             "MAESTRO scrna-qc --format mtx --matrix {input.rawmtx} --feature {input.feature} --barcode {input.barcode} --species {params.species} "
-            "--count-cutoff {params.count} --gene-cutoff {params.gene} --directory {params.outdir} --outprefix {params.outpre}"
+            "--count-cutoff {params.counts} --gene-cutoff {params.gene} --directory {params.outdir} --outprefix {params.outpre}"
 
 if config["platform"] == "Smartseq2":
     rule scrna_map:
@@ -203,7 +203,7 @@ if config["platform"] == "Smartseq2":
             filtermatrix = "Result/QC/%s_filtered_gene_count.h5" %(config["outprefix"]),
             rnafilterplot = "Result/QC/%s_scRNA_cell_filtering.png" %(config["outprefix"]),
         params:
-            count = config["cutoff"]["count"],
+            counts = config["cutoff"]["count"],
             gene = config["cutoff"]["gene"],
             outpre = config["outprefix"],
             outdir = "Result/QC",
@@ -212,7 +212,7 @@ if config["platform"] == "Smartseq2":
             "Result/Benchmark/%s_QC.benchmark" %(config["outprefix"])
         shell:
             "MAESTRO scrna-qc --format plain --matrix {input.expression} --species {params.species} "
-            "--count-cutoff {params.count} --gene-cutoff {params.gene} --directory {params.outdir} --outprefix {params.outpre}"
+            "--count-cutoff {params.counts} --gene-cutoff {params.gene} --directory {params.outdir} --outprefix {params.outpre}"
 
     # rule bam_rsort:
     #     input:
@@ -246,7 +246,7 @@ if config["platform"] == "Smartseq2":
             "samtools merge --threads {threads} {output.bam} {params.subprefix}.*.Aligned.sortedByCoord.out.bam;"
             "rm {params.subprefix}.[0-9]*.Aligned.sortedByCoord.out.bam;"
             "samtools index -b -@ {threads} {output.bam}"
-   
+
     # rule scrna_rseqc:
     #     input:
     #         bam = "Result/Mapping/" + config["outprefix"] + "Aligned.sortedByCoord.out.bam",
@@ -472,7 +472,7 @@ if config["rseqc"]:
             "Result/Benchmark/%s_Report.benchmark" %(config["outprefix"])
         shell:
             "python " + SCRIPT_PATH + "/scRNA_HTMLReport.py --directory {params.outdir} --outprefix {params.outpre} "
-            "--fastq-dir {params.fastqdir} --species {params.species} --platform {params.platform} --rseqc" 
+            "--fastq-dir {params.fastqdir} --species {params.species} --platform {params.platform} --rseqc"
 
 else:
     rule scrna_report:
@@ -494,4 +494,4 @@ else:
             "Result/Benchmark/%s_Report.benchmark" %(config["outprefix"])
         shell:
             "python " + SCRIPT_PATH + "/scRNA_HTMLReport.py --directory {params.outdir} --outprefix {params.outpre} "
-            "--fastq-dir {params.fastqdir} --species {params.species} --platform {params.platform}" 
+            "--fastq-dir {params.fastqdir} --species {params.species} --platform {params.platform}"
