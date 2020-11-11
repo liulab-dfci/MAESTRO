@@ -871,7 +871,6 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
             validbarcode = "Result/QC/%s_scATAC_validcells.txt" %(config["outprefix"]),
             frag = "Result/minimap2/fragments_corrected_count.tsv"
         output:
-            #counts
             counts = "Result/Analysis/" + config["outprefix"] + "_peak_count.h5"
         params:
             species = config["species"],
