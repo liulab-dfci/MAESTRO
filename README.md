@@ -8,7 +8,7 @@
 
 
 **MAESTRO**(**M**odel-based **A**nalys**E**s of **S**ingle-cell **T**ranscriptome and **R**egul**O**me) is a comprehensive single-cell RNA-seq and ATAC-seq analysis suit built using [snakemake](https://bitbucket.org/snakemake/snakemake/wiki/Home). MAESTRO combines several dozen tools and packages to create an integrative pipeline, which enables scRNA-seq and scATAC-seq analysis from raw sequencing data (fastq files) all the way through alignment, quality control, cell filtering, normalization, unsupervised clustering, differential expression and peak calling, celltype annotation and transcription regulation analysis. Currently, MAESTRO support [Smart-seq2](https://www.ncbi.nlm.nih.gov/pubmed/24385147), [10x-genomics](https://www.10xgenomics.com/solutions/single-cell/), [Drop-seq](https://www.cell.com/abstract/S0092-8674(15)00549-8), [SPLiT-seq](https://science.sciencemag.org/content/360/6385/176) for scRNA-seq protocols; [microfudics-based](https://www.ncbi.nlm.nih.gov/pubmed/26083756), [10x-genomics](https://www.10xgenomics.com/solutions/single-cell-atac/) and [sci-ATAC-seq](https://science.sciencemag.org/content/348/6237/910) for scATAC-seq protocols.       
-        
+
 ## Change Log
 
 ### v1.0.0
@@ -26,7 +26,7 @@
 * Modify the regulatory potential model by removing the interfering peaks from adjacent genes and adjusting the weight of exon peaks. The "enhanced RP model" is set as the default gene activity scoring model with original "simple RP model" as a option.
 * Modify the integration function of MAESTRO. The new function can output more intermediate figures and log files for diagnosing the possible failure in integrating rare populations.
 * Add the function for annotating cell-types for scATAC-seq clusters based on public bulk chromatin accessibility data from Cistrome database (**Note:** Please update the giggle index to the [latest](http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz)).
-* Provide the function of generating genome browser tracks at cluster level for scATAC-seq dataset visualization. 
+* Provide the function of generating genome browser tracks at cluster level for scATAC-seq dataset visualization.
 * Support peak calling at the cluster level now!
 ### v1.2.1
 * For scATAC, MAESTRO can support fastq, bam, fragments.tsv.gz as the input of the scATAC-seq workflow.
@@ -36,6 +36,13 @@
 * Update R in MAESTRO conda package from 3.6.3 to 4.0.2, and Seurat from 3.1.2 to 3.1.5.
 ### v1.2.1.9999
 * Bug fixes (placeholder for v1.2.2 formal release)
+### v1.2.2
+* Update conda dependencies to only requesting lowest versions.
+* Fix the bugs in conda package installation channel.
+* Update markers in the mouse.brain.ALLEN cell signature file.
+* Fix the bugs to support the 10X .h5 file as the input format of MAESTRO scatac-genescore.
+* Rename 'Adjusted RP model' to 'Enhanced RP model'.
+* Fix the bugs in Snakefile to meet the latest version of snakemake.
 
 
 ## System requirements
@@ -66,7 +73,7 @@ $ conda config --add channels conda-forge
 # To make the installation faster, we recommend using mamba
 $ conda install mamba -c conda-forge
 $ mamba create -n MAESTRO maestro=1.2.1.9999 -c liulab-dfci
-# Activate the environment 
+# Activate the environment
 $ conda activate MAESTRO
 ```
 
