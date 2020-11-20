@@ -98,8 +98,8 @@ Arguments  |  Description
 
 Arguments  |  Description
 ---------  |  -----------
-`--lisamode` | Mode to Run LISA, 'local' or 'web'. If the mode is set as 'local', please install [LISA](https://github.com/qinqian/lisa) and download pre-computed datasets following the instructions. The 'web' mode is to run online version of LISA. In consideration of the connection issue and size of datasets, the 'local' mode is recommended to run the whole MAESTRO pipeline. If the mode is 'local', please provide the name of LISA environment through `--lisaenv` and specify the directory where miniconda or anaconda is installed through `--condadir`. DEFAULT: local.
-`--lisaenv` | Name of LISA environment (required if method is set to lisa and lisamode is set to local). DEFAULT: lisa. Note: LISA takes multiple types of gene sets which can be constituted of only official gene symbols, only RefSeq ids, only Ensembl ids, only Entrez ids, or a mixture of these identifiers.)
+`--lisamode` | Mode to Run LISA, 'local' or 'web'. If the mode is set as 'local', please install [LISA](https://github.com/qinqian/lisa) and download pre-computed datasets following the instructions. The 'web' mode is to run online version of LISA. In consideration of the connection issue and size of datasets, the 'local' mode is recommended to run the whole MAESTRO pipeline. If the mode is 'local', please provide the name of LISA environment through `--lisaenv` and specify the directory where miniconda or anaconda is installed through `--condadir`. DEFAULT: local. (**Note:** LISA takes multiple types of gene sets which can be constituted of only official gene symbols, only RefSeq ids, only Ensembl ids, only Entrez ids, or a mixture of these identifiers.)
+`--lisaenv` | Name of LISA environment (required if method is set to lisa and lisamode is set to local). DEFAULT: lisa.
 `--condadir` | Directory where miniconda or anaconda is installed (required if method is set to lisa and lisamode is set to local). For example, `--condadir /home/user/miniconda3`.
 
 **Cell signature arguments:**
