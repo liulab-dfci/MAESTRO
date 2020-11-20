@@ -43,12 +43,13 @@
 * Fix the bugs to support the 10X .h5 file as the input format of MAESTRO scatac-genescore.
 * Rename 'Adjusted RP model' to 'Enhanced RP model'.
 * Fix the bugs in Snakefile to meet the latest version of snakemake.
+* Update STAR reference indexes files for STAR -version 2.7.6a. Provide pre-built indexes for [human](http://cistrome.org/~galib/Refdata_scRNA_MAESTRO_GRCh38_1.2.2.tar.gz) and [mouse](http://cistrome.org/~galib/Refdata_scRNA_MAESTRO_GRCm38_1.2.2.tar.gz).
 
 
 ## System requirements
 * Linux/Unix
-* Python (>= 3.0) for MAESTRO snakemake workflow
-* R (>= 3.6.1) for MAESTRO R package
+* Python (>= 3.7) for MAESTRO snakemake workflow
+* R (>= 4.0.2) for MAESTRO R package
 
 ## Installation
 
@@ -92,7 +93,7 @@ The full MAESTRO workflow requires extra annotation files and tools:
 
 * MAESTRO depends on [starsolo](https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md) and [minimap2](https://github.com/lh3/minimap2) for mapping scRNA-seq and scATAC-seq dataset. Users need to generate **the reference files** for the alignment software and specify the path of the annotations to MAESTRO through command line options.
 
-* MAESTRO utilizes **LISA** to evaluate the enrichment of transcription factors based on the marker genes from scRNA-seq clusters. By default, users can choose the "web" option, which will use the API function in MAESTRO to perform LISA analysis. However, if users want to use the local version of LISA, they need to install [LISA](https://github.com/qinqian/lisa) locally, build the annotation files according to the LISA document, and provide the path of LISA to MAESTRO when using the RNAAnnotateTranscriptionFactor function.
+* MAESTRO utilizes **LISA** to evaluate the enrichment of transcription factors based on the marker genes from scRNA-seq clusters. By default, users can choose the "web" option, which will use the API function in MAESTRO to perform LISA analysis. However, if users want to use the local version of LISA, they need to install [LISA](https://github.com/qinqian/lisa) locally, build the annotation files according to the LISA document, and provide the path of LISA to MAESTRO when using the RNAAnnotateTranscriptionFactor function. The input gene set can be constituted of only official gene symbols, only RefSeq ids, only Ensembl ids, only Entrez ids, or a mixture of these identifiers.
 
 * MAESTRO utilizes **giggle** to identify enrichment of transcription factor peaks in scATAC-seq cluster-specific peaks. By default [giggle](https://github.com/ryanlayer/giggle) is installed in MAESTRO environment. The giggle index for Cistrome database can be downloaded [here](http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz) (**Note:** Before v1.2.0, the giggle index `giggle.tar.gz` can be downloaded from http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz. Since v1.2.0, please download the latest index [giggle.all.tar.gz](http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz)). Users need to download the file and provide the location of the giggle annotation to MAESTRO when using the ATACAnnotateTranscriptionFactor function.
 
