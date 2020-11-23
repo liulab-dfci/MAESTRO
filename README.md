@@ -73,7 +73,7 @@ $ conda config --add channels bioconda
 $ conda config --add channels conda-forge
 # To make the installation faster, we recommend using mamba
 $ conda install mamba -c conda-forge
-$ mamba create -n MAESTRO maestro=1.2.1.9999 -c liulab-dfci
+$ mamba create -n MAESTRO maestro=1.2.2 -c liulab-dfci
 # Activate the environment
 $ conda activate MAESTRO
 ```
