@@ -37,7 +37,7 @@
 #' @export
 
 
-RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project = RNA@project.name,lisa.mode = "local",
+RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project = RNA@project.name,lisa.mode = "multi",
                                            method = "LISA",rabit.path, organism = "GRCh38", top.tf = 10)
 {
   if(organism == "GRCh38"){
@@ -71,10 +71,10 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project =
   }
   if(method == "LISA"){
     scorename = "log(Lisascore)"
-    if(lisa.mode == "local"){
-      out_fdr_max_log = RunLISALocal(genes = genes, project = project, organism = organism)
+    if(lisa.mode == "multi"){
+      out_fdr_max_log = RunLISAMulti(genes = genes, project = project, organism = organism)
     }
-    if(lisa.mode == "web"){
+    if(lisa.mode == "one-vs-rest"){
       out_fdr_max_log = RunLISAWeb(genes = genes, project = project, organism = organism)
     }
   }
@@ -209,7 +209,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project =
 }
 
 
-RunLISALocal <- function(genes, project, organism = "GRCh38")
+RunLISAMulti <- function(genes, project, organism = "GRCh38")
 {
   if(organism == "GRCh38"){
     species = "hg38"

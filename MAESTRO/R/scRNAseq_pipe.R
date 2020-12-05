@@ -19,9 +19,12 @@ option_list = list(
   make_option(c("--species"), type = "character", default = "GRCh38",
               action = "store", help = "The platform of scRNA-seq."
   ),
-  make_option(c("--method"), type = "character", default = "LISA",
-              action = "store", help = "The method to identify driver regulators. [LISA, RABIT]"
-  ),
+  #make_option(c("--lisamode"), type = "character", default = "multi",
+              #action = "store", help = "Mode to run LISA (multi or one-vs-rest)."
+  #),
+  #make_option(c("--method"), type = "character", default = "LISA",
+              #action = "store", help = "The method to identify driver regulators. [LISA, RABIT]"
+  #),
   make_option(c("--signature"), type = "character", default = "",
               action = "store", help = "The cell signature file for celltype annotation. Default is built-in CIBERSORT immune cell signature."
   ),
@@ -71,5 +74,4 @@ RNA.res$RNA <- RNAAnnotateCelltype(RNA = RNA.res$RNA, genes = RNA.res$genes,
                                    signatures = signatures, min.score = 0.05)
 saveRDS(RNA.res, paste0(prefix, "_scRNA_Object.rds"))
 RNA.tfs <- RNAAnnotateTranscriptionFactor(RNA = RNA.res$RNA, genes = RNA.res$genes, project = prefix, 
-                                          method = method, 
                                           organism = species, top.tf = 10)
