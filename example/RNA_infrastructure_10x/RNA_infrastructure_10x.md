@@ -97,7 +97,8 @@ Arguments  |  Description
 
 Arguments  |  Description
 ---------  |  -----------
-`--lisa` | Path to the LISA data files. Please download LISA's required data from cistrome.org: [human](http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz) and [mouse](http://cistrome.org/~alynch/data/lisa_data/mm10_2.1.tar.gz). The new version of [LISA](https://github.com/liulab-dfci/lisa2) has been released to largely decrease processing time on multiple gene list.
+`--lisa` | Path to the LISA data files. Please download LISA's required data from cistrome.org: [human](http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz) and [mouse](http://cistrome.org/~alynch/data/lisa_data/mm10_2.1.tar.gz). The latest version of [LISA2](https://github.com/liulab-dfci/lisa2) was recently released to largely decrease processing time on multiple gene lists. Please check out for detailed information.
+
 **Cell signature arguments:**
 
 Arguments  |  Description
@@ -273,7 +274,7 @@ All the reduction results are stored in `Object@reductions`. For example, users 
 <img src="./10X_PBMC_8k_annotated_nolegend.png" width="420" height="420" />
 
 ### Step 3. Identify driver transcription regulators
-To identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilizes LISA to predict the potential transcription factors based on the marker genes in each cluster, which rely on the transcriptional regulator binding profiles from CistromeDB to identify the potential regulators shaping the expression pattern of each cluster. In rare cases, users need to download LISA data manually. If the program fails while downloading data, follow these [LISA document](https://github.com/liulab-dfci/lisa2/blob/master/docs/troubleshooting.md). If users have multiple clusters of differential genes, the "multi" mode is recommended.
+To identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilizes LISA to predict the potential transcription factors based on the marker genes in each cluster, which rely on the transcriptional regulator binding profiles from CistromeDB to identify the potential regulators shaping the expression pattern of each cluster. In rare cases, users need to download LISA data manually. If the program fails while downloading data, follow this [LISA document](https://github.com/liulab-dfci/lisa2/blob/master/docs/troubleshooting.md). If users have multiple clusters of differential genes, the "multi" mode is recommended.
 
 ```R
 > pbmc.RNA.tfs <- RNAAnnotateTranscriptionFactor(RNA = pbmc.RNA.res$RNA,
