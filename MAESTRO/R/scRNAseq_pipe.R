@@ -25,15 +25,6 @@ option_list = list(
   make_option(c("--signature"), type = "character", default = "",
               action = "store", help = "The cell signature file for celltype annotation. Default is built-in CIBERSORT immune cell signature."
   ),
-  make_option(c("--lisamode"), type = "character", default = "",
-              action = "store", help = "Mode to run LISA (web or local)."
-  ),
-  make_option(c("--condadir"), type = "character", default = "",
-              action = "store", help = "Directory where miniconda or anaconda is installed (only if method is set to lisa)."
-  ),
-  make_option(c("--lisaenv"), type = "character", default = "lisa",
-              action = "store", help = "Name of lisa environment (only if method is set to lisa)."
-  ),
   make_option(c("--thread"), type = "integer", default = 1,
               action = "store", help = "Number of cores to use."
   )
@@ -47,9 +38,6 @@ prefix = argue$prefix
 thread = argue$thread
 method = argue$method
 sigfile = argue$signature
-lisamode = argue$lisamode
-condadir = argue$condadir
-lisaenv = argue$lisaenv
 species = argue$species
 
 
@@ -83,6 +71,5 @@ RNA.res$RNA <- RNAAnnotateCelltype(RNA = RNA.res$RNA, genes = RNA.res$genes,
                                    signatures = signatures, min.score = 0.05)
 saveRDS(RNA.res, paste0(prefix, "_scRNA_Object.rds"))
 RNA.tfs <- RNAAnnotateTranscriptionFactor(RNA = RNA.res$RNA, genes = RNA.res$genes, project = prefix, 
-                                          method = method, lisa.mode = lisamode, 
-                                          conda.dir = condadir, lisa.envname = lisaenv, 
+                                          method = method, 
                                           organism = species, top.tf = 10)
