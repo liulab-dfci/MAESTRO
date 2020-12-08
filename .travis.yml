@@ -55,7 +55,7 @@ install:
 
   # configure the channels
   - conda config --add channels defaults
-  - conda config --add channels	liulab-dfci
+  - conda config --add channels allenwlynch
   - conda config --add channels bioconda
   - conda config --add channels conda-forge
   - conda install -q mamba -c conda-forge
