@@ -10,11 +10,8 @@ RNAAnnotateTranscriptionFactor(
   genes,
   cluster = NULL,
   project = RNA@project.name,
-  method = "RABIT",
+  method = "LISA",
   rabit.path,
-  lisa.mode = "local",
-  conda.dir = "",
-  lisa.envname = "lisa",
   organism = "GRCh38",
   top.tf = 10
 )
@@ -30,23 +27,12 @@ the cluster should be set as c(1,2,3,4,5,6).}
 
 \item{project}{Output project name for the transcription factor analysis result. Default is the project name of the Seurat object.}
 
-\item{method}{Use RABIT or LISA to identify the driver regulators. If Rabit is selected, should provide rabit annotation at the
-same time. LISA do not need annotations for this step. Default is Rabit.}
+\item{method}{Use LISA or Rabit to identify the driver regulators. If using LISA, users will need to download and install annotation files. If Rabit is selected, should provide rabit annotation at the same time. Default is LISA.}
 
 \item{rabit.path}{Path of the rabit annotation files. The rabit annoation for CistromeDB is available at https://github.com/liulab-dfci/MAESTRO.
 Download and unzip the annotation, supply the path of the annotations to \code{rabit.path}.}
 
-\item{lisa.mode}{Mode to Run LISA, "local" or "web". If the mode is set as "local", 
-please install LISA (https://github.com/qinqian/lisa) and download pre-computed datasets
-following the instructions. The "web" mode is to run online version of LISA. 
-In consideration of the connection issue, if users have mutiple clusters of differential genes,
-the "local" mode is recommended.}
-
-\item{conda.dir}{Directory where miniconda or anaconda is installed (required if the \code{lisa.mode} is set to "local"). 
-For example, /home1/wangchenfei/miniconda3.}
-
-\item{lisa.envname}{The name of the lisa conda environment (required if the \code{lisa.mode} is set to "local"). 
-Default is "lisa".}
+\item{lisa.mode}{Mode to Run LISA, "multi" or "one-vs-rest". Currently disbabled since we only support multi mode. }
 
 \item{organism}{Organism for the dataset. Only support "GRCh38" and "GRCm38". Default is "GRCh38".}
 
@@ -57,15 +43,13 @@ A list of top enriched transcription factor family for each cluster. For each li
 TFs are ranked according to expression.
 }
 \description{
-Predict driver transcrition factors for scRNA-seq clusters based on TF ChIP-seq peaks from CistromeDB. 
-To run this function, you must first install the rabit package (see from http://rabit.dfci.harvard.edu/).
-}
+Predict driver transcrition factors for scRNA-seq clusters based on TF ChIP-seq peaks from CistromeDB.
 \examples{
 data(pbmc.RNA)
 data(human.immune.CIBERSORT)
 pbmc.RNA.res <- RNARunSeurat(inputMat = pbmc.RNA, project = "PBMC.scRNA.Seurat", min.c = 10, min.g = 100, dims.use = 1:15)
 pbmc.RNA.res$RNA <- RNAAnnotateCelltype(pbmc.RNA.res$RNA, pbmc.RNA.res$genes, human.immune.CIBERSORT, min.score = 0.05)
-pbmc.tfs <- RNAAnnotateTranscriptionFactor(pbmc.RNA.res$RNA, pbmc.RNA.res$genes, project = "PBMC.scRNA.TF", rabit.path = "/homes/cwang/annotations/rabit")
+pbmc.tfs <- RNAAnnotateTranscriptionFactor(pbmc.RNA.res$RNA, pbmc.RNA.res$genes, project = "PBMC.scRNA.TF", organism = "GRCh38", top.tf =10)
 pbmc.tfs
 
 }

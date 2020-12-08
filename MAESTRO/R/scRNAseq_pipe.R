@@ -39,7 +39,7 @@ setwd(argue$outdir)
 count_mat = argue$expression
 prefix = argue$prefix
 thread = argue$thread
-method = argue$method
+#method = argue$method
 sigfile = argue$signature
 species = argue$species
 
@@ -70,8 +70,8 @@ if(sigfile %in% c("human.immune.CIBERSORT", "mouse.brain.ALLEN", "mouse.all.facs
   signatures = read.table(sigfile, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
 }
 RNA.res <- RNARunSeurat(inputMat = exp.dat, project = prefix, min.c = 10, min.g = 100)
-RNA.res$RNA <- RNAAnnotateCelltype(RNA = RNA.res$RNA, genes = RNA.res$genes, 
+RNA.res$RNA <- RNAAnnotateCelltype(RNA = RNA.res$RNA, genes = RNA.res$genes,
                                    signatures = signatures, min.score = 0.05)
 saveRDS(RNA.res, paste0(prefix, "_scRNA_Object.rds"))
-RNA.tfs <- RNAAnnotateTranscriptionFactor(RNA = RNA.res$RNA, genes = RNA.res$genes, project = prefix, 
+RNA.tfs <- RNAAnnotateTranscriptionFactor(RNA = RNA.res$RNA, genes = RNA.res$genes, project = prefix,
                                           organism = species, top.tf = 10)

@@ -24,7 +24,7 @@ $ MAESTRO scrna-init --platform 10x-genomics --species GRCh38 \
 --cores 8 --rseqc --directory Analysis/10X_PBMC_8k_MAESTRO_V110 --outprefix 10X_PBMC_8k \
 --mapindex annotations/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_STAR_2.7.3a \
 --whitelist Data/barcodes/737K-august-2016.txt \
---umi-length 10 --lisa lisa/hg38_2.1.tar.gz --signature human.immune.CIBERSORT
+--umi-length 10 --lisadir lisa/hg38_2.1.tar.gz --signature human.immune.CIBERSORT
 ```
 
 To get a full description of command-line options, please use the command `MAESTRO scrna-init -h`.
@@ -43,7 +43,7 @@ usage: MAESTRO scrna-init [-h] [--platform {10x-genomics,Dropseq,Smartseq2}]
                           [--barcode-start BARCODE_START]
                           [--barcode-length BARCODE_LENGTH]
                           [--umi-start UMI_START] [--umi-length UMI_LENGTH]
-                          [--lisa][--signature SIGNATURE]
+                          [--lisadir][--signature SIGNATURE]
 ```
 
 Here we list all the arguments and their description.
@@ -97,7 +97,7 @@ Arguments  |  Description
 
 Arguments  |  Description
 ---------  |  -----------
-`--lisa` | Path to the LISA data files. Please download LISA's required data from cistrome.org: [human](http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz) and [mouse](http://cistrome.org/~alynch/data/lisa_data/mm10_2.1.tar.gz). The latest version of [LISA2](https://github.com/liulab-dfci/lisa2) was recently released to largely decrease processing time on multiple gene lists. Please check out for detailed information.
+`--lisadir` | Path to the LISA data files. Please download LISA's required data from cistrome.org: [human](http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz) and [mouse](http://cistrome.org/~alynch/data/lisa_data/mm10_2.1.tar.gz). The latest version of [LISA2](https://github.com/liulab-dfci/lisa2) was recently released to largely decrease processing time on multiple gene lists. Please check out for detailed information.
 
 **Cell signature arguments:**
 

@@ -30,7 +30,7 @@ signature: {{ signature }}
 
 # Path to the LISA data files
 # please follow LISA2 (https://github.com/liulab-dfci/lisa2) and download pre-computed datasets following the instructions.
-lisa: {{ lisa }}
+lisadir: {{ lisadir }}
 
 
 # Cutoff for quality control

@@ -272,8 +272,8 @@ def scrna_parser(subparsers):
     #    "the 'local' mode is recommended to run the whole MAESTRO pipeline. "
     #    "If the mode is 'local', please provide the name of LISA environment through --lisaenv "
     #    "and specify the directory where miniconda or anaconda is installed through --condadir. DEFAULT: local.")
-    group_regulator.add_argument("--lisa", dest = "lisa", type = str, default = "",
-        help = "Path to lisa data files. For human and mouse, data can be downloaded http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz"
+    group_regulator.add_argument("--lisadir", dest = "lisadir", type = str, default = "",
+        help = "Path to lisa data files. For human and mouse, data can be downloaded from http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz"
         "and http://cistrome.org/~alynch/data/lisa_data/mm10_2.1.tar.gz")
 
 
@@ -411,7 +411,7 @@ def scrna_config(args):
             signature = signature,
             # rabitlib = os.path.abspath(args.rabitlib),
             #lisamode = args.lisamode,
-            lisa = os.path.abspath(args.lisa)
+            lisadir = os.path.abspath(args.lisadir)
             mapindex = os.path.abspath(args.mapindex),
             rsem = os.path.abspath(args.rsem),
             whitelist = os.path.abspath(args.whitelist),
