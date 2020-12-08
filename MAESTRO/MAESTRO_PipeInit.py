@@ -411,7 +411,7 @@ def scrna_config(args):
             signature = signature,
             # rabitlib = os.path.abspath(args.rabitlib),
             #lisamode = args.lisamode,
-            lisadir = os.path.abspath(args.lisadir)
+            lisadir = os.path.abspath(args.lisadir),
             mapindex = os.path.abspath(args.mapindex),
             rsem = os.path.abspath(args.rsem),
             whitelist = os.path.abspath(args.whitelist),
