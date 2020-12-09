@@ -389,7 +389,7 @@ The output TFs from MAESTRO have already been pre-filtered using TF regulatory p
                              cluster.1 = 0,
                              type = "ATAC",
                              SeuratObj = pbmc.ATAC.res$ATAC,
-                             GIGGLE.table = "10X_PBMC_10k_giggle.txt",
+                             GIGGLE.table = "10X_PBMC_10k.PredictedTFScore.txt",
                              visual.totalnumber = 100,
                              name = "10X_PBMC_10k_Monocyte_filtered")
 ```
