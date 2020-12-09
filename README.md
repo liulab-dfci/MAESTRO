@@ -70,6 +70,7 @@ $ bash Miniconda3-latest-Linux-x86_64.sh
 And then users can create an isolated environment for MAESTRO and install through the following commands:
 ``` bash
 $ conda config --add channels defaults
+$ conda config --add channels allenwlynch
 $ conda config --add channels bioconda
 $ conda config --add channels conda-forge
 # To make the installation faster, we recommend using mamba

@@ -261,7 +261,7 @@ RunLISAMulti <- function(genes, project, organism = "GRCh38")
     tf_all_log10$TF= Hmisc::capitalize(tolower(tf_all_log10$TF))
   }
   rownames(tf_all_log10)=tf_all_log10$TF
-  tf_all_log10 = tf_all_log10[, c(-1)]
+  tf_all_log10 = subset(tf_all_log10, select = -c(TF))
   write.table(tf_all_log10,paste0(project,'_lisa.txt'),sep='\t',quote = F)
   return(tf_all_log10)
 }

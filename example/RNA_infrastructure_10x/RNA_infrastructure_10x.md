@@ -21,8 +21,8 @@ Initialize the MAESTRO scRNA-seq workflow using `MAESTRO scrna-init` command. Th
 ```bash
 $ MAESTRO scrna-init --platform 10x-genomics --species GRCh38 \
 --fastq-dir Data/10X_PBMC_8k/fastqs --fastq-prefix pbmc8k \
---cores 8 --rseqc --directory Analysis/10X_PBMC_8k_MAESTRO_V110 --outprefix 10X_PBMC_8k \
---mapindex annotations/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_STAR_2.7.3a \
+--cores 10 --rseqc --directory Analysis/10X_PBMC_8k_MAESTRO_V110 --outprefix 10X_PBMC_8k \
+--mapindex annotations/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.2.2/GRCh38_STAR_2.7.6a \
 --whitelist Data/barcodes/737K-august-2016.txt \
 --umi-length 10 --lisadir lisa/hg38_2.1.tar.gz --signature human.immune.CIBERSORT
 ```
@@ -63,7 +63,7 @@ Arguments  |  Description
 
 Arguments  |  Description
 ---------  |  -----------
-`--cores` | The number of cores to use. DEFAULT: 8.
+`--cores` | The number of cores to use. DEFAULT: 10.
 `--rseqc` | Whether or not to run RSeQC. If set, the pipeline will include the RSeQC part and then takes a longer time. By default (not set), the pipeline will skip the RSeQC part.
 `--directory` | Path to the directory where the workflow shall be initialized and results shall be stored. DEFAULT: MAESTRO.
 `--outprefix` | Prefix of output files. DEFAULT: MAESTRO.
@@ -295,7 +295,7 @@ To identify enriched transcription regulators is crucial to understanding gene r
 [10] "NCOR1"
 ```
 
-Besides identifying TFs for all the clusters, we also support the differential gene list from a single comparison. In this situation, users can choose the "web" mode.
+Besides identifying TFs for all the clusters, we also support the differential gene list from a single comparison.
 ```R
 > de.geneset <- FindMarkersMAESTRO(pbmc.RNA.res$RNA, ident.1 = c(0))
 > pbmc.RNA.monocyte.tfs <- RNAAnnotateTranscriptionFactor(RNA = pbmc.RNA.res$RNA,

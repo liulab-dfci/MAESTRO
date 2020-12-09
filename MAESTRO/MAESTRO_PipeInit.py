@@ -198,8 +198,8 @@ def scrna_parser(subparsers):
 
     # Output arguments
     group_output = workflow.add_argument_group("Running and output arguments")
-    group_output.add_argument("--cores", dest = "cores", default = 8,
-        type = int, help = "The number of cores to use. DEFAULT: 8.")
+    group_output.add_argument("--cores", dest = "cores", default = 10,
+        type = int, help = "The number of cores to use. DEFAULT: 10.")
     group_output.add_argument("--rseqc", dest = "rseqc", action = "store_true",
         help = "Whether or not to run RSeQC. "
         "If set, the pipeline will include the RSeQC part and then takes a longer time. "
@@ -411,7 +411,7 @@ def scrna_config(args):
             signature = signature,
             # rabitlib = os.path.abspath(args.rabitlib),
             #lisamode = args.lisamode,
-            lisadir = os.path.abspath(args.lisadir),
+            lisadir = os.path.abspath(args.lisadir)
             mapindex = os.path.abspath(args.mapindex),
             rsem = os.path.abspath(args.rsem),
             whitelist = os.path.abspath(args.whitelist),

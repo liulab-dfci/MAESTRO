@@ -19,7 +19,7 @@ outprefix: {{ outprefix }}
 # By default, the pipeline will skip the RSeQC part. DEFAULT: False.
 rseqc: {{ rseqc }}
 
-# Number of cores to use
+# Number of cores to use.
 cores: {{ cores }}
 
 # Cell signature file used to annotate cell types. MAESTRO provides several sets of built-in cell signatures.
@@ -29,7 +29,6 @@ cores: {{ cores }}
 signature: {{ signature }}
 
 # Path to the LISA data files
-# please follow LISA2 (https://github.com/liulab-dfci/lisa2) and download pre-computed datasets following the instructions.
 lisadir: {{ lisadir }}
 
 

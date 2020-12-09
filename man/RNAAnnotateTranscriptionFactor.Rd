@@ -44,6 +44,7 @@ TFs are ranked according to expression.
 }
 \description{
 Predict driver transcrition factors for scRNA-seq clusters based on TF ChIP-seq peaks from CistromeDB.
+}
 \examples{
 data(pbmc.RNA)
 data(human.immune.CIBERSORT)
@@ -51,7 +52,6 @@ pbmc.RNA.res <- RNARunSeurat(inputMat = pbmc.RNA, project = "PBMC.scRNA.Seurat",
 pbmc.RNA.res$RNA <- RNAAnnotateCelltype(pbmc.RNA.res$RNA, pbmc.RNA.res$genes, human.immune.CIBERSORT, min.score = 0.05)
 pbmc.tfs <- RNAAnnotateTranscriptionFactor(pbmc.RNA.res$RNA, pbmc.RNA.res$genes, project = "PBMC.scRNA.TF", organism = "GRCh38", top.tf =10)
 pbmc.tfs
-
 }
 \author{
 Dongqing Sun, Chenfei Wang
