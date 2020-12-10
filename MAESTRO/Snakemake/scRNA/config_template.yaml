@@ -1,7 +1,7 @@
 # Directory where fastq files are stored
 fastqdir: {{ fastqdir }}
 
-# Sample name of fastq file (only for platform of "10x-genomics", for example, 
+# Sample name of fastq file (only for platform of "10x-genomics", for example,
 # if there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the sample name is "pbmc_1k_v2". )
 fastqprefix: {{ fastqprefix }}
 
@@ -15,33 +15,21 @@ platform: {{ platform }}
 outprefix: {{ outprefix }}
 
 # Whether or not to run RSeQC. [True, False]
-# If it's set to True, the pipeline will include the RSeQC part and then takes a longer time. 
+# If it's set to True, the pipeline will include the RSeQC part and then takes a longer time.
 # By default, the pipeline will skip the RSeQC part. DEFAULT: False.
 rseqc: {{ rseqc }}
 
-# Number of cores to use
+# Number of cores to use.
 cores: {{ cores }}
 
-# Cell signature file used to annotate cell types. MAESTRO provides several sets of built-in cell signatures. 
-# Users can choose from ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']. 
-# Custom cell signatures are also supported. In this situation, users need to provide the file location of cell signatures, 
+# Cell signature file used to annotate cell types. MAESTRO provides several sets of built-in cell signatures.
+# Users can choose from ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris'].
+# Custom cell signatures are also supported. In this situation, users need to provide the file location of cell signatures,
 # and the signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene.
 signature: {{ signature }}
 
-# Mode to Run LISA, 'local' or 'web'. If the mode is set as 'local', 
-# please install LISA (https://github.com/qinqian/lisa) and download pre-computed datasets following the instructions. 
-# The 'web' mode is to run online version of LISA. In consideration of the connection issue and size of datasets, 
-# the 'local' mode is recommended to run the whole MAESTRO pipeline. 
-# If the mode is 'local', please provide the name of LISA environment through lisaenv 
-# and specify the directory where miniconda or anaconda is installed through condadir. DEFAULT: local.
-lisamode: {{ lisamode }}
-
-# Name of lisa environment (required if method is set to lisa and lisamode is set to local). DEFAULT: lisa.
-lisaenv: {{ lisaenv }}
-
-# Directory where miniconda or anaconda is installed (required if method is set to lisa and lisamode is set to local).
-# For example, /home/user/miniconda3
-condadir: {{ condadir }}
+# Path to the LISA data files
+lisadir: {{ lisadir }}
 
 
 # Cutoff for quality control
@@ -54,14 +42,14 @@ cutoff:
   cell: {{ cell }}
 
 
-# Reference genome 
+# Reference genome
 genome:
-  # Genome index directory for STAR. Users can just download the index file 
-  # from http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz and decompress it. 
+  # Genome index directory for STAR. Users can just download the index file
+  # from http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz and decompress it.
   # Then specify the index directory for STAR, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_STAR_2.7.3a'.
   mapindex: {{ mapindex }}
-  # The prefix of transcript references for RSEM used by rsem-prepare-reference (Only required when the platform is Smartseq2). 
-  # Users can directly download the annotation file from 
+  # The prefix of transcript references for RSEM used by rsem-prepare-reference (Only required when the platform is Smartseq2).
+  # Users can directly download the annotation file from
   # http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz and decompress it.
   # Then specify the prefix for RSEM, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_RSEM_1.3.2/GRCh38'.
   rsem: {{ rsem }}
@@ -69,31 +57,31 @@ genome:
 
 # Information about barcode (for platform of 'Dropseq' or '10x-genomics')
 barcode:
-  # If the platform is 'Dropseq' or '10x-genomics', please specify the barcode library (whitelist) 
-  # so that STARsolo can do the error correction and demultiplexing of cell barcodes. 
-  # The 10X Chromium whitelist file can be found inside the CellRanger distribution. 
-  # Please make sure that the whitelist is compatible with the specific version of the 10X chemistry: V2 or V3. 
-  # For example, in CellRanger 3.1.0, the V2 whitelist is 'cellranger-3.1.0/cellranger-cs/3.1.0/lib/python/cellranger/barcodes/737K-august-2016.txt'. 
-  # The V3 whitelist is 'cellranger-3.1.0/cellranger-cs/3.1.0/lib/python/cellranger/barcodes/3M-february-2018.txt'. 
+  # If the platform is 'Dropseq' or '10x-genomics', please specify the barcode library (whitelist)
+  # so that STARsolo can do the error correction and demultiplexing of cell barcodes.
+  # The 10X Chromium whitelist file can be found inside the CellRanger distribution.
+  # Please make sure that the whitelist is compatible with the specific version of the 10X chemistry: V2 or V3.
+  # For example, in CellRanger 3.1.0, the V2 whitelist is 'cellranger-3.1.0/cellranger-cs/3.1.0/lib/python/cellranger/barcodes/737K-august-2016.txt'.
+  # The V3 whitelist is 'cellranger-3.1.0/cellranger-cs/3.1.0/lib/python/cellranger/barcodes/3M-february-2018.txt'.
   whitelist: {{ whitelist }}
   # The start site of each barcode. DEFAULT: 1.
   barcodestart: {{ barcodestart }}
-  # The length of cell barcode. For 10x-genomics, the length of barcode is 16. DEFAULT: 16. 
+  # The length of cell barcode. For 10x-genomics, the length of barcode is 16. DEFAULT: 16.
   barcodelength: {{ barcodelength }}
   # The start site of UMI. DEFAULT: 17.
   umistart: {{ umistart }}
-  # The length of UMI. For 10x-genomics, the length of V2 chemistry is 10. 
-  # For 10X V3 chemistry, the length is 12. DEFAULT: 10. 
+  # The length of UMI. For 10x-genomics, the length of V2 chemistry is 10.
+  # For 10X V3 chemistry, the length is 12. DEFAULT: 10.
   umilength: {{ umilength }}
 
 
 # Specify the barcode fastq file and transcript fastq file (only for platform of "Dropseq")
 fastq:
-  # Specify the barcode fastq file, only for the platform of 'Dropseq'. 
+  # Specify the barcode fastq file, only for the platform of 'Dropseq'.
   # If there are multiple pairs of fastq, please provide a comma-separated list of barcode fastq files.
   # For example, 'test1_1.fastq,test2_1.fastq'
   barcode: {{ barcode }}
-  # Specify the transcript fastq file, only for the platform of 'Dropseq'. 
+  # Specify the transcript fastq file, only for the platform of 'Dropseq'.
   # If there are multiple pairs of fastq, please provide a comma-separated list of barcode fastq files.
   # For example, test1_2.fastq,test2_2.fastq'
   transcript: {{ transcript }}

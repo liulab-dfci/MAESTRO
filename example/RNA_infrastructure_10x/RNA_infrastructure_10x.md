@@ -21,10 +21,10 @@ Initialize the MAESTRO scRNA-seq workflow using `MAESTRO scrna-init` command. Th
 ```bash
 $ MAESTRO scrna-init --platform 10x-genomics --species GRCh38 \
 --fastq-dir Data/10X_PBMC_8k/fastqs --fastq-prefix pbmc8k \
---cores 8 --rseqc --directory Analysis/10X_PBMC_8k_MAESTRO_V110 --outprefix 10X_PBMC_8k \
---mapindex annotations/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_STAR_2.7.3a \
+--cores 10 --rseqc --directory Analysis/10X_PBMC_8k_MAESTRO_V110 --outprefix 10X_PBMC_8k \
+--mapindex annotations/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.2.2/GRCh38_STAR_2.7.6a \
 --whitelist Data/barcodes/737K-august-2016.txt \
---umi-length 10 --lisamode local --lisaenv lisa --condadir /home1/user/miniconda3 --signature human.immune.CIBERSORT
+--umi-length 10 --lisadir lisa/hg38_2.1.tar.gz --signature human.immune.CIBERSORT
 ```
 
 To get a full description of command-line options, please use the command `MAESTRO scrna-init -h`.
@@ -43,8 +43,7 @@ usage: MAESTRO scrna-init [-h] [--platform {10x-genomics,Dropseq,Smartseq2}]
                           [--barcode-start BARCODE_START]
                           [--barcode-length BARCODE_LENGTH]
                           [--umi-start UMI_START] [--umi-length UMI_LENGTH]
-                          [--lisamode {local,web}] [--lisaenv LISAENV]
-                          [--condadir CONDADIR] [--signature SIGNATURE]
+                          [--lisadir][--signature SIGNATURE]
 ```
 
 Here we list all the arguments and their description.
@@ -64,7 +63,7 @@ Arguments  |  Description
 
 Arguments  |  Description
 ---------  |  -----------
-`--cores` | The number of cores to use. DEFAULT: 8.
+`--cores` | The number of cores to use. DEFAULT: 10.
 `--rseqc` | Whether or not to run RSeQC. If set, the pipeline will include the RSeQC part and then takes a longer time. By default (not set), the pipeline will skip the RSeQC part.
 `--directory` | Path to the directory where the workflow shall be initialized and results shall be stored. DEFAULT: MAESTRO.
 `--outprefix` | Prefix of output files. DEFAULT: MAESTRO.
@@ -98,9 +97,7 @@ Arguments  |  Description
 
 Arguments  |  Description
 ---------  |  -----------
-`--lisamode` | Mode to Run LISA, 'local' or 'web'. If the mode is set as 'local', please install [LISA](https://github.com/qinqian/lisa) and download pre-computed datasets following the instructions. The 'web' mode is to run online version of LISA. In consideration of the connection issue and size of datasets, the 'local' mode is recommended to run the whole MAESTRO pipeline. If the mode is 'local', please provide the name of LISA environment through `--lisaenv` and specify the directory where miniconda or anaconda is installed through `--condadir`. DEFAULT: local. (**Note:** LISA takes multiple types of gene sets which can be constituted of only official gene symbols, only RefSeq ids, only Ensembl ids, only Entrez ids, or a mixture of these identifiers.)
-`--lisaenv` | Name of LISA environment (required if method is set to lisa and lisamode is set to local). DEFAULT: lisa.
-`--condadir` | Directory where miniconda or anaconda is installed (required if method is set to lisa and lisamode is set to local). For example, `--condadir /home/user/miniconda3`.
+`--lisadir` | Path to the LISA data files. Please download LISA's required data from cistrome.org: [human](http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz) and [mouse](http://cistrome.org/~alynch/data/lisa_data/mm10_2.1.tar.gz). The latest version of [LISA2](https://github.com/liulab-dfci/lisa2) was recently released to largely decrease processing time on multiple gene lists. Please check out for detailed information.
 
 **Cell signature arguments:**
 
@@ -277,16 +274,12 @@ All the reduction results are stored in `Object@reductions`. For example, users 
 <img src="./10X_PBMC_8k_annotated_nolegend.png" width="420" height="420" />
 
 ### Step 3. Identify driver transcription regulators
-To identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilizes LISA to predict the potential transcription factors based on the marker genes in each cluster, which rely on the transcriptional regulator binding profiles from CistromeDB to identify the potential regulators shaping the expression pattern of each cluster. MAESTRO provides two options for running LISA, "local" and "web". The web mode does not need to install LISA and download the annotations. If users select the local mode, which is much faster and more stable than the web version, users need to install LISA locally, build the annotation files according to the [LISA document](https://github.com/qinqian/lisa), and provide the environment name of LISA when using the `RNAAnnotateTranscriptionFactor` function. If users have multiple clusters of differential genes, the "local" mode is recommended.
+To identify enriched transcription regulators is crucial to understanding gene regulation in the heterogeneous single-cell populations. MAESTRO utilizes LISA to predict the potential transcription factors based on the marker genes in each cluster, which rely on the transcriptional regulator binding profiles from CistromeDB to identify the potential regulators shaping the expression pattern of each cluster. In rare cases, users need to download LISA data manually. If the program fails while downloading data, follow this [LISA document](https://github.com/liulab-dfci/lisa2/blob/master/docs/troubleshooting.md). If users have multiple clusters of differential genes, the "multi" mode is recommended.
 
 ```R
 > pbmc.RNA.tfs <- RNAAnnotateTranscriptionFactor(RNA = pbmc.RNA.res$RNA,
                                                  genes = pbmc.RNA.res$genes,
                                                  project = pbmc.RNA.res$RNA@project.name,
-                                                 method = "LISA",
-                                                 lisa.mode = "local",
-                                                 conda.dir = "/home1/user/miniconda3",
-                                                 lisa.envname = "lisa",
                                                  organism = "GRCh38",
                                                  top.tf = 10)
 > pbmc.RNA.tfs[["0"]]
@@ -302,15 +295,13 @@ To identify enriched transcription regulators is crucial to understanding gene r
 [10] "NCOR1"
 ```
 
-Besides identifying TFs for all the clusters, we also support the differential gene list from a single comparison. In this situation, users can choose the "web" mode.
+Besides identifying TFs for all the clusters, we also support the differential gene list from a single comparison.
 ```R
 > de.geneset <- FindMarkersMAESTRO(pbmc.RNA.res$RNA, ident.1 = c(0))
 > pbmc.RNA.monocyte.tfs <- RNAAnnotateTranscriptionFactor(RNA = pbmc.RNA.res$RNA,
                                                           genes = de.geneset,
                                                           cluster = c(0),
                                                           project = "10X_PBMC_8k_Monocyte",
-                                                          method = "LISA",
-                                                          lisa.mode = "web",
                                                           organism = "GRCh38",
                                                           top.tf = 20)
 ```
