@@ -37,7 +37,7 @@
 ### v1.2.1.9999
 * Bug fixes (placeholder for v1.2.2 formal release)
 ### v1.2.2
-* Update LISA to LISA2 which extends the original, running faster, reducing dependencies, and adding useful CLI functions for pipeline integration. Please download the LISA2 data from [human](http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz) and [mouse](http://cistrome.org/~alynch/data/lisa_data/mm10_2.1.tar.gz).
+* Update LISA to LISA2 which extends the original, runs faster, reduces dependencies, and adds useful CLI functions for pipeline integration. Please download the LISA2 data from [human](http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz) and [mouse](http://cistrome.org/~alynch/data/lisa_data/mm10_2.1.tar.gz).
 * Update conda dependencies to only requesting lowest versions.
 * Fix the bugs in conda package installation channel.
 * Update markers in the mouse.brain.ALLEN cell signature file.
