@@ -120,19 +120,9 @@ def scrna_validator(args):
             logging.error("--rsem is required. Please provide the prefix of transcript references for RSEM. See --rsem help for more details.")
             exit(1)
 
-    if args.lisamode == "local":
-        if args.lisaenv == "":
-            logging.error("--lisaenv is required when lisamode is 'local'. Please specify the name of LISA environment!")
-            exit(1)
-        if args.condadir == "":
-            logging.error("--condadir is required when lisamode is 'local'. Please specify the directory where miniconda or anaconda is installed!")
-            exit(1)
-
     if args.signature not in ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
         if os.path.exists(args.signature):
             pass
         else:
             logging.error("Please specify the signature built in MAESTRO or provide customized signature file. See --signature help for more details!")
             exit(1)
-
-

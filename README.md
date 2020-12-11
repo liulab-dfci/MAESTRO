@@ -37,6 +37,7 @@
 ### v1.2.1.9999
 * Bug fixes (placeholder for v1.2.2 formal release)
 ### v1.2.2
+* Update LISA to LISA2 which extends the original, runs faster, reduces dependencies, and adds useful CLI functions for pipeline integration. Please download the LISA2 data from [human](http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz) and [mouse](http://cistrome.org/~alynch/data/lisa_data/mm10_2.1.tar.gz).
 * Update conda dependencies to only requesting lowest versions.
 * Fix the bugs in conda package installation channel.
 * Update markers in the mouse.brain.ALLEN cell signature file.
@@ -69,6 +70,7 @@ $ bash Miniconda3-latest-Linux-x86_64.sh
 And then users can create an isolated environment for MAESTRO and install through the following commands:
 ``` bash
 $ conda config --add channels defaults
+$ conda config --add channels liulab-dfci
 $ conda config --add channels bioconda
 $ conda config --add channels conda-forge
 # To make the installation faster, we recommend using mamba
@@ -93,7 +95,7 @@ The full MAESTRO workflow requires extra annotation files and tools:
 
 * MAESTRO depends on [starsolo](https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md) and [minimap2](https://github.com/lh3/minimap2) for mapping scRNA-seq and scATAC-seq dataset. Users need to generate **the reference files** for the alignment software and specify the path of the annotations to MAESTRO through command line options.
 
-* MAESTRO utilizes **LISA** to evaluate the enrichment of transcription factors based on the marker genes from scRNA-seq clusters. By default, users can choose the "web" option, which will use the API function in MAESTRO to perform LISA analysis. However, if users want to use the local version of LISA, they need to install [LISA](https://github.com/qinqian/lisa) locally, build the annotation files according to the LISA document, and provide the path of LISA to MAESTRO when using the RNAAnnotateTranscriptionFactor function. The input gene set can be constituted of only official gene symbols, only RefSeq ids, only Ensembl ids, only Entrez ids, or a mixture of these identifiers.
+* MAESTRO utilizes **LISA2** to evaluate the enrichment of transcription factors based on the marker genes from scRNA-seq clusters. If users want to use LISA2, they need to download and install reference data either for [human](http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz) or for [mouse](http://cistrome.org/~alynch/data/lisa_data/mm10_2.1.tar.gz) locally and build the data according to the [LISA2 document](https://github.com/liulab-dfci/lisa2/blob/master/docs/troubleshooting.md). The input gene set can be constituted of only official gene symbols, only RefSeq ids, only Ensembl ids, only Entrez ids, or a mixture of these identifiers.
 
 * MAESTRO utilizes **giggle** to identify enrichment of transcription factor peaks in scATAC-seq cluster-specific peaks. By default [giggle](https://github.com/ryanlayer/giggle) is installed in MAESTRO environment. The giggle index for Cistrome database can be downloaded [here](http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz) (**Note:** Before v1.2.0, the giggle index `giggle.tar.gz` can be downloaded from http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz. Since v1.2.0, please download the latest index [giggle.all.tar.gz](http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz)). Users need to download the file and provide the location of the giggle annotation to MAESTRO when using the ATACAnnotateTranscriptionFactor function.
 
