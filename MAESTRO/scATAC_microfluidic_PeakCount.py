@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-28 13:57:12
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-12-13 16:39:45
+# @Last Modified time: 2020-12-13 20:48:54
 
 
 import os,sys
@@ -63,7 +63,7 @@ def bedtools_intersect(barcode, bam_dir, peak_bed):
     if not os.path.isfile(bam_dir + "/" + barcode +".sortedByPos.rmdp.unique.bed"):
         error(bam_dir+"/"+barcode+".sortedByPos.rmdp.unique.bed not exist!")
     else:
-        os.system("bedtools intersect -wa -a " + peak_bed + " -b " + bam_dir + "/" + barcode + ".sortedByPos.rmdp.unique.bed -c | awk '{if ($4>0) print $0}' > " + tmp + '/' + barcode + ".bed")
+        os.system("bedtools intersect -wa -a " + peak_bed + " -b " + bam_dir + "/" + barcode + ".sortedByPos.rmdp.unique.bed -c | awk '{if ($NF>0) print $0}' > " + tmp + '/' + barcode + ".bed")
     return(tmp + "/" + barcode + ".bed")
 
 

@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-24 22:26:54
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-12-13 16:02:34
+# @Last Modified time: 2020-12-13 20:46:06
 
 import os,sys
 import time
@@ -113,7 +113,7 @@ def filter_fragment_file(barcode_file, frag_file, count_cutoff = 1000):
 
 def bedtools_intersect(barcode, peak_bed):
     """Intersect frag file with peak file to genearate the count output."""
-    os.system("bedtools intersect -wa -a " + peak_bed + " -b " + tmp + "/" + barcode + " -c | awk '{if ($4>0) print $0}' > " + tmp + "/" + barcode + ".bed")
+    os.system("bedtools intersect -wa -a " + peak_bed + " -b " + tmp + "/" + barcode + " -c | awk '{if ($NF>0) print $0}' > " + tmp + "/" + barcode + ".bed")
     return(tmp + "/" + barcode + ".bed")
 
 
@@ -132,7 +132,7 @@ def generate_count_matrix(count_list, peak_list, binary = False):
                 if binary:
                     peak_count[line[0]+'_'+line[1]+'_'+line[2]][0, i] = 1
                 else:
-                    peak_count[line[0]+'_'+line[1]+'_'+line[2]][0, i] = int(line[3])
+                    peak_count[line[0]+'_'+line[1]+'_'+line[2]][0, i] = int(line[-1])
 
     matrix = []
     for k in peak_list:
