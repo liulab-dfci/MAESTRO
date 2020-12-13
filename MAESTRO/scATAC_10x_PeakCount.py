@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-24 22:26:54
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-03-16 18:15:08
+# @Last Modified time: 2020-12-13 16:02:34
 
 import os,sys
 import time
@@ -27,7 +27,7 @@ def peakcount_parser(subparsers):
     """
 
     workflow = subparsers.add_parser("scatac-peakcount", 
-        help = "Generate peak-cell binary count matrix. ")
+        help = "Generate peak-cell count matrix. ")
     group_input = workflow.add_argument_group("Input arguments")
     group_input.add_argument("--peak", dest = "peak", type = str, required = True,
         help = "Location of peak file. Support gzipped file."
@@ -42,7 +42,11 @@ def peakcount_parser(subparsers):
         help = "Location of valid cell barcode file (optional). Support gzipped file."
         "Each line of the file represents a valid barcode. "
         "If not set, the barcodes with enough read count (> --count-cutoff) "
-        "in the fragment file will be used to generate peak-cell binary count matrix.")
+        "in the fragment file will be used to generate peak-cell count matrix.")
+    group_input.add_argument("--binary", dest = "binary", action = "store_true",
+        help = "Whether or not to generate binary peak count matrix. If set, "
+        "MAESTRO will binarize the peak-cell count matrix. "
+        "If not (by default), MAESTRO will generate the original peak-count matrix. ")
     group_input.add_argument("--count-cutoff", dest = "count_cutoff", default = 1000, type = int, required = False,
         help = "Cutoff for the number of count in each cell. DEFAULT: 1000.")
     group_input.add_argument("--species", dest = "species", default = "GRCh38", required = False,
@@ -73,7 +77,7 @@ def filter_fragment_file(barcode_file, frag_file, count_cutoff = 1000):
 
         for line in fhd:
             line = line.strip().split('\t')
-            barcode_out[line[3]].append(line[0]+'\t'+line[1]+'\t'+line[2])
+            barcode_out[line[3]].append([line[0],line[1],line[2],line[4]])
             barcode_count[line[3]] += int(line[4])
 
         fhd.close()
@@ -95,51 +99,55 @@ def filter_fragment_file(barcode_file, frag_file, count_cutoff = 1000):
 
         for line in fhd:
             line = line.strip().split('\t')
-            barcode_out[line[3]].append(line[0]+'\t'+line[1]+'\t'+line[2])
+            barcode_out[line[3]].append([line[0],line[1],line[2],line[4]])
         fhd.close()
     
     for k in barcode_list:
         outf = open(tmp+"/"+k,'w')
-        for line in sorted(barcode_out[k]):
-            print(line, file=outf)
+        for frag in barcode_out[k]:
+            for i in range(int(frag[3])):
+                print("\t".join(frag[0:3]), file=outf)
         outf.close()
 
     return(barcode_list)
 
 def bedtools_intersect(barcode, peak_bed):
-    """Intersect frag file with peak file to genearate binary count output."""
-    os.system("bedtools intersect -wa -a " + peak_bed + " -b " + tmp + "/" + barcode + " -u > " + tmp + "/" + barcode + ".bed")
+    """Intersect frag file with peak file to genearate the count output."""
+    os.system("bedtools intersect -wa -a " + peak_bed + " -b " + tmp + "/" + barcode + " -c | awk '{if ($4>0) print $0}' > " + tmp + "/" + barcode + ".bed")
     return(tmp + "/" + barcode + ".bed")
 
 
-def generate_binary_matrix(count_list, peak_list):
+def generate_count_matrix(count_list, peak_list, binary = False):
 
-    binary_count = {}
+    peak_count = {}
     for peak in peak_list:
-        binary_count[peak] = sp_sparse.dok_matrix((1, len(count_list)), dtype=np.int8)
+        peak_count[peak] = sp_sparse.dok_matrix((1, len(count_list)), dtype=np.int8)
     
     barcodes = []
     for i in range(0,len(count_list)):
         barcodes.append(count_list[i].split("/")[-1][:-4])
         for line in open(count_list[i], 'r'):
             line = line.strip().split('\t')
-            if line[0]+'_'+line[1]+'_'+line[2] in binary_count:
-               binary_count[line[0]+'_'+line[1]+'_'+line[2]][0, i] = 1
+            if line[0]+'_'+line[1]+'_'+line[2] in peak_count:
+                if binary:
+                    peak_count[line[0]+'_'+line[1]+'_'+line[2]][0, i] = 1
+                else:
+                    peak_count[line[0]+'_'+line[1]+'_'+line[2]][0, i] = int(line[3])
 
     matrix = []
     for k in peak_list:
-        matrix.append(binary_count[k])
+        matrix.append(peak_count[k])
     matrix = sp_sparse.vstack(matrix)
     
     return((matrix, barcodes))
 
 
-def merge_binary_file(peak_file, count_list, count_file, cores, genome = 'GRCh38'):
-    """Merge the intersectBed result into binary count table."""
+def merge_count_file(peak_file, count_list, count_file, cores, binary, genome = 'GRCh38'):
+    """Merge the intersectBed result into the count table."""
     
     peak_list = []
 
-    fhd = universal_open( peak_file, "rt" )
+    fhd = universal_open(peak_file, "rt")
     for line in fhd:
         line = line.strip().split('\t')
         peak_list.append(line[0]+'_'+line[1]+'_'+line[2])
@@ -157,8 +165,8 @@ def merge_binary_file(peak_file, count_list, count_file, cores, genome = 'GRCh38
             i = len(count_list)
 
     pool = mp.Pool(processes = int(cores))
-    partial_generate_binary_matrix = partial(generate_binary_matrix, peak_list = peak_list) 
-    result = pool.map_async(partial_generate_binary_matrix, count_list_split)
+    partial_generate_count_matrix = partial(generate_count_matrix, peak_list = peak_list, binary = binary) 
+    result = pool.map_async(partial_generate_count_matrix, count_list_split)
     pool.close()
     pool.join()
 
@@ -172,7 +180,7 @@ def merge_binary_file(peak_file, count_list, count_file, cores, genome = 'GRCh38
     write_10X_h5(count_file, matrix, peak_list, barcodes, genome = genome, datatype = 'Peaks')
 
 
-def peakcount(peak, fragment, barcode, cores, count_cutoff, directory, outprefix, species):
+def peakcount(peak, fragment, barcode, binary, cores, count_cutoff, directory, outprefix, species):
 
     try:
         os.makedirs(directory)
@@ -194,6 +202,6 @@ def peakcount(peak, fragment, barcode, cores, count_cutoff, directory, outprefix
     pool.join()
 
     count_list = result.get()
-    merge_binary_file(peak, count_list, count_file, cores, species)
+    merge_count_file(peak, count_list, count_file, cores, binary, species)
     shutil.rmtree(tmp)
 
