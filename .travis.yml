@@ -139,7 +139,7 @@ script:
   # We also need more testing here!
 
 # the following codes will upload when all the above is successful and
-# the test is triggered within "liulab-dfci/MAESTRO" repo and
+# the test is triggered within "baigal628/MAESTRO" repo and
 # the test is triggered with a tag value, e.g. 1.1.0 or 1.2.0 and
 # the CONDA_UPLOAD_TOKEN must match the one retrieved under anaconda account
 #
@@ -154,7 +154,7 @@ after_success:
   - mamba install anaconda-client
   - |
     # Only upload builds from tags
-    if [[ $TRAVIS_PULL_REQUEST == false && $TRAVIS_REPO_SLUG == "liulab-dfci/MAESTRO"
+    if [[ $TRAVIS_PULL_REQUEST == false && $TRAVIS_REPO_SLUG == "baigal628/MAESTRO"
           && $TRAVIS_BRANCH == $TRAVIS_TAG  && $TRAVIS_TAG != '' ]]; then
       export ANACONDA_API_TOKEN=$CONDA_UPLOAD_TOKEN
       anaconda upload bld-dir/**/maestro-*.tar.bz2
