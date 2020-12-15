@@ -82,7 +82,7 @@ def main():
         merge_10X_h5(directory = args.directory, outprefix = args.outprefix, h5list = args.h5_list, prefixlist = args.cellprefix_list, genome = args.species, datatype = args.datatype)
 
     elif args.subcommand == "scatac-peakcount":
-        peakcount(directory = args.directory, outprefix = args.outprefix, peak = args.peak, fragment = args.fragment, barcode = args.barcode, count_cutoff = args.count_cutoff, cores = args.cores, species = args.species)
+        peakcount(directory = args.directory, outprefix = args.outprefix, peak = args.peak, fragment = args.fragment, barcode = args.barcode, binary = args.binary, count_cutoff = args.count_cutoff, cores = args.cores, species = args.species)
 
     elif args.subcommand == "scatac-genescore":
         genescore(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, peakcount = args.peakcount, feature = args.feature, barcode = args.barcode, genedistance = args.genedistance, species = args.species, model = args.model)
