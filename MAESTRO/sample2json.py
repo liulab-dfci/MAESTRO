@@ -20,9 +20,9 @@ def sample_parser(subparsers):
     workflow = subparsers.add_parser("samples-init", help = "Initialize samples.json file in the current directory.")
 
     group_input = workflow.add_argument_group("Input files arguments")
-    group_input.add_argument("assay_type", dest = "assay_type", help="Required. type of assay: either scatac or scrnaseq")
-    group_input.add_argument("data_type", dest = "data_type", help="Required. type of data: either fastq or fragment")
-    group_input.add_argument("data_dir", dest = "data_dir", help="Required. the FULL path to the fastq folder or the fragment folder")
+    group_input.add_argument("--assay_type", dest = "assay_type", help="Required. type of assay: either scatac or scrnaseq")
+    group_input.add_argument("--data_type", dest = "data_type", help="Required. type of data: either fastq or fragment")
+    group_input.add_argument("--data_dir", dest = "data_dir", help="Required. the FULL path to the fastq folder or the fragment folder")
 
 def sample_json(args):
     """
