@@ -13,7 +13,7 @@ rule scatac_merge_peaks_batch:
         catpeaksort = "Result/Analysis/Batch/all_samples_peaks_cat.bed",
         catpeakbdg = "Result/Analysis/Batch/all_samples_peaks_cat.bdg",
         cutoff_samples = config["cutoff_samples"],
-        chrom_len = config["chrom_len"]
+        chrom_len = "%s/annotations/%s_chrom_len.txt" %(SCRIPT_PATH, config["species"])
     log: "Result/Log/merge_peaks_batch.log"
     shell:
         """

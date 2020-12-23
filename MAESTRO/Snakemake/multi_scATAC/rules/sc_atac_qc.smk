@@ -21,7 +21,7 @@ rule scatac_qcstat_mapped:
 rule scatac_qcstat_promoter:
     input:
         frag_count = "Result/minimap2/{sample}/fragments_corrected_dedup_count.tsv",
-        promoter = config["promoter"]
+        promoter = "%s/annotations/%s_promoter.bed" %(SCRIPT_PATH, config["species"])
     output:
         promoter_stat = temp("Result/QC/{sample}/singlecell_promoter.txt"),
     params:
@@ -64,7 +64,7 @@ if config["format"] == "fastq":
     rule scatac_qcstat_bulk:
         input:
             bam = "Result/minimap2/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam",
-            promoter = config["promoter"],
+            promoter = "%s/annotations/%s_promoter.bed" %(SCRIPT_PATH, config["species"]),
             peak = "Result/Analysis/{sample}/{sample}_all_peaks.narrowPeak"
         output:
             bulk_stat = "Result/QC/{sample}/flagstat.txt",
@@ -88,7 +88,7 @@ elif config["format"] == "fragments":
     rule scatac_qcstat_bulk:
         input:
             frag_dedup = "Result/minimap2/{sample}/fragments_corrected_dedup_count.tsv",
-            promoter = config["promoter"],
+            promoter = "%s/annotations/%s_promoter.bed" %(SCRIPT_PATH, config["species"]),
             peak = "Result/Analysis/{sample}/{sample}_all_peaks.narrowPeak"
         output:
             bulk_stat = "Result/QC/{sample}/flagstat.txt",
