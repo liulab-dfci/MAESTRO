@@ -18,10 +18,10 @@ except ImportError:
 def main():
     setup(
         name = "MAESTRO",
-        version = "1.2.2",
+        version = "1.3.0",
         package_dir = {'MAESTRO':'MAESTRO'},
         packages = ['MAESTRO'],
-        package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'Snakemake/integrate/*', 'R/*', 'annotations/*', 'html/*', '']},
+        package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'Snakemake/integrate/*', 'Snakemake/multi_scATAC/*', 'R/*', 'utils/*','annotations/*', 'html/*', '']},
         #data_files = [(os.path.join(sys.prefix,'bin'), ['refpkg/giggle/bin/giggle'])],
         scripts = ['MAESTRO/MAESTRO'],
         include_package_data = True,
