@@ -364,7 +364,7 @@ def multi_scatac_parser(subparsers):
         "If the format is 'bam', --bam needs to be set. "
         "If the format is 'fragments', --frag needs to be set. "
         "DEFAULT: fastq.")
-    group_input.add_argument("--deduplication" dest = "deduplication", default = " cell level",
+    group_input.add_argument("--deduplication", dest = "deduplication", default = " cell level",
         choices = ["cell level", "bulk level"], type = str,
         help = "deduplication level: cell level or bulk level ")
     #group_input.add_argument()
