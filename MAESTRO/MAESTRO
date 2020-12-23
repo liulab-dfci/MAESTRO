@@ -20,7 +20,7 @@ from MAESTRO.scATAC_10x_PeakCount import peakcount_parser, peakcount
 from MAESTRO.scRNA_QC import scrnaqc_parser, scrna_qc
 from MAESTRO.scATAC_QC import scatacqc_parser, scatac_qc
 from MAESTRO.scRNA_AnalysisPipeline import scrna_analysis_parser, scrna_analysis
-from MAESTRO.sample2json.py import *
+from MAESTRO.sample2json import *
 
 def main():
     """
