@@ -25,7 +25,7 @@
 ### v1.2.0
 * Modify the regulatory potential model by removing the interfering peaks from adjacent genes and adjusting the weight of exon peaks. The "enhanced RP model" is set as the default gene activity scoring model with original "simple RP model" as a option.
 * Modify the integration function of MAESTRO. The new function can output more intermediate figures and log files for diagnosing the possible failure in integrating rare populations.
-* Add the function for annotating cell-types for scATAC-seq clusters based on public bulk chromatin accessibility data from Cistrome database (**Note:** Please update the giggle index to the [latest](http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz)).
+* Add the function for annotating cell-types for scATAC-seq clusters based on public bulk chromatin accessibility data from Cistrome database (**Note:** Please update the giggle index to the [latest](http://cistrome.org/~galib/giggle.all.tar.gz)).
 * Provide the function of generating genome browser tracks at cluster level for scATAC-seq dataset visualization.
 * Support peak calling at the cluster level now!
 ### v1.2.1
