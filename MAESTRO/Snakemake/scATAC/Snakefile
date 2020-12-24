@@ -881,7 +881,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
         benchmark:
             "Result/Benchmark/%s_PeakCount.benchmark" %(config["outprefix"])
         shell:
-            "MAESTRO scatac-peakcount --peak {input.finalpeak} --fragment {input.frag} --barcode {input.validbarcode} "
+            "MAESTRO scatac-peakcount --binary --peak {input.finalpeak} --fragment {input.frag} --barcode {input.validbarcode} "
             "--species {params.species} --cores {threads} --directory {params.outdir} --outprefix {params.outpre}"
 
 #     # rule scatac_rmdp:
@@ -1158,7 +1158,8 @@ rule scatac_qcfilter:
 
 rule scatac_genescore:
     input:
-        filtercount = "Result/QC/%s_filtered_peak_count.h5" %(config["outprefix"]),
+        filtercount = "Result/QC/%s_filtered_
+        unt.h5" %(config["outprefix"]),
         genebed = "%s/annotations/%s_ensembl.bed" %(SCRIPT_PATH, config["species"]),
     output:
         genescore = "Result/Analysis/%s_gene_score.h5" %(config["outprefix"])
