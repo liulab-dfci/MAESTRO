@@ -327,11 +327,11 @@ def multi_scatac_parser(subparsers):
     # Multi-Sample processing parameters
     group_multi = workflow.add_argument_group(" multi-sample processing parameters")
     group_multi.add_argument("--batch", dest = "batch", action = "store_true",
-        help = "If set as true, peaks will be called on each sample individually first and peaks from all samples will be merged"
-        "A count matrix for each sample will be produced based on the merged peak set")
+        help = "If set as true, peaks will be called on each sample individually first and peaks from all samples will be merged."
+        "A count matrix for each sample will be produced based on the merged peak set.")
     group_multi.add_argument("--consensus_peaks", dest = "consensus_peaks", action = "store_true",
         help = "When batch is TRUE, users can define whether to merge consensus peaks from each sample."
-        "If set as true, users should also set number of cutoff_samples to define consensus")
+        "If set as true, users should also set number of cutoff_samples to define consensus.")
     group_multi.add_argument("--cutoff_samples", dest = "cutoff_samples", default = 2, type = int,
         help = "Minimum number of samples to present consensus peaks. The peaks present in at least cutoff_samples will be kept")
     group_multi.add_argument("--bulk_peaks", dest = "bulk_peaks", action = "store_true",

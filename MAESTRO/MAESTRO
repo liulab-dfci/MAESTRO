@@ -73,7 +73,7 @@ def main():
         integrate_config(args)
 
     elif args.subcommand == "multi-scatac-init":
-        integrate_config(args)
+        multi_scatac_config(args)
 
     elif args.subcommand == "mtx-to-h5":
         mtx_2_h5(directory = args.directory, outprefix = args.outprefix, matrix_file = args.matrix, feature_file = args.feature, barcode_file = args.barcode, gene_column = args.gene_column, genome = args.species, datatype = args.datatype)
