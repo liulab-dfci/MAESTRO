@@ -20,7 +20,7 @@ def sample_parser(subparsers):
     workflow = subparsers.add_parser("samples-init", help = "Initialize samples.json file in the current directory.")
 
     group_input = workflow.add_argument_group("Input files arguments")
-    group_input.add_argument("--assay_type", dest = "assay_type", help="Required. type of assay: either scatac or scrnaseq")
+    group_input.add_argument("--assay_type", dest = "assay_type", help="Required. type of assay: either scatac or scrna")
     group_input.add_argument("--data_type", dest = "data_type", help="Required. type of data: either fastq or fragment")
     group_input.add_argument("--data_dir", dest = "data_dir", help="Required. the FULL path to the fastq folder or the fragment folder")
 
@@ -28,13 +28,13 @@ def sample_json(args):
     """
     Generate samples.json file.
     """
-    assert args.assay_type == "scrnaseq" or args.assay_type == "scatac", "please specify scatac or scrnaseq for assay_type"
+    assert args.assay_type == "scrna" or args.assay_type == "scatac", "please specify scatac or scrna for assay_type"
     assert args.data_type == "fastq" or args.data_type == "fragment", "please specify fastq or fragment for data_type"
     assert args.data_dir is not None, "please provide the path to the fastq or fragment folder"
 
-    if args.assay_type == "scrnaseq":
+    if args.assay_type == "scrna":
         if not args.data_type == "fastq":
-            print("for scrnaseq assay type, only fastq data type is supported")
+            print("for scrna assay type, only fastq data type is supported")
             sys.exit(1)
     elif args.assay_type == "scatac":
         if (not args.data_type == "fragment") and (not args.data_type == "fastq"):
@@ -50,7 +50,7 @@ def sample_json(args):
             for file in files:
                 if file.endswith("fastq.gz"):
                     full_path = join(root, file)
-                    if args.assay_type == "scrnaseq":
+                    if args.assay_type == "scrna":
                         #R1 will be sample barcode, R2 will be reverse reads, I1 will be the index
                         m = re.search(r"([A-Z0-9a-z_]+)_S[0-9]_(L[0-9]{3})_([IR][12])_[0-9]+.fastq.gz", file)
                         if m:
@@ -68,7 +68,7 @@ def sample_json(args):
                             FILES[sample][reads].append(full_path)
                 elif file.endswith("fastq"):
                     full_path = join(root, file)
-                    if args.assay_type == "scrnaseq":
+                    if args.assay_type == "scrna":
                         #R1 will be sample barcode, R2 will be reverse reads, I1 will be the index
                         m = re.search(r"([A-Z0-9a-z_]+)_S[0-9]_(L[0-9]{3})_([IR][12])_[0-9]+.fastq", file)
                         if m:
