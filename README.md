@@ -136,6 +136,6 @@ COMMAND -h` to see the detail description for each option of each module.
 [<img src="./image/integration.10x.png" width="297" height="378" />](./example/Integration/Integration.md)
 [<img src="./image/integration.large.png" width="297" height="378" />](./example/Integration_large/Integration_large.md)
 [<img src="./image/gene.activity.png" width="297" height="378" />](./example/Gene_activity_modelling/Gene_activity_modelling.md)
-[<img src="./image/multi-ATAC/png" width="297" height="378" />](https://baigal628.github.io/MultiSample_scATACseq/index.html)
+[<img src="./image/multi-ATAC.png" width="297" height="378" />](https://baigal628.github.io/MultiSample_scATACseq/index.html)
 ## Citation
 Wang C, Sun D, Huang X, Wan C, Li Z, Han Y, Qin Q, Fan J, Qiu X, Xie Y, Meyer CA, Brown M, Tang M, Long H, Liu T, Liu XS. Integrative analyses of single-cell transcriptome and regulome using MAESTRO. Genome Biol. 2020 Aug 7;21(1):198. doi: 10.1186/s13059-020-02116-x. PMID: 32767996; PMCID: PMC7412809.
