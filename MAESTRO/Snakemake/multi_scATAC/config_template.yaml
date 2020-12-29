@@ -1,6 +1,6 @@
 # SAMPLE JSON file
 
-SAMPLES_JSON: sample_json
+SAMPLES_JSON: samples.json
 
 #######################################################################################
 
@@ -36,9 +36,6 @@ bulk_peaks: {{ bulk_peaks }}
 downsample: {{ downsample }}
 target_reads: {{ target_reads }}
 
-# define the genome file with the 1st column as chromosome name and
-# the 2nd column as chromosome length
-#chrom_len: {{ chrom_len }}
 
 
 

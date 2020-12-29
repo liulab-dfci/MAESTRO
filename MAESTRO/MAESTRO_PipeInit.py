@@ -337,7 +337,7 @@ def multi_scatac_parser(subparsers):
     group_multi.add_argument("--bulk_peaks", dest = "bulk_peaks", action = "store_true",
         help = "For multi-samples from the same experiment, if set as true, peaks will be called after merging all bam file."
         "Bulk_peaks and consensus_peaks are mutually exclusive.")
-    group_multi.add_argument("--downsample", dest = "down_sample", action = "store_true",
+    group_multi.add_argument("--downsample", dest = "downsample", action = "store_true",
         help = "For deeply sequenced samples, bam files can be downsampled to a certain number of reads (target_reads) to get peak set.")
     group_multi.add_argument("--target_reads", dest = "target_reads", default = 50000000, type = int,
         help = "Number of reads to be kept in downsampling. If the sample has fewer than the target_reads, the original number of reads will be kept.")
@@ -364,7 +364,7 @@ def multi_scatac_parser(subparsers):
         "If the format is 'bam', --bam needs to be set. "
         "If the format is 'fragments', --frag needs to be set. "
         "DEFAULT: fastq.")
-    group_input.add_argument("--deduplication", dest = "deduplication", default = " cell level",
+    group_input.add_argument("--deduplication", dest = "deduplication", default = "cell level",
         choices = ["cell level", "bulk level"], type = str,
         help = "deduplication level: cell level or bulk level ")
     #group_input.add_argument()
@@ -443,7 +443,7 @@ def multi_scatac_parser(subparsers):
 
     # Customized peak arguments
     group_peak = workflow.add_argument_group("Customized peak arguments")
-    group_peak.add_argument("--custompeaks", dest = "custompeaks", action = "store_true",
+    group_peak.add_argument("--custompeak", dest = "custompeak", action = "store_true",
         help = "Whether or not to provide custom peaks. If set, users need to provide "
         "the file location of peak file through '--custompeak-file' and then MAESTRO will merge "
         "the custom peak file and the peak file called from all fragments using MACS2. "
@@ -452,7 +452,7 @@ def multi_scatac_parser(subparsers):
         help = "If '--custompeak' is set, please provide the file location of custom peak file. "
         "The peak file is BED formatted with tab seperated. "
         "The first column is chromsome, the second is chromStart, and the third is chromEnd.")
-    group_peak.add_argument("--shortpeaks", dest = "shortpeaks", action = "store_true",
+    group_peak.add_argument("--shortpeak", dest = "shortpeak", action = "store_true",
         help = "Whether or not to call peaks from short fragments (shorter than 150bp). If set, "
         "MAESTRO will merge the peaks called from all fragments and those called from short fragments, "
         "and then use the merged peak file for further analysis. "

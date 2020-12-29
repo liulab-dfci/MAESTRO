@@ -146,7 +146,7 @@ rule scatac_bdg2bw:
         "bedtools slop -i {input.bdg} -g {params.chrom_len} -b 0 | " + SCRIPT_PATH + "/utils/bedClip stdin {params.chrom_len} {params.clip_bdg};"
         "sort -k1,1 -k2,2n {params.clip_bdg} > {params.sort_bdg};"
 
-        SCRIPT_PATH + "/utils/bedGraphToBigWig {params.sort_bdg} {params.chrom_len} {output.bw};"
+        "" + SCRIPT_PATH + "/utils/bedGraphToBigWig {params.sort_bdg} {params.chrom_len} {output.bw};"
 
         """
         rm {params.sort_bdg}

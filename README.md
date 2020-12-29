@@ -31,7 +31,7 @@
 ### v1.2.1
 * For scATAC, MAESTRO can support fastq, bam, fragments.tsv.gz as the input of the scATAC-seq workflow.
 * For scATAC, MAESTRO provides an option for users to skip the cell-type annotation step in the pipeline, and an option to choose the strategy for cell-type annotation (`RP-based` and `peak-based`).
-* Provide small test data for test [scRNA-seq](http://cistrome.org/~chenfei/MAESTRO/pbmc_1k_v3_fastqs_sampling.tar.gz) and [scATAC-seq](http://cistrome.org/~chenfei/MAESTRO/atac_pbmc_500_v1_fastqs_sampling.tar.gz) pipeline (sampling from 10x fastq files).
+* Provide small test data for test [scRNA-seq](http://cistrome.org/~galib/pbmc_1k_v3_fastqs_sampling.tar.gz) and [scATAC-seq](http://cistrome.org/~galib/atac_pbmc_500_v1_fastqs_sampling.tar.gz) pipeline (sampling from 10x fastq files).
 * Add parameter validation before initializing the pipeline and provide more gracious error messages.
 * Update R in MAESTRO conda package from 3.6.3 to 4.0.2, and Seurat from 3.1.2 to 3.1.5.
 ### v1.2.1.9999
@@ -45,7 +45,11 @@
 * Rename 'Adjusted RP model' to 'Enhanced RP model'.
 * Fix the bugs in Snakefile to meet the latest version of snakemake.
 * Update STAR reference indexes files for STAR -version 2.7.6a. Provide pre-built indexes for [human](http://cistrome.org/~galib/Refdata_scRNA_MAESTRO_GRCh38_1.2.2.tar.gz) and [mouse](http://cistrome.org/~galib/Refdata_scRNA_MAESTRO_GRCm38_1.2.2.tar.gz).
-
+### v1.3.0
+* scATAC-seq multi-sample pipeline enabled.
+* Peak count matrix can be generated either on binary or raw count.
+* LISA2 data will only be configured once in a given environment.
+* Update web links for downloading reference data.
 
 ## System requirements
 * Linux/Unix
@@ -75,7 +79,7 @@ $ conda config --add channels bioconda
 $ conda config --add channels conda-forge
 # To make the installation faster, we recommend using mamba
 $ conda install mamba -c conda-forge
-$ mamba create -n MAESTRO maestro=1.2.2 -c liulab-dfci
+$ mamba create -n MAESTRO maestro=1.3.0 -c liulab-dfci
 # Activate the environment
 $ conda activate MAESTRO
 ```
@@ -97,12 +101,12 @@ The full MAESTRO workflow requires extra annotation files and tools:
 
 * MAESTRO utilizes **LISA2** to evaluate the enrichment of transcription factors based on the marker genes from scRNA-seq clusters. If users want to use LISA2, they need to download and install reference data either for [human](http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz) or for [mouse](http://cistrome.org/~alynch/data/lisa_data/mm10_2.1.tar.gz) locally and build the data according to the [LISA2 document](https://github.com/liulab-dfci/lisa2/blob/master/docs/troubleshooting.md). The input gene set can be constituted of only official gene symbols, only RefSeq ids, only Ensembl ids, only Entrez ids, or a mixture of these identifiers.
 
-* MAESTRO utilizes **giggle** to identify enrichment of transcription factor peaks in scATAC-seq cluster-specific peaks. By default [giggle](https://github.com/ryanlayer/giggle) is installed in MAESTRO environment. The giggle index for Cistrome database can be downloaded [here](http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz) (**Note:** Before v1.2.0, the giggle index `giggle.tar.gz` can be downloaded from http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz. Since v1.2.0, please download the latest index [giggle.all.tar.gz](http://cistrome.org/~chenfei/MAESTRO/giggle.all.tar.gz)). Users need to download the file and provide the location of the giggle annotation to MAESTRO when using the ATACAnnotateTranscriptionFactor function.
+* MAESTRO utilizes **giggle** to identify enrichment of transcription factor peaks in scATAC-seq cluster-specific peaks. By default [giggle](https://github.com/ryanlayer/giggle) is installed in MAESTRO environment. The giggle index for Cistrome database can be downloaded [here](http://cistrome.org/~galib/giggle.all.tar.gz) (**Note:** Before v1.2.0, the giggle index `giggle.tar.gz` can be downloaded from http://cistrome.org/~galib/giggle.tar.gz. Since v1.2.0, please download the latest index [giggle.all.tar.gz](http://cistrome.org/~galib/giggle.all.tar.gz)). Users need to download the file and provide the location of the giggle annotation to MAESTRO when using the ATACAnnotateTranscriptionFactor function.
 
 ## Usage
 ```
 usage: MAESTRO [-h] [-v]
-               {scrna-init,scatac-init,integrate-init,mtx-to-h5,count-to-h5,merge-h5,scrna-qc,scatac-qc,scatac-peakcount,scatac-genescore}
+               {scrna-init,scatac-init,integrate-init, multi-scatac-init, samples-init, mtx-to-h5,count-to-h5,merge-h5,scrna-qc,scatac-qc,scatac-peakcount,scatac-genescore}
 ```
 
 There are ten functions available in MAESTRO serving as sub-commands.
@@ -112,6 +116,8 @@ Subcommand | Description
 `scrna-init` | Initialize the MAESTRO scRNA-seq workflow.
 `scatac-init` | Initialize the MAESTRO scATAC-seq workflow.
 `integrate-init` | Initialize the MAESTRO integration workflow.
+`multi-scatac-init` | Initialize the MAESTRO multi-sample scATAC-seq workflow.
+`samples-init` | Initialize samples.json file in the current directory.
 `mtx-to-h5` | Convert 10X mtx format matrix to HDF5 format.
 `count-to-h5` | Convert plain text count table to HDF5 format.
 `merge-h5` | Merge multiple HDF5 files, e.g. different replicates.
@@ -130,6 +136,6 @@ COMMAND -h` to see the detail description for each option of each module.
 [<img src="./image/integration.10x.png" width="297" height="378" />](./example/Integration/Integration.md)
 [<img src="./image/integration.large.png" width="297" height="378" />](./example/Integration_large/Integration_large.md)
 [<img src="./image/gene.activity.png" width="297" height="378" />](./example/Gene_activity_modelling/Gene_activity_modelling.md)
-
+[<img src="./image/multi-ATAC/png" width="297" height="378" />](https://baigal628.github.io/MultiSample_scATACseq/index.html)
 ## Citation
 Wang C, Sun D, Huang X, Wan C, Li Z, Han Y, Qin Q, Fan J, Qiu X, Xie Y, Meyer CA, Brown M, Tang M, Long H, Liu T, Liu XS. Integrative analyses of single-cell transcriptome and regulome using MAESTRO. Genome Biol. 2020 Aug 7;21(1):198. doi: 10.1186/s13059-020-02116-x. PMID: 32767996; PMCID: PMC7412809.
