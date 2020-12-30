@@ -55,10 +55,8 @@ if config["clusterpeaks"]:
             "bedtools slop -i {input.bdg} -g {params.chrom_len} -b 0 | " + SCRIPT_PATH + "/utils/bedClip stdin {params.chrom_len} {params.clip_bdg};"
             "sort -k1,1 -k2,2n {params.clip_bdg} > {params.sort_bdg};"
             "" + SCRIPT_PATH + "/utils/bedGraphToBigWig {params.sort_bdg} {params.chrom_len} {output.bw};"
-            """
-            rm {params.sort_bdg}
-            rm {params.clip_bdg}
-            """
+            "rm {params.sort_bdg};"
+            "rm {params.clip_bdg}"
 
     ## make RPM normalized bw per cluster per sample without using MACS
     rule scatac_frag2bw_per_cluster_sample:
@@ -70,10 +68,8 @@ if config["clusterpeaks"]:
             chrom_len = "%s/annotations/%s_chrom_len.txt" %(SCRIPT_PATH, config["species"]),
             bdg = "Result/Analysis/Cluster/per_cluster_sample/{cluster}@{sample}.bdg"
         shell:
-            """
-            total=`wc -l {input.tsv} | awk '{{print $1}}'`
+            "total=`wc -l {input.tsv} | awk '{{print $1}}'`;"
             # make RPM normalized bigwig
-            bedtools genomecov -i {input.tsv} -bg -g {params.chrom_len} | sort -k1,1 -k2,2n - | awk -v OFS='\t' -v total=$total '{{print $1,$2,$3,$4*1000000/total}}' > {params.bdg};
-            """
+            "bedtools genomecov -i {input.tsv} -bg -g {params.chrom_len} | sort -k1,1 -k2,2n - | awk -v OFS='\t' -v total=$total '{{print $1,$2,$3,$4*1000000/total}}' > {params.bdg};"
             "" + SCRIPT_PATH + "/utils/bedGraphToBigWig {params.bdg} {params.chrom_len} {output.bw};"
             "rm {params.bdg}"
