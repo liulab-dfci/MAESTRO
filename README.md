@@ -46,7 +46,7 @@
 * Fix the bugs in Snakefile to meet the latest version of snakemake.
 * Update STAR reference indexes files for STAR -version 2.7.6a. Provide pre-built indexes for [human](http://cistrome.org/~galib/Refdata_scRNA_MAESTRO_GRCh38_1.2.2.tar.gz) and [mouse](http://cistrome.org/~galib/Refdata_scRNA_MAESTRO_GRCm38_1.2.2.tar.gz).
 ### v1.3.0
-* scATAC-seq multi-sample pipeline enabled.
+* scATAC-seq multi-sample pipeline enabled. Deduplication can be set at cell or bulk level.
 * Peak count matrix can be generated either on binary or raw count.
 * LISA2 data will only be configured once in a given environment.
 * Update web links for downloading reference data.

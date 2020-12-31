@@ -13,7 +13,7 @@ if config["clusterpeaks"]:
             "Result/Benchmark/all_sample_split_frag_by_cluster.benchmark"
 
         shell:
-            "python " + SCRIPT_PATH +  "/utils/scATAC_split_by_cluster.py -F {input.merged_frag} -C {input.cellcluster} -S by_cluster -O {output} 2> {log}"
+            "python " + SCRIPT_PATH +  "/scATAC_split_by_cluster.py -F {input.merged_frag} -C {input.cellcluster} -S by_cluster -O {output} 2> {log}"
 
 
     checkpoint scatac_fragcluster_per_sample:
@@ -28,7 +28,7 @@ if config["clusterpeaks"]:
             "Result/Benchmark/all_sample_split_frag_by_cluster.benchmark"
 
         shell:
-            "python " + SCRIPT_PATH + "/utils/scATAC_split_by_cluster.py -F {input.merged_frag} -C {input.cellcluster} -S by_sample_cluster -O {output} 2> {log}"
+            "python " + SCRIPT_PATH + "/scATAC_split_by_cluster.py -F {input.merged_frag} -C {input.cellcluster} -S by_sample_cluster -O {output} 2> {log}"
 
     rule scatac_call_peak_per_cluster:
         input:
