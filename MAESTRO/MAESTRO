@@ -5,7 +5,7 @@
 # @Last Modified by:   Dongqing Sun
 # @Last Modified time: 2020-02-28 13:58:10
 
-version = "1.2.2"
+version = "1.3.0"
 
 import logging
 import sys, os
@@ -20,6 +20,7 @@ from MAESTRO.scATAC_10x_PeakCount import peakcount_parser, peakcount
 from MAESTRO.scRNA_QC import scrnaqc_parser, scrna_qc
 from MAESTRO.scATAC_QC import scatacqc_parser, scatac_qc
 from MAESTRO.scRNA_AnalysisPipeline import scrna_analysis_parser, scrna_analysis
+from MAESTRO.sample2json import *
 
 def main():
     """
@@ -33,7 +34,10 @@ def main():
     scatac_parser(subparsers)
     scrna_parser(subparsers)
     integrate_parser(subparsers)
+    multi_scatac_parser(subparsers)
+    #multi_scrna_parser(subparsers)
 
+    sample_parser(subparsers)
     mtxtoh5_parser(subparsers)
     mtxtocount_parser(subparsers)
     counttoh5_parser(subparsers)
@@ -45,7 +49,7 @@ def main():
 
     scrnaqc_parser(subparsers)
     scatacqc_parser(subparsers)
-    
+
     scrna_analysis_parser(subparsers)
 
     logging.basicConfig(format="%(levelname)s: %(message)s", stream=sys.stderr)
@@ -55,6 +59,8 @@ def main():
     if args.version:
         print(version)
         exit(0)
+    elif args.subcommand == "samples-init":
+        sample_json(args)
     elif args.subcommand == "scatac-init":
         scatac_validator(args)
         scatac_config(args)
@@ -65,6 +71,9 @@ def main():
 
     elif args.subcommand == "integrate-init":
         integrate_config(args)
+
+    elif args.subcommand == "multi-scatac-init":
+        multi_scatac_config(args)
 
     elif args.subcommand == "mtx-to-h5":
         mtx_2_h5(directory = args.directory, outprefix = args.outprefix, matrix_file = args.matrix, feature_file = args.feature, barcode_file = args.barcode, gene_column = args.gene_column, genome = args.species, datatype = args.datatype)
@@ -82,14 +91,14 @@ def main():
         merge_10X_h5(directory = args.directory, outprefix = args.outprefix, h5list = args.h5_list, prefixlist = args.cellprefix_list, genome = args.species, datatype = args.datatype)
 
     elif args.subcommand == "scatac-peakcount":
-        peakcount(directory = args.directory, outprefix = args.outprefix, peak = args.peak, fragment = args.fragment, barcode = args.barcode, count_cutoff = args.count_cutoff, cores = args.cores, species = args.species)
+        peakcount(directory = args.directory, outprefix = args.outprefix, peak = args.peak, fragment = args.fragment, barcode = args.barcode, binary = args.binary, count_cutoff = args.count_cutoff, cores = args.cores, species = args.species)
 
     elif args.subcommand == "scatac-genescore":
         genescore(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, peakcount = args.peakcount, feature = args.feature, barcode = args.barcode, genedistance = args.genedistance, species = args.species, model = args.model)
 
     elif args.subcommand == "scrna-qc":
         scrna_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, matrix = args.matrix, separator = args.separator, feature = args.feature, gene_column = args.gene_column, barcode = args.barcode, count_cutoff = args.count_cutoff, gene_cutoff = args.gene_cutoff, cell_cutoff = args.cell_cutoff, species = args.species)
-    
+
     elif args.subcommand == "scatac-qc":
         scatac_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, peakcount = args.peakcount, feature = args.feature, barcode = args.barcode, single_stat = args.single_stat, peak_cutoff = args.peak_cutoff, count_cutoff = args.count_cutoff, frip_cutoff = args.frip_cutoff, cell_cutoff = args.cell_cutoff, species = args.species)
 
@@ -110,4 +119,3 @@ if __name__ == "__main__":
     """
 
     main()
-

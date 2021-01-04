@@ -130,6 +130,8 @@ script:
   - sinto -h
   - lisa
   - MAESTRO -v
+  - MAESTRO multi-scatac-init -h
+  - MAESTRO samples-init -h
   - R -e "library(MAESTRO);library(Seurat)"
   - R -e "library(org.Hs.eg.db);library(org.Mm.eg.db)"
   # test python utility scripts

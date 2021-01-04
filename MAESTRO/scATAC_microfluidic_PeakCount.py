@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-28 13:57:12
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-03-03 20:57:34
+# @Last Modified time: 2020-12-13 20:48:54
 
 
 import os,sys
@@ -16,7 +16,7 @@ from functools import partial
 
 from MAESTRO.scATAC_utility import *
 from MAESTRO.scATAC_H5Process import *
-from MAESTRO.scATAC_10x_PeakCount import merge_binary_file, generate_binary_matrix
+from MAESTRO.scATAC_10x_PeakCount import merge_count_file, generate_count_matrix
 
 tmp = randomString()
 
@@ -39,6 +39,10 @@ def CommandLineParser():
         "Each line of the file represents a valid barcode. "
         "If not set, the barcodes with enough read count (> --count-cutoff) "
         "in the fragment file will be used to generate peak-cell binary count matrix.")
+    group_input.add_argument("--binary", dest = "binary", action = "store_true",
+        help = "Whether or not to generate binary peak count matrix. If set, "
+        "MAESTRO will binarize the peak-cell count matrix. "
+        "If not (by default), MAESTRO will generate the original peak-count matrix. ")
     group_input.add_argument("--species", dest = "species", default = "GRCh38", 
         choices = ["GRCh38", "GRCm38"], type = str, 
         help = "Species (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
@@ -59,7 +63,7 @@ def bedtools_intersect(barcode, bam_dir, peak_bed):
     if not os.path.isfile(bam_dir + "/" + barcode +".sortedByPos.rmdp.unique.bed"):
         error(bam_dir+"/"+barcode+".sortedByPos.rmdp.unique.bed not exist!")
     else:
-        os.system("bedtools intersect -wa -a " + peak_bed + " -b " + bam_dir + "/" + barcode + ".sortedByPos.rmdp.unique.bed -u > " + tmp + '/' + barcode + ".bed")
+        os.system("bedtools intersect -wa -a " + peak_bed + " -b " + bam_dir + "/" + barcode + ".sortedByPos.rmdp.unique.bed -c | awk '{if ($NF>0) print $0}' > " + tmp + '/' + barcode + ".bed")
     return(tmp + "/" + barcode + ".bed")
 
 
@@ -74,6 +78,7 @@ def main():
     bam_dir = myparser.bam_dir
     cores = int(myparser.cores)
     genome = myparser.species
+    binary = myparser.binary
 
     try:
         os.makedirs(directory)
@@ -97,7 +102,7 @@ def main():
     pool.join()
 
     count_list = result.get()
-    merge_binary_file(peak_file, count_list, count_file, cores, genome)
+    merge_count_file(peak_file, count_list, count_file, cores, binary, genome)
     shutil.rmtree(tmp)
 
 if __name__ == "__main__":
