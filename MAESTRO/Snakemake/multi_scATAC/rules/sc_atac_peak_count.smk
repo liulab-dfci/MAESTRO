@@ -17,7 +17,7 @@ rule scatac_countpeak:
         "Result/Benchmark/{sample}_PeakCount.benchmark"
     shell:
         """
-        MAESTRO scatac-peakcount --peak {input.finalpeak} --fragment {input.frag} --barcode {input.validbarcode} \
+        MAESTRO scatac-peakcount --binary --peak {input.finalpeak} --fragment {input.frag} --barcode {input.validbarcode} \
         --species {params.species} --cores {threads} --directory {params.outdir} --outprefix {params.outpre}
         """
 
