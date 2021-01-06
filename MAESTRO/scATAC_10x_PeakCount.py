@@ -105,8 +105,7 @@ def filter_fragment_file(barcode_file, frag_file, count_cutoff = 1000):
     for k in barcode_list:
         outf = open(tmp+"/"+k,'w')
         for frag in barcode_out[k]:
-            for i in range(int(frag[3])):
-                print("\t".join(frag[0:3]), file=outf)
+            print("\t".join(frag[0:4]), file=outf)
         outf.close()
 
     return(barcode_list)
