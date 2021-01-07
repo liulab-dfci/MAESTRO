@@ -50,7 +50,8 @@
 * Peak count matrix can be generated either on binary or raw count.
 * LISA2 data will only be configured once in a given environment.
 * Update web links for downloading reference data.
-
+### v1.3.1
+* Fix the bug in raw peak count matrix generation.
 ## System requirements
 * Linux/Unix
 * Python (>= 3.7) for MAESTRO snakemake workflow
@@ -79,7 +80,7 @@ $ conda config --add channels bioconda
 $ conda config --add channels conda-forge
 # To make the installation faster, we recommend using mamba
 $ conda install mamba -c conda-forge
-$ mamba create -n MAESTRO maestro=1.3.0 -c liulab-dfci
+$ mamba create -n MAESTRO maestro=1.3.1 -c liulab-dfci
 # Activate the environment
 $ conda activate MAESTRO
 ```
