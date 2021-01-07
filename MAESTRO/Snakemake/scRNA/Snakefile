@@ -445,7 +445,7 @@ rule scrna_analysis:
     threads:
         config["cores"]
     shell:
-        "lisa unpack {params.lisadir}; "
+        "python " + SCRIPT_PATH + "/lisa_path.py --species {params.species} --input {params.lisadir} "
         "Rscript " + RSCRIPT_PATH + "/scRNAseq_pipe.R --expression {params.expression} --species {params.species} "
         "--prefix {params.outpre} --signature {params.signature} "
         "--outdir {params.outdir} --thread {threads}"
