@@ -158,7 +158,7 @@ after_success:
     # Only upload builds from tags
     if [[ $TRAVIS_PULL_REQUEST == false && $TRAVIS_REPO_SLUG == "baigal628/MAESTRO"
           && $TRAVIS_BRANCH == $TRAVIS_TAG  && $TRAVIS_TAG != '' ]]; then
-      export ANACONDA_API_TOKEN=$CONDA_UPLOAD_TOKEN
+      export ANACONDA_API_TOKEN=$CONDA_LIULAB_TOKEN
       anaconda upload bld-dir/**/maestro-*.tar.bz2
     fi
 
