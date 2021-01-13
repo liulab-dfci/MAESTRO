@@ -22,7 +22,6 @@ jobs:
     - name: Install dependencies
       shell: bash -el {0}
       run: |
-        source /usr/share/miniconda/etc/profile.d/conda.sh
         conda config --set always_yes yes --set changeps1 no
         # need conda-build/verify to test building conda package
         #conda install -q conda-build
@@ -50,7 +49,8 @@ jobs:
         mamba create -q -n test bedtools
         # Activate this environment 
         #conda activate MAESTRO
-        conda activate bedtools
+        source /usr/share/miniconda/etc/profile.d/conda.sh        
+        conda activate test
         # list conda env packages for reference 
         conda list
     #- name: Test installed MAESTRO package
