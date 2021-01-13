@@ -22,11 +22,11 @@ jobs:
     - name: Install dependencies
       shell: bash -el {0}
       run: |
-        conda init bash
+        source /usr/share/miniconda/etc/profile.d/conda.sh
         conda config --set always_yes yes --set changeps1 no
         # need conda-build/verify to test building conda package
-        conda install -q conda-build
-        conda install -q conda-verify
+        #conda install -q conda-build
+        #conda install -q conda-verify
         conda update -q conda
         # Useful for debugging any issues with conda
         conda info -a
