@@ -15,10 +15,12 @@ jobs:
       with:
         python-version: 3.8
     - name: Add conda to system path
+      shell: bash -el {0}      
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
         echo $CONDA/bin >> $GITHUB_PATH
     - name: Install dependencies
+      shell: bash -el {0}
       run: |
         conda config --set always_yes yes --set changeps1 no
         # need conda-build/verify to test building conda package
@@ -33,34 +35,36 @@ jobs:
         conda config --add channels bioconda
         conda config --add channels conda-forge
         conda install -q mamba -c conda-forge
-    - name: Build package
-      run: |
-        mkdir bld-dir
-        conda build -q conda/MAESTRO --python=3.8 --output-folder bld-dir
+    #- name: Build package
+    #  run: |
+    #    mkdir bld-dir
+    #    conda build -q conda/MAESTRO --python=3.8 --output-folder bld-dir
     - name: Test installing package
+      shell: bash -el {0}      
       run: |
         # Now add this folder as a highest priority channel 
-        conda config --add channels "file://`pwd`/bld-dir" 
+        #conda config --add channels "file://`pwd`/bld-dir" 
         # install MAESTRO from local repo 
-        mamba create -q -n MAESTRO maestro 
+        #mamba create -q -n MAESTRO maestro
+        mamba create -q -n test bedtools
         # Activate this environment 
-        conda init bash 
-        conda activate MAESTRO 
+        #conda activate MAESTRO
+        conda activate bedtools
         # list conda env packages for reference 
         conda list
-    - name: Test installed MAESTRO package
-      run: |
-        giggle search 
-        sinto -h
-        lisa
-        MAESTRO -v
-        MAESTRO multi-scatac-init -h
-        MAESTRO samples-init -h
-        R -e "library(MAESTRO);library(Seurat)"
-        R -e "library(org.Hs.eg.db);library(org.Mm.eg.db)"
-        # test python utility scripts
-        cd test
-        bash test.sh
-        cd ..
+    #- name: Test installed MAESTRO package
+    #  run: |
+    #    giggle search 
+    #    sinto -h
+    #    lisa
+    #    MAESTRO -v
+    #    MAESTRO multi-scatac-init -h
+    #    MAESTRO samples-init -h
+    #    R -e "library(MAESTRO);library(Seurat)"
+    #    R -e "library(org.Hs.eg.db);library(org.Mm.eg.db)"
+    #    # test python utility scripts
+    #    cd test
+    #    bash test.sh
+    #    cd ..
 
 
