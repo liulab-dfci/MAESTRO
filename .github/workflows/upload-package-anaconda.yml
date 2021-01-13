@@ -21,6 +21,12 @@ jobs:
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
         echo $CONDA/bin >> $GITHUB_PATH
+    - name: Cache conda pkgs 
+      uses: actions/cache@v2 
+      with: 
+        path: |
+          /usr/share/miniconda/pkgs 
+          /home/runner/.conda/pkgs
     - name: Install dependencies
       run: |
         conda config --set always_yes yes --set changeps1 no
