@@ -7,7 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 5
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.8
@@ -15,7 +14,7 @@ jobs:
       with:
         python-version: 3.8
     - name: Add conda to system path
-      shell: bash -el {0}      
+      shell: bash -el {0}
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
         echo $CONDA/bin >> $GITHUB_PATH
@@ -24,8 +23,8 @@ jobs:
       run: |
         conda config --set always_yes yes --set changeps1 no
         # need conda-build/verify to test building conda package
-        #conda install -q conda-build
-        #conda install -q conda-verify
+        conda install -q conda-build
+        conda install -q conda-verify
         conda update -q conda
         # Useful for debugging any issues with conda
         conda info -a
@@ -35,37 +34,37 @@ jobs:
         conda config --add channels bioconda
         conda config --add channels conda-forge
         conda install -q mamba -c conda-forge
-    #- name: Build package
-    #  run: |
-    #    mkdir bld-dir
-    #    conda build -q conda/MAESTRO --python=3.8 --output-folder bld-dir
+    - name: Build package
+      shell: bash -el {0}
+      run: |
+        mkdir bld-dir
+        conda build -q conda/MAESTRO --python=3.8 --output-folder bld-dir
     - name: Test installing package
-      shell: bash -el {0}      
+      shell: bash -el {0}
       run: |
         # Now add this folder as a highest priority channel 
-        #conda config --add channels "file://`pwd`/bld-dir" 
+        conda config --add channels "file://`pwd`/bld-dir" 
         # install MAESTRO from local repo 
-        #mamba create -q -n MAESTRO maestro
-        mamba create -q -n test bedtools
+        mamba create -q -n MAESTRO maestro
         # Activate this environment 
-        #conda activate MAESTRO
-        source /usr/share/miniconda/etc/profile.d/conda.sh        
-        conda activate test
+        source /usr/share/miniconda/etc/profile.d/conda.sh
+        conda activate MAESTRO
         # list conda env packages for reference 
         conda list
-    #- name: Test installed MAESTRO package
-    #  run: |
-    #    giggle search 
-    #    sinto -h
-    #    lisa
-    #    MAESTRO -v
-    #    MAESTRO multi-scatac-init -h
-    #    MAESTRO samples-init -h
-    #    R -e "library(MAESTRO);library(Seurat)"
-    #    R -e "library(org.Hs.eg.db);library(org.Mm.eg.db)"
-    #    # test python utility scripts
-    #    cd test
-    #    bash test.sh
-    #    cd ..
-
+    - name: Test installed MAESTRO package (cmdline) 
+      run: |
+        giggle search 
+        sinto -h
+        lisa
+        MAESTRO -v
+        MAESTRO multi-scatac-init -h
+        MAESTRO samples-init -h
+        R -e "library(MAESTRO);library(Seurat)"
+        R -e "library(org.Hs.eg.db);library(org.Mm.eg.db)"
+    - name: Test installed MAESTRO package (other) 
+      run: |
+        # test python utility scripts
+        cd test
+        bash test.sh
+        cd ..
 
