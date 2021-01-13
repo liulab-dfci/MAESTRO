@@ -7,6 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 5
+    defaults: 
+      run: 
+        shell: bash
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.8
@@ -14,12 +17,10 @@ jobs:
       with:
         python-version: 3.8
     - name: Add conda to system path
-      shell: bash -el {0}
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
         echo $CONDA/bin >> $GITHUB_PATH
     - name: Install dependencies
-      shell: bash -el {0}
       run: |
         conda config --set always_yes yes --set changeps1 no
         # need conda-build/verify to test building conda package
@@ -35,24 +36,24 @@ jobs:
         conda config --add channels conda-forge
         conda install -q mamba -c conda-forge
     - name: Build package
-      shell: bash -el {0}
       run: |
         mkdir bld-dir
         conda build -q conda/MAESTRO --python=3.8 --output-folder bld-dir
     - name: Test installing package
-      shell: bash -el {0}
       run: |
         # Now add this folder as a highest priority channel 
         conda config --add channels "file://`pwd`/bld-dir" 
         # install MAESTRO from local repo 
         mamba create -q -n MAESTRO maestro
         # Activate this environment 
-        source /usr/share/miniconda/etc/profile.d/conda.sh
+        source /usr/share/miniconda/etc/profile.d/conda.sh 
         conda activate MAESTRO
         # list conda env packages for reference 
         conda list
     - name: Test installed MAESTRO package (cmdline) 
       run: |
+        source /usr/share/miniconda/etc/profile.d/conda.sh 
+        conda activate MAESTRO        
         giggle search 
         sinto -h
         lisa
@@ -64,6 +65,8 @@ jobs:
     - name: Test installed MAESTRO package (other) 
       run: |
         # test python utility scripts
+        source /usr/share/miniconda/etc/profile.d/conda.sh 
+        conda activate MAESTRO        
         cd test
         bash test.sh
         cd ..
