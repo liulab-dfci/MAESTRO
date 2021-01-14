@@ -4,7 +4,7 @@ on:
   release:
     types: [created]
 jobs:
-  build-linux:
+  upload-linux:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 5
