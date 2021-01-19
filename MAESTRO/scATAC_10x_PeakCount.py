@@ -62,7 +62,6 @@ def peakcount_parser(subparsers):
     group_output.add_argument("--outprefix", dest = "outprefix", default = "10x-genomics", 
         help = "Prefix of output files. DEFAULT: MAESTRO.")
 
-
 def filter_fragment_file(barcode_file, frag_file, count_cutoff = 1000):
     """Filter fragment file and only keep the valid barcode ones."""
 
@@ -77,7 +76,7 @@ def filter_fragment_file(barcode_file, frag_file, count_cutoff = 1000):
 
         for line in fhd:
             line = line.strip().split('\t')
-            barcode_out[line[3]].append([line[0],line[1],line[2],line[4]])
+            barcode_out[line[3]].append(line[0]+'\t'+line[1]+'\t'+line[2])
             barcode_count[line[3]] += int(line[4])
 
         fhd.close()
@@ -89,7 +88,7 @@ def filter_fragment_file(barcode_file, frag_file, count_cutoff = 1000):
     else:
         # read barcode file
         fhd = universal_open( barcode_file, "rt" )
-                
+
         for line in fhd:
             barcode_list.append(line.strip())
             barcode_out[line.strip()] = []
@@ -99,13 +98,13 @@ def filter_fragment_file(barcode_file, frag_file, count_cutoff = 1000):
 
         for line in fhd:
             line = line.strip().split('\t')
-            barcode_out[line[3]].append([line[0],line[1],line[2],line[4]])
+            barcode_out[line[3]].append(line[0]+'\t'+line[1]+'\t'+line[2])
         fhd.close()
-    
+
     for k in barcode_list:
         outf = open(tmp+"/"+k,'w')
-        for frag in barcode_out[k]:
-            print("\t".join(frag[0:4]), file=outf)
+        for line in sorted(barcode_out[k]):
+            print(line, file=outf)
         outf.close()
 
     return(barcode_list)

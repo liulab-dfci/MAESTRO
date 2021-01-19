@@ -1,0 +1,86 @@
+name: Upload MAESTRO Package to anaconda
+
+on:
+  release:
+    types: [created]
+jobs:
+  upload-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
+    defaults: 
+      run: 
+        shell: bash
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Add conda to system path
+      run: |
+        # $CONDA is an environment variable pointing to the root of the miniconda directory
+        echo $CONDA/bin >> $GITHUB_PATH
+    #- name: Cache conda pkgs 
+    #  uses: actions/cache@v2 
+    #  with: 
+    #    path: |
+    #      /usr/share/miniconda/pkgs 
+    #      /home/runner/.conda/pkgs
+    - name: Install dependencies
+      run: |
+        conda config --set always_yes yes --set changeps1 no
+        # need conda-build/verify to test building conda package
+        conda install -q conda-build
+        conda install -q conda-verify
+        conda update -q conda
+        # Useful for debugging any issues with conda
+        conda info -a
+        # configure the channels
+        conda config --add channels defaults
+        conda config --add channels liulab-dfci
+        conda config --add channels bioconda
+        conda config --add channels conda-forge
+        conda install -q mamba -c conda-forge
+    - name: Build package
+      run: |
+        mkdir bld-dir
+        conda build -q conda/MAESTRO --python=3.8 --output-folder bld-dir
+    - name: Test installing package
+      run: |
+        # Now add this folder as a highest priority channel 
+        conda config --add channels "file://`pwd`/bld-dir" 
+        # install MAESTRO from local repo 
+        mamba create -q -n MAESTRO maestro
+        # Activate this environment 
+        source /usr/share/miniconda/etc/profile.d/conda.sh
+        conda activate MAESTRO
+        # list conda env packages for reference 
+        conda list
+    - name: Test installed MAESTRO package (cmdline) 
+      run: |
+        source /usr/share/miniconda/etc/profile.d/conda.sh 
+        conda activate MAESTRO        
+        giggle search 
+        sinto -h
+        lisa
+        MAESTRO -v
+        MAESTRO multi-scatac-init -h
+        MAESTRO samples-init -h
+        R -e "library(MAESTRO);library(Seurat)"
+        R -e "library(org.Hs.eg.db);library(org.Mm.eg.db)"
+    - name: Test installed MAESTRO package (other) 
+      run: |
+        source /usr/share/miniconda/etc/profile.d/conda.sh 
+        conda activate MAESTRO        
+        # test python utility scripts
+        cd test
+        bash test.sh
+        cd ..
+    - name: Publish
+      env:
+        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+      run: |
+        mamba install anaconda-client
+        anaconda upload bld-dir/**/maestro-*.tar.bz2
+

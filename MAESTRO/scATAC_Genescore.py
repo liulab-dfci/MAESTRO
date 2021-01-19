@@ -295,6 +295,7 @@ def calculate_RP_score(peakmatrix, features, barcodes, gene_bed, decay, score_fi
     # cell_peaks = sp_sparse.csc_matrix(cell_peaks.loc[peaks_list, :].values)
     if model == "Simple":
         fhd = universal_open(gene_bed, 'rt')
+        fhd.readline() # skip the first line. In our current gene txt file, there is no '#' in the first line. We need to, perhaps, use the 'ExtractGeneInfo' function.
         for line in fhd:
             line = line.strip().split('\t')
             if not line[0].startswith('#'):
