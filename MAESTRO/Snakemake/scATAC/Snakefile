@@ -1159,8 +1159,7 @@ rule scatac_qcfilter:
 rule scatac_genescore:
     input:
         filtercount = "Result/QC/%s_filtered_peak_count.h5" %(config["outprefix"]),
-        unt.h5" %(config["outprefix"]),
-        genebed = "%s/annotations/%s_ensembl.bed" %(SCRIPT_PATH, config["species"]),
+        genebed = "%s/annotations/%s_ensembl.bed" %(SCRIPT_PATH, config["species"])
     output:
         genescore = "Result/Analysis/%s_gene_score.h5" %(config["outprefix"])
     params:
