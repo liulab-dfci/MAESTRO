@@ -15,6 +15,7 @@
 #' @param project Output project name for the transcription factor analysis result. Default is the project name of the Seurat object.
 #' @param method Use RABIT or LISA to identify the driver regulators. If Rabit is selected, should provide rabit annotation at the
 #' same time. LISA do not need annotations for this step. Default is Rabit.
+#' @param lisa.path Path of lisa. LISA might be installed in users' conda, and is not visible for R in the system unless the full path is given.
 #' @param rabit.path Path of the rabit annotation files. The rabit annoation for CistromeDB is available at https://github.com/liulab-dfci/MAESTRO.
 #' Download and unzip the annotation, supply the path of the annotations to \code{rabit.path}.
 #' @param organism Organism for the dataset. Only support "GRCh38" and "GRCm38". Default is "GRCh38".
@@ -37,8 +38,8 @@
 #' @export
 
 
-RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project = RNA@project.name,lisa.mode = "multi",
-                                           method = "LISA",rabit.path, organism = "GRCh38", top.tf = 10)
+RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project = RNA@project.name, lisa.mode = "multi",
+                                           method = "LISA", lisa.path = "lisa", rabit.path, organism = "GRCh38", top.tf = 10)
 {
   if(organism == "GRCh38"){
     org = "hsa"
@@ -72,7 +73,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project =
   if(method == "LISA"){
     scorename = "log(Lisascore)"
     if(lisa.mode == "multi"){
-      out_fdr_max_log = RunLISAMulti(genes = genes, project = project, organism = organism)
+      out_fdr_max_log = RunLISAMulti(genes = genes, project = project, organism = organism, lisa.path = lisa.path)
     }
     if(lisa.mode == "one-vs-rest"){
       out_fdr_max_log = RunLISAWeb(genes = genes, project = project, organism = organism)
@@ -209,7 +210,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project =
 }
 
 
-RunLISAMulti <- function(genes, project, organism = "GRCh38")
+RunLISAMulti <- function(genes, project, organism = "GRCh38", lisa.path = lisa.path)
 {
   if(organism == "GRCh38"){
     species = "hg38"
@@ -233,7 +234,7 @@ RunLISAMulti <- function(genes, project, organism = "GRCh38")
   }
   
   message("Start to run Lisa.")
-  cmd = paste0("lisa multi ", species, " ", outputDir, "/*.txt -o ", outputDir, "/ -c 10 -b 500 --seed=2556")
+  cmd = paste0(lisa.path, " multi ", species, " ", outputDir, "/*.txt -o ", outputDir, "/ -c 10 -b 500 --seed=2556")
   system2("/bin/bash", args = c("-c", shQuote(cmd)))
   message(paste0("Lisa in cluster ", i, " is done!"))
   message("Lisa is done.")
