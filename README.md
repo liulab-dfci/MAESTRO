@@ -52,6 +52,12 @@
 * Update web links for downloading reference data.
 ### v1.3.1
 * Fix the bug in raw peak count matrix generation.
+### v1.3.2
+* Move from TravisCI to GitHub Action for building package.
+* Add LISA path as a variable in TF annotating function.
+* Fix the bug in simple RP model for gene score calculation.
+* Fix the bug in scATAC-Seq Snakefile.
+
 ## System requirements
 * Linux/Unix
 * Python (>= 3.7) for MAESTRO snakemake workflow
