@@ -26,7 +26,7 @@ def main():
         scripts = ['MAESTRO/MAESTRO'],
         include_package_data = True,
 
-        author = "Chenfei Wang, Dongqing Sun, Ming (Tommy) Tang, Gali Bai, Tao Liu, Changxin Wan",
+        author = "Chenfei Wang, Dongqing Sun, Tao Liu, Changxin Wan, Ming (Tommy) Tang, Gali Bai",
         author_email = "",
         description = "MAESTRO(Model-based AnalysEs of Single-cell Transcriptome and RegulOme) is a comprehensive "
         "single-cell RNA-seq and ATAC-seq analysis suit built using snakemake.",
