@@ -18,7 +18,7 @@ except ImportError:
 def main():
     setup(
         name = "MAESTRO",
-        version = "1.3.1.99999",
+        version = "1.3.2",
         package_dir = {'MAESTRO':'MAESTRO'},
         packages = ['MAESTRO'],
         package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'Snakemake/integrate/*', 'Snakemake/multi_scATAC/*', 'Snakemake/multi_scATAC/rules/*', 'R/*', 'utils/*','annotations/*', 'html/*', '']},
@@ -26,7 +26,7 @@ def main():
         scripts = ['MAESTRO/MAESTRO'],
         include_package_data = True,
 
-        author = "Chenfei Wang, Dongqing Sun, Ming (Tommy) Tang, Gali Bai, Tao Liu",
+        author = "Chenfei Wang, Dongqing Sun, Tao Liu, Changxin Wan, Ming (Tommy) Tang, Gali Bai",
         author_email = "",
         description = "MAESTRO(Model-based AnalysEs of Single-cell Transcriptome and RegulOme) is a comprehensive "
         "single-cell RNA-seq and ATAC-seq analysis suit built using snakemake.",
