@@ -234,7 +234,7 @@ RunLISAMulti <- function(genes, project, organism = "GRCh38", lisa.path = lisa.p
   }
   
   message("Start to run Lisa.")
-  cmd = paste0(lisa.path, " multi ", species, " ", outputDir, "/*.txt -o ", outputDir, "/ -c 10 -b 500 --seed=2556")
+  cmd = paste0(lisa.path, " multi ", species, " ", outputDir, "/*.txt -o ", outputDir, "/ -b 501 --seed=2556")
   system2("/bin/bash", args = c("-c", shQuote(cmd)))
   message(paste0("Lisa in cluster ", i, " is done!"))
   message("Lisa is done.")

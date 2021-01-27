@@ -53,9 +53,11 @@
 ### v1.3.1
 * Fix the bug in raw peak count matrix generation.
 ### v1.3.2
-* Move from TravisCI to GitHub Action for building package.
+* Move from TravisCI to GitHub Actions for building package.
+* LISA2 upgrades to v2.2.2. New LISA data are required for [human](http://cistrome.org/~alynch/data/lisa_data/hg38_1000_2.0.h5) and [mouse](http://cistrome.org/~alynch/data/lisa_data/mm10_1000_2.0.h5). Please download to your computer and provide the path when initiating.
 * Add LISA path as a variable in TF annotating function.
-* Fix the bug in simple RP model for gene score calculation.
+* Reduce the time and memory usage in the peak counting step.
+* Fix the bug in the simple RP model for gene score calculation.
 * Fix the bug in scATAC-Seq Snakefile.
 
 ## System requirements

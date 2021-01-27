@@ -1,6 +1,6 @@
 package:
   name: maestro
-  version: "1.3.1.99999"
+  version: "1.3.2"
 source:
   path: ../../
 # build:
@@ -25,7 +25,7 @@ requirements:
     - rsem >=1.3.2
     - picard >=2.22.0
     - macs2 >=2.2.6
-    - lisa2 >=2.1.0
+    - lisa2 =2.2.2
     - umap-learn
     - pysam # this is needed by sinto
     - r-base >=4.0.2

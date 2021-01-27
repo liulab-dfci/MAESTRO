@@ -1,9 +1,9 @@
 Package: MAESTRO
 Type: Package
 Title: Model-based Analyses of Single-cell Transcriptome and Regulome
-Version: 1.3.1.99999
+Version: 1.3.2
 Date: 2020-12-31
-Author: Chenfei Wang, Dongqing Sun, Ming (Tommy) Tang, Gali Bai, Tao Liu
+Author: Chenfei Wang, Dongqing Sun, Ming (Tommy) Tang, Gali Bai, Tao Liu, Changxin Wan
 Maintainer: Dongqing Sun<dongqingsun96@gmail.com>, Gali Bai<gali.bai@hotmail.com>
 Description: MAESTRO is an intergrative analysis pipeline to support downstream analysis of single-cell RNA-seq and single-cell ATAC-seq dataset. MAESTRO provides funtion for quality control, normalization, clustering, differential gene and peak analysis, marker gene based annotation, transcription factor identification using Cistome toolkit, and intergrative analysis for scRNA-seq and scATACseq.
 URL: https://github.com/LiuLab-dfci/MAESTRO
