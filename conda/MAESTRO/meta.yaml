@@ -19,12 +19,12 @@ requirements:
     - snakemake >=5.14
     - rseqc >=3.0.0
     - star =2.7.6a
-    - minimap2 >=2.17
-    - samtools >=1.9
-    - bedtools >=2.29.2
+    - minimap2 =2.17
+    - samtools =1.10
+    - bedtools =2.29.2
     - rsem >=1.3.2
     - picard >=2.22.0
-    - macs2 >=2.2.6
+    - macs2 =2.2.7.1
     - lisa2 =2.2.2
     - umap-learn
     - pysam # this is needed by sinto
@@ -86,13 +86,13 @@ requirements:
     - snakemake >=5.14
     - rseqc >=3.0.0
     - star =2.7.6a
-    - minimap2 >=2.17
-    - samtools >=1.9
-    - bedtools >=2.29.2
+    - minimap2 =2.17
+    - samtools =1.10
+    - bedtools =2.29.2
     - rsem >=1.3.2
     - picard >=2.22.0
-    - macs2 >=2.2.6
-    - lisa2 >=2.1.0
+    - macs2 =2.2.7.1
+    - lisa2 =2.2.2
     - umap-learn
     - pysam # this is needed by sinto
     - r-base >=4.0.2
