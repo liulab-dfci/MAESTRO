@@ -10,7 +10,7 @@
 #' for example "chr10_100020591_100020841". 
 #' @param type Type of the input matrix. Default is "matrix". Set to "object" if the input is Seurat object.
 #' @param project Output project name. Default is "MAESTRO.scATAC.Seurat".
-#' @param orign.ident Orginal identity for the input cells. If supplied, should keep the same order with the column name of the peak x cell matrix.
+#' @param orig.ident Orginal identity for the input cells. If supplied, should keep the same order with the column name of the peak x cell matrix.
 #' @param method Methods for dimension reduction, available options are LSI and PCA. Default is "LSI".
 #' @param min.c Minimum number of cells required for a peak. Will exclude the peaks from input matrix if they only identified in 
 #' less than \code{min.c} cells. Default is 10. See \code{\link{CreateSeuratObject}} for details.
@@ -48,7 +48,7 @@
 #' @importFrom Gmisc fastDoCall
 #' @export
 
-ATACRunSeurat <- function(inputMat, type = "matrix", project = "MAESTRO.scATAC.Seurat", orign.ident = NULL, 
+ATACRunSeurat <- function(inputMat, type = "matrix", project = "MAESTRO.scATAC.Seurat", orig.ident = NULL, 
                           min.c = 10, min.p = 100, method = "LSI", dims.use = 1:30, 
                           cluster.res = 0.6, only.pos = FALSE, peaks.test.use = "presto", 
                           peaks.cutoff = 1E-5, peaks.pct = 0.1, peaks.logfc = 0.2, 
@@ -106,7 +106,12 @@ ATACRunSeurat <- function(inputMat, type = "matrix", project = "MAESTRO.scATAC.S
   # SeuratObj <- FindClusters(object = SeuratObj, resolution = res)
   p3 <- DimPlot(object = SeuratObj, pt.size = 0.5, label = TRUE)
   ggsave(file.path(paste0(project, "_cluster.png")), p3, width=5, height=4)
-
+  if(!is.null(orig.ident)){
+    SeuratObj$orig.ident <- orig.ident
+    p4 = DimPlot(object = SeuratObj, label = TRUE, pt.size = 0.2, group.by = "orig.ident", label.size = 3)
+    ggsave(file.path(paste0(SeuratObj@project.name, "_original.png")), p4,  width=5, height=4)
+  }
+ 
   #============ DE analysis ============
   message("Identify cluster specific peaks ...")
   cluster.peaks <- NULL
