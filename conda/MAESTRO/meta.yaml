@@ -39,7 +39,8 @@ requirements:
     - r-multcomp
     - r-numDeriv
     - r-cluster
-    - r-Seurat =3.1.5
+    - r-Seurat >=4.0.0
+    - r-Signac =1.1.1
     # Although the following will be installed through the dependencies of other tools
     # They have been explicitly defined in DESCRIPTION.
     - r-ggplot2
@@ -75,6 +76,9 @@ requirements:
     - bioconductor-DESeq2
     - bioconductor-TxDb.Hsapiens.UCSC.hg38.knownGene
     - bioconductor-TxDb.Mmusculus.UCSC.mm10.knownGene
+    - bioconductor-EnsDb.Mmusculus.v79
+    - bioconductor-EnsDb.Hsapiens.v86
+    - bioconductor-GenomeInfoDb
   run:
     - xorg-libxrender
     - python >=3.7
@@ -106,7 +110,8 @@ requirements:
     - r-multcomp
     - r-numDeriv
     - r-cluster
-    - r-Seurat =3.1.5
+    - r-Seurat >=4.0.0
+    - r-Signac =1.1.1
     # Although the following will be installed through the dependencies of other tools
     # They have been explicitly defined in DESCRIPTION.
     - r-ggplot2 >=3.0.0
@@ -142,6 +147,9 @@ requirements:
     - bioconductor-DESeq2
     - bioconductor-TxDb.Hsapiens.UCSC.hg38.knownGene
     - bioconductor-TxDb.Mmusculus.UCSC.mm10.knownGene
+    - bioconductor-EnsDb.Mmusculus.v79
+    - bioconductor-EnsDb.Hsapiens.v86
+    - bioconductor-GenomeInfoDb
 
 about:
   home: https://github.com/liulab-dfci/MAESTRO
