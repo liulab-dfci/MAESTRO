@@ -1,6 +1,6 @@
 #' Clustering analysis for scATAC-seq data using Seurat
 #'
-#' Clustering analysis for scATAC-seq dataset using Seurat(version >=3.0.1). Including normalization, LSI/PCA dimension reduction, clustering and UMAP visualization. To run UMAP analysis, you must first install the umap-learn python package (e.g. via \code{pip install umap-learn}). 
+#' Clustering analysis for scATAC-seq dataset using Seurat (version >=4.0.0) and Signac (version >= 1.1.1). Including normalization, LSI/PCA dimension reduction, clustering and UMAP visualization. To run UMAP analysis, you must first install the umap-learn python package (e.g. via \code{pip install umap-learn}). 
 #'
 #' @docType methods
 #' @name ATACRunSeurat
@@ -43,7 +43,8 @@
 #' str(pbmc.ATAC.res$ATAC)
 #' head(pbmc.ATAC.res$peaks)
 #'
-#' @importFrom Seurat CreateSeuratObject DimPlot ElbowPlot FindClusters FindNeighbors NormalizeData RunLSI RunPCA RunUMAP ScaleData VariableFeatures
+#' @importFrom Signac RunTFIDF FindTopFeatures RunSVD
+#' @importFrom Seurat CreateSeuratObject DimPlot ElbowPlot FindClusters FindNeighbors NormalizeData RunPCA RunUMAP ScaleData
 #' @importFrom ggplot2 ggsave
 #' @importFrom Gmisc fastDoCall
 #' @export
@@ -52,7 +53,7 @@ ATACRunSeurat <- function(inputMat, type = "matrix", project = "MAESTRO.scATAC.S
                           min.c = 10, min.p = 100, method = "LSI", dims.use = 1:30, 
                           cluster.res = 0.6, only.pos = FALSE, peaks.test.use = "presto", 
                           peaks.cutoff = 1E-5, peaks.pct = 0.1, peaks.logfc = 0.2, 
-                          runlsi.args = list(), runpca.args = list(), 
+                          runtfidf.args = list(), runsvd.args = list(), runpca.args = list(), 
                           findneighbors.args = list(), findclusters.args = list(),...)
 {
   if(type == "matrix"){SeuratObj <- CreateSeuratObject(inputMat, project = project, min.cells = min.c, min.features = min.p, assay = "ATAC")}
@@ -61,9 +62,9 @@ ATACRunSeurat <- function(inputMat, type = "matrix", project = "MAESTRO.scATAC.S
   if(method == "LSI"){    
   #============ LSI ============
   message("LSI analysis ...")
-  VariableFeatures(SeuratObj) <- names(which(Matrix::rowSums(SeuratObj) > min.c))
-  # SeuratObj <- RunLSI(object = SeuratObj, scale.max = NULL) 
-  SeuratObj <- fastDoCall("RunLSI", c(object = SeuratObj, runlsi.args)) 
+  SeuratObj <- fastDoCall("RunTFIDF", c(object = SeuratObj, runtfidf.args)) 
+  SeuratObj <- FindTopFeatures(SeuratObj, min.cutoff = 'q0')
+  SeuratObj <- fastDoCall("RunSVD", c(object = SeuratObj, runsvd.args)) 
   
   #============ UMAP ============
   message("UMAP analysis ...")

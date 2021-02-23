@@ -20,7 +20,8 @@ ATACRunSeurat(
   peaks.cutoff = 1e-05,
   peaks.pct = 0.1,
   peaks.logfc = 0.2,
-  runlsi.args = list(),
+  runtfidf.args = list(),
+  runsvd.args = list(),
   runpca.args = list(),
   findneighbors.args = list(),
   findclusters.args = list(),
@@ -62,8 +63,6 @@ Available options are "wilcox" and "t". See \code{\link{FindAllMarkersMAESTRO}} 
 \item{peaks.logfc}{Limit testing to peaks which show, on average, at least X-fold difference (log-scale) between the two groups of cells. Default is 0.2 Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 for each cluster. Default cutoff is 1E-5.}
 
-\item{runlsi.args}{Extra arguments passed to \code{\link{RunLSI}}.}
-
 \item{runpca.args}{Extra arguments passed to \code{\link{RunPCA}}.}
 
 \item{findneighbors.args}{Extra arguments passed to \code{\link{FindNeighbors}}.}
@@ -71,12 +70,14 @@ for each cluster. Default cutoff is 1E-5.}
 \item{findclusters.args}{Extra arguments passed to \code{\link{FindClusters}}.}
 
 \item{\dots}{Extra arguments passed to \code{\link{RunUMAP}}.}
+
+\item{runlsi.args}{Extra arguments passed to \code{\link{RunLSI}}.}
 }
 \value{
 A list contains a Seurat object for ATAC clusters and a data frame of cluster specific peaks.
 }
 \description{
-Clustering analysis for scATAC-seq dataset using Seurat(version >=3.0.1). Including normalization, LSI/PCA dimension reduction, clustering and UMAP visualization. To run UMAP analysis, you must first install the umap-learn python package (e.g. via \code{pip install umap-learn}).
+Clustering analysis for scATAC-seq dataset using Seurat (version >=4.0.0) and Signac (version >= 1.1.1). Including normalization, LSI/PCA dimension reduction, clustering and UMAP visualization. To run UMAP analysis, you must first install the umap-learn python package (e.g. via \code{pip install umap-learn}).
 }
 \examples{
 data(pbmc.ATAC)
