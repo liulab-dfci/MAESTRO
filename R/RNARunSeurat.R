@@ -49,31 +49,31 @@
 #' @export
 
 RNARunSeurat <- function(inputMat, type = "matrix", project = "MAESTRO.scRNA.Seurat", orig.ident = NULL, min.c = 10, min.g = 200, mito = FALSE, 
-                         variable.genes = 2000, organism = "GRCh38", dims.use = 1:15, cluster.res = 0.6, only.pos = FALSE, genes.test.use = "presto", 
+                         mito.cutoff = 0.2, variable.genes = 2000, organism = "GRCh38", dims.use = 1:15, cluster.res = 0.6, only.pos = FALSE, genes.test.use = "presto", 
                          genes.cutoff = 1E-5, genes.pct = 0.1, genes.logfc = 0.25,
                          runpca.agrs = list(), findneighbors.args = list(), 
-                         findclusters.args = list(), ...)
+                         findclusters.args = list(), outdir = ".", ...)
 {
   if(type == "matrix"){SeuratObj <- CreateSeuratObject(inputMat, project = project, min.cells = min.c, min.features = min.g)}
   if(type == "object"){SeuratObj <- inputMat}
-
+  
   #=========Mitochondria and Spike-in========  
   if(mito){
     message("Check the mitochondria and spike-in percentage ...")
     if(organism=="GRCh38"){
-       mito.genes <- grep("^MT-", rownames(GetAssayData(object = SeuratObj)), value = TRUE)
-       ercc.genes <- grep("^ERCC", rownames(GetAssayData(object = SeuratObj)), value = TRUE)}
+      mito.genes <- grep("^MT-", rownames(GetAssayData(object = SeuratObj)), value = TRUE)
+      ercc.genes <- grep("^ERCC", rownames(GetAssayData(object = SeuratObj)), value = TRUE)}
     else{
-       mito.genes <- grep("^mt-", rownames(GetAssayData(object = SeuratObj)), value = TRUE)
-       ercc.genes <- grep("^ercc", rownames(GetAssayData(object = SeuratObj)), value = TRUE)}   
+      mito.genes <- grep("^mt-", rownames(GetAssayData(object = SeuratObj)), value = TRUE)
+      ercc.genes <- grep("^ercc", rownames(GetAssayData(object = SeuratObj)), value = TRUE)}   
     percent.mito <- Matrix::colSums(GetAssayData(object = SeuratObj)[mito.genes, ])/Matrix::colSums(GetAssayData(object = SeuratObj))
     percent.ercc <- Matrix::colSums(GetAssayData(object = SeuratObj)[ercc.genes, ])/Matrix::colSums(GetAssayData(object = SeuratObj))
     SeuratObj$percent.mito <- percent.mito
     SeuratObj$percent.ercc <- percent.ercc
     p1 = VlnPlot(SeuratObj, c("percent.mito","percent.ercc"), ncol = 2)
-    ggsave(paste0(SeuratObj@project.name, ".spikein.png"), p1,  width=6, height=4.5)
+    ggsave(file.path(outdir, paste0(SeuratObj@project.name, ".spikein.png")), p1,  width=6, height=4.5)
     
-    SeuratObj <- subset(x = SeuratObj, subset = percent.mito < 0.05)
+    SeuratObj <- subset(x = SeuratObj, subset = percent.mito < mito.cutoff)
     SeuratObj <- subset(x = SeuratObj, subset = percent.ercc < 0.05)
     vars.to.regress = c("nCount_RNA","percent.mito","percent.ercc")}
   else{
@@ -90,7 +90,7 @@ RNARunSeurat <- function(inputMat, type = "matrix", project = "MAESTRO.scRNA.Seu
   SeuratObj <- fastDoCall("RunPCA", c(object = SeuratObj, features = VariableFeatures(SeuratObj), runpca.agrs))
   # SeuratObj <- RunPCA(object = SeuratObj, features = VariableFeatures(SeuratObj))
   p2 = ElbowPlot(object = SeuratObj, ndims = SeuratObj@commands$RunPCA.RNA@params$npcs)
-  ggsave(file.path(paste0(SeuratObj@project.name, "_PCElbowPlot.png")), p2,  width=10, height=4)
+  ggsave(file.path(outdir, paste0(SeuratObj@project.name, "_PCElbowPlot.png")), p2,  width=10, height=4)
   
   #=========UMAP===========
   message("UMAP analysis ...")
@@ -100,17 +100,17 @@ RNARunSeurat <- function(inputMat, type = "matrix", project = "MAESTRO.scRNA.Seu
   # SeuratObj <- FindNeighbors(object = SeuratObj, reduction = "pca", dims = dims.use)
   # SeuratObj <- FindClusters(object = SeuratObj, resolution = cluster.res)
   p3 = DimPlot(object = SeuratObj, label = TRUE, pt.size = 0.2)
-  ggsave(file.path(paste0(SeuratObj@project.name, "_cluster.png")), p3,  width=5, height=4)
+  ggsave(file.path(outdir,paste0(SeuratObj@project.name, "_cluster.png")), p3,  width=5, height=4)
   if(!is.null(orig.ident)){
     SeuratObj$orig.ident <- orig.ident
     p4 = DimPlot(object = SeuratObj, label = TRUE, pt.size = 0.2, group.by = "orig.ident", label.size = 3)
-    ggsave(file.path(paste0(SeuratObj@project.name, "_original.png")), p4,  width=5, height=4)}
-
+    ggsave(file.path(outdir, paste0(SeuratObj@project.name, "_original.png")), p4,  width=5, height=4)}
+  
   #=========DE analysis===========
   message("Identify cluster specific genes ...")
   cluster.genes <- FindAllMarkersMAESTRO(object = SeuratObj, min.pct = genes.pct, logfc.threshold = genes.logfc, test.use = genes.test.use, only.pos = only.pos)
   cluster.genes <- cluster.genes[cluster.genes$p_val_adj<genes.cutoff, ]
-  write.table(cluster.genes, paste0(SeuratObj@project.name, "_DiffGenes.tsv"), quote = F, sep = "\t")
-
+  write.table(cluster.genes, file.path(outdir, paste0(SeuratObj@project.name, "_DiffGenes.tsv")), quote = F, sep = "\t")
+  
   return(list(RNA=SeuratObj, genes=cluster.genes))
 }

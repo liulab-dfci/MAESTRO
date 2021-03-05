@@ -32,7 +32,7 @@
 #' @importFrom ggplot2 ggsave
 #' @export
 
-RNAAnnotateCelltype <- function(RNA, genes, signatures = "human.immune.CIBERSORT", min.score = 0, orig.ident = NULL){
+RNAAnnotateCelltype <- function(RNA, genes, signatures = "human.immune.CIBERSORT", min.score = 0, orig.ident = NULL, outdir = "."){
     if(is.null(orig.ident)){
         if(class(signatures) == "character"){
             signatures_name = signatures
@@ -84,11 +84,11 @@ RNAAnnotateCelltype <- function(RNA, genes, signatures = "human.immune.CIBERSORT
                                                          from = current.cluster.ids, to = new.cluster.ids)
         }
         p = DimPlot(object = RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3, repel = T)
-        ggsave(paste0(RNA@project.name, "_annotated.png"), p, width=6, height=4)}
+        ggsave(file.path(outdir, paste0(RNA@project.name, "_annotated.png")), p, width=6, height=4)}
     else{
         RNA$assign.ident <- orig.ident
         p = DimPlot(object = RNA, label = TRUE, pt.size = 0.2, group.by = "assign.ident", label.size = 3, repel = T)
-        ggsave(file.path(paste0(RNA@project.name, "_original.png")), p,  width=5.5, height=4)}
+        ggsave(file.path(outdir, paste0(RNA@project.name, "_original.png")), p,  width=5.5, height=4)}
     
     return(RNA)    
 }

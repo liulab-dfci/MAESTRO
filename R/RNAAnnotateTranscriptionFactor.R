@@ -39,7 +39,7 @@
 
 
 RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project = RNA@project.name, lisa.mode = "multi",
-                                           method = "LISA", lisa.path = "lisa", rabit.path, organism = "GRCh38", top.tf = 10)
+                                           method = "LISA", lisa.path = "lisa", rabit.path, organism = "GRCh38", top.tf = 10, outdir=".")
 {
   if(organism == "GRCh38"){
     org = "hsa"
@@ -221,7 +221,7 @@ RunLISAMulti <- function(genes, project, organism = "GRCh38", lisa.path = lisa.p
   
   cluster_markers_list <- split(genes, genes$cluster)
   
-  outputDir <- paste0(project, ".lisa")
+  outputDir <- file.path(outdir, paste0(project, ".lisa"))
   if (!file.exists(outputDir)) dir.create(path=outputDir)
   
   for(i in names(cluster_markers_list))
