@@ -36,7 +36,7 @@
 #' @importFrom ggplot2 ggsave
 #' @export
 
-ATACAnnotateCelltype <- function(ATAC, signatures = "human.immune.CIBERSORT", min.score = 0, genes.test.use = "presto", genes.cutoff = 1E-5, orig.ident = NULL)
+ATACAnnotateCelltype <- function(ATAC, signatures = "human.immune.CIBERSORT", min.score = 0, genes.test.use = "presto", genes.cutoff = 1E-5, orig.ident = NULL, outdir = ".",...)
 {
   DefaultAssay(ATAC) <- "ACTIVITY"
 
@@ -45,9 +45,9 @@ ATACAnnotateCelltype <- function(ATAC, signatures = "human.immune.CIBERSORT", mi
      cluster.genes <- NULL
      cluster.genes <- FindAllMarkersMAESTRO(object = ATAC, min.pct = 0.1, test.use = genes.test.use)
      cluster.genes <- cluster.genes[cluster.genes$p_val_adj<genes.cutoff, ]
-     write.table(cluster.genes, paste0(ATAC@project.name, "_RPDiffGenes.tsv"), quote = F, sep = "\t")}
+     write.table(cluster.genes, file.path(outdir, paste0(ATAC@project.name, "_RPDiffGenes.tsv")), quote = F, sep = "\t")}
   
-  ATAC <- RNAAnnotateCelltype(ATAC, cluster.genes, signatures, min.score = min.score, orig.ident = orig.ident)
+  ATAC <- RNAAnnotateCelltype(ATAC, cluster.genes, signatures, min.score = min.score, orig.ident = orig.ident, outdir = outdir)
   ATAC@meta.data$assign.celltype = ATAC@meta.data$assign.ident
   return(ATAC)
 }
