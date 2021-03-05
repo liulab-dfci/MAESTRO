@@ -60,7 +60,7 @@
 * Fix the bug in the simple RP model for gene score calculation.
 * Fix the bug in scATAC-Seq Snakefile.
 ### v1.4.0
-* Upgrade dependencies to Seurat4.0.0, Signac 1.1.1.
+* Upgrade dependencies to Seurat 4.0.0 and Signac 1.1.1.
 * Set QC; genes mapped to mitochondrial as a variable in the scRNA-seq analysis.
 * Add output path as variables in the MAESTRO R package.
 
