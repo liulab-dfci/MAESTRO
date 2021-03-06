@@ -67,16 +67,16 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project =
   method = toupper(method)
   if(method == "RABIT"){
     scorename = "log(Rabitscore)"
-    out_fdr_max_log = tryCatch(expr = RunRABIT(genes = genes, project = project, rabit.path = rabit.path, organism = org),
+    out_fdr_max_log = tryCatch(expr = RunRABIT(genes = genes, project = project, rabit.path = rabit.path, organism = org, outdir="."),
                                error = function(cond) {return(cond$message)})
   }
   if(method == "LISA"){
     scorename = "log(Lisascore)"
     if(lisa.mode == "multi"){
-      out_fdr_max_log = RunLISAMulti(genes = genes, project = project, organism = organism, lisa.path = lisa.path)
+      out_fdr_max_log = RunLISAMulti(genes = genes, project = project, organism = organism, lisa.path = lisa.path, outdir=".")
     }
     if(lisa.mode == "one-vs-rest"){
-      out_fdr_max_log = RunLISAWeb(genes = genes, project = project, organism = organism)
+      out_fdr_max_log = RunLISAWeb(genes = genes, project = project, organism = organism, outdir=".")
     }
   }
   
@@ -210,7 +210,7 @@ RNAAnnotateTranscriptionFactor <- function(RNA, genes, cluster = NULL, project =
 }
 
 
-RunLISAMulti <- function(genes, project, organism = "GRCh38", lisa.path = lisa.path)
+RunLISAMulti <- function(genes, project, organism = "GRCh38", lisa.path = lisa.path, outdir=".")
 {
   if(organism == "GRCh38"){
     species = "hg38"
@@ -267,7 +267,7 @@ RunLISAMulti <- function(genes, project, organism = "GRCh38", lisa.path = lisa.p
   return(tf_all_log10)
 }
 
-RunLISAWeb <- function(genes, project, organism = "GRCh38")
+RunLISAWeb <- function(genes, project, organism = "GRCh38", outdir=".")
 {
   if(organism == "GRCh38"){
     species = "hg38"
@@ -278,7 +278,7 @@ RunLISAWeb <- function(genes, project, organism = "GRCh38")
   
   cluster_markers_list <- split(genes, genes$cluster)
   
-  outputDir <- paste0(project, ".lisa")
+  outputDir <- file.path(outdir, paste0(project, ".lisa"))
   if (!file.exists(outputDir)) dir.create(path=outputDir)
   
   res_zip_url_list = rep("zip", length(cluster_markers_list))
@@ -382,7 +382,7 @@ DownloadResult <- function(resurl, destfile)
 }
 
 
-RunRABIT <- function(genes, project, rabit.path, organism = "hsa")
+RunRABIT <- function(genes, project, rabit.path, organism = "hsa", outdir=".")
 {
   if(organism == "hsa"){
     genes$entrezid = MAGeCKFlute::TransGeneID(genes$gene, fromType = "Symbol", toType = "Entrez",
@@ -401,7 +401,7 @@ RunRABIT <- function(genes, project, rabit.path, organism = "hsa")
   genes = na.omit(genes)
   cluster_markers_list <- split(genes, genes$cluster)
   
-  outputDir <- paste0(project, ".RABIT")
+  outputDir <- file.path(outdir, paste0(project, ".RABIT"))
   if (!file.exists(outputDir)){
     dir.create(path=outputDir)
   }else{
