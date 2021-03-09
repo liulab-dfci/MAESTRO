@@ -1,0 +1,31 @@
+"""
+A single cell multiome (RNA + ATAC) analysis pipeline.
+"""
+
+configfile: "config.yaml"
+
+import yaml
+import sys
+import os
+
+
+rule all:
+    input:
+        summaryreport = "Result/" + config["outprefix"] + "_scRNA_report.html"
+
+# scRNA part
+include: "rules/sc_rna_map.smk"
+include: "rules/sc_rna_qc.smk"
+if config["rseqc"]:
+    include: "rules/sc_rna_map.smk"
+include: "rules/sc_rna_analysis.smk"
+
+# scATAC part
+include: "rules/sc_atac_preprocess.smk"
+include: "rules/sc_atac_map.smk"
+include: "rules/sc_atac_fragment_correct.smk"
+include: "rules/sc_atac_peak_call.smk"
+include: "rules/sc_atac_peak_count.smk"
+include: "rules/sc_atac_qc.smk"
+
+# integration
