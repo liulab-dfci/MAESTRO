@@ -43,7 +43,7 @@
 #' str(pbmc.RNA.res$RNA)
 #' head(pbmc.RNA.res$genes)
 #'
-#' @importFrom Seurat CreateSeuratObject DimPlot ElbowPlot FindClusters FindNeighbors FindVariableFeatures GetAssayData NormalizeData RunPCA RunUMAP ScaleData SubsetData VlnPlot
+#' @importFrom Seurat CreateSeuratObject DimPlot ElbowPlot FindClusters FindNeighbors FindVariableFeatures GetAssayData NormalizeData RunPCA RunUMAP ScaleData VlnPlot
 #' @importFrom ggplot2 ggplot ggsave
 #' @importFrom Gmisc fastDoCall
 #' @export
