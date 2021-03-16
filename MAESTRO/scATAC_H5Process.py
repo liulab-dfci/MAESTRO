@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:44:05
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2021-03-16 21:46:50
+# @Last Modified time: 2021-03-17 01:16:23
 
 
 import os
@@ -192,17 +192,22 @@ def read_10X_h5(filename):
         return FeatureBCMatrix(ids, names, barcodes, matrix)
 
 
-def write_10X_h5(filename, matrix, features, barcodes, genome = 'GRCh38', datatype = 'Peak'):
+def write_10X_h5(filename, matrix, features, barcodes, feature_types = None, genome = 'GRCh38', datatype = 'Peak'):
     """Write 10X HDF5 files, support both gene expression and peaks."""
     f = h5py.File(filename, 'w')
-    if datatype == 'Peak':
-       M = sp_sparse.csc_matrix(matrix, dtype=numpy.int32)
+    if datatype == 'Gene':
+        M = sp_sparse.csc_matrix(matrix, dtype=numpy.float32)
+        FT = numpy.array([datatype]*len(features), dtype='|S100')
     else:
-       M = sp_sparse.csc_matrix(matrix, dtype=numpy.float32)
+        M = sp_sparse.csc_matrix(matrix, dtype=numpy.int32)
+        if datatype == 'Peak':
+            FT = numpy.array([datatype]*len(features), dtype='|S100')
+        else:
+            FT = numpy.array(feature_types, dtype='|S100')
+
     B = numpy.array(barcodes, dtype='|S200')
     P = numpy.array(features, dtype='|S100')
     GM = numpy.array([genome]*len(features), dtype='|S10')
-    FT = numpy.array([datatype]*len(features), dtype='|S100')
     AT = numpy.array(['genome'], dtype='|S10')
     mat = f.create_group('matrix')
     mat.create_dataset('barcodes', data=B)
@@ -216,52 +221,6 @@ def write_10X_h5(filename, matrix, features, barcodes, genome = 'GRCh38', dataty
     fet.create_dataset('genome', data=GM)
     fet.create_dataset('id', data=P)
     fet.create_dataset('name', data=P)
-    f.close()
-
-
-def write_10X_h5_multiome(filename, rna_matrix, rna_features, barcodes, atac_matrix, atac_features, genome = 'GRCh38', datatype = 'Multiome'):
-    """Write 10X HDF5 files, support both gene expression and peaks."""
-    f = h5py.File(filename, 'w')
-    if datatype == 'Multiome':
-       atac_M = sp_sparse.csc_matrix(atac_matrix, dtype=numpy.int32)
-       rna_M = sp_sparse.csc_matrix(rna_matrix, dtype=numpy.int32)
-
-    rna_B = numpy.array(barcodes, dtype='|S200')
-    rna_P = numpy.array(rna_features, dtype='|S100')
-    rna_GM = numpy.array([genome]*len(rna_features), dtype='|S10')
-    rna_FT = numpy.array(["Peak"]*len(rna_features), dtype='|S100')
-    rna_AT = numpy.array(['genome'], dtype='|S10')
-    rna_mat = f.create_group('Gene Expression')
-    rna_mat.create_dataset('barcodes', data=rna_B)
-    rna_mat.create_dataset('data', data=rna_M.data)
-    rna_mat.create_dataset('indices', data=rna_M.indices)
-    rna_mat.create_dataset('indptr', data=rna_M.indptr)
-    rna_mat.create_dataset('shape', data=rna_M.shape)
-    rna_fet = rna_mat.create_group('features')
-    rna_fet.create_dataset('_all_tag_keys', data=rna_AT)
-    rna_fet.create_dataset('feature_type', data=rna_FT)
-    rna_fet.create_dataset('genome', data=rna_GM)
-    rna_fet.create_dataset('id', data=rna_P)
-    rna_fet.create_dataset('name', data=rna_P)
-
-    atac_B = numpy.array(barcodes, dtype='|S200')
-    atac_P = numpy.array(atac_features, dtype='|S100')
-    atac_GM = numpy.array([genome]*len(atac_features), dtype='|S10')
-    atac_FT = numpy.array(["Peak"]*len(atac_features), dtype='|S100')
-    atac_AT = numpy.array(['genome'], dtype='|S10')
-    atac_mat = f.create_group('Peaks')
-    atac_mat.create_dataset('barcodes', data=atac_B)
-    atac_mat.create_dataset('data', data=atac_M.data)
-    atac_mat.create_dataset('indices', data=atac_M.indices)
-    atac_mat.create_dataset('indptr', data=atac_M.indptr)
-    atac_mat.create_dataset('shape', data=atac_M.shape)
-    atac_fet = atac_mat.create_group('features')
-    atac_fet.create_dataset('_all_tag_keys', data=atac_AT)
-    atac_fet.create_dataset('feature_type', data=atac_FT)
-    atac_fet.create_dataset('genome', data=atac_GM)
-    atac_fet.create_dataset('id', data=atac_P)
-    atac_fet.create_dataset('name', data=atac_P)
-
     f.close()
 
 
