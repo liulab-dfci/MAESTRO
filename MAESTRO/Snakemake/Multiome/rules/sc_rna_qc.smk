@@ -1,5 +1,7 @@
 # rule for cell-level quality control
 
+from MAESTRO.scRNA_utility import get_fastqlist, getfastq_10x, getfastq_dropseq, SCRIPT_PATH, RSCRIPT_PATH
+
 rule scrna_qc:
     input:
         rawmtx = "Result/RNA/STAR/%sSolo.out/Gene/raw/matrix.mtx" %(config["outprefix"]),
@@ -10,8 +12,8 @@ rule scrna_qc:
         filtermatrix = "Result/RNA/QC/%s_filtered_gene_count.h5" %(config["outprefix"]),
         rnafilterplot = "Result/RNA/QC/%s_scRNA_cell_filtering.png" %(config["outprefix"]),
     params:
-        counts = config["cutoff"]["count"],
-        gene = config["cutoff"]["gene"],
+        counts = config["cutoff"]["rna_count"],
+        gene = config["cutoff"]["rna_gene"],
         outpre = config["outprefix"],
         outdir = "Result/RNA/QC",
         species = config["species"]

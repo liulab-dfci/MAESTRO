@@ -2,9 +2,9 @@
 
 rule scatac_map:
     input:
-        fasta = config["genome"]["fasta"],
-        r1 = os.path.join("Result/ATAC/Tmp", "%s_R1.barcoded.fastq" %(config["fastqprefix"])),
-        r3 = os.path.join("Result/ATAC/Tmp", "%s_R3.barcoded.fastq" %(config["fastqprefix"])),
+        fasta = config["genome"]["atac_fasta"],
+        r1 = os.path.join("Result/ATAC/Tmp", "%s_R1.barcoded.fastq" %(config["atac_fastqprefix"])),
+        r3 = os.path.join("Result/ATAC/Tmp", "%s_R3.barcoded.fastq" %(config["atac_fastqprefix"])),
     output:
         bam = temp("Result/ATAC/minimap2/%s.sortedByPos.bam" %(config["outprefix"])),
     threads:

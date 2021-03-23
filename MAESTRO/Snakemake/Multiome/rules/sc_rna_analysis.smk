@@ -1,15 +1,16 @@
-# rule for cell-level quality control
+# rule for scRNA analysis
 
 rule scrna_analysis:
     input:
-        expression = "Result/RNA/QC/%s_filtered_gene_count.h5" %(config["outprefix"]),
+        expression = "Result/Multiome/%s_multiome_gene_count.h5" %(config["outprefix"]),
     output:
         specificgene = "Result/RNA/Analysis/%s_DiffGenes.tsv" %(config["outprefix"]),
         clusterplot = "Result/RNA/Analysis/%s_cluster.png" %(config["outprefix"]),
         annotateplot = "Result/RNA/Analysis/%s_annotated.png" %(config["outprefix"]),
-        tflist = "Result/RNA/Analysis/%s.PredictedTFTop10.txt" %(config["outprefix"])
+        tflist = "Result/RNA/Analysis/%s.PredictedTFTop10.txt" %(config["outprefix"]),
+        rnaobject = "Result/RNA/Analysis/%s_scRNA_Object.rds" %(config["outprefix"]),
     params:
-        expression = "../RNA/QC/%s_filtered_gene_count.h5" %(config["outprefix"]),
+        expression = "../../Multiome/%s_multiome_gene_count.h5" %(config["outprefix"]),
         species = config["species"],
         outpre = config["outprefix"],
         outdir = "Result/RNA/Analysis",

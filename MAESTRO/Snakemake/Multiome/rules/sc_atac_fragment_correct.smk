@@ -1,10 +1,10 @@
 # rule for correcting barcodes according to whitelist
 
-if config["whitelist"]:
+if config["barcode"]["atac_whitelist"]:
     rule scatac_barcodecorrect:
         input:
-            r2 = os.path.join("Result/ATAC/Tmp", "%s_R2.fastq" %(config["fastqprefix"])),
-            whitelist = config["whitelist"],
+            r2 = os.path.join("Result/ATAC/Tmp", "%s_R2.fastq" %(config["atac_fastqprefix"])),
+            whitelist = config["barcode"]["atac_whitelist"],
         output:
             bc_correct = "Result/ATAC/minimap2/barcode_correct.txt",
             bc_correct_uniq = "Result/ATAC/minimap2/barcode_correct_uniq.txt",
@@ -18,7 +18,7 @@ if config["whitelist"]:
 else:
     rule scatac_barcodecorrect:
         input:
-            r2 = os.path.join("Result/ATAC/Tmp", "%s_R2.fastq" %(config["fastqprefix"])),
+            r2 = os.path.join("Result/ATAC/Tmp", "%s_R2.fastq" %(config["atac_fastqprefix"])),
         output:
             bc_correct = "Result/ATAC/minimap2/barcode_correct.txt",
             bc_correct_uniq = "Result/ATAC/minimap2/barcode_correct_uniq.txt",

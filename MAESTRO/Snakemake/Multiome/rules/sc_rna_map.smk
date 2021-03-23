@@ -4,9 +4,9 @@ from MAESTRO.scRNA_utility import getfastq_10x
 
 rule scrna_map:
     input:
-        mapindex = config["genome"]["mapindex"],
-        whitelist = config["barcode"]["whitelist"],
-        fastqs = config["fastqdir"],
+        mapindex = config["genome"]["rna_mapindex"],
+        whitelist = config["barcode"]["rna_whitelist"],
+        fastqs = config["rna_fastqdir"],
     output:
         bam = "Result/RNA/STAR/%sAligned.sortedByCoord.out.bam" %(config["outprefix"]),
         bai = "Result/RNA/STAR/%sAligned.sortedByCoord.out.bam.bai" %(config["outprefix"]),
@@ -15,13 +15,13 @@ rule scrna_map:
         barcode = "Result/RNA/STAR/%sSolo.out/Gene/raw/barcodes.tsv" %(config["outprefix"]),
     params:
         outdir = "Result/RNA/STAR/" + config["outprefix"],
-        transcript = getfastq_10x(config["fastqdir"], config["fastqprefix"])["transcript"],
-        barcode = getfastq_10x(config["fastqdir"], config["fastqprefix"])["barcode"],
-        decompress = getfastq_10x(config["fastqdir"], config["fastqprefix"])["decompress"],
-        barcodestart = config["barcode"]["barcodestart"],
-        barcodelength = config["barcode"]["barcodelength"],
-        umistart = config["barcode"]["umistart"],
-        umilength = config["barcode"]["umilength"],
+        transcript = getfastq_10x(config["rna_fastqdir"], config["rna_fastqprefix"])["transcript"],
+        barcode = getfastq_10x(config["rna_fastqdir"], config["rna_fastqprefix"])["barcode"],
+        decompress = getfastq_10x(config["rna_fastqdir"], config["rna_fastqprefix"])["decompress"],
+        barcodestart = 1,
+        barcodelength = 16,
+        umistart = 17,
+        umilength = 12,
     log:
         "Result/Log/%s_scRNA_STAR.log" %(config["outprefix"])
     benchmark:

@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="http://cistrome.org/~dsun/MAESTRO/css/bootstrap4.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="http://cistrome.org/~dsun/MAESTRO/css/mFilter.css">
+    <style type="text/css">
+        #nav-scrna-tab.active
+        {
+            color: #007bff;
+        }
+        #nav-scatac-tab.active
+        {
+            color: #007bff;
+        }
+        #nav-joint-tab.active
+        {
+            color: #007bff;
+        }
+    </style>
+    <title>MAESTRO</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-dark fixed-top navbar-expand-lg flex-md-nowrap p-0" style="background-color:#1E284A">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://github.com/liulab-dfci/MAESTRO">MAESTRO</a>
+        <div class="container-fluid" style="padding-top:5px; padding-bottom:5px">
+            <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+                <li class="nav-item">
+                    <a class="nav-link nav-a" href="#" style="font-size: 1rem">scRNA-seq module</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-a" href="" style="font-size: 1rem">scATAC-seq module</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-a" href="#" style="font-size: 1rem">Integration module</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link nav-a" href="#" style="font-size: 1rem">Multiome module</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid" style="margin-top: 90px;margin-bottom: 90px">
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist" style="margin-bottom: -10px; margin-right: 30px; margin-left: 30px">
+            <a class="nav-item nav-link active" id="nav-joint-tab" data-toggle="tab" href="#nav-joint" role="tab" aria-controls="nav-joint" aria-selected="false">Joint</a>
+            <a class="nav-item nav-link" id="nav-scrna-tab" data-toggle="tab" href="#nav-scrna" role="tab" aria-controls="nav-scrna" aria-selected="true">scRNA</a>
+            <a class="nav-item nav-link" id="nav-scatac-tab" data-toggle="tab" href="#nav-scatac" role="tab" aria-controls="nav-scatac" aria-selected="false">scATAC</a>
+          </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent" style="margin-top: 30px">
+          <div class="tab-pane fade show active" id="nav-joint" role="tabpanel" aria-labelledby="nav-joint-tab">
+            <div class="card text-left" style="margin-right: 30px; margin-left: 30px">
+                <div class="row" style="margin-right: 0px; margin-left: 0px">
+                    <div class="col-2" style="background-color: rgba(0, 0, 0, 0.03); border-right: 1px solid rgba(0, 0, 0, 0.125)">
+                        <ul class="nav nav-pills flex-column" aria-orientation="vertical" style="padding-top: 20px; padding-bottom: 20px">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="pill" href="#sample" style="font-size: 1rem" aria-selected="true">Sample Information</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="pill" href="#QC_joint" style="font-size: 1rem">Quality Control</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="pill" href="#clustering_joint" style="font-size: 1rem">Joint Clustering</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="pill" href="#annotation_joint" style="font-size: 1rem">Annotation</a>
+                                <ul>
+                                    <li>
+                                        <a class="nav-link" href="#celltype_joint" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Celltype annotation</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-10">
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="container-fluid tab-pane fade show active" id="sample">
+                                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                                        <h1 class="h2" id="sample">Sample Information</h1>
+                                    </div>
+                                    <table class="table" style="font-size: 15px">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">Sample ID</th>
+                                                <td>%(outprefix)s</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">scRNA FASTQ Path</th>
+                                                <td>%(rna_fastqdir)s</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">scATAC FASTQ Path</th>
+                                                <td>%(atac_fastqdir)s</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Species</th>
+                                                <td>%(species)s</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="container-fluid tab-pane fade" id="QC_joint">
+                                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                        <h1 class="h2">Quality Control</h1>
+                                    </div>
+                                    <div class="row">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <h3 class="h5">
+                                                        Joint cell calling
+                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#cellfilter_joint" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                            </path>
+                                                        </svg>
+                                                    </h3>
+                                                    <p class="collapse" id="cellfilter_joint" style="font-size: 0.925rem">
+                                                        Joint cell calling
+                                                    </p>
+                                                    <a href=%(cellfilter_joint)s><img src=%(cellfilter_joint)s width="375" height="400" class="float-left"></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-fluid tab-pane fade" id="clustering_joint">
+                                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                        <h1 class="h2" id="clustering">Cell Clustering</h1>
+                                    </div>
+                                    <div class="row">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <h3 class="h5">
+                                                        Joint cell clustering
+                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#genecluster_joint" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                            </path>
+                                                        </svg>
+                                                    </h3>
+                                                    <p class="collapse" id="genecluster_joint" style="font-size: 0.925rem">
+                                                        UMAP visualization of the joint clustering result based on RNA expression and ATAC regulatory potential. Colors represent different clusters with the cluster ID labeled.
+                                                    </p>
+                                                    <a href=%(cluster_joint)s><img src=%(cluster_joint)s width="530" height="450" class="float-left"></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-fluid tab-pane fade" id="annotation_joint">
+                                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                        <h1 class="h2">Annotation</h1>
+                                    </div>
+                                    <div class="row">
+                                        <div class="container-fluid">
+                                            <h2 class="h3" id="celltype">Celltype annotation</h2>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <h3 class="h5">
+                                                        Celltype annotation based on RNA expression
+                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#geneannotate_joint" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                            </path>
+                                                        </svg>
+                                                    </h3>
+                                                    <p class="collapse" id="geneannotate_joint" style="font-size: 0.925rem">
+                                                        UMAP visualization of annotated clusters. Colors represent different cell types. The cell type information for each cluster is annotated using the expression level of marker genes.
+                                                    </p>
+                                                    <a href=%(annotate_joint)s><img src=%(annotate_joint)s width="600" height="450" class="float-left"></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="nav-scrna" role="tabpanel" aria-labelledby="nav-scrna-tab">
+            <div class="card text-left" style="margin-right: 30px; margin-left: 30px">
+                <div class="row" style="margin-right: 0px; margin-left: 0px">
+                    <div class="col-2" style="background-color: rgba(0, 0, 0, 0.03); border-right: 1px solid rgba(0, 0, 0, 0.125)">
+                        <ul class="nav nav-pills flex-column" aria-orientation="vertical" style="padding-top: 20px; padding-bottom: 20px">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="pill" href="#QC_rna" style="font-size: 1rem">Quality Control</a>
+                                <ul>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#single_rna" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Single-cell level</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="pill" href="#clustering_rna" style="font-size: 1rem">Cell Clustering</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="pill" href="#annotation_rna" style="font-size: 1rem">Annotation</a>
+                                <ul>
+                                    <li>
+                                        <a class="nav-link" href="#celltype_rna" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Celltype annotation</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" href="#regulator_rna" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Regulator annotation</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-10">
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="container-fluid tab-pane fade show active" id="QC_rna">
+                                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                        <h1 class="h2">Quality Control</h1>
+                                    </div>
+                                    <div class="row">
+                                        <div class="container-fluid">
+                                            <h2 class="h3" id="single_rna">Single-cell level</h2>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <h3 class="h5">
+                                                        Cell filtering based on counts and covered genes
+                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#countgene_rna" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                            </path>
+                                                        </svg></h3>
+                                                    <p class="collapse" id="countgene_rna" style="font-size: 0.925rem">
+                                                        Cell filtering plot of scRNA-seq. The x-axis represents the number of unique reads/UMIs present in each cell, and the y-axis represents the number of genes covered in each cell.
+                                                    </p>
+                                                    <a href=%(countgene_rna)s><img src=%(countgene_rna)s width="400" height="400" class="float-left"></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-fluid tab-pane fade" id="clustering_rna">
+                                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                        <h1 class="h2" id="clustering">Cell Clustering</h1>
+                                    </div>
+                                    <div class="row">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <h3 class="h5">
+                                                        Cell clustering based on gene expression
+                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#genecluster_rna" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                            </path>
+                                                        </svg>
+                                                    </h3>
+                                                    <p class="collapse" id="genecluster_rna" style="font-size: 0.925rem">
+                                                        UMAP visualization of the clustering result. Colors represent different clusters with the cluster ID labeled.
+                                                    </p>
+                                                    <a href=%(genecluster_rna)s><img src=%(genecluster_rna)s width="500" height="400" class="float-left"></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-fluid tab-pane fade" id="annotation_rna">
+                                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                        <h1 class="h2">Annotation</h1>
+                                    </div>
+                                    <div class="row">
+                                        <div class="container-fluid">
+                                            <h2 class="h3" id="celltype">Celltype annotation</h2>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <h3 class="h5">
+                                                        Celltype annotation based on DE genes
+                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#geneannotate_rna" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                            </path>
+                                                        </svg>
+                                                    </h3>
+                                                    <p class="collapse" id="geneannotate_rna" style="font-size: 0.925rem">
+                                                        UMAP visualization of annotated clusters. Colors represent different cell types. The cell type information for each cluster is annotated using the expression level of marker genes.
+                                                    </p>
+                                                    <a href=%(geneannotate_rna)s><img src=%(geneannotate_rna)s width="600" height="400" class="float-left"></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 15px">
+                                    </div>
+                                    <div class="row">
+                                        <div class="container-fluid">
+                                            <h2 class="h3" id="regulator_rna">Regulator annotation</h2>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h3 class="h5">
+                                                        %(regtabletitle_rna)s
+                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#regulatorannotate_rna" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                            </path>
+                                                        </svg>
+                                                    </h3>
+                                                    <p class="collapse" id="regulatorannotate_rna" style="font-size: 0.925rem">
+                                                        Driver transcription regulators identified based on cluster-specific genes. By default, the regulators are ranked by the enrichment score in each cluster.
+                                                    </p>
+                                                    <table class="table table-striped table-bordered" id="myTable_rna">
+                                                        <thead class="thead">
+                                                            <tr>
+                                                                <th scope="col" style="vertical-align: middle">Cluster</th>
+                                                                <th scope="col" style="vertical-align: middle">Celltype Annotation</th>
+                                                                <th scope="col" style="vertical-align: middle">Transcription Factor</th>
+                                                                <th scope="col" style="vertical-align: middle">%(regtablecolname_rna)s</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody style="font-size: 0.9rem">
+%(regtable_rna)s
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="nav-scatac" role="tabpanel" aria-labelledby="nav-scatac-tab">
+            <div class="card text-left" style="margin-right: 30px; margin-left: 30px">
+                <div class="row" style="margin-right: 0px; margin-left: 0px">
+                    <div class="col-2" style="background-color: rgba(0, 0, 0, 0.03); border-right: 1px solid rgba(0, 0, 0, 0.125)">
+                        <ul class="nav nav-pills flex-column" aria-orientation="vertical" style="padding-top: 20px; padding-bottom: 20px">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="pill" href="#QC_atac" style="font-size: 1rem">Quality Control</a>
+                                <ul>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#bulk_atac" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Bulk level</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#single_atac" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Single-cell level</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="pill" href="#clustering_atac" style="font-size: 1rem">Cell Clustering</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="pill" href="#annotation_atac" style="font-size: 1rem">Annotation</a>
+                                <ul>
+                                    <li>
+                                        <a class="nav-link" href="#celltype_atac" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Celltype annotation</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" href="#regulator_atac" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Regulator annotation</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="pill" href="#genetrack_atac" style="font-size: 1rem">Gene Track</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-10">
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="container-fluid tab-pane fade show active" id="QC_atac">
+                                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                        <h1 class="h2">Quality Control</h1>
+                                    </div>
+                                    <div class="row">
+                                        <div class="container-fluid">
+                                            <h2 class="h3" id="bulk_atac">Bulk level</h2>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <h3 class="h5">
+                                                        Mappability
+                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#readdistr_atac" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                            </path>
+                                                        </svg>
+                                                    </h3>
+                                                    <div class="collapse" id="readdistr_atac">
+                                                        <p style="font-size: 0.925rem">
+                                                            Read mappability, duplicated reads percentage, fraction of reads mapped to mitochondrial genes, peak regions or promoter regions. 
+                                                        </p>
+                                                        <ul>
+                                                            <li>
+                                                                The <strong>percentage of duplicate reads</strong> shows whether the library is over-amplified due to limited starting material. For human or mouse, if the percentage of duplicate reads is more than 50%%, there may be something wrong during the library preparation.
+                                                            </li>
+                                                            <li>
+                                                                The <strong>percentage of uniquely mapped reads</strong> is usually more than 50%%. If the percentage is less than 50%%, it might be due to inadequate sequencing depth or excessive PCR amplification.
+                                                            </li>
+                                                            <li>
+                                                                <strong>Reads derived from mitochondrial DNA</strong> represent noise in ATAC-seq data, and should be discarded in the downstream analysis. The mitochondrial read fraction shows a large degree of variation across different species and cell types. 
+                                                            </li>
+                                                            <li>
+                                                                The <strong>fraction of reads in peak or promoter regions</strong> is used to evaluate the signal-to-noise ratio of ATAC-seq data quality. At the bulk level, if the values are less than 2%%, it might indicate that the ATAC-seq assay does not capture strong signals.
+                                                            </li>
+                                                        </ul>
+                                                        
+                                                    </div>
+                                                    <a href="%(readdistr_atac)s"><img src="%(readdistr_atac)s" width="375" height="400" class="float-left"></a>
+                                                </div>
+                                                <div class="col-6">
+                                                    <h3 class="h5">
+                                                        Fragment size distribution
+                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#fragment_atac" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                            </path>
+                                                        </svg>
+                                                    </h3>
+                                                    <p class="collapse" id="fragment_atac" style="font-size: 0.925rem">
+                                                        Fragment size distribution for 1%% reads sampled from scATAC-seq. Only fragments with insert size less than 1,000 are considered. Y-axis represents the number of fragments. The fragment size distribution should show a periodicity of approximately 200bp due to nucleosome protection of the chromatin to transposase cutting.
+
+                                                    </p>
+                                                    <a href="%(fragment_atac)s"><img src="%(fragment_atac)s" width="400" height="400" class="float-left"></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="container-fluid">
+                                            <h2 class="h3" id="single_atac">Single-cell level</h2>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <h3 class="h5">
+                                                        Cell filtering based on valid fragments and FRIP
+                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#frip_atac" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                            </path>
+                                                        </svg>
+                                                    </h3>
+                                                    <p class="collapse" id="frip_atac" style="font-size: 0.925rem">
+                                                        Cell filtering plot of scATAC-seq. The x-axis represents the number of unique reads present in each cell, and the y-axis represents the fraction of reads in promoter regions (defined as 2kb up/downstream of TSS).
+                                                    </p>
+                                                    <a href="%(frip_atac)s"><img src="%(frip_atac)s" width="400" height="400" class="float-left"></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-fluid tab-pane fade" id="clustering_atac">
+                                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                        <h1 class="h2">Cell Clustering</h1>
+                                    </div>
+                                    <div class="row">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <h3 class="h5">
+                                                        Cell clustering based on peaks
+                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#peakcluster_atac" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                            </path>
+                                                        </svg>
+                                                    </h3>
+                                                    <p class="collapse" id="peakcluster_atac" style="font-size: 0.925rem">
+                                                        UMAP visualization of the clustering result. Colors represent different clusters with the cluster ID labeled.
+                                                    </p>
+                                                    <a href="%(peakcluster_atac)s"><img src="%(peakcluster_atac)s" width="500" height="400" class="float-left"></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-fluid tab-pane fade" id="annotation_atac">
+                                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                        <h1 class="h2">Annotation</h1>
+                                    </div>
+                                    <div class="row">
+                                        <div class="container-fluid">
+                                            <h2 class="h3" id="celltype_atac">Celltype annotation</h2>
+                                            <div class="row">
+                                                <div class="col-12" style="display: %(rpannodisplay_atac)s">
+                                                    <h3 class="h5">
+                                                        Celltype annotation based on RP and DE genes
+                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#rpannotate_atac" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                            </path>
+                                                        </svg>
+                                                    </h3>
+                                                    <p class="collapse" id="rpannotate_atac" style="font-size: 0.925rem">
+                                                        UMAP visualization of annotated clusters. Colors represent different cell types. The cell type information for each cluster is annotated using the regulatory potential of marker genes.
+                                                    </p>
+                                                    <a href="%(rpannotate_atac)s"><img src="%(rpannotate_atac)s" width="600" height="400" class="float-left"></a>
+                                                </div>
+                                                <div class="col-12" style="display: %(caannodisplay_atac)s">
+                                                    <h3 class="h5">
+                                                       Celltype annotation based on bulk chromatin accessibility data
+                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#caannotate_atac" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                            </path>
+                                                        </svg>
+                                                    </h3>
+                                                    <p class="collapse" id="caannotate_atac" style="font-size: 0.925rem">
+                                                        UMAP visualization of cells. Colors represent different biological sources. The biological source information for each cluster is inferred based on cluster-specific peaks.
+                                                    </p>
+                                                    <a href="%(caannotate_atac)s"><img src="%(caannotate_atac)s" width="750" height="400" class="float-left"></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="container-fluid">
+                                            <h2 class="h3" id="regulator_atac">Regulator annotation</h2>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <h3 class="h5">
+                                                        Cluster-specific regulator identified by GIGGLE
+                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#regulatorannotate_atac" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                            </path>
+                                                        </svg>
+                                                    </h3>
+                                                    <p class="collapse" id="regulatorannotate_atac" style="font-size: 0.925rem">
+                                                        Driver transcription regulators identified based on cluster-specific peaks. By default, the regulators are ranked by the enrichment score in each cluster.
+                                                    </p>
+                                                    <table class="table table-striped table-bordered" id="myTable_atac">
+                                                        <thead class="thead">
+                                                            <tr>
+                                                                <th scope="col" style="vertical-align: middle">Cluster</th>
+                                                                <th scope="col" style="vertical-align: middle">Celltype Annotation</th>
+                                                                <th scope="col" style="vertical-align: middle">Transcription Factor</th>
+                                                                <th scope="col" style="vertical-align: middle">log10(Giggle score)</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody style="font-size: 0.9rem">
+%(regtable_atac)s
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-fluid tab-pane fade" id="genetrack_atac">
+                                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                        <h1 class="h2">Gene Track</h1>
+                                    </div>
+                                    <div class="row">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <h3 class="h5">
+                                                        Gene track plot for each cluster
+                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#genetrackanno" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
+                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
+                                                            </path>
+                                                        </svg>
+                                                    </h3>
+                                                    <p class="collapse" id="genetrackanno_atac" style="font-size: 0.925rem">
+                                                        Gene track plot for each cluster. Here, CD3D nad MS4A1 are displayed as markers of T cells and B cells, respectively.
+                                                    </p>
+                                                    <div class="row">
+                                                        <div class="col-6" style="display: %(cd3ddisplay_atac)s">
+                                                            <a href="%(cd3dtrack_atac)s"><img src="%(cd3dtrack_atac)s" width="480" height="400" class="float-left"></a>
+                                                        </div>
+                                                        <div class="col-6" style="display: %(ms4a1display_atac)s">
+                                                            <a href="%(ms4a1track_atac)s"><img src="%(ms4a1track_atac)s" width="480" height="400" class="float-left"></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <nav class="navbar flex-md-nowrap fixed-bottom navbar-dark" style="background-color:#1E284A">
+<!--         <a href="http://liulab.dfci.harvard.edu/" class="navbar-brand" style="background-color: rgba(0, 0, 0, 0);height: 46px; width: 58px; padding-top: 0px;padding-bottom: 0px;margin-right: 0px">
+            <img src="http://liulab.dfci.harvard.edu/WEBSITE/images/Global/logofinal.png" height="46" width="58">
+        </a> -->
+        <span class="navbar-text" style="font-size: 13px">Copyright @2019 Liu lab</span>
+    </nav>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="http://cistrome.org/~dsun/MAESTRO/js/mFilter.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('a[data-toggle="pill"]').on('shown.bs.tab', function(e) {
+            if (($(this).attr('href')) == "#annotation_atac" && !$.fn.dataTable.isDataTable("#myTable_atac")){
+                $('#myTable_atac').DataTable({
+                autoWidth: false,
+                dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+                     "<'row'<'col-sm-12'tr>>" + "F" +
+                     "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                columnDefs: [
+                    { "targets": 0, "width": "12%%" },
+                    { "targets": 1, "width": "23%%" },
+                    { "targets": 3, "width": "20%%" },
+                ],
+            });
+            }
+            if (($(this).attr('href')) == "#annotation_rna" && !$.fn.dataTable.isDataTable("#myTable_rna")){
+                $('#myTable_rna').DataTable({
+                autoWidth: false,
+                dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+                     "<'row'<'col-sm-12'tr>>" + "F" +
+                     "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                columnDefs: [
+                    { "targets": 0, "width": "12%%" },
+                    { "targets": 1, "width": "23%%" },
+                    { "targets": 3, "width": "20%%" },
+                ],
+            });
+            }
+        });
+    }); 
+    </script>
+</body>
+
+</html>

@@ -10,13 +10,14 @@ rule scatac_allpeakcall:
         bdg = "Result/ATAC/Analysis/%s_all_treat_pileup.bdg" %(config["outprefix"]),
     params:
         name = "%s_all" %(config["outprefix"]),
-        genome = macs2_genome
+        genome = macs2_genome,
+        outdir = "Result/ATAC/Analysis"
     log:
         "Result/Log/%s_scATAC_macs2_allpeak.log" %(config["outprefix"])
     benchmark:
         "Result/Benchmark/%s_AllPeakCall.benchmark" %(config["outprefix"])
     shell:
-        "macs2 callpeak -f BAMPE -g {params.genome} --outdir Result/Analysis -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.bam}"
+        "macs2 callpeak -f BAMPE -g {params.genome} --outdir {params.outdir} -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.bam}"
 
 
 if config["shortpeaks"]:

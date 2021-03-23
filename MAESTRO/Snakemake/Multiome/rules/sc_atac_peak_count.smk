@@ -27,28 +27,11 @@ rule scatac_qcfilter:
     params:
         outdir = "Result/ATAC/QC",
         outpre = config["outprefix"],
-        peak = config["cutoff"]["peak"],
-        cell = config["cutoff"]["cell"],
+        peak = config["cutoff"]["atac_peak"],
+        cell = config["cutoff"]["atac_cell"],
     benchmark:
         "Result/Benchmark/%s_scATAC_QCFilter.benchmark" %(config["outprefix"])
     shell:
         "MAESTRO scatac-qc --format h5 --peakcount {input.counts} --peak-cutoff {params.peak} --cell-cutoff {params.cell} "
         "--directory {params.outdir} --outprefix {params.outpre}"
-
-rule scatac_genescore:
-    input:
-        filtercount = "Result/ATAC/QC/%s_filtered_peak_count.h5" %(config["outprefix"]),
-        genebed = "%s/annotations/%s_ensembl.bed" %(SCRIPT_PATH, config["species"])
-    output:
-        genescore = "Result/ATAC/Analysis/%s_gene_score.h5" %(config["outprefix"])
-    params:
-        genedistance = config["genedistance"],
-        species = config["species"],
-        outdir = "Result/ATAC/Analysis",
-        outpre = config["outprefix"],
-        rpmodel = config["rpmodel"]
-    benchmark:
-        "Result/Benchmark/%s_scATAC_GeneScore.benchmark" %(config["outprefix"])
-    shell:
-        "MAESTRO scatac-genescore --format h5 --peakcount {input.filtercount} --species {params.species} --directory {params.outdir} --outprefix {params.outpre} --model {params.rpmodel}"
 

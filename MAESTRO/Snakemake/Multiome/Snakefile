@@ -8,17 +8,22 @@ import yaml
 import sys
 import os
 
+def all_input_frag(wildcards):
+    checkpoint_output = checkpoints.scatac_fragcluster.get().output[0]
+    return expand("Result/ATAC/Analysis/Cluster/{cluster}_treat_pileup.bdg",
+        cluster=glob_wildcards(os.path.join(checkpoint_output, "{cluster}.bed")).cluster)
 
-rule all:
-    input:
-        summaryreport = "Result/" + config["outprefix"] + "_scRNA_report.html"
+if config["clusterpeaks"]:
+    rule all:
+        input:
+            multiome_rds = "Result/Multiome/" + config["outprefix"] + "_multiome_Object.rds",
+            peakcluster = all_input_frag
 
 # scRNA part
 include: "rules/sc_rna_map.smk"
 include: "rules/sc_rna_qc.smk"
 if config["rseqc"]:
-    include: "rules/sc_rna_map.smk"
-include: "rules/sc_rna_analysis.smk"
+    include: "rules/sc_rna_rseqc.smk"
 
 # scATAC part
 include: "rules/sc_atac_preprocess.smk"
@@ -29,3 +34,7 @@ include: "rules/sc_atac_peak_count.smk"
 include: "rules/sc_atac_qc.smk"
 
 # integration
+include: "rules/multiome_barcode_map.smk"
+include: "rules/sc_rna_analysis.smk"
+include: "rules/sc_atac_analysis.smk"
+include: "rules/multiome_analysis.smk"

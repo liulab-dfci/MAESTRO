@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-07-19 17:20:32
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-11-02 17:35:25
+# @Last Modified time: 2021-03-22 15:33:01
 
 
 import sys
@@ -119,6 +119,38 @@ def scrna_validator(args):
         if args.rsem == "":
             logging.error("--rsem is required. Please provide the prefix of transcript references for RSEM. See --rsem help for more details.")
             exit(1)
+
+    if args.signature not in ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
+        if os.path.exists(args.signature):
+            pass
+        else:
+            logging.error("Please specify the signature built in MAESTRO or provide customized signature file. See --signature help for more details!")
+            exit(1)
+
+def multiome_validator(args):
+    """
+    Validate parameters from multiome-init argument parsers.
+    """
+    if args.rna_fastq_dir == "":
+        logging.error("--rna-fastq-dir is required. Please specify the directory where fastq files are stored!")
+        exit(1)
+    if args.rna_fastq_prefix == "":
+        logging.error("--rna-fastq-prefix is required. Please provide the sample name of fastq files!")
+        exit(1)
+    if args.rna_whitelist == "":
+        logging.error("--rna-whitelist is required for 10x-genomics multiome data!")
+        exit(1)
+    if args.atac_fastq_dir == "":
+        logging.error("--atac-fastq-dir is required. Please specify the directory where fastq files are stored!")
+        exit(1)
+    if args.atac_fastq_dir == "":
+        logging.error("--atac-fastq-prefix is required. Please provide the sample name of fastq files!")
+        exit(1)
+    if args.atac_fasta == "":
+        logging.error("--atac-fasta is required if fastq files are provided!")
+        exit(1)
+    if args.atac_whitelist == "":
+        logging.error("--atac-whitelist is required for 10x-genomics multiome data!")
 
     if args.signature not in ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
         if os.path.exists(args.signature):

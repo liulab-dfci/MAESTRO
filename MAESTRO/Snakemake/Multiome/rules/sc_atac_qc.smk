@@ -84,8 +84,8 @@ rule scatac_qcplot:
         fragbed = "%s_frag.bed" %(config["outprefix"]),
         single_stat = "singlecell.txt",
         bulk_stat = "flagstat.txt",
-        counts = config["cutoff"]["count"],
-        frip = config["cutoff"]["frip"]
+        counts = config["cutoff"]["atac_count"],
+        frip = config["cutoff"]["atac_frip"]
     threads:
         config["cores"]
     benchmark:
