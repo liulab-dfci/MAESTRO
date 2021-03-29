@@ -47,7 +47,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
             shell:
                 "gunzip -c {params.barcode} | "
                 "awk -v barlen=$(({params.barcodelength}+{params.umilength})) '{{if(!($1 ~/^@/) && !($0=="+")){{print substr($0,1,barlen)}} else {{print}}}}' | "
-                "gzip -c > {params.outprefix}.R1.tmp.fastq.gz;"
+                "gzip -c > {params.outdir}Temp.R1.tmp.fastq.gz;"
                 "STAR --runMode alignReads --genomeDir {input.mapindex} --runThreadN {threads} "
                 "--outFileNamePrefix {params.outdir} --outSAMtype BAM SortedByCoordinate "
                 "--soloType CB_UMI_Simple --soloCBwhitelist {input.whitelist} "
@@ -57,7 +57,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
                 "--readFilesIn {params.transcript} {params.barcode} --readFilesCommand {params.decompress} "
                 "> {log};"
                 "samtools index -b -@ {threads} {output.bam};"
-                "rm {params.outprefix}.R1.tmp.fastq.gz"
+                "rm {params.outdir}Temp.R1.tmp.fastq.gz"
     else:
         rule scrna_map:
             input:
@@ -86,6 +86,9 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
             benchmark:
                 "Result/Benchmark/%s_STAR.benchmark" %(config["outprefix"])
             shell:
+                "gunzip -c {params.barcode} | "
+                "awk -v barlen=$(({params.barcodelength}+{params.umilength})) '{{if(!($1 ~/^@/) && !($0=="+")){{print substr($0,1,barlen)}} else {{print}}}}' | "
+                "gzip -c > {params.outdir}Temp.R1.tmp.fastq.gz;"
                 "STAR --runMode alignReads --genomeDir {input.mapindex} --runThreadN {threads} "
                 "--outFileNamePrefix {params.outdir} --outSAMtype BAM SortedByCoordinate "
                 "--soloType CB_UMI_Simple --soloCBwhitelist {input.whitelist} "
@@ -94,7 +97,8 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
                 "--soloCBmatchWLtype 1MM_multi_pseudocounts --soloUMIfiltering MultiGeneUMI "
                 "--readFilesIn {params.transcript} {params.barcode} --readFilesCommand {params.decompress} "
                 "> {log};"
-                "samtools index -b -@ {threads} {output.bam}"
+                "samtools index -b -@ {threads} {output.bam};"
+                "rm {params.outdir}Temp.R1.tmp.fastq.gz"
 
     rule scrna_qc:
         input:
