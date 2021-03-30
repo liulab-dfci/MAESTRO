@@ -45,8 +45,9 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
             threads:
                 config["cores"]
             shell:
-                "gunzip -c {params.barcode} | "
-                "awk -v barlen=$(({params.barcodelength}+{params.umilength})) '{{if(!($1 ~/^@/) && !($0=="+")){{print substr($0,1,barlen)}} else {{print}}}}' | "
+                "cat $(echo {params.barcode} | tr , ' ') | "
+                "gunzip -c | "
+                "awk -v barlen=$(({params.barcodelength}+{params.umilength})) '{{if(!($1 ~/^@/) && !($0==\"+\")){{print substr($0,1,barlen)}} else {{print}}}}' | "
                 "gzip -c > {params.outdir}Temp.R1.tmp.fastq.gz;"
                 "STAR --runMode alignReads --genomeDir {input.mapindex} --runThreadN {threads} "
                 "--outFileNamePrefix {params.outdir} --outSAMtype BAM SortedByCoordinate "
