@@ -4,7 +4,8 @@ if config["barcode"]["atac_whitelist"]:
     rule scatac_barcodecorrect:
         input:
             r2 = os.path.join("Result/ATAC/Tmp", "%s_R2.fastq" %(config["atac_fastqprefix"])),
-            whitelist = config["barcode"]["atac_whitelist"],
+            whitelist_atac = config["barcode"]["atac_whitelist"],
+            whitelist_rna = config["barcode"]["rna_whitelist"],
         output:
             bc_correct = "Result/ATAC/minimap2/barcode_correct.txt",
             bc_correct_uniq = "Result/ATAC/minimap2/barcode_correct_uniq.txt",
@@ -13,7 +14,7 @@ if config["barcode"]["atac_whitelist"]:
         benchmark:
             "Result/Benchmark/%s_scATAC_BarcodeCorrect.benchmark" %(config["outprefix"])
         shell:
-            "python " + SCRIPT_PATH + "/scATAC_10x_BarcodeCorrect.py -b {input.r2} -B {input.whitelist} -O {params.outdir};"
+            "python " + SCRIPT_PATH + "/scATAC_10x_BarcodeCorrect.py -b {input.r2} -B {input.whitelist_atac} --barcodelib-rna {input.whitelist_rna} -O {params.outdir};"
             "sort -k1,1 -k3,3 {output.bc_correct} | uniq > {output.bc_correct_uniq}"
 else:
     rule scatac_barcodecorrect:

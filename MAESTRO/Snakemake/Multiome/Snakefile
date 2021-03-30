@@ -16,8 +16,13 @@ def all_input_frag(wildcards):
 if config["clusterpeaks"]:
     rule all:
         input:
-            multiome_rds = "Result/Multiome/" + config["outprefix"] + "_multiome_Object.rds",
+            summaryreport = "Result/" + config["outprefix"] + "_multiome_report.html",
             peakcluster = all_input_frag
+
+else:
+    rule all:
+        input:
+            summaryreport = "Result/" + config["outprefix"] + "_multiome_report.html"
 
 # scRNA part
 include: "rules/sc_rna_map.smk"
@@ -34,7 +39,8 @@ include: "rules/sc_atac_peak_count.smk"
 include: "rules/sc_atac_qc.smk"
 
 # integration
-include: "rules/multiome_barcode_map.smk"
+# include: "rules/multiome_barcode_map.smk"
+include: "rules/multiome_qc.smk"
 include: "rules/sc_rna_analysis.smk"
 include: "rules/sc_atac_analysis.smk"
 include: "rules/multiome_analysis.smk"

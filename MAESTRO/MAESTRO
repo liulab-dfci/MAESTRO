@@ -21,7 +21,7 @@ from MAESTRO.scRNA_QC import scrnaqc_parser, scrna_qc
 from MAESTRO.scATAC_QC import scatacqc_parser, scatac_qc
 from MAESTRO.scRNA_AnalysisPipeline import scrna_analysis_parser, scrna_analysis
 from MAESTRO.sample2json import *
-from MAESTRO.Multiome_BarcodeMap import *
+from MAESTRO.Multiome_QC import *
 
 def main():
     """
@@ -52,7 +52,7 @@ def main():
     scrnaqc_parser(subparsers)
     scatacqc_parser(subparsers)
 
-    barcodemap_parser(subparsers)
+    multiomeqc_parser(subparsers)
 
     scrna_analysis_parser(subparsers)
 
@@ -114,8 +114,8 @@ def main():
     elif args.subcommand == "scrna-analysis":
         scrna_analysis(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, matrix = args.matrix, separator = args.separator, feature = args.feature, gene_column = args.gene_column, gene_idtype = args.gene_idtype, barcode = args.barcode, meta_file = args.meta_file, meta_sep = args.meta_sep, meta_cell = args.meta_cell, count_cutoff = args.count_cutoff, gene_cutoff = args.gene_cutoff, cell_cutoff = args.cell_cutoff, assembly = args.assembly)
     
-    elif args.subcommand == "multiome-barcode-map":
-        barcodemap(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, rna_to_atac = args.rna_to_atac, peakcount = args.peakcount, genecount = args.genecount, atac_qc = args.atac_qc, rna_qc = args.rna_qc, atac_feature = args.atac_feature, atac_barcode = args.atac_barcode, rna_feature = args.rna_feature, gene_column = args.gene_column, rna_barcode = args.rna_barcode, atac_barcode_lib = args.atac_barcode_lib, rna_barcode_lib = args.rna_barcode_lib, species = args.species)
+    elif args.subcommand == "multiome-qc":
+        multiome_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, peakcount = args.peakcount, genecount = args.genecount, atac_qc = args.atac_qc, rna_qc = args.rna_qc, atac_feature = args.atac_feature, atac_barcode = args.atac_barcode, rna_feature = args.rna_feature, gene_column = args.gene_column, rna_barcode = args.rna_barcode, species = args.species)
 
     else:
         parser.print_help()

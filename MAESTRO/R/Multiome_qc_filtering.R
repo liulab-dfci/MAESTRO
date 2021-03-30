@@ -1,4 +1,5 @@
 library(MAESTRO)
+library(Seurat)
 library(optparse)
 
 option_list = list(
@@ -8,11 +9,11 @@ option_list = list(
   make_option(c("--outdir"), type = "character", default = "MAESTRO",
               action = "store", help = "The directory where the output files are stored."
   ),
-  make_option(c("--filtering"), type = "character", default = "",
+  make_option(c("--rna_statpath"), type = "character", default = "",
               action = "store", help = "The result of scRNA_qc."
   ),
-  make_option(c("--singlestat"), type = "character", default = "singlecell.txt",
-              action = "store", help = "The result of MAESTRO QC."
+  make_option(c("--atac_statpath"), type = "character", default = "singlecell.txt",
+              action = "store", help = "The result of scATAC_qc."
   ),
   make_option(c("--count"), type = "character", default = "",
               action = "store", help = "The multiome count file."
@@ -21,8 +22,8 @@ option_list = list(
 argue = parse_args(OptionParser(option_list = option_list, usage = "Generate QC plots."))
 
 setwd(argue$outdir)
-singlestat_file = argue$singlestat
-countgene_file = argue$filtering
+atac_statpath = argue$atac_statpath
+rna_statpath = argue$rna_statpath
 count_file = argue$count
 prefix = argue$prefix
 
@@ -45,6 +46,6 @@ MultiomeFilteringPlot <- function(rna_statpath, atac_statpath, multiome_count, n
          pch='.',col=RCB_blue)
   legend("topleft",c("High-quality cells","Low-quality cells"),col=c(RCB_blue,RCB_red),pch=20, bty = "n")
   dev.off()
-  # write.table(as.character(rownames(UMI_gene[which(UMI_gene[,1]>=UMI.cutoff&(UMI_gene[,2]>=gene.number.cutoff)),])), paste0(name,"_scRNA_validcells.txt"), sep = "\n", quote=F, row.names=F, col.names=F)
 }
-MultiomeFilteringPlot(countgene_file, singlestat_file, count_file, prefix)
+
+MultiomeFilteringPlot(rna_statpath, atac_statpath, count_file, prefix)

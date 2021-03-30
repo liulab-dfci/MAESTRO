@@ -3,7 +3,7 @@
 
 rule scatac_genescore:
     input:
-        filtercount = "Result/Multiome/%s_multiome_peak_count.h5" %(config["outprefix"]),
+        filtercount = "Result/Multiome/%s_joint_filtered_peak_count.h5" %(config["outprefix"]),
         genebed = "%s/annotations/%s_ensembl.bed" %(SCRIPT_PATH, config["species"])
     output:
         genescore = "Result/ATAC/Analysis/%s_gene_score.h5" %(config["outprefix"])
@@ -32,7 +32,7 @@ rule scatac_fragmentindex:
 
 rule scatac_analysis:
     input:
-        filtercount = "Result/Multiome/%s_multiome_peak_count.h5" %(config["outprefix"]),
+        filtercount = "Result/Multiome/%s_joint_filtered_peak_count.h5" %(config["outprefix"]),
         genescore = "Result/ATAC/Analysis/%s_gene_score.h5" %(config["outprefix"]),
         fraggz = "Result/ATAC/minimap2/fragments_corrected_count.tsv.gz"
     output:
@@ -45,7 +45,7 @@ rule scatac_analysis:
         outdir = "Result/ATAC/Analysis",
         genescore = "%s_gene_score.h5" %(config["outprefix"]),
         outpre = config["outprefix"],
-        counts = "../../Multiome/%s_multiome_peak_count.h5" %(config["outprefix"]),
+        counts = "../../Multiome/%s_joint_filtered_peak_count.h5" %(config["outprefix"]),
         fraggz = "../minimap2/fragments_corrected_count.tsv.gz",
         giggleannotation = config["giggleannotation"],
         species = config["species"],

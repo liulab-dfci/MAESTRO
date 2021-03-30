@@ -195,9 +195,6 @@
                                 <a class="nav-link active" data-toggle="pill" href="#QC_rna" style="font-size: 1rem">Quality Control</a>
                                 <ul>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#bulk_rna" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Bulk level</a>
-                                    </li>
-                                    <li class="nav-item">
                                         <a class="nav-link" href="#single_rna" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;padding-right: 0.25rem;">Single-cell level</a>
                                     </li>
                                 </ul>
@@ -224,82 +221,6 @@
                                 <div class="container-fluid tab-pane fade show active" id="QC_rna">
                                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                                         <h1 class="h2">Quality Control</h1>
-                                    </div>
-                                    <div class="row">
-                                        <div class="container-fluid">
-                                            <h2 class="h3" id="bulk_rna">Bulk level</h2>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <h3 class="h5">
-                                                        Mappability
-                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#readdistr_rna" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
-                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
-                                                            </path>
-                                                        </svg>
-                                                    </h3>
-                                                    <p class="collapse" id="readdistr_rna" style="font-size: 0.925rem">
-                                                        Read mappability and distribution of reads in coding regions (CDS) and intronic regions. In general, for human or mouse, <strong>uniquely mapped reads</strong> should account for more than 60%% of all reads, and more reads should be distributed in exon regions than intron reads. La Manno et al (2018) found that for scRNA-seq, 15–25%% of reads contained unspliced intronic sequences. 
-                                                    </p>
-                                                    <a href=%(readdistr_rna)s><img src=%(readdistr_rna)s width="375" height="400" class="float-left"></a>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <h3 class="h5">
-                                                        Reads quality
-                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#readqual_rna" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
-                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
-                                                            </path>
-                                                        </svg>
-                                                    </h3>
-                                                    <p class="collapse" id="readqual_rna" style="font-size: 0.925rem">
-                                                        Phred quality score of scRNA-seq reads. The x-axis represents the position of reads from 5’ to 3’.
-                                                    </p>
-                                                    <a href=%(readqual_rna)s><img src=%(readqual_rna)s width="400" height="400" class="float-left"></a>
-                                                </div>
-                                                <div class="col-6">
-                                                    <h3 class="h5">
-                                                        Reads nucleotide composition
-                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#nvc_rna" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
-                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
-                                                            </path>
-                                                        </svg>
-                                                    </h3>
-                                                    <p class="collapse" id="nvc_rna" style="font-size: 0.925rem">
-                                                        Nucleotide frequency plot of scRNA-seq reads. The x-axis represents the position of reads from 5’ to 3’.
-                                                    </p>
-                                                    <a href=%(nvc_rna)s><img src=%(nvc_rna)s width="400" height="400" class="float-left"></a>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <h3 class="h5">
-                                                        GC content
-                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#gc_rna" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
-                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
-                                                            </path>
-                                                        </svg>
-                                                    </h3>
-                                                    <p class="collapse" id="gc_rna" style="font-size: 0.925rem">
-                                                        GC content distribution of scRNA-seq reads.
-                                                    </p>
-                                                    <a href=%(gc_rna)s><img src=%(gc_rna)s width="400" height="400" class="float-left"></a>
-                                                </div>
-                                                <div class="col-6">
-                                                    <h3 class="h5">
-                                                        Gene body coverage
-                                                        <svg t="1581181133804" class="icon" data-toggle="collapse" href="#genecov_rna" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1372" width="0.825em" height="0.825em" overflow="hidden" style="cursor:pointer">
-                                                            <path d="M512 149.333333c200.298667 0 362.666667 162.368 362.666667 362.666667s-162.368 362.666667-362.666667 362.666667S149.333333 712.298667 149.333333 512 311.701333 149.333333 512 149.333333z m0 64c-164.949333 0-298.666667 133.717333-298.666667 298.666667s133.717333 298.666667 298.666667 298.666667 298.666667-133.717333 298.666667-298.666667-133.717333-298.666667-298.666667-298.666667z m39.658667 426.666667v64h-59.946667l-0.021333-64h59.968z m-3.541334-316.757333c38.72 7.808 84.778667 44.736 84.778667 98.453333 0 53.738667-43.882667 74.069333-59.605333 84.117333-14.506667 9.28-20.672 19.882667-21.525334 31.189334l-0.106666 2.816V597.333333h-59.968v-79.338666c0-18.816 6.037333-32 22.826666-43.648l3.776-2.496 33.685334-22.4c21.482667-14.464 21.184-43.498667 7.893333-56.32a60.373333 60.373333 0 0 0-52.842667-13.546667c-37.376 7.338667-41.685333 33.706667-41.941333 59.306667v14.485333H405.333333c0-49.834667 5.717333-72.426667 32.298667-100.970667 29.781333-31.893333 71.744-37.013333 110.485333-29.162666z" p-id="1373" fill="#707070">
-                                                            </path>
-                                                        </svg>
-                                                    </h3>
-                                                    <p class="collapse" id="genecov_rna" style="font-size: 0.925rem">
-                                                        Reads distribution of gene body for scRNA-seq. Gene-body coverage evaluates sample read bias over 3’ or 5’ of the transcripts. For 10x-genomics, reads are supposed to be biased to 3' of the transcripts. For Smartseq2, reads are supposed to be distributed evenly over the transcripts.
-                                                    </p>
-                                                    <a href=%(genecov_rna)s><img src=%(genecov_rna)s width="400" height="400" class="float-left"></a>
-                                                </div>
-                                            </div>  
-                                        </div>
                                     </div>
                                     <div class="row">
                                         <div class="container-fluid">
