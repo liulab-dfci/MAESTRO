@@ -5,6 +5,7 @@ library(future.apply)
 library(pbapply)
 library(optparse)
 library(ggplot2)
+library(dplyr)
 
 option_list = list(
   make_option(c("--prefix"), type = "character", default = "MAESTRO",
@@ -72,8 +73,11 @@ atac.meta.col = colnames(ATAC.subset@meta.data)[!(colnames(ATAC.subset@meta.data
 Combined.Seurat@meta.data = cbind(Combined.Seurat@meta.data, ATAC.subset@meta.data[rownames(Combined.Seurat@meta.data),atac.meta.col])
 
 DefaultAssay(Combined.Seurat) = "ACTIVITY"
-Combined.Seurat = RunPCA(Combined.Seurat, reduction.name = 'pca.activity')
-Combined.Seurat = RunUMAP(Combined.Seurat, dims = 1:50, reduction = "pca.activity",reduction.name = 'umap.activity', reduction.key = 'activityUMAP_')
+DefaultAssay(Combined.Seurat) = "ACTIVITY"
+VariableFeatures(Combined.Seurat) <- VariableFeatures(Combined.Seurat, assay = "RNA")
+Combined.Seurat <- NormalizeData(Combined.Seurat) %>% 
+  ScaleData() %>% RunPCA(reduction.name = 'pca.activity') %>% 
+  RunUMAP(dims = 1:50, reduction = "pca.activity", reduction.name = 'umap.activity', reduction.key = 'activityUMAP_')
 
 Combined.Seurat <- FindMultiModalNeighbors(Combined.Seurat, reduction.list = list("pca.rna", "pca.activity"), 
                                            dims.list = list(1:50, 1:50),

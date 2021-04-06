@@ -14,10 +14,12 @@ rule multiome_qc:
     params:
         species = config["species"],
         outdir = "Result/Multiome",
-        outpre = config["outprefix"]
+        outpre = config["outprefix"],
+        rna_qc = "../RNA/QC/%s_count_gene_stat.txt" %(config["outprefix"]),
+        atac_qc = "../ATAC/QC/singlecell.txt",
     benchmark:
         "Result/Benchmark/%s_multiome_QC.benchmark" %(config["outprefix"])
     shell:
         "MAESTRO multiome-qc --format h5 --peakcount {input.atac_filtercount} --genecount {input.rna_filtercount} "
-        "--atac-qc {input.atac_qc} --rna-qc {input.rna_qc} --species {params.species} "
+        "--atac-qc {params.atac_qc} --rna-qc {params.rna_qc} --species {params.species} "
         "-d {params.outdir} --outprefix {params.outpre}"
