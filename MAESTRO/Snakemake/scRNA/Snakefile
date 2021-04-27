@@ -64,6 +64,13 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
             threads:
                 config["cores"]
             shell:
+<<<<<<< HEAD
+=======
+                "cat $(echo {params.barcode} | tr , ' ') | "
+                "gunzip -c | "
+                "awk -v barlen=$(({params.barcodelength}+{params.umilength})) '{{if(!($1 ~/^@/) && !($0==\"+\")){{print substr($0,1,barlen)}} else {{print}}}}' | "
+                "gzip -c > {params.outdir}Temp.R1.tmp.fastq.gz;"
+>>>>>>> 8aa76d340b7c53ab9d1560ce59cc9f50ad2c7063
                 "STAR --runMode alignReads --genomeDir {input.mapindex} --runThreadN {threads} "
                 "--outFileNamePrefix {params.outdir} --outSAMtype BAM SortedByCoordinate "
                 "--soloType CB_UMI_Simple --soloCBwhitelist {input.whitelist} "
