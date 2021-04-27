@@ -17,27 +17,46 @@ rule all:
 
 
 if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
+    if config["barcode"]["trimR1"]:
+        rule trimR1:
+            input:
+                origbarcode = getfastq_10x(config["fastqdir"], config["fastqprefix"])["barcode"].split(sep=",")
+            output:
+                tempbarcode = temp(expand("{fastq}.tmp.fastq.gz", fastq=getfastq_10x(config["fastqdir"], config["fastqprefix"])["barcode"].split(sep=",")))
+            params:
+                outdir = "Result/STAR/" + config["outprefix"],
+                barcodelength = config["barcode"]["barcodelength"],
+                umilength = config["barcode"]["umilength"]
+            shell:
+                "for var in {input.origbarcode}; "
+                "do "
+                    "gunzip -c $var | "
+                    "awk -v barlen=$(({params.barcodelength}+{params.umilength})) "
+                    "'{{if(!($1 ~/^@/) && !($0==\"+\")){{print substr($0,1,barlen)}} else {{print}}}}' | "
+                    "gzip -c > ${{var}}.tmp.fastq.gz; "
+                "done"
+    
     if config["platform"] == "10x-genomics":
         rule scrna_map:
             input:
                 mapindex = config["genome"]["mapindex"],
                 whitelist = config["barcode"]["whitelist"],
                 fastqs = config["fastqdir"],
+                barcode = expand("{fastq}.tmp.fastq.gz", fastq=getfastq_10x(config["fastqdir"], config["fastqprefix"])["barcode"].split(sep=",")) if config["barcode"]["trimR1"] else (getfastq_10x(config["fastqdir"], config["fastqprefix"])["barcode"]).split(",")
             output:
                 bam = "Result/STAR/%sAligned.sortedByCoord.out.bam" %(config["outprefix"]),
                 bai = "Result/STAR/%sAligned.sortedByCoord.out.bam.bai" %(config["outprefix"]),
                 rawmtx = "Result/STAR/%sSolo.out/Gene/raw/matrix.mtx" %(config["outprefix"]),
                 feature = "Result/STAR/%sSolo.out/Gene/raw/features.tsv" %(config["outprefix"]),
-                barcode = "Result/STAR/%sSolo.out/Gene/raw/barcodes.tsv" %(config["outprefix"]),
+                barcode = "Result/STAR/%sSolo.out/Gene/raw/barcodes.tsv" %(config["outprefix"])
             params:
                 outdir = "Result/STAR/" + config["outprefix"],
-                transcript = getfastq_10x(config["fastqdir"], config["fastqprefix"])["transcript"],
-                barcode = getfastq_10x(config["fastqdir"], config["fastqprefix"])["barcode"],
                 decompress = getfastq_10x(config["fastqdir"], config["fastqprefix"])["decompress"],
+                transcript = getfastq_10x(config["fastqdir"], config["fastqprefix"])["transcript"],
                 barcodestart = config["barcode"]["barcodestart"],
                 barcodelength = config["barcode"]["barcodelength"],
                 umistart = config["barcode"]["umistart"],
-                umilength = config["barcode"]["umilength"],
+                umilength = config["barcode"]["umilength"]
             log:
                 "Result/Log/%s_STAR.log" %(config["outprefix"])
             benchmark:
@@ -45,19 +64,16 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
             threads:
                 config["cores"]
             shell:
-                "gunzip -c {params.barcode} | "
-                "awk -v barlen=$(({params.barcodelength}+{params.umilength})) '{{if(!($1 ~/^@/) && !($0=="+")){{print substr($0,1,barlen)}} else {{print}}}}' | "
-                "gzip -c > {params.outdir}Temp.R1.tmp.fastq.gz;"
                 "STAR --runMode alignReads --genomeDir {input.mapindex} --runThreadN {threads} "
                 "--outFileNamePrefix {params.outdir} --outSAMtype BAM SortedByCoordinate "
                 "--soloType CB_UMI_Simple --soloCBwhitelist {input.whitelist} "
                 "--soloCBstart {params.barcodestart} --soloCBlen {params.barcodelength} "
                 "--soloUMIstart {params.umistart} --soloUMIlen {params.umilength} "
                 "--soloCBmatchWLtype 1MM_multi_pseudocounts --soloUMIfiltering MultiGeneUMI "
-                "--readFilesIn {params.transcript} {params.barcode} --readFilesCommand {params.decompress} "
-                "> {log};"
-                "samtools index -b -@ {threads} {output.bam};"
-                "rm {params.outdir}Temp.R1.tmp.fastq.gz"
+                "--readFilesIn {params.transcript} $(echo {input.barcode} | tr ' ' ',') "
+                "--readFilesCommand {params.decompress} "
+                "> {log}; "
+                "samtools index -b -@ {threads} {output.bam}"
     else:
         rule scrna_map:
             input:
@@ -86,9 +102,6 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
             benchmark:
                 "Result/Benchmark/%s_STAR.benchmark" %(config["outprefix"])
             shell:
-                "gunzip -c {params.barcode} | "
-                "awk -v barlen=$(({params.barcodelength}+{params.umilength})) '{{if(!($1 ~/^@/) && !($0=="+")){{print substr($0,1,barlen)}} else {{print}}}}' | "
-                "gzip -c > {params.outdir}Temp.R1.tmp.fastq.gz;"
                 "STAR --runMode alignReads --genomeDir {input.mapindex} --runThreadN {threads} "
                 "--outFileNamePrefix {params.outdir} --outSAMtype BAM SortedByCoordinate "
                 "--soloType CB_UMI_Simple --soloCBwhitelist {input.whitelist} "
@@ -98,7 +111,6 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
                 "--readFilesIn {params.transcript} {params.barcode} --readFilesCommand {params.decompress} "
                 "> {log};"
                 "samtools index -b -@ {threads} {output.bam};"
-                "rm {params.outdir}Temp.R1.tmp.fastq.gz"
 
     rule scrna_qc:
         input:

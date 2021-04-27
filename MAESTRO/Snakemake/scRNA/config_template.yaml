@@ -73,6 +73,9 @@ barcode:
   # The length of UMI. For 10x-genomics, the length of V2 chemistry is 10.
   # For 10X V3 chemistry, the length is 12. DEFAULT: 10.
   umilength: {{ umilength }}
+  # Whether to trim the R1 file, to make it compatible with STARsolo if it extends beyond the 
+  # barcodes
+  trimR1: {{ trimr1 }}
 
 
 # Specify the barcode fastq file and transcript fastq file (only for platform of "Dropseq")

@@ -252,6 +252,11 @@ def scrna_parser(subparsers):
     group_barcode.add_argument("--umi-length", dest = "umi_length", type = int, default = 10,
         help = "The length of UMI. For 10x-genomics, the length of V2 chemistry is 10. "
         "For 10X V3 chemistry, the length is 12. DEFAULT: 10. ")
+    group_barcode.add_argument("--trimR1", dest = "trimR1", action = "store_true",
+        help = "Whether or not to run the R1 file. "
+        "If set, the pipeline will include the trim off anything after the R1 reads past barcode information. "
+        "Only necessary if reads were sequenced past these barcodes, by default not set.")
+
 
     # Regulator identification
     group_regulator = workflow.add_argument_group("Regulator identification arguments")
@@ -595,6 +600,7 @@ def scrna_config(args):
             barcodelength = args.barcode_length,
             umistart = args.umi_start,
             umilength = args.umi_length,
+            trimr1 = args.trimR1,
             barcode = args.fastq_barcode,
             transcript = args.fastq_transcript))
 
