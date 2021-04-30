@@ -59,6 +59,11 @@
 * Reduce the time and memory usage in the peak counting step.
 * Fix the bug in the simple RP model for gene score calculation.
 * Fix the bug in scATAC-Seq Snakefile.
+### v1.4.0
+* Upgrade dependencies to Seurat 4.0.0 and Signac 1.1.1.
+* Set QC; genes mapped to mitochondrial as a variable in the scRNA-seq analysis.
+* Add output path as variables in the MAESTRO R package.
+
 
 ## System requirements
 * Linux/Unix
@@ -88,7 +93,7 @@ $ conda config --add channels bioconda
 $ conda config --add channels conda-forge
 # To make the installation faster, we recommend using mamba
 $ conda install mamba -c conda-forge
-$ mamba create -n MAESTRO maestro=1.3.1 -c liulab-dfci
+$ mamba create -n MAESTRO maestro=1.4.0 -c liulab-dfci
 # Activate the environment
 $ conda activate MAESTRO
 ```

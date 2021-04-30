@@ -33,7 +33,7 @@
 #' @import ggplot2
 #' @export
 
-ATACAnnotateChromatinAccessibility <- function(ATAC, peaks, project = ATAC@project.name, giggle.path, organism = "GRCh38", top.ca = 10, min.peaks = 10)
+ATACAnnotateChromatinAccessibility <- function(ATAC, peaks, project = ATAC@project.name, giggle.path, organism = "GRCh38", top.ca = 10, min.peaks = 10, outdir = ".", ...)
 {
   if(nrow(peaks)<=50){
     message("Not enough differential peaks input and no enriched chromatin accessibility dataset identified.")
@@ -43,7 +43,7 @@ ATACAnnotateChromatinAccessibility <- function(ATAC, peaks, project = ATAC@proje
     targetList <- list()
     tfList <- list()
     antFile <- read.csv(paste0(giggle.path,"/CistromeDB.sample.annotation.txt"), sep="\t", row.names=1, stringsAsFactors = FALSE)  
-    outputDir <- paste0(project, ".GIGGLE")
+    outputDir <- file.path(outdir, paste0(project, ".GIGGLE"))
     if (!file.exists(outputDir)){
       dir.create(path=outputDir)
     }

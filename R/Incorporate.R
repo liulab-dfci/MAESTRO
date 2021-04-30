@@ -12,14 +12,18 @@
 #' and gene RP score as values. Can be ignored if \code{\link{ATACAnnotateCelltype}} have already been run.
 #' @param project Output project name. Default is "MAESTRO.coembedded".
 #' @param method Method to do integration, MAESTRO or Seurat. If "MAESTRO", gene RP score will be used to quantify the gene activity for scATAC-seq.
-#' If "Seurat" is set, \code{\link{CreateGeneActivityMatrix}} from Seurat will be used to model the gene activity.
+#' If "Seurat" is set, \code{\link{GeneActivity}} from Signac will be used to model the gene activity.
+#' @param assembly Assembly for the dataset. Only support "GRCh38" and "GRCm38". Default is "GRCh38".
+#' @param frag.file Path to a tabix-indexed fragments file for the data contained in ATAC count matrix.
+#' @param min.c Minimum number of cells required for a peak. Will exclude the peaks from input matrix if they only identified in 
+#' less than \code{min.c} cells. Default is 10.
 #' @param dims.use Number of dimensions used for PCA and UMAP analysis. Default is 1:30, use the first 30 PCs.
 #' @param RNA.res Clusterig resolution used for the scRNA-seq dataset, should keep the same with the input RNA object. Default is 0.6.
 #' @param ATAC.res Clustering resolution used for the scATAC-seq dataset, should keep the sampe with the input ATAC object. Default is 0.6.
 #'
 #' @author Chenfei Wang
 #'
-#' @return A combined Seurat object with RNA dataset, ATAC dataset, gene activity dataset, combined UMAP analysis and clustering information. A tsv file for the cell meta information. 
+#' @return ATAC object. And A combined Seurat object with RNA dataset, ATAC dataset, gene activity dataset, combined UMAP analysis and clustering information. A tsv file for the cell meta information. 
 #'
 #'
 #' @examples
@@ -34,11 +38,17 @@
 #' pbmc.coembedded.cluster <- Incorporate(RNA = pbmc.RNA.res$RNA, ATAC = pbmc.ATAC.res$ATAC, project = "PBMC.coembedded")
 #' str(pbmc.coembedded.cluster)
 #'
-#' @importFrom Seurat CreateAssayObject CreateGeneActivityMatrix CreateSeuratObject DimPlot FindTransferAnchors FindVariableFeatures GetAssayData NormalizeData RunPCA RunUMAP ScaleData SubsetData TransferData VariableFeatures 
+#' @importFrom Seurat CreateAssayObject CreateSeuratObject DimPlot FindTransferAnchors FindVariableFeatures GetAssayData NormalizeData RunPCA RunUMAP ScaleData TransferData VariableFeatures 
+#' @import Signac 
+#' @import GenomeInfoDb
 #' @importFrom ggplot2 ggsave
+#' @import EnsDb.Hsapiens.v86
+#' @import EnsDb.Mmusculus.v79
 #' @export
 
-Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembedding", method = "MAESTRO", annotation.file, dims.use = 1:30, RNA.res = 0.6, ATAC.res = 0.6)
+Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembedding", 
+                        method = "MAESTRO", assembly = "GRCh38", frag.file,  min.c = 10,
+                        dims.use = 1:30, RNA.res = 0.6, ATAC.res = 0.6)
 {
   require(Seurat)
   ATAC$tech <- "ATAC"
@@ -46,7 +56,7 @@ Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembeddi
   
   if(is.null(ATAC[["ACTIVITY"]])&method!="Seurat"){
      RPmatrix <- RPmatrix[,intersect(colnames(ATAC), colnames(RPmatrix))]
-     ATAC <- SubsetData(ATAC, cells = intersect(colnames(ATAC), colnames(RPmatrix)))
+     ATAC <- subset(ATAC, cells = intersect(colnames(ATAC), colnames(RPmatrix)))
      ATAC[["ACTIVITY"]] <- CreateAssayObject(counts = RPmatrix)
      DefaultAssay(ATAC) <- "ACTIVITY"
      ATAC <- FindVariableFeatures(ATAC)
@@ -54,10 +64,34 @@ Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembeddi
      ATAC <- ScaleData(ATAC)
   }
   if(method=="Seurat"){
-     activity.matrix <- CreateGeneActivityMatrix(peak.matrix = GetAssayData(ATAC, slot = "counts", assay = "ATAC"), annotation.file = annotation.file,  seq.levels = c(1:22, "X", "Y"), upstream = 2000, verbose = TRUE)
-     activity.matrix <- activity.matrix[,intersect(colnames(ATAC), colnames(activity.matrix))]
-     ATAC <- SubsetData(ATAC, cells = intersect(colnames(ATAC), colnames(activity.matrix)))
-     ATAC[["ACTIVITY"]] <- CreateAssayObject(counts = activity.matrix)
+     peak.count = GetAssayData(ATAC, slot = "counts", assay = "ATAC")
+
+     # add gene annotation information
+     if (assembly == "GRCh38") {
+       genome = "hg38"
+       annotations <- GetGRangesFromEnsDb(ensdb = EnsDb.Hsapiens.v86)
+     }
+     if (assembly == "GRCm38") {
+       genome = "mm10"
+       annotations <- GetGRangesFromEnsDb(ensdb = EnsDb.Mmusculus.v79)
+     }
+     seqlevelsStyle(annotations) <- "UCSC"
+     genome(annotations) <- genome
+     
+     chrom_assay <- CreateChromatinAssay(
+       counts = peak.count,
+       sep = c("-", "-"),
+       genome = genome,
+       fragments = frag.file,
+       min.cells = min.c,
+       annotation = annotations
+     )
+     ATAC[["ATAC.chrom"]] <- chrom_assay
+     DefaultAssay(ATAC) = "ATAC.chrom"
+     Annotation(ATAC) <- annotations
+     
+     gene.activities <- GeneActivity(ATAC, assay = "ATAC.chrom")
+     ATAC[["ACTIVITY"]] <- CreateAssayObject(counts = gene.activities)
      DefaultAssay(ATAC) <- "ACTIVITY"
      ATAC <- FindVariableFeatures(ATAC)
      ATAC <- NormalizeData(ATAC)
@@ -67,13 +101,13 @@ Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembeddi
   DefaultAssay(ATAC) <- "ACTIVITY"
   transfer.anchors <- FindTransferAnchors(reference = RNA, query = ATAC, features = VariableFeatures(object = RNA), 
                       reference.assay = "RNA", query.assay = "ACTIVITY", reduction = "cca")
-  celltype.predictions <- TransferData(anchorset = transfer.anchors, refdata = RNA$assign.ident, weight.reduction = ATAC[["lsi"]])
+  celltype.predictions <- TransferData(anchorset = transfer.anchors, refdata = RNA$assign.ident, weight.reduction = ATAC[["lsi"]], dims = dims.use)
   ATAC@meta.data$assign.ident <- celltype.predictions$predicted.id
   ATAC@meta.data$prediction.score.max <- celltype.predictions$prediction.score.max
 
   genes.use <- VariableFeatures(RNA)
   refdata <- GetAssayData(RNA, assay = "RNA", slot = "data")[genes.use, ]
-  imputation <- TransferData(anchorset = transfer.anchors, refdata = refdata, weight.reduction = ATAC[["lsi"]])
+  imputation <- TransferData(anchorset = transfer.anchors, refdata = refdata, weight.reduction = ATAC[["lsi"]], dims = dims.use)
   ATAC[["RNA"]] <- imputation
 
   CombinedObj <- merge(x = RNA, y = ATAC)
@@ -92,7 +126,7 @@ Incorporate <- function(RNA, ATAC, RPmatrix = NULL, project = "MAESTRO.coembeddi
   ggsave(file.path(paste0(CombinedObj@project.name, "_annotated.png")), p4, width=6, height=4)
   
   write.table(CombinedObj@meta.data, file.path(paste0(CombinedObj@project.name, "_metadata.tsv")), quote=F, sep="\t")
-  return(CombinedObj)
+  return(list(ATAC = ATAC, CombinedObj = CombinedObj))
 }
 
 

@@ -1,6 +1,6 @@
 package:
   name: maestro
-  version: "1.3.2"
+  version: "1.4.0"
 source:
   path: ../../
 # build:
@@ -19,12 +19,12 @@ requirements:
     - snakemake >=5.14
     - rseqc >=3.0.0
     - star =2.7.6a
-    - minimap2 >=2.17
-    - samtools >=1.9
-    - bedtools >=2.29.2
+    - minimap2 =2.17
+    - samtools =1.10
+    - bedtools =2.29.2
     - rsem >=1.3.2
     - picard >=2.22.0
-    - macs2 >=2.2.6
+    - macs2 =2.2.7.1
     - lisa2 =2.2.2
     - umap-learn
     - pysam # this is needed by sinto
@@ -39,7 +39,8 @@ requirements:
     - r-multcomp
     - r-numDeriv
     - r-cluster
-    - r-Seurat =3.1.5
+    - r-Seurat >=4.0.0
+    - r-Signac =1.1.1
     # Although the following will be installed through the dependencies of other tools
     # They have been explicitly defined in DESCRIPTION.
     - r-ggplot2
@@ -75,6 +76,9 @@ requirements:
     - bioconductor-DESeq2
     - bioconductor-TxDb.Hsapiens.UCSC.hg38.knownGene
     - bioconductor-TxDb.Mmusculus.UCSC.mm10.knownGene
+    - bioconductor-EnsDb.Mmusculus.v79
+    - bioconductor-EnsDb.Hsapiens.v86
+    - bioconductor-GenomeInfoDb
   run:
     - xorg-libxrender
     - python >=3.7
@@ -86,13 +90,13 @@ requirements:
     - snakemake >=5.14
     - rseqc >=3.0.0
     - star =2.7.6a
-    - minimap2 >=2.17
-    - samtools >=1.9
-    - bedtools >=2.29.2
+    - minimap2 =2.17
+    - samtools =1.10
+    - bedtools =2.29.2
     - rsem >=1.3.2
     - picard >=2.22.0
-    - macs2 >=2.2.6
-    - lisa2 >=2.1.0
+    - macs2 =2.2.7.1
+    - lisa2 =2.2.2
     - umap-learn
     - pysam # this is needed by sinto
     - r-base >=4.0.2
@@ -106,7 +110,8 @@ requirements:
     - r-multcomp
     - r-numDeriv
     - r-cluster
-    - r-Seurat =3.1.5
+    - r-Seurat >=4.0.0
+    - r-Signac =1.1.1
     # Although the following will be installed through the dependencies of other tools
     # They have been explicitly defined in DESCRIPTION.
     - r-ggplot2 >=3.0.0
@@ -142,6 +147,9 @@ requirements:
     - bioconductor-DESeq2
     - bioconductor-TxDb.Hsapiens.UCSC.hg38.knownGene
     - bioconductor-TxDb.Mmusculus.UCSC.mm10.knownGene
+    - bioconductor-EnsDb.Mmusculus.v79
+    - bioconductor-EnsDb.Hsapiens.v86
+    - bioconductor-GenomeInfoDb
 
 about:
   home: https://github.com/liulab-dfci/MAESTRO

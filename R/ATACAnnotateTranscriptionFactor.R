@@ -35,7 +35,7 @@
 #' @importFrom Seurat GetAssayData Idents DefaultAssay
 #' @export
 
-ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project = ATAC@project.name, giggle.path, organism = "GRCh38", top.tf = 10, target.genes = FALSE, min.peaks = 10)
+ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project = ATAC@project.name, giggle.path, organism = "GRCh38", top.tf = 10, target.genes = FALSE, min.peaks = 10, outdir = ".",...)
 {
   if(organism == "GRCh38"){
       data(GRCh38.CistromeDB.genescore)
@@ -72,14 +72,14 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
     reg_df = reg_table_unique
     reg_df$TF = "No TFs identified."
     reg_df$`log(Gigglescore)` = "NA"
-    write.table(reg_df,paste0(project, ".PredictedTFTop", top.tf, ".txt"), col.names = TRUE, row.names = FALSE, sep = "\t", quote = FALSE)
+    write.table(reg_df,file.path(outdir, paste0(project, ".PredictedTFTop", top.tf, ".txt")), col.names = TRUE, row.names = FALSE, sep = "\t", quote = FALSE)
     
     return(list())
   }else{
     targetList <- list()
     tfList <- list()
     antFile <- read.csv(paste0(giggle.path,"/CistromeDB.sample.annotation.txt"), sep="\t", row.names=1, stringsAsFactors = FALSE)  
-    outputDir <- paste0(project, ".GIGGLE")
+    outputDir <- file.path(outdir,paste0(project, ".GIGGLE"))
     if (!file.exists(outputDir)){
       dir.create(path=outputDir)
     } 
@@ -120,7 +120,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
         else {tf_all=multimerge(list(tf_all, tf_temp))}
       }
     }
-    write.table(log10(tf_all+1),paste0(project,'.PredictedTFScore.txt'),sep='\t',quote = F)
+    write.table(log10(tf_all+1), file.path(outdir,paste0(project,'.PredictedTFScore.txt')),sep='\t',quote = F)
     message("Identification of enriched TFs is done.")
     
     if(ifAllcluster){
@@ -235,12 +235,12 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
       reg_table_unique = data.frame(Cluster = unique(cluster_tf_df$Cluster), CelltypeAnnotation = "unknown")
     }
     reg_df = merge(reg_table_unique, cluster_tf_df)
-    write.table(reg_df,paste0(project, ".PredictedTFTop", top.tf, ".txt"), col.names = TRUE, row.names = FALSE, sep = "\t", quote = FALSE)
+    write.table(reg_df,file.path(outdir, paste0(project, ".PredictedTFTop", top.tf, ".txt")), col.names = TRUE, row.names = FALSE, sep = "\t", quote = FALSE)
     
     if(target.genes){
     for(icluster in colnames(cluster_tf_list_filter)){
       message(paste("Identify target genes for the top ", top.tf, " TFs for cluster ", icluster, "..."))
-      targetDf <- read.table(paste0(project, ".GIGGLE/", icluster, ".peaks.bed.giggle.res.tfs.txt"), sep="\t", header = TRUE, stringsAsFactors = FALSE, quote = "")
+      targetDf <- read.table(file.path(outdir, paste0(project, ".GIGGLE/", icluster, ".peaks.bed.giggle.res.tfs.txt")), sep="\t", header = TRUE, stringsAsFactors = FALSE, quote = "")
       tfs = cluster_tf_list_filter_tf[[icluster]]
       tfs = sapply(tfs, function(x){
         tf = unlist(strsplit(x, split = " | ", fixed = TRUE))[1]
@@ -251,7 +251,7 @@ ATACAnnotateTranscriptionFactor <- function(ATAC, peaks, cluster = NULL, project
         if(tf %in% targetDf$factor){
           dcid <- as.character(targetDf[targetDf$factor==tf, "sample_id"])
           tfTarget <- geneScore[["genes"]][geneScore[["indices"]][[dcid]]]
-          write.table(data.frame(tfTarget), paste0(project, ".GIGGLE/", icluster, ".", tf, ".", dcid, ".target.genes.top500.txt"), sep="\t", quote=FALSE, row.names=FALSE, col.names=FALSE)
+          write.table(data.frame(tfTarget), file.path(outdir,paste0(project, ".GIGGLE/", icluster, ".", tf, ".", dcid, ".target.genes.top500.txt")), sep="\t", quote=FALSE, row.names=FALSE, col.names=FALSE)
         }
       }
     }}
