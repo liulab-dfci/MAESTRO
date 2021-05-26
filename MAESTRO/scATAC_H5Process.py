@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:44:05
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-11-02 22:31:18
+# @Last Modified time: 2021-03-17 01:16:23
 
 
 import os
@@ -192,17 +192,22 @@ def read_10X_h5(filename):
         return FeatureBCMatrix(ids, names, barcodes, matrix)
 
 
-def write_10X_h5(filename, matrix, features, barcodes, genome = 'GRCh38', datatype = 'Peak'):
+def write_10X_h5(filename, matrix, features, barcodes, feature_types = None, genome = 'GRCh38', datatype = 'Peak'):
     """Write 10X HDF5 files, support both gene expression and peaks."""
     f = h5py.File(filename, 'w')
-    if datatype == 'Peak':
-       M = sp_sparse.csc_matrix(matrix, dtype=numpy.int8)
+    if datatype == 'Gene':
+        M = sp_sparse.csc_matrix(matrix, dtype=numpy.float32)
+        FT = numpy.array([datatype]*len(features), dtype='|S100')
     else:
-       M = sp_sparse.csc_matrix(matrix, dtype=numpy.float32)
+        M = sp_sparse.csc_matrix(matrix, dtype=numpy.int32)
+        if datatype == 'Peak':
+            FT = numpy.array([datatype]*len(features), dtype='|S100')
+        else:
+            FT = numpy.array(feature_types, dtype='|S100')
+
     B = numpy.array(barcodes, dtype='|S200')
     P = numpy.array(features, dtype='|S100')
     GM = numpy.array([genome]*len(features), dtype='|S10')
-    FT = numpy.array([datatype]*len(features), dtype='|S100')
     AT = numpy.array(['genome'], dtype='|S10')
     mat = f.create_group('matrix')
     mat.create_dataset('barcodes', data=B)
@@ -217,6 +222,7 @@ def write_10X_h5(filename, matrix, features, barcodes, genome = 'GRCh38', dataty
     fet.create_dataset('id', data=P)
     fet.create_dataset('name', data=P)
     f.close()
+
 
 def merge_10X_h5(directory, outprefix, h5list, prefixlist, genome = 'GRCh38', datatype = 'Gene'):
     """Merge 10X HDF5 files, h5 filenames should be provided as list."""

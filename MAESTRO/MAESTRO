@@ -21,6 +21,7 @@ from MAESTRO.scRNA_QC import scrnaqc_parser, scrna_qc
 from MAESTRO.scATAC_QC import scatacqc_parser, scatac_qc
 from MAESTRO.scRNA_AnalysisPipeline import scrna_analysis_parser, scrna_analysis
 from MAESTRO.sample2json import *
+from MAESTRO.Multiome_QC import *
 
 def main():
     """
@@ -35,6 +36,7 @@ def main():
     scrna_parser(subparsers)
     integrate_parser(subparsers)
     multi_scatac_parser(subparsers)
+    multiome_parser(subparsers)
     #multi_scrna_parser(subparsers)
 
     sample_parser(subparsers)
@@ -50,6 +52,8 @@ def main():
     scrnaqc_parser(subparsers)
     scatacqc_parser(subparsers)
 
+    multiomeqc_parser(subparsers)
+
     scrna_analysis_parser(subparsers)
 
     logging.basicConfig(format="%(levelname)s: %(message)s", stream=sys.stderr)
@@ -61,6 +65,7 @@ def main():
         exit(0)
     elif args.subcommand == "samples-init":
         sample_json(args)
+
     elif args.subcommand == "scatac-init":
         scatac_validator(args)
         scatac_config(args)
@@ -74,6 +79,10 @@ def main():
 
     elif args.subcommand == "multi-scatac-init":
         multi_scatac_config(args)
+
+    elif args.subcommand == "multiome-init":
+        multiome_validator(args)
+        multiome_config(args)
 
     elif args.subcommand == "mtx-to-h5":
         mtx_2_h5(directory = args.directory, outprefix = args.outprefix, matrix_file = args.matrix, feature_file = args.feature, barcode_file = args.barcode, gene_column = args.gene_column, genome = args.species, datatype = args.datatype)
@@ -104,6 +113,10 @@ def main():
 
     elif args.subcommand == "scrna-analysis":
         scrna_analysis(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, matrix = args.matrix, separator = args.separator, feature = args.feature, gene_column = args.gene_column, gene_idtype = args.gene_idtype, barcode = args.barcode, meta_file = args.meta_file, meta_sep = args.meta_sep, meta_cell = args.meta_cell, count_cutoff = args.count_cutoff, gene_cutoff = args.gene_cutoff, cell_cutoff = args.cell_cutoff, assembly = args.assembly)
+    
+    elif args.subcommand == "multiome-qc":
+        multiome_qc(directory = args.directory, outprefix = args.outprefix, fileformat = args.format, peakcount = args.peakcount, genecount = args.genecount, atac_qc = args.atac_qc, rna_qc = args.rna_qc, atac_feature = args.atac_feature, atac_barcode = args.atac_barcode, rna_feature = args.rna_feature, gene_column = args.gene_column, rna_barcode = args.rna_barcode, species = args.species)
+
     else:
         parser.print_help()
         exit(1)
