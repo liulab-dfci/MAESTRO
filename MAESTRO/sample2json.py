@@ -102,7 +102,19 @@ def sample_json(args):
                         if m:
                             sample = m.group(1)
                             FILES[sample] = full_path
-
+                        else:
+                            sample = file.replace('.tsv.gz')
+                            FILES[sample] = full_path
+                else:
+                    full_path = join(root, file)
+                    if args.assay_type == "scatac":
+                        m = re.search(r"([A-Z0-9a-z_]+)_fragments.tsv", file)
+                        if m:
+                            sample = m.group(1)
+                            FILES[sample] = full_path
+                        else:
+                            sample = file.replace('.tsv')
+                            FILES[sample] = full_path
 
     if args.data_type == "fastq":
         print()

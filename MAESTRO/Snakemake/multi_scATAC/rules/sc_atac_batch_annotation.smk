@@ -29,7 +29,7 @@ rule scatac_batch_merge_gene_score_h5:
 
 rule scatac_batch_merge_fragment:
     input:
-        frag = sorted(expand("Result/minimap2/{sample}/fragments_corrected_dedup_count.tsv", sample = ALL_SAMPLES))
+        frag = sorted(expand("Result/mapping/{sample}/fragments_corrected_dedup_count.tsv", sample = ALL_SAMPLES))
     output:
         merged_frag = "Result/Analysis/Batch/all_samples_fragments_corrected_dedup_count.tsv.gz"
     params:
@@ -41,7 +41,7 @@ rule scatac_batch_merge_fragment:
 
         for i in {input}
             do
-                prefix=$(echo $i | sed -E 's,Result/minimap2/(.+)/fragments_corrected_dedup_count.tsv,\\1,')
+                prefix=$(echo $i | sed -E 's,Result/mapping/(.+)/fragments_corrected_dedup_count.tsv,\\1,')
                 echo $prefix
                 cat $i | awk -v prefix="$prefix" -v OFS="\t" '$4=prefix"@"$4' > Result/Tmp/${{prefix}}_fragment_tmp.tsv
             done

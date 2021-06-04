@@ -36,7 +36,8 @@ bulk_peaks: {{ bulk_peaks }}
 downsample: {{ downsample }}
 target_reads: {{ target_reads }}
 
-
+## select the alignmet tool for mapping
+mapping: {{mapping}}
 
 
 #######################################################################################
@@ -49,11 +50,13 @@ input_path: {{ input_path }}
 
 # Reference genome
 genome:
-  # Genome fasta file for minimap2. Users can just download the fasta file
+  # Genome fasta file for mapping. Users can just download the fasta file
   # from http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz and decompress it.
   # For example, 'Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa'.
   #fasta: /liulab/mtang/references/Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa
   fasta: {{ fasta }}
+  #If using chromap, reference index is also required
+  index: {{ index }}
 
 # Path of the giggle annotation file required for regulator identification.
 # Please download the annotation file from http://cistrome.org/~galib/giggle.all.tar.gz and decompress it.

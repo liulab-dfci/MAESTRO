@@ -87,7 +87,7 @@ def scatac_parser(subparsers):
         "http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz and decompress it.")
     group_reference.add_argument("--fasta", dest = "fasta",
         default = "",
-        help = "Genome fasta file for minimap2. "
+        help = "Genome fasta file for mapping. "
         "Users can just download the fasta file for huamn and mouse from "
         "http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz and "
         "http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCm38_1.1.0.tar.gz, respectively and decompress them. "
@@ -341,6 +341,9 @@ def multi_scatac_parser(subparsers):
         help = "For deeply sequenced samples, bam files can be downsampled to a certain number of reads (target_reads) to get peak set.")
     group_multi.add_argument("--target_reads", dest = "target_reads", default = 50000000, type = int,
         help = "Number of reads to be kept in downsampling. If the sample has fewer than the target_reads, the original number of reads will be kept.")
+    group_multi.add_argument("--mapping", dest = "mapping", default = "chromap", type = str,
+        choices = ["chromap", "minimap2"],
+        help = "Choose the aligment tool for scATAC-seq from either chromap or minimap2. DEFAULT: chromap.")
 
 
     # Input files arguments
@@ -397,6 +400,11 @@ def multi_scatac_parser(subparsers):
         "http://cistrome.org/~galib/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz and "
         "http://cistrome.org/~galib/Refdata_scATAC_MAESTRO_GRCm38_1.1.0.tar.gz, respectively and decompress them. "
         "For example, 'Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa'.")
+    group_reference.add_argument("--index", dest = "index", type = str,
+        default = "",
+        help = "Path of the reference index file for chromap. "
+        "User need to build the index file for the reference using "
+        "chromap -i -r ref.fa -o index")
 
     # Barcode library arguments
     group_barcode = workflow.add_argument_group("Barcode library arguments, only for platform of 'sci-ATAC-seq' and '10x-genomics'")
@@ -664,6 +672,7 @@ def multi_scatac_config(args):
             bulk_peaks = args.bulk_peaks,
             downsample = args.downsample,
             target_reads = args.target_reads,
+            mapping = args.mapping,
             platform = args.platform,
             format = args.format,
             deduplication = args.deduplication,
@@ -689,7 +698,8 @@ def multi_scatac_config(args):
             rpmodel = args.rpmodel,
             genedistance = args.genedistance,
             giggleannotation = os.path.abspath(args.giggleannotation),
-            fasta = os.path.abspath(args.fasta)))
+            fasta = os.path.abspath(args.fasta),
+            index = os.path.abspath(args.index)))
 
     source = os.path.join(pkgpath, "multi_scATAC", "Snakefile")
     rules = os.path.join(pkgpath, "multi_scATAC", "rules")

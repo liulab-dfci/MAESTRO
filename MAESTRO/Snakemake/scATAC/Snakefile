@@ -665,27 +665,29 @@ if config["platform"] == "10x-genomics" or config["platform"] == "sci-ATAC-seq":
                 input:
                     frag = config["frag"]
                 output:
-                    frag = "Result/minimap2/fragments_corrected_count.tsv"
+                    frag = temp("Result/Tmp/fragments_corrected_count.tsv")
                 benchmark:
                     "Result/Benchmark/%s_FragCP.benchmark" %(config["outprefix"])
                 shell:
                     "cp -T {input.frag} {output.frag}"
 
-        rule scatac_fragmentreshape:
+        rule scatac_fragmentsort:
             input:
-                frag = "Result/minimap2/fragments_corrected_count.tsv"
+                frag = temp("Result/Tmp/fragments_corrected_count.tsv")
             output:
-                frag = "Result/minimap2/fragments_BEDPE.bed"
-            params:
-                outdir = "Result/minimap2"
+                frag = "Result/mapping/fragments_corrected_dedup_count.tsv",
+                fraggz = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv.gz"
             benchmark:
-                "Result/Benchmark/%s_FragReshape.benchmark" %(config["outprefix"])
+                "Result/Benchmark/%s_FragSort.benchmark" %(config["outprefix"])
             shell:
-                "python " + SCRIPT_PATH + "/scATAC_FragmentReshape.py -F {input.frag} -O {params.outdir}"
+                "sort -k1,1 -k2,2n {input.frag} > {output.frag};"
+                "cat {output.frag} | bgzip > {output.fraggz};
+                "tabix -p bed {output.fraggz}"
+                ""
 
         rule scatac_fragmentsample:
             input:
-                frag = "Result/minimap2/fragments_BEDPE.bed"
+                frag = "Result/mapping/fragments_corrected_dedup_count.tsv"
             output:
                 fragbed = "Result/QC/%s_frag.bed" %(config["outprefix"]),
             benchmark:

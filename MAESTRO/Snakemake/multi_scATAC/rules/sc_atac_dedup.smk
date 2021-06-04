@@ -6,9 +6,9 @@
 
 # def get_fragments(wildcards):
 #     if config["deduplication"] == "cell level":
-#         return "Result/minimap2/{sample}/fragments_corrected_cell_dedup_count.tsv".format(sample = wildcards.sample)
+#         return "Result/mapping/{sample}/fragments_corrected_cell_dedup_count.tsv".format(sample = wildcards.sample)
 #     elif config["deduplication"] == "bulk level":
-#         return "Result/minimap2/{sample}/fragments_corrected_bulk_dedup_count.tsv".format(sample = wildcards.sample)
+#         return "Result/mapping/{sample}/fragments_corrected_bulk_dedup_count.tsv".format(sample = wildcards.sample)
 #     else:
 #         print("please specify 'cell level' or 'bulk level")
 #         sys.exit(1)
@@ -16,9 +16,9 @@
 if config["deduplication"] == "cell level":
     rule scatac_celldedup:
         input:
-            frag_count = "Result/minimap2/{sample}/fragments_corrected_count.tsv",
+            frag_count = "Result/mapping/{sample}/fragments_corrected_count.tsv",
         output:
-            frag_dedup = "Result/minimap2/{sample}/fragments_corrected_dedup_count.tsv",
+            frag_dedup = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv",
         params:
             source_dir = os.path.dirname(os.path.dirname(srcdir("Snakefile"))) # strip the /rules from srcdir("Snakefile") 
         benchmark:
@@ -28,9 +28,9 @@ if config["deduplication"] == "cell level":
 elif config["deduplication"] == "bulk level":
     rule scatac_bulkdedup:
         input:
-            frag_count = "Result/minimap2/{sample}/fragments_corrected_count.tsv",
+            frag_count = "Result/mapping/{sample}/fragments_corrected_count.tsv",
         output:
-            frag_dedup = "Result/minimap2/{sample}/fragments_corrected_dedup_count.tsv",
+            frag_dedup = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv",
         benchmark:
             "Result/Benchmark/{sample}_Bulkdedup.benchmark" 
         shell:
@@ -39,10 +39,10 @@ elif config["deduplication"] == "bulk level":
 
 rule scatac_fragmentindex:
     input:
-        frag = "Result/minimap2/{sample}/fragments_corrected_dedup_count.tsv"
+        frag = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv"
     output:
-        fraggz = "Result/minimap2/{sample}/fragments_corrected_dedup_count.tsv.gz",
-        fragindex = "Result/minimap2/{sample}/fragments_corrected_dedup_count.tsv.gz.tbi"
+        fraggz = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv.gz",
+        fragindex = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv.gz.tbi"
     benchmark:
         "Result/Benchmark/{sample}_FragmentIndex.benchmark"
     shell:

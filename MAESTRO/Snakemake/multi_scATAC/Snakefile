@@ -55,11 +55,13 @@ else:
         input:
             TARGET
 
-if config["platform"] == "10x-genomics" and config["format"] == "fastq":
-    include: "rules/sc_atac_map.smk"
+if config["mapping"] == "minimap2" and config["format"] == "fastq":
+    include: "rules/sc_atac_minimap.smk"
     include: "rules/sc_atac_preprocess.smk"
     include: "rules/sc_atac_fragment_generate.smk"
     include: "rules/sc_atac_dedup.smk"
+elif config["mapping"] == "chromap" and config["format"] == "fastq":
+    include: "rules/sc_atac_chromap.smk"
 elif config["platform"] == "10x-genomics" and config["format"] == "fragments":
     include: "rules/sc_atac_link_fragment.smk"
 

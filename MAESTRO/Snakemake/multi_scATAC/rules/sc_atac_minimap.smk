@@ -3,13 +3,13 @@ _picard_threads = 4
 _bamAddCB_threads = 4
 _bamindex_threads = 4
 
-rule scatac_map:
+rule scatac_minimap:
     input:
         fasta = config["genome"]["fasta"],
         r1 = "Result/Tmp/{sample}/{sample}_R1.barcoded.fastq",
         r3 = "Result/Tmp/{sample}/{sample}_R3.barcoded.fastq"
     output:
-            bam = temp("Result/minimap2/{sample}/{sample}.sortedByPos.bam")
+            bam = temp("Result/mapping/{sample}/{sample}.sortedByPos.bam")
     threads:
         _minmap_threads
     benchmark:
@@ -23,30 +23,30 @@ rule scatac_map:
 
 rule scatac_fragmentgenerate:
         input:
-            bam = "Result/minimap2/{sample}/{sample}.sortedByPos.bam"
+            bam = "Result/mapping/{sample}/{sample}.sortedByPos.bam"
         output:
-            fragments = "Result/minimap2/{sample}/fragments.tsv",
-            bam = "Result/minimap2/{sample}/{sample}.sortedByPos.CRadded.bam"
+            fragments = "Result/mapping/{sample}/fragments.tsv",
+            bam = "Result/mapping/{sample}/{sample}.sortedByPos.CRadded.bam"
         params:
-            outdir = "Result/minimap2/{sample}"
+            outdir = "Result/mapping/{sample}"
         benchmark:
-            "Result/Benchmark/{sample}_FragGenerate.benchmark" 
+            "Result/Benchmark/{sample}_FragGenerate.benchmark"
         shell:
             "python " + SCRIPT_PATH + "/scATAC_FragmentGenerate.py -B {input.bam} -O {params.outdir} --addtag CR"
 
 rule scatac_rmdp:
     input:
-        bam = "Result/minimap2/{sample}/{sample}.sortedByPos.CRadded.bam",
+        bam = "Result/mapping/{sample}/{sample}.sortedByPos.CRadded.bam",
     output:
-        bam = "Result/minimap2/{sample}/{sample}.sortedByPos.CRadded.rmdp.bam",
-        metric = "Result/minimap2/{sample}/{sample}.rmdp.txt",
+        bam = "Result/mapping/{sample}/{sample}.sortedByPos.CRadded.rmdp.bam",
+        metric = "Result/mapping/{sample}/{sample}.rmdp.txt",
         fragbed = "Result/QC/{sample}/{sample}_frag.bed"
     params:
-        sam = "Result/minimap2/{sample}/{sample}.sortedByPos.CRadded.rmdp.sample.sam"
+        sam = "Result/mapping/{sample}/{sample}.sortedByPos.CRadded.rmdp.sample.sam"
     threads:
         _picard_threads
     benchmark:
-        "Result/Benchmark/{sample}_Rmdp.benchmark" 
+        "Result/Benchmark/{sample}_Rmdp.benchmark"
     shell:
         """
         picard MarkDuplicates INPUT={input.bam} OUTPUT={output.bam} METRICS_FILE={output.metric} TMP_DIR=Result/Tmp
@@ -58,13 +58,13 @@ rule scatac_rmdp:
 
 rule scatac_bamaddCB:
         input:
-            bam = "Result/minimap2/{sample}/{sample}.sortedByPos.CRadded.rmdp.bam",
-            bc_correct = "Result/minimap2/{sample}/barcode_correct_uniq.txt"
+            bam = "Result/mapping/{sample}/{sample}.sortedByPos.CRadded.rmdp.bam",
+            bc_correct = "Result/mapping/{sample}/barcode_correct_uniq.txt"
         output:
-            bam = "Result/minimap2/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam"
+            bam = "Result/mapping/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam"
         params:
-            outdir = "Result/minimap2/{sample}",
-            outprefix = "{sample}.sortedByPos.rmdp.CBadded" 
+            outdir = "Result/mapping/{sample}",
+            outprefix = "{sample}.sortedByPos.rmdp.CBadded"
         threads:
             _bamAddCB_threads
         benchmark:
@@ -73,21 +73,15 @@ rule scatac_bamaddCB:
             "python " +  SCRIPT_PATH + "/scATAC_BamAddTag.py -B {input.bam} -T {input.bc_correct} -C CR "
             "-O {params.outdir} -P {params.outprefix}"
 
-            
-
 
 rule scatac_bamindex:
     input:
-        bam = "Result/minimap2/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam",
+        bam = "Result/mapping/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam",
     output:
-        bai = "Result/minimap2/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam.bai",
+        bai = "Result/mapping/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam.bai",
     threads:
         _bamindex_threads
     benchmark:
-        "Result/Benchmark/{sample}_BamIndex.benchmark" 
+        "Result/Benchmark/{sample}_BamIndex.benchmark"
     shell:
         "samtools index -@ {threads} {input.bam}"
-
-
-
-

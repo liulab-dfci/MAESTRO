@@ -19,6 +19,7 @@ requirements:
     - snakemake >=5.14
     - rseqc >=3.0.0
     - star =2.7.6a
+    - chromap =0.1
     - minimap2 =2.17
     - samtools =1.10
     - bedtools =2.29.2
@@ -90,6 +91,7 @@ requirements:
     - snakemake >=5.14
     - rseqc >=3.0.0
     - star =2.7.6a
+    - chromap =0.1
     - minimap2 =2.17
     - samtools =1.10
     - bedtools =2.29.2
