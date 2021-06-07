@@ -18,7 +18,7 @@ except ImportError:
 def main():
     setup(
         name = "MAESTRO",
-        version = "1.4.0",
+        version = "1.5.0",
         package_dir = {'MAESTRO':'MAESTRO'},
         packages = ['MAESTRO'],
         package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'Snakemake/integrate/*', 'Snakemake/multi_scATAC/*', 'Snakemake/multi_scATAC/rules/*', 'R/*', 'utils/*','annotations/*', 'html/*', '']},

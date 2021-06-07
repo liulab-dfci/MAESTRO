@@ -314,9 +314,9 @@ def integrate_parser(subparsers):
 
     return
 
-def multi_scatac_parser(subparsers):
+def fast_scatac_parser(subparsers):
     """
-    Add main function multi-scatac-init argument parsers.
+    Add main function fast-scatac-init argument parsers.
     """
 
     workflow = subparsers.add_parser("multi-scatac-init", help = "Initialize the MAESTRO multi-sample scATAC-seq workflow in a given directory. "
@@ -395,7 +395,7 @@ def multi_scatac_parser(subparsers):
         "http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz and decompress it.")
     group_reference.add_argument("--fasta", dest = "fasta", type = str,
         default = "",
-        help = "Genome fasta file for minimap2."
+        help = "Genome fasta file for mapping."
         "Users can just download the fasta file for huamn and mouse from "
         "http://cistrome.org/~galib/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz and "
         "http://cistrome.org/~galib/Refdata_scATAC_MAESTRO_GRCm38_1.1.0.tar.gz, respectively and decompress them. "
@@ -637,9 +637,9 @@ def integrate_config(args):
     target = os.path.join(args.directory, "Snakefile")
     shutil.copy(source, target)
 
-def multi_scatac_config(args):
+def fast_scatac_config(args):
     """
-    Generate multi_scatac config.yaml file.
+    Generate fast_scatac config.yaml file.
     """
 
     try:
@@ -651,7 +651,7 @@ def multi_scatac_config(args):
 
 
     pkgpath = resource_filename('MAESTRO', 'Snakemake')
-    template_file = os.path.join(pkgpath, "multi_scATAC", "config_template.yaml")
+    template_file = os.path.join(pkgpath, "fast_scATAC", "config_template.yaml")
     configfile = os.path.join(args.directory, "config.yaml")
     config_template = Template(open(template_file, "r").read(), trim_blocks=True, lstrip_blocks=True)
     if args.signature not in ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
@@ -701,8 +701,8 @@ def multi_scatac_config(args):
             fasta = os.path.abspath(args.fasta),
             index = os.path.abspath(args.index)))
 
-    source = os.path.join(pkgpath, "multi_scATAC", "Snakefile")
-    rules = os.path.join(pkgpath, "multi_scATAC", "rules")
+    source = os.path.join(pkgpath, "fast_scATAC", "Snakefile")
+    rules = os.path.join(pkgpath, "fast_scATAC", "rules")
     target = os.path.join(args.directory, "Snakefile")
     dest = os.path.join(args.directory, "rules")
     shutil.copy(source, target)
