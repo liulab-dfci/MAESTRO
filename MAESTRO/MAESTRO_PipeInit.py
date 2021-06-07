@@ -319,7 +319,7 @@ def fast_scatac_parser(subparsers):
     Add main function fast-scatac-init argument parsers.
     """
 
-    workflow = subparsers.add_parser("multi-scatac-init", help = "Initialize the MAESTRO multi-sample scATAC-seq workflow in a given directory. "
+    workflow = subparsers.add_parser("fast-scatac-init", help = "Initialize the MAESTRO fast scATAC-seq workflow in a given directory. "
         "This will install a Snakefile with its rule folder and a config file in this directory. "
         "You can configure the config file according to your needs, and run the workflow with Snakemake "
         "(https://bitbucket.org/johanneskoester/snakemake).")
