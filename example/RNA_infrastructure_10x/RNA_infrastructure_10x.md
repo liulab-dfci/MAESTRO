@@ -97,7 +97,7 @@ Arguments  |  Description
 
 Arguments  |  Description
 ---------  |  -----------
-`--lisadir` | Path to the LISA data files. Please download LISA's required data from cistrome.org: [human](http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz) and [mouse](http://cistrome.org/~alynch/data/lisa_data/mm10_2.1.tar.gz). The latest version of [LISA2](https://github.com/liulab-dfci/lisa2) was recently released to largely decrease processing time on multiple gene lists. Please check out for detailed information.
+`--lisadir` | Path to the LISA data files. Please download LISA's required data from cistrome.org: [human](http://cistrome.org/~alynch/data/lisa_data/hg38_1000_2.0.h5) and [mouse](http://cistrome.org/~alynch/data/lisa_data/mm10_1000_2.0.h5). The latest version of [LISA2](https://github.com/liulab-dfci/lisa2) was recently released to largely decrease processing time on multiple gene lists. Please check out for detailed information.
 
 **Cell signature arguments:**
 

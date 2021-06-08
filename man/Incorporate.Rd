@@ -11,6 +11,9 @@ Incorporate(
   RPmatrix = NULL,
   project = "MAESTRO.coembedding",
   method = "MAESTRO",
+  assembly = "GRCh38",
+  frag.file,
+  min.c = 10,
   dims.use = 1:30,
   RNA.res = 0.6,
   ATAC.res = 0.6
@@ -27,7 +30,14 @@ and gene RP score as values. Can be ignored if \code{\link{ATACAnnotateCelltype}
 \item{project}{Output project name. Default is "MAESTRO.coembedded".}
 
 \item{method}{Method to do integration, MAESTRO or Seurat. If "MAESTRO", gene RP score will be used to quantify the gene activity for scATAC-seq.
-If "Seurat" is set, \code{\link{CreateGeneActivityMatrix}} from Seurat will be used to model the gene activity.}
+If "Seurat" is set, \code{\link{GeneActivity}} from Signac will be used to model the gene activity.}
+
+\item{assembly}{Assembly for the dataset. Only support "GRCh38" and "GRCm38". Default is "GRCh38".}
+
+\item{frag.file}{Path to a tabix-indexed fragments file for the data contained in ATAC count matrix.}
+
+\item{min.c}{Minimum number of cells required for a peak. Will exclude the peaks from input matrix if they only identified in 
+less than \code{min.c} cells. Default is 10.}
 
 \item{dims.use}{Number of dimensions used for PCA and UMAP analysis. Default is 1:30, use the first 30 PCs.}
 
@@ -36,7 +46,7 @@ If "Seurat" is set, \code{\link{CreateGeneActivityMatrix}} from Seurat will be u
 \item{ATAC.res}{Clustering resolution used for the scATAC-seq dataset, should keep the sampe with the input ATAC object. Default is 0.6.}
 }
 \value{
-A combined Seurat object with RNA dataset, ATAC dataset, gene activity dataset, combined UMAP analysis and clustering information. A tsv file for the cell meta information.
+ATAC object. And A combined Seurat object with RNA dataset, ATAC dataset, gene activity dataset, combined UMAP analysis and clustering information. A tsv file for the cell meta information.
 }
 \description{
 Incorparation of scATAC-seq clusters with scRNA-seq clusters, generate the cell-coembedding visualizations, also transfer the celltypes from scRNA-seq to scATAC-seq annotations.

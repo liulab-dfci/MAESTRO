@@ -28,5 +28,7 @@ setwd(argue$outdir)
 Seurat1 = readRDS(atacobj)
 Seurat2 = readRDS(rnaobj)
 
-Seurat.combined = Incorporate(ATAC = Seurat1$ATAC, RNA = Seurat2$RNA, RPmatrix = NULL, project = outprefix, dims.use = 1:30, RNA.res = 0.6, ATAC.res = 0.6)
+Combine.res = Incorporate(ATAC = Seurat1$ATAC, RNA = Seurat2$RNA, RPmatrix = NULL, project = outprefix, dims.use = 1:30, RNA.res = 0.6, ATAC.res = 0.6)
+
+Seurat.combined = Combine.res$CombinedObj
 saveRDS(Seurat.combined, paste0(outprefix, "_integrate_Object.rds"))
