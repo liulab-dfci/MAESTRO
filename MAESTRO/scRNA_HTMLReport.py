@@ -38,6 +38,8 @@ def CommandLineParser():
         help = "Whether or not to run RSeQC. "
         "If set, the pipeline will include the RSeQC part and then takes a longer time. "
         "By default (not set), the pipeline will skip the RSeQC part.")
+    group_output.add_argument("--multisample", dest = "multisample", action = "store_true",
+        help = "Whether the mulitple samples were run")
 
     return parser.parse_args()
     
@@ -53,6 +55,7 @@ def main():
     species = myparser.species
     platform = myparser.platform
     rseqc = myparser.rseqc
+    multisample = myparser.multisample
     method = myparser.method
 
     try:
@@ -90,7 +93,30 @@ def main():
 
         #"totalreads":stat_list[0],"dupreads":stat_list[1],"mapreads":stat_list[2],"maptags":stat_list[3],"exontags":stat_list[4],"introntags":stat_list[5],
         report_html_instance = report_html_temp % {"outprefix":outpre, "fastqdir":fastqdir, "species":species,"platform":platform, "readdistr":readdistrplot_link,"readqual":readqualplot_link, "nvc":nvcplot_link, "gc":gcplot_link, "genecov":genecovplot_link, "countgene":countgeneplot_link, "genecluster":genecluster_link, "geneannotate":geneannotate_link, "regtabletitle":tdtitle, "regtablecolname":tdcolname, "regtable":td_str}
+    elif multisample:
+        report_html_tempfile = os.path.join(SCRIPT_PATH, "html", "scRNA_noqc_multisample_template.html")
+        report_html_temp = open(report_html_tempfile, "r").read()
 
+        cluster_regulator_file = "Result/Analysis/%s.PredictedTFTop10.txt"%outpre
+
+        countgeneplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_cell_filtering.png"%outpre)
+        genecluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_cluster.png"%outpre)
+        sampleannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_samples.png"%outpre)
+        geneannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_annotated.png"%outpre)
+        tdtitle = "Cluster-specific regulator identified by %s" %(method)
+        tdcolname = "log10(%s score)" %(method)
+
+        td_list = []
+        for line in open(cluster_regulator_file,"r").readlines():
+            if not line.startswith("Cluster"):
+                items = line.strip().split("\t")
+                items_str_list = ["                                                            <td>" + i + "</td>" for i in items]
+                items_str = "                                                        <tr>\n" + "\n".join(items_str_list) + "\n                                                        </tr>"
+                td_list.append(items_str)
+        td_str = "\n".join(td_list)
+
+        #"totalreads":stat_list[0],"dupreads":stat_list[1],"mapreads":stat_list[2],"maptags":stat_list[3],"exontags":stat_list[4],"introntags":stat_list[5],
+        report_html_instance = report_html_temp % {"outprefix":outpre, "fastqdir":fastqdir, "species":species,"platform":platform, "countgene":countgeneplot_link, "genecluster":genecluster_link, "sampleannotate":sampleannotate_link, "geneannotate":geneannotate_link, "regtabletitle":tdtitle, "regtablecolname":tdcolname, "regtable":td_str}
     else:
         report_html_tempfile = os.path.join(SCRIPT_PATH, "html", "scRNA_noqc_template.html")
         report_html_temp = open(report_html_tempfile, "r").read()

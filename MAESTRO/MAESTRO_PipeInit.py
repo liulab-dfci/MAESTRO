@@ -2,8 +2,8 @@
 # @Author: Dongqing Sun
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:40:27
-# @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-11-02 17:34:46
+# @Last Modified by:   Shariq Madha
+# @Last Modified time: 4:01 PM 5/4/2021
 
 
 import os
@@ -495,6 +495,131 @@ def multi_scatac_parser(subparsers):
 
     return
 
+def multi_scrna_parser(subparsers):
+    """
+    Add main function multi-scrna-init argument parsers.
+    """
+
+    workflow = subparsers.add_parser("multi-scrna-init", help = "Initialize the MAESTRO multiple scRNA-seq workflow in a given directory. "
+        "This will install a Snakefile and a config file in this directory. "
+        "You can configure the config file according to your needs, and run the workflow with Snakemake.")
+
+    # Input files arguments
+    group_input = workflow.add_argument_group("Input files arguments")
+    group_input.add_argument("--platform", dest = "platform", default = "10x-genomics",
+        choices = ["10x-genomics", "Dropseq", "Smartseq2"],
+        help = "Platform of single cell RNA-seq. DEFAULT: 10x-genomics.")
+    group_input.add_argument("--sample-file", dest = "sample_file", type = str, default = "",
+        help = "JSON file with sample file information")
+    group_input.add_argument("--fastq-barcode", dest = "fastq_barcode", type = str, default = "",
+        help = "Specify the barcode fastq file, only for the platform of 'Dropseq'. "
+        "If there are multiple pairs of fastq, please provide a comma-separated list of barcode fastq files. "
+        "For example, --fastq-barcode test1_1.fastq,test2_1.fastq")
+    group_input.add_argument("--fastq-transcript", dest = "fastq_transcript", type = str, default = "",
+        help = "Specify the transcript fastq file, only for the platform of 'Dropseq'. "
+        "If there are multiple pairs of fastq, please provide a comma-separated list of barcode fastq files. "
+        "For example, --fastq-barcode test1_2.fastq,test2_2.fastq")
+    group_input.add_argument("--species", dest = "species", default = "GRCh38",
+        choices = ["GRCh38", "GRCm38"], type = str,
+        help = "Specify the genome assembly (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
+
+    # Output arguments
+    group_output = workflow.add_argument_group("Running and output arguments")
+    group_output.add_argument("--cores", dest = "cores", default = 10,
+        type = int, help = "The number of cores to use. DEFAULT: 10.")
+    group_output.add_argument("--rseqc", dest = "rseqc", action = "store_true",
+        help = "Whether or not to run RSeQC. "
+        "If set, the pipeline will include the RSeQC part and then takes a longer time. "
+        "By default (not set), the pipeline will skip the RSeQC part.")
+    group_output.add_argument("--directory", "-d", dest = "directory", type = str, default = "MAESTRO",
+        help = "Path to the directory where the workflow shall be initialized and results shall be stored. DEFAULT: MAESTRO.")
+    group_output.add_argument("--mergedname", dest = "mergedname", type = str, default = "MAESTRO",
+        help = "Prefix of merged output files. DEFAULT: MAESTRO.")
+
+    # Quality control cutoff
+    group_cutoff = workflow.add_argument_group("Quality control arguments")
+    group_cutoff.add_argument("--count-cutoff", dest = "count_cutoff", default = 1000, type = int,
+        help = "Cutoff for the number of count in each cell. DEFAULT: 1000.")
+    group_cutoff.add_argument("--gene-cutoff", dest = "gene_cutoff", default = 500, type = int,
+        help = "Cutoff for the number of genes included in each cell. DEFAULT: 500.")
+    group_cutoff.add_argument("--cell-cutoff", dest = "cell_cutoff", default = 10, type = int,
+        help = "Cutoff for the number of cells covered by each gene. DEFAULT: 10.")
+
+    # Reference genome arguments
+    group_reference = workflow.add_argument_group("Reference genome arguments")
+    group_reference.add_argument("--mapindex", dest = "mapindex",
+        required = True,
+        help = "Genome index directory for STAR. Users can just download the index file for human and mouse "
+        "from http://cistrome.org/~galib/Refdata_scRNA_MAESTRO_GRCh38_1.2.2.tar.gz and "
+        "http://cistrome.org/~galib/Refdata_scRNA_MAESTRO_GRCm38_1.2.2.tar.gz, respectively, and decompress them. "
+        "Then specify the index directory for STAR, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.2.2/GRCh38_STAR_2.7.6a'.")
+    group_reference.add_argument("--rsem", dest = "rsem", default = "",
+        help = "The prefix of transcript references for RSEM used by rsem-prepare-reference (Only required when the platform is Smartseq2). "
+        "Users can directly download the annotation file for huamn and mouse from "
+        "http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz and "
+        "http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCm38_1.1.0.tar.gz, respectively, and decompress them. "
+        "Then specify the prefix for RSEM, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_RSEM_1.3.2/GRCh38'.")
+
+    # Barcode arguments
+    group_barcode = workflow.add_argument_group("Barcode arguments, for platform of 'Dropseq' or '10x-genomics'")
+    group_barcode.add_argument("--whitelist", dest = "whitelist", type = str, default = "",
+        help = "If the platform is 'Dropseq' or '10x-genomics', please specify the barcode library (whitelist) "
+        "so that STARsolo can do the error correction and demultiplexing of cell barcodes. "
+        "The 10X Chromium whitelist file can be found inside the CellRanger distribution. "
+        "Please make sure that the whitelist is compatible with the specific version of the 10X chemistry: V2 or V3. "
+        "For example, in CellRanger 3.1.0, the V2 whitelist is "
+        "'cellranger-3.1.0/cellranger-cs/3.1.0/lib/python/cellranger/barcodes/737K-august-2016.txt'. "
+        "The V3 whitelist is 'cellranger-3.1.0/cellranger-cs/3.1.0/lib/python/cellranger/barcodes/3M-february-2018.txt'. ")
+    group_barcode.add_argument("--barcode-start", dest = "barcode_start", type = int, default = 1,
+        help = "The start site of each barcode. DEFAULT: 1. ")
+    group_barcode.add_argument("--barcode-length", dest = "barcode_length", type = int, default = 16,
+        help = "The length of cell barcode. For 10x-genomics, the length of barcode is 16. DEFAULT: 16. ")
+    group_barcode.add_argument("--umi-start", dest = "umi_start", type = int, default = 17,
+        help = "The start site of UMI. DEFAULT: 17. ")
+    group_barcode.add_argument("--umi-length", dest = "umi_length", type = int, default = 10,
+        help = "The length of UMI. For 10x-genomics, the length of V2 chemistry is 10. "
+        "For 10X V3 chemistry, the length is 12. DEFAULT: 10. ")
+    group_barcode.add_argument("--trimR1", dest = "trimR1", action = "store_true",
+        help = "Whether or not to run the R1 file. "
+        "If set, the pipeline will include the trim off anything after the R1 reads past barcode information. "
+        "Only necessary if reads were sequenced past these barcodes, by default not set.")
+
+
+    # Regulator identification
+    group_regulator = workflow.add_argument_group("Regulator identification arguments")
+    # group_regulator.add_argument("--method", dest = "method", type = str,
+    #     choices = ["RABIT", "LISA"], default = "LISA",
+    #     help = "Method to predict driver regulators.")
+    # group_regulator.add_argument("--method", dest = "method", type = str,
+    #     choices = ["LISA"], default = "LISA",
+    #     help = "Method to predict driver regulators.")
+    # group_regulator.add_argument("--rabitlib", dest = "rabitlib", type = str,
+    #     help = "Path of the rabit annotation file required for regulator identification (only required if method is set to RABIT). "
+    #     "Please download the annotation file from "
+    #     "http://cistrome.org/~chenfei/MAESTRO/rabit.tar.gz and decompress it.")
+    #group_regulator.add_argument("--lisamode", dest = "lisamode", type = str, default = "local", choices = ["local", "web"],
+    #    help = "Mode to Run LISA, 'local' or 'web'. If the mode is set as 'local', "
+    #    "please install LISA (https://github.com/qinqian/lisa) and download pre-computed datasets following the instructions. "
+    #    "The 'web' mode is to run online version of LISA. In consideration of the connection issue and size of datasets, "
+    #    "the 'local' mode is recommended to run the whole MAESTRO pipeline. "
+    #    "If the mode is 'local', please provide the name of LISA environment through --lisaenv "
+    #    "and specify the directory where miniconda or anaconda is installed through --condadir. DEFAULT: local.")
+    group_regulator.add_argument("--lisadir", dest = "lisadir", type = str, default = "",
+        help = "Path to lisa data files. For human and mouse, data can be downloaded from http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz"
+        "and http://cistrome.org/~alynch/data/lisa_data/mm10_2.1.tar.gz")
+
+
+    # Signature file arguments
+    group_signature = workflow.add_argument_group("Cell signature arguments")
+    group_signature.add_argument("--signature", dest = "signature", type = str, default = "human.immune.CIBERSORT",
+        help = "Cell signature file used to annotate cell types. MAESTRO provides several sets of built-in cell signatures. "
+        "Users can choose from ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']. "
+        "Custom cell signatures are also supported. In this situation, users need to provide the file location of cell signatures, "
+        "and the signature file is tab-seperated without header. The first column is cell type, and the second column is signature gene. "
+        "DEFAULT: human.immune.CIBERSORT.")
+
+    return
+
 
 def scatac_config(args):
     """
@@ -699,6 +824,67 @@ def multi_scatac_config(args):
 
     source = os.path.join(pkgpath, "multi_scATAC", "Snakefile")
     rules = os.path.join(pkgpath, "multi_scATAC", "rules")
+    target = os.path.join(args.directory, "Snakefile")
+    dest = os.path.join(args.directory, "rules")
+    shutil.copy(source, target)
+    shutil.copytree(rules, dest)
+
+def multi_scrna_config(args):
+    """
+    Generate multi_scatac config.yaml file.
+    """
+
+    try:
+        os.makedirs(args.directory)
+    except OSError:
+        # either directory exists (then we can ignore) or it will fail in the
+        # next step.
+        pass
+
+
+    pkgpath = resource_filename('MAESTRO', 'Snakemake')
+    template_file = os.path.join(pkgpath, "multi_scRNA", "config_template.yaml")
+    configfile = os.path.join(args.directory, "config.yaml")
+    config_template = Template(open(template_file, "r").read(), trim_blocks=True, lstrip_blocks=True)
+    if args.signature not in ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
+        signature = os.path.abspath(args.signature)
+    else:
+        signature = args.signature
+
+    if args.whitelist != "":
+        whitelist = os.path.abspath(args.whitelist)
+    else:
+        whitelist = ""
+
+    with open(configfile, "w") as configout:
+        configout.write(config_template.render(
+            #input_path = os.path.abspath(args.input_path),
+            sample_file = os.path.abspath(args.sample_file),
+            species = args.species,
+            platform = args.platform,
+            mergedname = args.mergedname,
+            rseqc = args.rseqc,
+            cores = args.cores,
+            count = args.count_cutoff,
+            gene = args.gene_cutoff,
+            cell = args.cell_cutoff,
+            signature = signature,
+            # rabitlib = os.path.abspath(args.rabitlib),
+            #lisamode = args.lisamode,
+            lisadir = os.path.abspath(args.lisadir),
+            mapindex = os.path.abspath(args.mapindex),
+            rsem = os.path.abspath(args.rsem),
+            whitelist = os.path.abspath(args.whitelist),
+            barcodestart = args.barcode_start,
+            barcodelength = args.barcode_length,
+            umistart = args.umi_start,
+            umilength = args.umi_length,
+            trimr1 = args.trimR1,
+            barcode = args.fastq_barcode,
+            transcript = args.fastq_transcript))
+
+    source = os.path.join(pkgpath, "multi_scRNA", "Snakefile")
+    rules = os.path.join(pkgpath, "multi_scRNA", "rules")
     target = os.path.join(args.directory, "Snakefile")
     dest = os.path.join(args.directory, "rules")
     shutil.copy(source, target)
