@@ -13,26 +13,26 @@
 #         print("please specify 'cell level' or 'bulk level")
 #         sys.exit(1)
 
-if config["deduplication"] == "cell level":
+if config["deduplication"] == "cell-level":
     rule scatac_celldedup:
         input:
             frag_count = "Result/mapping/{sample}/fragments_corrected_count.tsv",
         output:
             frag_dedup = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv",
         params:
-            source_dir = os.path.dirname(os.path.dirname(srcdir("Snakefile"))) # strip the /rules from srcdir("Snakefile") 
+            source_dir = os.path.dirname(os.path.dirname(srcdir("Snakefile"))) # strip the /rules from srcdir("Snakefile")
         benchmark:
-            "Result/Benchmark/{sample}_Celldedup.benchmark" 
+            "Result/Benchmark/{sample}_Celldedup.benchmark"
         shell:
             "ln -s {params.source_dir}/{input.frag_count} {output.frag_dedup};"
-elif config["deduplication"] == "bulk level":
+elif config["deduplication"] == "bulk-level":
     rule scatac_bulkdedup:
         input:
             frag_count = "Result/mapping/{sample}/fragments_corrected_count.tsv",
         output:
             frag_dedup = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv",
         benchmark:
-            "Result/Benchmark/{sample}_Bulkdedup.benchmark" 
+            "Result/Benchmark/{sample}_Bulkdedup.benchmark"
         shell:
             "awk  '!a[$1,$2,$3]++' {input.frag_count} > {output.frag_dedup};"
 
@@ -48,6 +48,3 @@ rule scatac_fragmentindex:
     shell:
         "bgzip -c {input.frag} > {output.fraggz};"
         "tabix -p bed {output.fraggz}"
- 
-
-

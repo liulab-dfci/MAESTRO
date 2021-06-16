@@ -34,8 +34,6 @@ def main():
     scatac_parser(subparsers)
     scrna_parser(subparsers)
     integrate_parser(subparsers)
-    fast_scatac_parser(subparsers)
-    #multi_scrna_parser(subparsers)
 
     sample_parser(subparsers)
     mtxtoh5_parser(subparsers)

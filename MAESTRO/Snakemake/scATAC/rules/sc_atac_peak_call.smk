@@ -18,7 +18,7 @@ rule scatac_allpeakcall:
     shell:
         "macs2 callpeak -f BEDPE -g {params.genome} --outdir Result/Analysis/{wildcards.sample} -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.frag_dedup}"
 
-if config["shortpeaks"]:
+if config["shortpeaks"] and not config["custompeaks"] :
     rule scatac_shortfragment:
         input:
             frag_dedup = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv"
@@ -46,7 +46,54 @@ if config["shortpeaks"]:
         shell:
             "macs2 callpeak -f BEDPE -g {params.genome} --outdir Result/Analysis/{wildcards.sample} -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.frag_short}"
 
-if config["custompeaks"] and config["shortpeaks"]:
+    rule scatac_mergepeak:
+        input:
+            allpeak = "Result/Analysis/{sample}/{sample}_all_peaks.narrowPeak",
+            shortpeak = "Result/Analysis/{sample}/{sample}_150bp_peaks.narrowPeak"
+        output:
+            finalpeak = "Result/Analysis/{sample}/{sample}_final_peaks.bed"
+        params:
+            catpeaksort = "Result/Analysis/{sample}/{sample}_cat_peaks.bed"
+        benchmark:
+            "Result/Benchmark/{sample}_PeakMerge.benchmark"
+        shell:
+            """
+            cat {input.allpeak} {input.shortpeak} \
+            | sort -k1,1 -k2,2n | cut -f 1-4 > {params.catpeaksort}
+
+            mergeBed -i {params.catpeaksort} | grep -v '_' | grep -v 'chrEBV' > {output.finalpeak}
+
+            rm {params.catpeaksort}
+            """
+
+elif config["custompeaks"] and config["shortpeaks"]:
+    rule scatac_shortfragment:
+        input:
+            frag_dedup = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv"
+        output:
+            frag_short = "Result/mapping/{sample}/fragments_corrected_150bp.tsv"
+        threads:
+            _shortfragment_threads
+        benchmark:
+            "Result/Benchmark/{sample}_ShortFrag.benchmark"
+        shell:
+            "awk -F'\\t' 'function abs(x){{return ((x < 0.0) ? -x : x)}} {{if (abs($3-$2)<=150) print}}' {input.frag_dedup} > {output.frag_short}"
+
+    rule scatac_shortpeakcall:
+        input:
+            frag_short = "Result/mapping/{sample}/fragments_corrected_150bp.tsv"
+        output:
+            bed = "Result/Analysis/{sample}/{sample}_150bp_peaks.narrowPeak"
+        params:
+            name = "{sample}_150bp",
+            genome = macs2_genome
+        log:
+            "Result/Log/{sample}_macs2_shortpeak.log"
+        benchmark:
+            "Result/Benchmark/{sample}_ShortPeakCall.benchmark"
+        shell:
+            "macs2 callpeak -f BEDPE -g {params.genome} --outdir Result/Analysis/{wildcards.sample} -n {params.name} -B -q 0.05 --nomodel --extsize=50 --SPMR --keep-dup all -t {input.frag_short}"
+
     rule scatac_mergepeak:
         input:
             allpeak = "Result/Analysis/{sample}/{sample}_all_peaks.narrowPeak" ,
@@ -68,7 +115,7 @@ if config["custompeaks"] and config["shortpeaks"]:
             rm {params.catpeaksort}
             """
 
-elif config["custompeaks"]:
+elif config["custompeaks"] and not config["shortpeaks"]:
     rule scatac_mergepeak:
         input:
             allpeak = "Result/Analysis/{sample}/{sample}_all_peaks.narrowPeak",
@@ -82,27 +129,6 @@ elif config["custompeaks"]:
         shell:
             """
             cat {input.allpeak} {input.custompeaks} \
-            | sort -k1,1 -k2,2n | cut -f 1-4 > {params.catpeaksort}
-
-            mergeBed -i {params.catpeaksort} | grep -v '_' | grep -v 'chrEBV' > {output.finalpeak}
-
-            rm {params.catpeaksort}
-            """
-
-elif config["shortpeaks"]:
-    rule scatac_mergepeak:
-        input:
-            allpeak = "Result/Analysis/{sample}/{sample}_all_peaks.narrowPeak",
-            shortpeak = "Result/Analysis/{sample}/{sample}_150bp_peaks.narrowPeak"
-        output:
-            finalpeak = "Result/Analysis/{sample}/{sample}_final_peaks.bed"
-        params:
-            catpeaksort = "Result/Analysis/{sample}/{sample}_cat_peaks.bed"
-        benchmark:
-            "Result/Benchmark/{sample}_PeakMerge.benchmark"
-        shell:
-            """
-            cat {input.allpeak} {input.shortpeak} \
             | sort -k1,1 -k2,2n | cut -f 1-4 > {params.catpeaksort}
 
             mergeBed -i {params.catpeaksort} | grep -v '_' | grep -v 'chrEBV' > {output.finalpeak}
