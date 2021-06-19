@@ -59,6 +59,7 @@ def main():
         exit(0)
     elif args.subcommand == "samples-init":
         sample_json(args)
+  
     elif args.subcommand == "scatac-init":
         scatac_validator(args)
         scatac_config(args)
@@ -69,9 +70,6 @@ def main():
 
     elif args.subcommand == "integrate-init":
         integrate_config(args)
-
-    elif args.subcommand == "fast-scatac-init":
-        fast_scatac_config(args)
 
     elif args.subcommand == "mtx-to-h5":
         mtx_2_h5(directory = args.directory, outprefix = args.outprefix, matrix_file = args.matrix, feature_file = args.feature, barcode_file = args.barcode, gene_column = args.gene_column, genome = args.species, datatype = args.datatype)

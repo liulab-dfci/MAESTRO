@@ -9,7 +9,7 @@ rule scatac_minimap:
         r1 = "Result/Tmp/{sample}/{sample}_R1.barcoded.fastq",
         r3 = "Result/Tmp/{sample}/{sample}_R3.barcoded.fastq"
     output:
-            bam = temp("Result/mapping/{sample}/{sample}.sortedByPos.bam")
+        bam = temp("Result/mapping/{sample}/{sample}.sortedByPos.bam")
     threads:
         _minmap_threads
     benchmark:
@@ -22,17 +22,17 @@ rule scatac_minimap:
         """
 
 rule scatac_fragmentgenerate:
-        input:
-            bam = "Result/mapping/{sample}/{sample}.sortedByPos.bam"
-        output:
-            fragments = "Result/mapping/{sample}/fragments.tsv",
-            bam = "Result/mapping/{sample}/{sample}.sortedByPos.CRadded.bam"
-        params:
-            outdir = "Result/mapping/{sample}"
-        benchmark:
-            "Result/Benchmark/{sample}_FragGenerate.benchmark"
-        shell:
-            "python " + SCRIPT_PATH + "/scATAC_FragmentGenerate.py -B {input.bam} -O {params.outdir} --addtag CR"
+    input:
+        bam = "Result/mapping/{sample}/{sample}.sortedByPos.bam"
+    output:
+        fragments = "Result/mapping/{sample}/fragments.tsv",
+        bam = "Result/mapping/{sample}/{sample}.sortedByPos.CRadded.bam"
+    params:
+        outdir = "Result/mapping/{sample}"
+    benchmark:
+        "Result/Benchmark/{sample}_FragGenerate.benchmark"
+    shell:
+        "python " + SCRIPT_PATH + "/scATAC_FragmentGenerate.py -B {input.bam} -O {params.outdir} --addtag CR"
 
 rule scatac_rmdp:
     input:

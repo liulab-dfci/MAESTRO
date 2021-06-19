@@ -68,13 +68,13 @@ def scatac_parser(subparsers):
         required = True,
         help = "Path of the giggle annotation file required for regulator identification. "
         "Please download the annotation file from "
-        "http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz and decompress it.")
+        "http://cistrome.org/~galib/MAESTRO/references/giggle.all.tar.gz and decompress it.")
     group_reference.add_argument("--fasta", dest = "fasta", type = str,
         default = "",
         help = "Genome fasta file for mapping."
         "Users can just download the fasta file for huamn and mouse from "
-        "http://cistrome.org/~galib/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz and "
-        "http://cistrome.org/~galib/Refdata_scATAC_MAESTRO_GRCm38_1.1.0.tar.gz, respectively and decompress them. "
+        "http://cistrome.org/~galib/MAESTRO/references/scATAC/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz and "
+        "http://cistrome.org/~galib/MAESTRO/references/scATAC/Refdata_scATAC_MAESTRO_GRCm38_1.1.0.tar.gz, respectively and decompress them. "
         "For example, 'Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa'.")
     group_reference.add_argument("--index", dest = "index", type = str,
         default = "",
@@ -171,61 +171,9 @@ def scatac_parser(subparsers):
 
     return
 
-
-def scrna_config(args):
-    """
-    Generate scrna config.yaml file.
-    """
-
-    try:
-        os.makedirs(args.directory)
-    except OSError:
-        # either directory exists (then we can ignore) or it will fail in the
-        # next step.
-        pass
-
-    pkgpath = resource_filename('MAESTRO', 'Snakemake')
-    template_file = os.path.join(pkgpath, "scRNA", "config_template.yaml")
-    configfile = os.path.join(args.directory, "config.yaml")
-    config_template = Template(open(template_file, "r").read(), trim_blocks=True, lstrip_blocks=True)
-    if args.signature not in ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
-        signature = os.path.abspath(args.signature)
-    else:
-        signature = args.signature
-
-    with open(configfile, "w") as configout:
-        configout.write(config_template.render(
-            fastqdir = os.path.abspath(args.fastq_dir),
-            fastqprefix = args.fastq_prefix,
-            species = args.species,
-            platform = args.platform,
-            outprefix = args.outprefix,
-            rseqc = args.rseqc,
-            cores = args.cores,
-            count = args.count_cutoff,
-            gene = args.gene_cutoff,
-            cell = args.cell_cutoff,
-            signature = signature,
-            # rabitlib = os.path.abspath(args.rabitlib),
-            #lisamode = args.lisamode,
-            lisadir = os.path.abspath(args.lisadir),
-            mapindex = os.path.abspath(args.mapindex),
-            rsem = os.path.abspath(args.rsem),
-            whitelist = os.path.abspath(args.whitelist),
-            barcodestart = args.barcode_start,
-            barcodelength = args.barcode_length,
-            umistart = args.umi_start,
-            umilength = args.umi_length,
-            barcode = args.fastq_barcode,
-            transcript = args.fastq_transcript))
-
-    source = os.path.join(pkgpath, "scRNA", "Snakefile")
-    target = os.path.join(args.directory, "Snakefile")
-    shutil.copy(source, target)
-
 def scrna_parser(subparsers):
     """
-    Add main function init-scatac argument parsers.
+    Add main function scrna-init argument parsers.
     """
 
     workflow = subparsers.add_parser("scrna-init", help = "Initialize the MAESTRO scRNA-seq workflow in a given directory. "
@@ -237,11 +185,8 @@ def scrna_parser(subparsers):
     group_input.add_argument("--platform", dest = "platform", default = "10x-genomics",
         choices = ["10x-genomics", "Dropseq", "Smartseq2"],
         help = "Platform of single cell RNA-seq. DEFAULT: 10x-genomics.")
-    group_input.add_argument("--fastq-dir", dest = "fastq_dir", type = str, required = True,
-        help = "Directory where fastq files are stored")
-    group_input.add_argument("--fastq-prefix", dest = "fastq_prefix", type = str, default = "",
-        help = "Sample name of fastq file, only for the platform of '10x-genomics'. "
-        "If there is a file named pbmc_1k_v2_S1_L001_I1_001.fastq.gz, the prefix is 'pbmc_1k_v2'.")
+    group_input.add_argument("--sample-file", dest = "sample_file", type = str, default = "samples.json",
+        help = "JSON file with sample file information")
     group_input.add_argument("--fastq-barcode", dest = "fastq_barcode", type = str, default = "",
         help = "Specify the barcode fastq file, only for the platform of 'Dropseq'. "
         "If there are multiple pairs of fastq, please provide a comma-separated list of barcode fastq files. "
@@ -264,8 +209,8 @@ def scrna_parser(subparsers):
         "By default (not set), the pipeline will skip the RSeQC part.")
     group_output.add_argument("--directory", "-d", dest = "directory", type = str, default = "MAESTRO",
         help = "Path to the directory where the workflow shall be initialized and results shall be stored. DEFAULT: MAESTRO.")
-    group_output.add_argument("--outprefix", dest = "outprefix", type = str, default = "MAESTRO",
-        help = "Prefix of output files. DEFAULT: MAESTRO.")
+    group_output.add_argument("--mergedname", dest = "mergedname", type = str, default = "MAESTRO",
+        help = "Prefix of merged output files. DEFAULT: MAESTRO.")
 
     # Quality control cutoff
     group_cutoff = workflow.add_argument_group("Quality control arguments")
@@ -281,14 +226,14 @@ def scrna_parser(subparsers):
     group_reference.add_argument("--mapindex", dest = "mapindex",
         required = True,
         help = "Genome index directory for STAR. Users can just download the index file for human and mouse "
-        "from http://cistrome.org/~galib/Refdata_scRNA_MAESTRO_GRCh38_1.2.2.tar.gz and "
-        "http://cistrome.org/~galib/Refdata_scRNA_MAESTRO_GRCm38_1.2.2.tar.gz, respectively, and decompress them. "
+        "from http://cistrome.org/~galib/MAESTRO/references/scRNA/Refdata_scRNA_MAESTRO_GRCh38_1.2.2.tar.gz and "
+        "http://cistrome.org/~galib/MAESTRO/references/scRNA/Refdata_scRNA_MAESTRO_GRCm38_1.2.2.tar.gz, respectively, and decompress them. "
         "Then specify the index directory for STAR, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.2.2/GRCh38_STAR_2.7.6a'.")
     group_reference.add_argument("--rsem", dest = "rsem", default = "",
         help = "The prefix of transcript references for RSEM used by rsem-prepare-reference (Only required when the platform is Smartseq2). "
         "Users can directly download the annotation file for huamn and mouse from "
-        "http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz and "
-        "http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCm38_1.1.0.tar.gz, respectively, and decompress them. "
+        "http://cistrome.org/~galib/MAESTRO/references/scRNA/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz and "
+        "http://cistrome.org/~galib/MAESTRO/references/scRNA/Refdata_scRNA_MAESTRO_GRCm38_1.1.0.tar.gz, respectively, and decompress them. "
         "Then specify the prefix for RSEM, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_RSEM_1.3.2/GRCh38'.")
 
     # Barcode arguments
@@ -310,12 +255,17 @@ def scrna_parser(subparsers):
     group_barcode.add_argument("--umi-length", dest = "umi_length", type = int, default = 10,
         help = "The length of UMI. For 10x-genomics, the length of V2 chemistry is 10. "
         "For 10X V3 chemistry, the length is 12. DEFAULT: 10. ")
+    group_barcode.add_argument("--trimR1", dest = "trimR1", action = "store_true",
+        help = "Whether or not to run the R1 file. "
+        "If set, the pipeline will include the trim off anything after the R1 reads past barcode information. "
+        "Only necessary if reads were sequenced past these barcodes, by default not set.")
+
 
     # Regulator identification
     group_regulator = workflow.add_argument_group("Regulator identification arguments")
     group_regulator.add_argument("--lisadir", dest = "lisadir", type = str, default = "",
-        help = "Path to lisa data files. For human and mouse, data can be downloaded from http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz"
-        "and http://cistrome.org/~alynch/data/lisa_data/mm10_2.1.tar.gz")
+        help = "Path to lisa data files. For human and mouse, data can be downloaded from http://cistrome.org/~alynch/data/lisa_data/hg38_1000_2.0.h5"
+        "and http://cistrome.org/~alynch/data/lisa_data/mm10_1000_2.0.h5")
 
 
     # Signature file arguments
@@ -328,7 +278,6 @@ def scrna_parser(subparsers):
         "DEFAULT: human.immune.CIBERSORT.")
 
     return
-
 
 def integrate_parser(subparsers):
     """
@@ -354,32 +303,6 @@ def integrate_parser(subparsers):
         help = "Prefix of output files. DEFAULT: MAESTRO.")
 
     return
-
-def integrate_config(args):
-    """
-    Generate integrate config.yaml file.
-    """
-
-    try:
-        os.makedirs(args.directory)
-    except OSError:
-        # either directory exists (then we can ignore) or it will fail in the
-        # next step.
-        pass
-
-    pkgpath = resource_filename('MAESTRO', 'Snakemake')
-    template_file = os.path.join(pkgpath, "integrate", "config_template.yaml")
-    configfile = os.path.join(args.directory, "config.yaml")
-    config_template = Template(open(template_file, "r").read(), trim_blocks=True, lstrip_blocks=True)
-    with open(configfile, "w") as configout:
-        configout.write(config_template.render(
-            rnaobject = os.path.abspath(args.rna_object),
-            atacobject = os.path.abspath(args.atac_object),
-            outprefix = args.outprefix))
-
-    source = os.path.join(pkgpath, "integrate", "Snakefile")
-    target = os.path.join(args.directory, "Snakefile")
-    shutil.copy(source, target)
 
 def scatac_config(args):
     """
@@ -464,3 +387,90 @@ def scatac_config(args):
     dest = os.path.join(args.directory, "rules")
     shutil.copy(source, target)
     shutil.copytree(rules, dest)
+
+def scrna_config(args):
+    """
+    Generate scatac config.yaml file.
+    """
+
+    try:
+        os.makedirs(args.directory)
+    except OSError:
+        # either directory exists (then we can ignore) or it will fail in the
+        # next step.
+        pass
+
+
+    pkgpath = resource_filename('MAESTRO', 'Snakemake')
+    template_file = os.path.join(pkgpath, "scRNA", "config_template.yaml")
+    configfile = os.path.join(args.directory, "config.yaml")
+    config_template = Template(open(template_file, "r").read(), trim_blocks=True, lstrip_blocks=True)
+    if args.signature not in ['human.immune.CIBERSORT', 'mouse.brain.ALLEN', 'mouse.all.facs.TabulaMuris', 'mouse.all.droplet.TabulaMuris']:
+        signature = os.path.abspath(args.signature)
+    else:
+        signature = args.signature
+
+    if args.whitelist != "":
+        whitelist = os.path.abspath(args.whitelist)
+    else:
+        whitelist = ""
+
+    with open(configfile, "w") as configout:
+        configout.write(config_template.render(
+            #input_path = os.path.abspath(args.input_path),
+            sample_file = args.sample_file,
+            species = args.species,
+            platform = args.platform,
+            mergedname = args.mergedname,
+            rseqc = args.rseqc,
+            cores = args.cores,
+            count = args.count_cutoff,
+            gene = args.gene_cutoff,
+            cell = args.cell_cutoff,
+            signature = signature,
+            # rabitlib = os.path.abspath(args.rabitlib),
+            #lisamode = args.lisamode,
+            lisadir = os.path.abspath(args.lisadir),
+            mapindex = os.path.abspath(args.mapindex),
+            rsem = os.path.abspath(args.rsem),
+            whitelist = os.path.abspath(args.whitelist),
+            barcodestart = args.barcode_start,
+            barcodelength = args.barcode_length,
+            umistart = args.umi_start,
+            umilength = args.umi_length,
+            trimr1 = args.trimR1,
+            barcode = args.fastq_barcode,
+            transcript = args.fastq_transcript))
+
+    source = os.path.join(pkgpath, "scRNA", "Snakefile")
+    rules = os.path.join(pkgpath, "scRNA", "rules")
+    target = os.path.join(args.directory, "Snakefile")
+    dest = os.path.join(args.directory, "rules")
+    shutil.copy(source, target)
+    shutil.copytree(rules, dest)
+
+def integrate_config(args):
+    """
+    Generate integrate config.yaml file.
+    """
+
+    try:
+        os.makedirs(args.directory)
+    except OSError:
+        # either directory exists (then we can ignore) or it will fail in the
+        # next step.
+        pass
+
+    pkgpath = resource_filename('MAESTRO', 'Snakemake')
+    template_file = os.path.join(pkgpath, "integrate", "config_template.yaml")
+    configfile = os.path.join(args.directory, "config.yaml")
+    config_template = Template(open(template_file, "r").read(), trim_blocks=True, lstrip_blocks=True)
+    with open(configfile, "w") as configout:
+        configout.write(config_template.render(
+            rnaobject = os.path.abspath(args.rna_object),
+            atacobject = os.path.abspath(args.atac_object),
+            outprefix = args.outprefix))
+
+    source = os.path.join(pkgpath, "integrate", "Snakefile")
+    target = os.path.join(args.directory, "Snakefile")
+    shutil.copy(source, target)

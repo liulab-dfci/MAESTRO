@@ -84,12 +84,6 @@ def scrna_validator(args):
     """
 
     if args.platform == "10x-genomics":
-        if args.input_path == "":
-            logging.error("--input-path is required. Please specify the directory where fastq files are stored!")
-            exit(1)
-        if args.fastq_prefix == "":
-            logging.error("--fastq-prefix is required. Please provide the sample name of fastq files!")
-            exit(1)
         if args.whitelist == "":
             logging.error("--whitelist is required for 10x-genomics data!")
             exit(1)

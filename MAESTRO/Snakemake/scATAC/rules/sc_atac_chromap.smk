@@ -6,7 +6,7 @@ rule scatac_chromap:
         r3 = "Result/Tmp/{sample}/{sample}_R3.fastq",
         barcode = "Result/Tmp/{sample}/{sample}_R2.fastq",
     output:
-        "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv",
+        temp("Result/mapping/{sample}/fragments_pre_corrected_dedup_count.tsv")
     benchmark:
         "Result/Benchmark/{sample}_chromap.benchmark"
     threads:
@@ -21,9 +21,11 @@ rule scatac_chromap:
 
 rule scatac_process_frag:
     input:
-        "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv"
+        "Result/mapping/{sample}/fragments_pre_corrected_dedup_count.tsv"
     output:
+        frag = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv",
         fraggz = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv.gz"
     shell:
-        "bgzip -c {input} > {output.fraggz};"
+        "python " + SCRIPT_PATH + "/scATAC_FragmentReshape.py -F {input} -O {output.frag};"
+        "bgzip -c {output.frag} > {output.fraggz};"
         "tabix -p bed {output.fraggz}"

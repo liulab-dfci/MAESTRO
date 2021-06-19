@@ -78,13 +78,13 @@ deduplication: {{ deduplication }}
 #######################################################################################
 
 # Path of the giggle annotation file required for regulator identification.
-# Please download the annotation file from http://cistrome.org/~galib/MAESTRO/references/giggle.all.tar.gz and decompress it.
+# Please download the annotation file from http://cistrome.org/~galib/giggle.all.tar.gz and decompress it.
 giggleannotation: {{ giggleannotation }}
 
 # Reference genome
 genome:
   # Genome fasta file for mapping. Users can just download the fasta file
-  # from http://cistrome.org/~galib/MAESTRO/references/scATAC/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz  and decompress it.
+  # from http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz and decompress it.
   # For example, 'Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa'.
   #fasta: /liulab/mtang/references/Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa
   fasta: {{ fasta }}
