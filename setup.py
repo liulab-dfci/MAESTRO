@@ -2,7 +2,7 @@
 # @Author: Dongqing Sun
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-06-12 03:53:45
-# @Last Modified by:   Dongqing Sun
+# @Last Modified by:   Gali Bai
 # @Last Modified time: 2020-06-15 21:58:56
 
 
@@ -21,7 +21,7 @@ def main():
         version = "1.5.0",
         package_dir = {'MAESTRO':'MAESTRO'},
         packages = ['MAESTRO'],
-        package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/integrate/*', 'Snakemake/scATAC/*', 'Snakemake/scATAC/rules/*', 'R/*', 'utils/*','annotations/*', 'html/*', '']},
+        package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/integrate/*', 'Snakemake/scATAC/*', 'Snakemake/scATAC/rules/*', 'Snakemake/scRNA/rules/*', 'R/*', 'utils/*','annotations/*', 'html/*', '']},
         #data_files = [(os.path.join(sys.prefix,'bin'), ['refpkg/giggle/bin/giggle'])],
         scripts = ['MAESTRO/MAESTRO'],
         include_package_data = True,

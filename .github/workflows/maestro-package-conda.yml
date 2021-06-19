@@ -64,7 +64,8 @@ jobs:
         sinto -h
         lisa
         MAESTRO -v
-        MAESTRO fast-scatac-init -h
+        MAESTRO scatac-init -h
+        MAESTRO scrna-init -h
         MAESTRO samples-init -h
         R -e "library(MAESTRO);library(Seurat)"
         R -e "library(org.Hs.eg.db);library(org.Mm.eg.db)"
