@@ -68,13 +68,13 @@ def scatac_parser(subparsers):
         required = True,
         help = "Path of the giggle annotation file required for regulator identification. "
         "Please download the annotation file from "
-        "http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz and decompress it.")
+        "http://cistrome.org/~galib/MAESTRO/references/giggle.all.tar.gz and decompress it.")
     group_reference.add_argument("--fasta", dest = "fasta", type = str,
         default = "",
         help = "Genome fasta file for mapping."
         "Users can just download the fasta file for huamn and mouse from "
-        "http://cistrome.org/~galib/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz and "
-        "http://cistrome.org/~galib/Refdata_scATAC_MAESTRO_GRCm38_1.1.0.tar.gz, respectively and decompress them. "
+        "http://cistrome.org/~galib/MAESTRO/references/scATAC/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz and "
+        "http://cistrome.org/~galib/MAESTRO/references/scATAC/Refdata_scATAC_MAESTRO_GRCm38_1.1.0.tar.gz, respectively and decompress them. "
         "For example, 'Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa'.")
     group_reference.add_argument("--index", dest = "index", type = str,
         default = "",
@@ -228,14 +228,14 @@ def scrna_parser(subparsers):
     group_reference.add_argument("--mapindex", dest = "mapindex",
         required = True,
         help = "Genome index directory for STAR. Users can just download the index file for human and mouse "
-        "from http://cistrome.org/~galib/Refdata_scRNA_MAESTRO_GRCh38_1.2.2.tar.gz and "
-        "http://cistrome.org/~galib/Refdata_scRNA_MAESTRO_GRCm38_1.2.2.tar.gz, respectively, and decompress them. "
+        "from http://cistrome.org/~galib/MAESTRO/references/scRNA/Refdata_scRNA_MAESTRO_GRCh38_1.2.2.tar.gz and "
+        "http://cistrome.org/~galib/MAESTRO/references/scRNA/Refdata_scRNA_MAESTRO_GRCm38_1.2.2.tar.gz, respectively, and decompress them. "
         "Then specify the index directory for STAR, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.2.2/GRCh38_STAR_2.7.6a'.")
     group_reference.add_argument("--rsem", dest = "rsem", default = "",
         help = "The prefix of transcript references for RSEM used by rsem-prepare-reference (Only required when the platform is Smartseq2). "
         "Users can directly download the annotation file for huamn and mouse from "
-        "http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz and "
-        "http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCm38_1.1.0.tar.gz, respectively, and decompress them. "
+        "http://cistrome.org/~galib/MAESTRO/references/scRNA/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz and "
+        "http://cistrome.org/~galib/MAESTRO/references/scRNA/Refdata_scRNA_MAESTRO_GRCm38_1.1.0.tar.gz,, respectively, and decompress them. "
         "Then specify the prefix for RSEM, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_RSEM_1.3.2/GRCh38'.")
 
     # Barcode arguments
@@ -266,8 +266,8 @@ def scrna_parser(subparsers):
     # Regulator identification
     group_regulator = workflow.add_argument_group("Regulator identification arguments")
     group_regulator.add_argument("--lisadir", dest = "lisadir", type = str, default = "",
-        help = "Path to lisa data files. For human and mouse, data can be downloaded from http://cistrome.org/~alynch/data/lisa_data/hg38_2.1.tar.gz"
-        "and http://cistrome.org/~alynch/data/lisa_data/mm10_2.1.tar.gz")
+        help = "Path to lisa data files. For human and mouse, data can be downloaded from http://cistrome.org/~alynch/data/lisa_data/hg38_1000_2.0.h5"
+        "and http://cistrome.org/~alynch/data/lisa_data/mm10_1000_2.0.h5")
 
 
     # Signature file arguments
