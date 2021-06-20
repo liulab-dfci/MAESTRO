@@ -29,17 +29,17 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
                 --directory {params.outdir} \
                 --outprefix {params.outpre}
             """
-    
-    if len(ALL_SAMPLES) > 1: 
+
+    if len(ALL_SAMPLES) > 1:
         rule scrna_qc_merge:
             input:
-                rawmtx = "Result/%s/rawmatrix/matrix.mtx" % config["mergedname"],
-                feature = "Result/%s/rawmatrix/features.tsv" % config["mergedname"],
-                barcode = "Result/%s/rawmatrix/barcodes.tsv" % config["mergedname"]
+                rawmtx = "Result/STAR/%s/rawmatrix/matrix.mtx" % config["mergedname"],
+                feature = "Result/STAR/%s/rawmatrix/features.tsv" % config["mergedname"],
+                barcode = "Result/STAR/%s/rawmatrix/barcodes.tsv" % config["mergedname"]
             output:
-                countgene = "Result/QC/%s_count_gene_stat.txt" % config["mergedname"],
-                filtermatrix = "Result/QC/%s_filtered_gene_count.h5" % config["mergedname"],
-                rnafilterplot = "Result/QC/%s_scRNA_cell_filtering.png" % config["mergedname"]
+                countgene = "Result/QC/%s/%s_count_gene_stat.txt" % (config["mergedname"],config["mergedname"]),
+                filtermatrix = "Result/QC/%s/%s_filtered_gene_count.h5" % (config["mergedname"],config["mergedname"]),
+                rnafilterplot = "Result/QC/%s/%s_scRNA_cell_filtering.png" % (config["mergedname"],config["mergedname"])
             params:
                 counts = config["cutoff"]["count"],
                 gene = config["cutoff"]["gene"],
@@ -47,7 +47,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
                 outdir = "Result/QC",
                 species = config["species"]
             benchmark:
-                "Result/Benchmark/%s_QC.benchmark" % config["mergedname"]
+                "Result/Benchmark/%s/%s_QC.benchmark" % (config["mergedname"],config["mergedname"])
             shell:
                 """
                 MAESTRO scrna-qc \
@@ -82,7 +82,7 @@ elif config["platform"] == "Smartseq2":
                 --append-names {input.transbam} {params.reference} {params.sample} \
                 > {log} 2>&1
             """
-    
+
     rule scrna_rsem_count:
         input:
             generesult = "Result/STAR/{sample}/{sample}.genes.results"
@@ -93,7 +93,7 @@ elif config["platform"] == "Smartseq2":
             rsem-generate-data-matrix {input.generesult} > {output.expression}
             """
 
-    
+
     rule scrna_qc:
         input:
             expression = "Result/Count/{sample}/{sample}_gene_count_matrix.txt"
@@ -120,7 +120,7 @@ elif config["platform"] == "Smartseq2":
                 --directory {params.outdir} \
                 --outprefix {params.outpre}
             """
-    
+
     rule scrna_bammerge:
         input:
             genomebam = "Result/STAR/{sample}/{sample}Aligned.sortedByCoord.out.bam"
@@ -140,7 +140,7 @@ elif config["platform"] == "Smartseq2":
             ls Result/STAR/*Aligned.sortedByCoord.out.bam > {output.bamlist};
             split -1000 -d {output.bamlist} {params.bamprefix};
             for file in $(ls {params.bamprefix}*);
-            do 
+            do
                 sub=${{file#{params.bamprefix}}};
                 samtools merge \
                     --threads {threads} \

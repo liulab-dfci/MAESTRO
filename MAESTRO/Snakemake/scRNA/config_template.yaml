@@ -16,7 +16,11 @@ species: {{ species }}
 platform: {{ platform }}
 
 # The prefix of output files. DEFAULT: MAESTRO.
-mergedname: {{ outprefix }}
+outprefix: {{outprefix}}
+
+# The prefix of merged output files. DEFAULT: MAESTRO.
+mergedname: {{ mergedname }}
+
 
 # Whether or not to run RSeQC. [True, False]
 # If it's set to True, the pipeline will include the RSeQC part and then takes a longer time.
@@ -49,12 +53,12 @@ cutoff:
 # Reference genome
 genome:
   # Genome index directory for STAR. Users can just download the index file
-  # from http://cistrome.org/~galib/MAESTRO/references/scRNA/Refdata_scRNA_MAESTRO_GRCh38_1.2.2.tar.gz and decompress it.
+  # from http://cistrome.org/~chenfei/MAESTRO/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz and decompress it.
   # Then specify the index directory for STAR, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_STAR_2.7.3a'.
   mapindex: {{ mapindex }}
   # The prefix of transcript references for RSEM used by rsem-prepare-reference (Only required when the platform is Smartseq2).
   # Users can directly download the annotation file from
-  # http://cistrome.org/~galib/MAESTRO/references/scRNA/Refdata_scRNA_MAESTRO_GRCh38_1.1.0.tar.gz and decompress it.
+  # http://cistrome.org/~chenfei/MAESTRO/giggle.tar.gz and decompress it.
   # Then specify the prefix for RSEM, for example, 'Refdata_scRNA_MAESTRO_GRCh38_1.1.0/GRCh38_RSEM_1.3.2/GRCh38'.
   rsem: {{ rsem }}
 

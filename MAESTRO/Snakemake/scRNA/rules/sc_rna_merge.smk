@@ -4,10 +4,10 @@ rule scrna_merge:
         features = expand("Result/STAR/{sample}/{sample}Solo.out/Gene/raw/features.tsv", sample=ALL_SAMPLES)[1],
         barcodes = expand("Result/STAR/{sample}/{sample}Solo.out/Gene/raw/barcodes.tsv", sample=ALL_SAMPLES)
     output:
-        mergedmtx = "Result/%s/rawmatrix/matrix.mtx" % config["mergedname"],
-        mergedfeatures = "Result/%s/rawmatrix/features.tsv" % config["mergedname"],
-        mergedbarcodes = "Result/%s/rawmatrix/barcodes.tsv" % config["mergedname"],
-        sampleannotation = "Result/%s/BarcodeAnnotation.tsv" % config["mergedname"]
+        mergedmtx = "Result/STAR/%s/rawmatrix/matrix.mtx" % config["mergedname"],
+        mergedfeatures = "Result/STAR/%s/rawmatrix/features.tsv" % config["mergedname"],
+        mergedbarcodes = "Result/STAR/%s/rawmatrix/barcodes.tsv" % config["mergedname"],
+        sampleannotation = "Result/STAR/%s/BarcodeAnnotation.tsv" % config["mergedname"]
     params:
         samplenames = ALL_SAMPLES
     shell:

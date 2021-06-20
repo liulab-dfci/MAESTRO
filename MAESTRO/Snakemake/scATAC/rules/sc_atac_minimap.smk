@@ -9,7 +9,7 @@ rule scatac_minimap:
         r1 = "Result/Tmp/{sample}/{sample}_R1.barcoded.fastq",
         r3 = "Result/Tmp/{sample}/{sample}_R3.barcoded.fastq"
     output:
-        bam = temp("Result/mapping/{sample}/{sample}.sortedByPos.bam")
+        bam = temp("Result/Mapping/{sample}/{sample}.sortedByPos.bam")
     threads:
         _minmap_threads
     benchmark:
@@ -23,12 +23,12 @@ rule scatac_minimap:
 
 rule scatac_fragmentgenerate:
     input:
-        bam = "Result/mapping/{sample}/{sample}.sortedByPos.bam"
+        bam = "Result/Mapping/{sample}/{sample}.sortedByPos.bam"
     output:
-        fragments = "Result/mapping/{sample}/fragments.tsv",
-        bam = "Result/mapping/{sample}/{sample}.sortedByPos.CRadded.bam"
+        fragments = "Result/Mapping/{sample}/fragments.tsv",
+        bam = "Result/Mapping/{sample}/{sample}.sortedByPos.CRadded.bam"
     params:
-        outdir = "Result/mapping/{sample}"
+        outdir = "Result/Mapping/{sample}"
     benchmark:
         "Result/Benchmark/{sample}_FragGenerate.benchmark"
     shell:
@@ -36,13 +36,13 @@ rule scatac_fragmentgenerate:
 
 rule scatac_rmdp:
     input:
-        bam = "Result/mapping/{sample}/{sample}.sortedByPos.CRadded.bam",
+        bam = "Result/Mapping/{sample}/{sample}.sortedByPos.CRadded.bam",
     output:
-        bam = "Result/mapping/{sample}/{sample}.sortedByPos.CRadded.rmdp.bam",
-        metric = "Result/mapping/{sample}/{sample}.rmdp.txt",
+        bam = "Result/Mapping/{sample}/{sample}.sortedByPos.CRadded.rmdp.bam",
+        metric = "Result/Mapping/{sample}/{sample}.rmdp.txt",
         fragbed = "Result/QC/{sample}/{sample}_frag.bed"
     params:
-        sam = "Result/mapping/{sample}/{sample}.sortedByPos.CRadded.rmdp.sample.sam"
+        sam = "Result/Mapping/{sample}/{sample}.sortedByPos.CRadded.rmdp.sample.sam"
     threads:
         _picard_threads
     benchmark:
@@ -58,12 +58,12 @@ rule scatac_rmdp:
 
 rule scatac_bamaddCB:
         input:
-            bam = "Result/mapping/{sample}/{sample}.sortedByPos.CRadded.rmdp.bam",
-            bc_correct = "Result/mapping/{sample}/barcode_correct_uniq.txt"
+            bam = "Result/Mapping/{sample}/{sample}.sortedByPos.CRadded.rmdp.bam",
+            bc_correct = "Result/Mapping/{sample}/barcode_correct_uniq.txt"
         output:
-            bam = "Result/mapping/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam"
+            bam = "Result/Mapping/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam"
         params:
-            outdir = "Result/mapping/{sample}",
+            outdir = "Result/Mapping/{sample}",
             outprefix = "{sample}.sortedByPos.rmdp.CBadded"
         threads:
             _bamAddCB_threads
@@ -76,9 +76,9 @@ rule scatac_bamaddCB:
 
 rule scatac_bamindex:
     input:
-        bam = "Result/mapping/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam",
+        bam = "Result/Mapping/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam",
     output:
-        bai = "Result/mapping/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam.bai",
+        bai = "Result/Mapping/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam.bai",
     threads:
         _bamindex_threads
     benchmark:

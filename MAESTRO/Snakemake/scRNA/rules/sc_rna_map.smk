@@ -10,11 +10,10 @@ if config["platform"] == "10x-genomics":
         specify --soloFeatures GeneFull for single-nuclei data
         specify --soloFeatures Gene GeneFull for getting both counts in exons level and exon + intron level (velocity)
         """
-        input: 
+        input:
             mapindex = config["genome"]["mapindex"],
-            #gtf = config["genome"]["gtf"],
             whitelist = config["barcode"]["whitelist"]
-        output: 
+        output:
             bam = "Result/STAR/{sample}/{sample}Aligned.sortedByCoord.out.bam",
             bai = "Result/STAR/{sample}/{sample}Aligned.sortedByCoord.out.bam.bai",
             rawmtx = "Result/STAR/{sample}/{sample}Solo.out/Gene/raw/matrix.mtx",
@@ -29,17 +28,17 @@ if config["platform"] == "10x-genomics":
             barcodelength = config["barcode"]["barcodelength"],
             umistart = config["barcode"]["umistart"],
             umilength = config["barcode"]["umilength"]
-        version: STAR_VERSION        
+        version: STAR_VERSION
         log:
-            "Result/Log/{sample}_STAR.log" 
+            "Result/Log/{sample}_STAR.log"
         benchmark:
-            "Result/Benchmark/{sample}_STAR.benchmark"
+            "Result/Benchmark/{sample}/{sample}_STAR.benchmark"
         threads:
             config.get("STARsolo_threads", "")
 
         shell:
             """
-            
+
             STAR \
                 --runMode alignReads \
                 --genomeDir {input.mapindex} \
@@ -60,10 +59,10 @@ if config["platform"] == "10x-genomics":
 				--readFilesCommand zcat \
                 --genomeSAindexNbases 2 \
                 > {log} 2>&1
-                
+
             samtools index -b -@ {threads} {output.bam} >> {log} 2>&1
             """
-elif config["platform"] == "Dropseq": 
+elif config["platform"] == "Dropseq":
     rule scrna_map:
         input:
             mapindex = config["genome"]["mapindex"],
@@ -89,7 +88,7 @@ elif config["platform"] == "Dropseq":
         threads:
             config["cores"]
         benchmark:
-            "Result/Benchmark/%s_STAR.benchmark" %(config["outprefix"])
+            "Result/Benchmark/%s/%s_STAR.benchmark" % (config["outprefix"],config["outprefix"])
         shell:
             """
             STAR \
@@ -109,7 +108,7 @@ elif config["platform"] == "Dropseq":
                 --readFilesIn {params.transcript} {params.barcode} \
                 --readFilesCommand {params.decompress} \
                 > {log} 2>&1
-            
+
             samtools index -b -@ {threads} {output.bam}
             """
 elif config["platform"] == "Smartseq2":
@@ -141,10 +140,3 @@ elif config["platform"] == "Smartseq2":
 				--readFilesIn {input.fastq1} {input.fastq2} \
 				> {log} 2>&1
             """
-
-
-
-
-
-
-

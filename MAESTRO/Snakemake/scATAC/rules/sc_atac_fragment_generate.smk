@@ -5,10 +5,10 @@ if config["whitelist"]:
             r2 = "Result/Tmp/{sample}/{sample}_R2.fastq",
             whitelist = config["whitelist"]
         output:
-            bc_correct = "Result/mapping/{sample}/barcode_correct.txt",
-            bc_correct_uniq = "Result/mapping/{sample}/barcode_correct_uniq.txt"
+            bc_correct = "Result/Mapping/{sample}/barcode_correct.txt",
+            bc_correct_uniq = "Result/Mapping/{sample}/barcode_correct_uniq.txt"
         params:
-            outdir = "Result/mapping/{sample}"
+            outdir = "Result/Mapping/{sample}"
         benchmark:
             "Result/Benchmark/{sample}_BarcodeCorrect.benchmark"
         shell:
@@ -21,10 +21,10 @@ else:
         input:
             r2 = "Result/Tmp/{sample}/{sample}_R2.fastq",
         output:
-            bc_correct = "Result/mapping/{sample}/barcode_correct.txt",
-            bc_correct_uniq = "Result/mapping/{sample}/barcode_correct_uniq.txt"
+            bc_correct = "Result/Mapping/{sample}/barcode_correct.txt",
+            bc_correct_uniq = "Result/Mapping/{sample}/barcode_correct_uniq.txt"
         params:
-            outdir = "Result/mapping/{sample}"
+            outdir = "Result/Mapping/{sample}"
         benchmark:
             "Result/Benchmark/{sample}_BarcodeCorrect.benchmark"
         shell:
@@ -34,14 +34,14 @@ else:
 
 rule scatac_fragmentcorrect:
     input:
-        fragments = "Result/mapping/{sample}/fragments.tsv",
-        bc_correct = "Result/mapping/{sample}/barcode_correct.txt"
+        fragments = "Result/Mapping/{sample}/fragments.tsv",
+        bc_correct = "Result/Mapping/{sample}/barcode_correct.txt"
     output:
-        frag_count = "Result/mapping/{sample}/fragments_corrected_count.tsv",
-        frag_sort = temp("Result/mapping/{sample}/fragments_corrected_sorted.tsv")
+        frag_count = "Result/Mapping/{sample}/fragments_corrected_count.tsv",
+        frag_sort = temp("Result/Mapping/{sample}/fragments_corrected_sorted.tsv")
     params:
-        outdir = "Result/mapping/{sample}",
-        frag_correct = "Result/mapping/{sample}/fragments_corrected.tsv",
+        outdir = "Result/Mapping/{sample}",
+        frag_correct = "Result/Mapping/{sample}/fragments_corrected.tsv",
     benchmark:
         "Result/Benchmark/{sample}_FragCorrect.benchmark"
     shell:

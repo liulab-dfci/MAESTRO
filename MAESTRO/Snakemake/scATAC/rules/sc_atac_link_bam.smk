@@ -3,9 +3,9 @@ rule scatac_fragmentgenerate:
         input:
             bam = lambda wildcards: FILES[wildcards.sample]
         output:
-            fragments = "Result/mapping/{sample}/fragments.tsv",
+            fragments = "Result/Mapping/{sample}/fragments.tsv",
         params:
-            outdir = "Result/mapping/{sample}"
+            outdir = "Result/Mapping/{sample}"
         benchmark:
             "Result/Benchmark/{sample}_FragGenerate.benchmark"
         shell:
@@ -15,11 +15,11 @@ rule scatac_rmdp:
     input:
         bam = lambda wildcards: FILES[wildcards.sample],
     output:
-        bam = "Result/mapping/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam",
-        metric = "Result/mapping/{sample}/{sample}.rmdp.txt",
+        bam = "Result/Mapping/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam",
+        metric = "Result/Mapping/{sample}/{sample}.rmdp.txt",
         fragbed = "Result/QC/{sample}/{sample}_frag.bed"
     params:
-        sam = "Result/mapping/{sample}/{sample}.sortedByPos.CRadded.rmdp.sample.sam"
+        sam = "Result/Mapping/{sample}/{sample}.sortedByPos.CRadded.rmdp.sample.sam"
     threads:
         _picard_threads
     benchmark:
@@ -33,9 +33,9 @@ rule scatac_rmdp:
 
 rule scatac_bamindex:
     input:
-        bam = "Result/mapping/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam",
+        bam = "Result/Mapping/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam",
     output:
-        bai = "Result/mapping/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam.bai",
+        bai = "Result/Mapping/{sample}/{sample}.sortedByPos.rmdp.CBadded.bam.bai",
     threads:
         _bamindex_threads
     benchmark:

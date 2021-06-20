@@ -4,7 +4,7 @@ macs2_genome = "hs" if config["species"] == "GRCh38" else "mm"
 
 rule scatac_allpeakcall:
     input:
-        frag_dedup = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv"
+        frag_dedup = "Result/Mapping/{sample}/fragments_corrected_dedup_count.tsv"
     output:
         peak = "Result/Analysis/{sample}/{sample}_all_peaks.narrowPeak",
         bdg = "Result/Analysis/{sample}/{sample}_all_treat_pileup.bdg"
@@ -21,9 +21,9 @@ rule scatac_allpeakcall:
 if config["shortpeaks"] and not config["custompeaks"] :
     rule scatac_shortfragment:
         input:
-            frag_dedup = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv"
+            frag_dedup = "Result/Mapping/{sample}/fragments_corrected_dedup_count.tsv"
         output:
-            frag_short = "Result/mapping/{sample}/fragments_corrected_150bp.tsv"
+            frag_short = "Result/Mapping/{sample}/fragments_corrected_150bp.tsv"
         threads:
             _shortfragment_threads
         benchmark:
@@ -33,7 +33,7 @@ if config["shortpeaks"] and not config["custompeaks"] :
 
     rule scatac_shortpeakcall:
         input:
-            frag_short = "Result/mapping/{sample}/fragments_corrected_150bp.tsv"
+            frag_short = "Result/Mapping/{sample}/fragments_corrected_150bp.tsv"
         output:
             bed = "Result/Analysis/{sample}/{sample}_150bp_peaks.narrowPeak"
         params:
@@ -69,9 +69,9 @@ if config["shortpeaks"] and not config["custompeaks"] :
 elif config["custompeaks"] and config["shortpeaks"]:
     rule scatac_shortfragment:
         input:
-            frag_dedup = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv"
+            frag_dedup = "Result/Mapping/{sample}/fragments_corrected_dedup_count.tsv"
         output:
-            frag_short = "Result/mapping/{sample}/fragments_corrected_150bp.tsv"
+            frag_short = "Result/Mapping/{sample}/fragments_corrected_150bp.tsv"
         threads:
             _shortfragment_threads
         benchmark:
@@ -81,7 +81,7 @@ elif config["custompeaks"] and config["shortpeaks"]:
 
     rule scatac_shortpeakcall:
         input:
-            frag_short = "Result/mapping/{sample}/fragments_corrected_150bp.tsv"
+            frag_short = "Result/Mapping/{sample}/fragments_corrected_150bp.tsv"
         output:
             bed = "Result/Analysis/{sample}/{sample}_150bp_peaks.narrowPeak"
         params:

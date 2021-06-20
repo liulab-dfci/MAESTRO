@@ -7,7 +7,7 @@ rule scatac_analysis:
     input:
         filtercount = "Result/QC/{sample}/{sample}_filtered_peak_count.h5",
         genescore = "Result/Analysis/{sample}/{sample}_gene_score.h5",
-        fraggz = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv.gz"
+        fraggz = "Result/Mapping/{sample}/fragments_corrected_dedup_count.tsv.gz"
     output:
         specificpeak = "Result/Analysis/{sample}/{sample}_DiffPeaks.tsv",
         clusterplot = "Result/Analysis/{sample}/{sample}_cluster.png",

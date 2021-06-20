@@ -38,7 +38,7 @@ rule scatac_countpeak_batch:
     input:
         finalpeak = "Result/Analysis/Batch/all_samples_peaks.bed",
         validbarcode = "Result/QC/{sample}/{sample}_scATAC_validcells.txt",
-        frag = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv"
+        frag = "Result/Mapping/{sample}/fragments_corrected_dedup_count.tsv"
     output:
         counts = "Result/Analysis/Batch/{sample}/{sample}_peak_count.h5"
     params:

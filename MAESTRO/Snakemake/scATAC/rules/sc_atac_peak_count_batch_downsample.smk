@@ -8,9 +8,9 @@ _downsample_threads = 4
 
 rule scatac_downsample_batch:
     input:
-        frag_dedup = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv",
+        frag_dedup = "Result/Mapping/{sample}/fragments_corrected_dedup_count.tsv",
     output:
-        frag_downsample = "Result/mapping/{sample}/{sample}_fragment_corrected_downsample.tsv"
+        frag_downsample = "Result/Mapping/{sample}/{sample}_fragment_corrected_downsample.tsv"
     threads:
         _downsample_threads
     message:
@@ -41,7 +41,7 @@ rule scatac_downsample_batch:
 
 rule scatac_downsample_peak_call:
     input:
-        frags = expand("Result/mapping/{sample}/{sample}_fragment_corrected_downsample.tsv", sample = ALL_SAMPLES)
+        frags = expand("Result/Mapping/{sample}/{sample}_fragment_corrected_downsample.tsv", sample = ALL_SAMPLES)
     output:
         peak = "Result/Analysis/Batch/all_samples_peaks.narrowPeak"
     params:
@@ -59,7 +59,7 @@ rule scatac_countpeak_batch:
     input:
         finalpeak = "Result/Analysis/Batch/all_samples_peaks.narrowPeak",
         validbarcode = "Result/QC/{sample}/{sample}_scATAC_validcells.txt",
-        frag = "Result/mapping/{sample}/fragments_corrected_dedup_count.tsv"
+        frag = "Result/Mapping/{sample}/fragments_corrected_dedup_count.tsv"
     output:
         counts = "Result/Analysis/Batch/{sample}/{sample}_peak_count.h5"
     params:

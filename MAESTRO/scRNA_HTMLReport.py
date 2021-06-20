@@ -15,26 +15,26 @@ def CommandLineParser():
     parser = ap.ArgumentParser(description = "Generate scRNA result report. ")
 
     group_input = parser.add_argument_group("Input arguments")
-    group_input.add_argument("--platform", dest = "platform", default = "10x-genomics", 
-        choices = ["10x-genomics", "Dropseq", "Smartseq2"], 
+    group_input.add_argument("--platform", dest = "platform", default = "10x-genomics",
+        choices = ["10x-genomics", "Dropseq", "Smartseq2"],
         help = "Platform of single cell RNA-seq. DEFAULT: 10x-genomics.")
-    group_input.add_argument("--fastq-dir", dest = "fastq_dir", type = str, default = "",  
+    group_input.add_argument("--fastq-dir", dest = "fastq_dir", type = str, default = "",
         help = "Directory where fastq files are stored")
-    group_input.add_argument("--species", dest = "species", default = "GRCh38", 
-        choices = ["GRCh38", "GRCm38"], type = str, 
+    group_input.add_argument("--species", dest = "species", default = "GRCh38",
+        choices = ["GRCh38", "GRCm38"], type = str,
         help = "Species (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
 
     group_regulator = parser.add_argument_group("Regulator identification arguments")
-    group_regulator.add_argument("--method", dest = "method", type = str, 
+    group_regulator.add_argument("--method", dest = "method", type = str,
         choices = ["RABIT", "LISA"], default = "LISA",
         help = "Method to predict driver regulators.")
 
     group_output = parser.add_argument_group("Output arguments")
-    group_output.add_argument("-d", "--directory", dest = "directory", default = "MAESTRO", 
+    group_output.add_argument("-d", "--directory", dest = "directory", default = "MAESTRO",
         help = "Path to the directory where the result file shall be stored. DEFAULT: MAESTRO.")
-    group_output.add_argument("--outprefix", dest = "outprefix", default = "10x-genomics", 
+    group_output.add_argument("--outprefix", dest = "outprefix", default = "10x-genomics",
         help = "Prefix of output files. DEFAULT: MAESTRO.")
-    group_output.add_argument("--rseqc", dest = "rseqc", action = "store_true", 
+    group_output.add_argument("--rseqc", dest = "rseqc", action = "store_true",
         help = "Whether or not to run RSeQC. "
         "If set, the pipeline will include the RSeQC part and then takes a longer time. "
         "By default (not set), the pipeline will skip the RSeQC part.")
@@ -42,7 +42,7 @@ def CommandLineParser():
         help = "Whether the mulitple samples were run")
 
     return parser.parse_args()
-    
+
 
 def main():
 
@@ -69,16 +69,16 @@ def main():
         report_html_tempfile = os.path.join(SCRIPT_PATH, "html", "scRNA_template.html")
         report_html_temp = open(report_html_tempfile, "r").read()
 
-        cluster_regulator_file = "Result/Analysis/%s.PredictedTFTop10.txt"%outpre
+        cluster_regulator_file = "Result/Analysis/%s/%s.PredictedTFTop10.txt"%(outpre, outpre)
 
-        readdistrplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_read_distr.png"%outpre)
-        readqualplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_read_quality.png"%outpre)
-        nvcplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_NVC.png"%outpre)
-        gcplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_GCcontent.png"%outpre)
-        genecovplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_genebody_cov.png"%outpre)
-        countgeneplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_cell_filtering.png"%outpre)
-        genecluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_cluster.png"%outpre)
-        geneannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_annotated.png"%outpre)
+        readdistrplot_link = snakemake.report.data_uri_from_file("Result/QC/%s/%s_scRNA_read_distr.png"%(outpre, outpre))
+        readqualplot_link = snakemake.report.data_uri_from_file("Result/QC/%s/%s_scRNA_read_quality.png"%(outpre, outpre))
+        nvcplot_link = snakemake.report.data_uri_from_file("Result/QC/%s/%s_scRNA_NVC.png"%(outpre, outpre))
+        gcplot_link = snakemake.report.data_uri_from_file("Result/QC/%s/%s_scRNA_GCcontent.png"%(outpre, outpre))
+        genecovplot_link = snakemake.report.data_uri_from_file("Result/QC/%s/%s_scRNA_genebody_cov.png"%(outpre, outpre))
+        countgeneplot_link = snakemake.report.data_uri_from_file("Result/QC/%s/%s_scRNA_cell_filtering.png"%(outpre, outpre))
+        genecluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s/%s_cluster.png"%(outpre, outpre))
+        geneannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s/%s_annotated.png"%(outpre, outpre))
         tdtitle = "Cluster-specific regulator identified by %s" %(method)
         tdcolname = "log10(%s score)" %(method)
 
@@ -97,12 +97,12 @@ def main():
         report_html_tempfile = os.path.join(SCRIPT_PATH, "html", "scRNA_noqc_multisample_template.html")
         report_html_temp = open(report_html_tempfile, "r").read()
 
-        cluster_regulator_file = "Result/Analysis/%s.PredictedTFTop10.txt"%outpre
+        cluster_regulator_file = "Result/Analysis/%s/%s.PredictedTFTop10.txt"%outpre
 
-        countgeneplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_cell_filtering.png"%outpre)
-        genecluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_cluster.png"%outpre)
-        sampleannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_samples.png"%outpre)
-        geneannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_annotated.png"%outpre)
+        countgeneplot_link = snakemake.report.data_uri_from_file("Result/QC/%s/%s_scRNA_cell_filtering.png"%(outpre, outpre))
+        genecluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s/%s_cluster.png"%(outpre, outpre))
+        sampleannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s/%s_samples.png"%(outpre, outpre))
+        geneannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s/%s_annotated.png"%(outpre, outpre))
         tdtitle = "Cluster-specific regulator identified by %s" %(method)
         tdcolname = "log10(%s score)" %(method)
 
@@ -121,11 +121,11 @@ def main():
         report_html_tempfile = os.path.join(SCRIPT_PATH, "html", "scRNA_noqc_template.html")
         report_html_temp = open(report_html_tempfile, "r").read()
 
-        cluster_regulator_file = "Result/Analysis/%s.PredictedTFTop10.txt"%outpre
+        cluster_regulator_file = "Result/Analysis/%s/%s.PredictedTFTop10.txt"%outpre
 
-        countgeneplot_link = snakemake.report.data_uri_from_file("Result/QC/%s_scRNA_cell_filtering.png"%outpre)
-        genecluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_cluster.png"%outpre)
-        geneannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s_annotated.png"%outpre)
+        countgeneplot_link = snakemake.report.data_uri_from_file("Result/QC/%s/%s_scRNA_cell_filtering.png"%(outpre, outpre))
+        genecluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s/%s_cluster.png"%(outpre, outpre))
+        geneannotate_link = snakemake.report.data_uri_from_file("Result/Analysis/%s/%s_annotated.png"%(outpre, outpre))
         tdtitle = "Cluster-specific regulator identified by %s" %(method)
         tdcolname = "log10(%s score)" %(method)
 
@@ -150,4 +150,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

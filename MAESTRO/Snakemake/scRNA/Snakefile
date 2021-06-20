@@ -1,7 +1,7 @@
 """
 A single cell RNA-seq analysis pipeline.
 Author: Ming (Tommy) Tang  04/16/2020
-Author: Shariq Madha
+Author: Shariq Madha, Gali Bai
 """
 
 from MAESTRO.scRNA_utility import SCRIPT_PATH, RSCRIPT_PATH
@@ -13,10 +13,10 @@ configfile: "config.yaml"
 FILES = json.load(open(config['SAMPLES_JSON']))
 ALL_SAMPLES = sorted(FILES.keys())
 
-REPORTS = expand("Result/{sample}_scRNA_report.html", sample = ALL_SAMPLES)
+REPORTS = expand("Result/Report/{sample}_scRNA_report.html", sample = ALL_SAMPLES)
 
 if len(ALL_SAMPLES)>1:
-    REPORTS += ["Result/%s_scRNA_report.html" % config["mergedname"]]
+    REPORTS += ["Result/Report/%s_scRNA_report.html" % config["mergedname"]]
 
 TARGETS = REPORTS
 

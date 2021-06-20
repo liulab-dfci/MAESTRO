@@ -12,9 +12,9 @@ if config["rseqc"]:
             genecovplot = "Result/QC/{sample}/{sample}_scRNA_genebody_cov.png",
             rnafilterplot = "Result/QC/{sample}/{sample}_scRNA_cell_filtering.png",
         output:
-            summaryreport = "Result/{sample}_scRNA_report.html",
+            summaryreport = "Result/Report/{sample}_scRNA_report.html",
         params:
-            outdir = "Result",
+            outdir = "Result/Report",
             outpre = "{sample}",
             fastqdir = lambda wildcards: ','.join(FILES[wildcards.sample]["R1"]),
             species = config["species"],
@@ -39,9 +39,9 @@ else:
             tflist = "Result/Analysis/{sample}/{sample}.PredictedTFTop10.txt",
             rnafilterplot = "Result/QC/{sample}/{sample}_scRNA_cell_filtering.png",
         output:
-            summaryreport = "Result/{sample}_scRNA_report.html",
+            summaryreport = "Result/Report/{sample}_scRNA_report.html",
         params:
-            outdir = "Result",
+            outdir = "Result/Report",
             outpre = "{sample}",
             fastqdir = lambda wildcards: ','.join(FILES[wildcards.sample]["R1"]),
             species = config["species"],
@@ -62,21 +62,21 @@ else:
 if len(ALL_SAMPLES) > 1:
     rule scrna_report_merge:
         input:
-            clusterplot = "Result/Analysis/%s_cluster.png" % config["mergedname"],
-            sampleplot = "Result/Analysis/%s_samples.png" %config["mergedname"],
-            annotateplot = "Result/Analysis/%s_annotated.png" % config["mergedname"],
-            tflist = "Result/Analysis/%s.PredictedTFTop10.txt" % config["mergedname"],
-            rnafilterplot = "Result/QC/%s_scRNA_cell_filtering.png" % config["mergedname"]
+            clusterplot = "Result/Analysis/%s/%s_cluster.png" % (config["mergedname"],config["mergedname"]),
+            sampleplot = "Result/Analysis/%s/%s_samples.png" %(config["mergedname"],config["mergedname"]),
+            annotateplot = "Result/Analysis/%s/%s_annotated.png" % (config["mergedname"],config["mergedname"]),
+            tflist = "Result/Analysis/%s/%s.PredictedTFTop10.txt" % (config["mergedname"],config["mergedname"]),
+            rnafilterplot = "Result/QC/%s/%s_scRNA_cell_filtering.png" % (config["mergedname"],config["mergedname"])
         output:
-            summaryreport = "Result/%s_scRNA_report.html" % config["mergedname"]
+            summaryreport = "Result/Report/%s_scRNA_report.html" % config["mergedname"]
         params:
-            outdir = "Result",
+            outdir = "Result/Report",
             outpre = config["mergedname"],
             species = config["species"],
             platform = config["platform"],
             rseqc = False
         benchmark:
-            "Result/Benchmark/%s_Report.benchmark" % config["mergedname"]
+            "Result/Benchmark/%s/%s_Report.benchmark" % (config["mergedname"],config["mergedname"])
         shell:
             """
 			python {SCRIPT_PATH}/scRNA_HTMLReport.py \
