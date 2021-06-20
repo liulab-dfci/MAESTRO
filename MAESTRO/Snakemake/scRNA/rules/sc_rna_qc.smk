@@ -44,7 +44,7 @@ if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
                 counts = config["cutoff"]["count"],
                 gene = config["cutoff"]["gene"],
                 outpre = config["mergedname"],
-                outdir = "Result/QC",
+                outdir = "Result/QC/%s" % config["mergedname"],
                 species = config["species"]
             benchmark:
                 "Result/Benchmark/%s/%s_QC.benchmark" % (config["mergedname"],config["mergedname"])
