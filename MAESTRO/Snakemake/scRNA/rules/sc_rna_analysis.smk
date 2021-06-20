@@ -36,13 +36,13 @@ if len(ALL_SAMPLES)>1:
             sampleplot = "Result/Analysis/%s/%s_samples.png" %(config["mergedname"],config["mergedname"]),
             tflist = "Result/Analysis/%s/%s.PredictedTFTop10.txt"  % (config["mergedname"],config["mergedname"])
         params:
-            expression = "../QC/%s/%s_filtered_gene_count.h5" % (config["mergedname"],config["mergedname"]),
+            expression = "../../QC/%s/%s_filtered_gene_count.h5" % (config["mergedname"],config["mergedname"]),
             species = config["species"],
             outpre =  config["mergedname"],
-            outdir = "Result/Analysis",
+            outdir = "Result/Analysis/%s" % config["mergedname"] ,
             lisadir = config["lisadir"],
             signature = config["signature"],
-            sampleannotation = "../STAR/%s/BarcodeAnnotation.tsv" % config["mergedname"]
+            sampleannotation = "../../STAR/%s/BarcodeAnnotation.tsv" % config["mergedname"]
         benchmark:
             "Result/Benchmark/%s/%s_Analysis.benchmark" % (config["mergedname"],config["mergedname"])
         threads:

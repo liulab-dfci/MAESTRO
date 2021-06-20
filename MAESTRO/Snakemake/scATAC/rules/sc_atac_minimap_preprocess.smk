@@ -44,7 +44,7 @@ if config["platform"] == "10x-genomics":
 
 elif config["platform"] == "sci-ATAC-seq":
     if config["gzip"]:
-        rule scatac_preprocess:
+        rule scatac_preproces_paired:
             input:
                 r1 = lambda wildcards: FILES[wildcards.sample]["1"],
                 r2 = lambda wildcards: FILES[wildcards.sample]["2"],

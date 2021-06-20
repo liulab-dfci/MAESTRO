@@ -97,7 +97,7 @@ def main():
         report_html_tempfile = os.path.join(SCRIPT_PATH, "html", "scRNA_noqc_multisample_template.html")
         report_html_temp = open(report_html_tempfile, "r").read()
 
-        cluster_regulator_file = "Result/Analysis/%s/%s.PredictedTFTop10.txt"%outpre
+        cluster_regulator_file = "Result/Analysis/%s/%s.PredictedTFTop10.txt"%(outpre,outpre)
 
         countgeneplot_link = snakemake.report.data_uri_from_file("Result/QC/%s/%s_scRNA_cell_filtering.png"%(outpre, outpre))
         genecluster_link = snakemake.report.data_uri_from_file("Result/Analysis/%s/%s_cluster.png"%(outpre, outpre))
