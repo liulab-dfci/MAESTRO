@@ -392,7 +392,7 @@ def scatac_config(args):
 
 def scrna_config(args):
     """
-    Generate scatac config.yaml file.
+    Generate scrna config.yaml file.
     """
 
     try:
