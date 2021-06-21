@@ -34,7 +34,5 @@ with open(fragfile, "r") as frag_in, open(outfile, "w") as frag_out:
         items = line.strip().split("\t")
         if str(items[0]) in chr_list :
             frag_out.write("\t".join(items[0:]) + "\n")
-        else:
-            print("Region in" + items[0] + "is excluded." )
 end_time = time.time()
 print("End:", end_time-start_time)

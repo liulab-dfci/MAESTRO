@@ -25,6 +25,9 @@ def CommandLineParser():
         help = "The format of input files. DEFAULT: fastq.")
     group_input.add_argument("--input-path", dest = "input_path", type = str, default = "",
         help = "Directory where input files are stored")
+    group_input.add_argument("--mapping", dest = "mapping", type = str, default = "chromap",
+	choices = ["chromap", "minimap2"],
+	help = "Mapping Tools of scATAC-seq. DEFAULT: chromap.")
     group_input.add_argument("--species", dest = "species", default = "GRCh38",
         choices = ["GRCh38", "GRCm38"], type = str,
         help = "Species (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
@@ -49,7 +52,7 @@ def main():
     species = myparser.species
     platform = myparser.platform
     input_format = myparser.input_format
-
+    mapping = myparser.mapping
     try:
         os.makedirs(directory)
     except OSError:
@@ -99,7 +102,7 @@ def main():
             td_list.append(items_str)
     td_str = "\n".join(td_list)
 
-    if input_format != "fragments":
+    if input_format != "fragments" and mapping != "chromap":
         if input_format == "fastq":
             inputformat = "FASTQ Path"
         else:

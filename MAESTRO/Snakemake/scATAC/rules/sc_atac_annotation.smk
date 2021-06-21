@@ -19,7 +19,7 @@ rule scatac_analysis:
         genescore = "{sample}_gene_score.h5",
         outpre = "{sample}",
         counts = "../../QC/{sample}/{sample}_filtered_peak_count.h5",
-        fraggz = "../../mapping/{sample}/fragments_corrected_dedup_count.tsv.gz",
+        fraggz = "../../Mapping/{sample}/fragments_corrected_dedup_count.tsv.gz",
         giggleannotation = config["giggleannotation"],
         species = config["species"],
         signature = config["signature"],
