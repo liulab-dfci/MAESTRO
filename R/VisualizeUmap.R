@@ -76,7 +76,8 @@ VisualizeUmap <- function(genes, type, SeuratObj, ncol = NULL, width = 6, height
     return(p)
   })
   combinedplot = CombinePlots(umapplots, ncol = ncol)
-  ggsave(paste0(name, "_umapplot.png"), combinedplot,  width=width, height=height)  
+  ggsave(paste0(name, "_umapplot.png"), combinedplot,  width=width, height=height)
+  return(combinedplot)
 }
 
 

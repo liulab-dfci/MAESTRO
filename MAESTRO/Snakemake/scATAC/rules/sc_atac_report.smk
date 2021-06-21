@@ -19,10 +19,11 @@ rule scatac_report:
         species = config["species"],
         platform = config["platform"],
         inputformat = config["format"],
+        mapping = config["mapping"],
         outdir = "Result/Report",
     benchmark:
         "Result/Benchmark/{sample}_Report.benchmark"
     shell:
         # "cp {input.readdistr} {input.qcmap} {input.qcfrag} {input.qcfrip} {input.clusterplot} {input.annotateplot} {output.outdir};"
         "python " + SCRIPT_PATH + "/scATAC_HTMLReport_multi.py --directory {params.outdir} --outprefix {params.outpre} "
-        "--input-path {params.inputpath} --species {params.species} --platform {params.platform} --input-format {params.inputformat}"
+        "--input-path {params.inputpath} --species {params.species} --platform {params.platform} --input-format {params.inputformat} --mapping {params.mapping}"

@@ -7,7 +7,7 @@ rule scatac_analysis:
     input:
         filtercount = "Result/QC/{sample}/{sample}_filtered_peak_count.h5",
         genescore = "Result/Analysis/{sample}/{sample}_gene_score.h5",
-        fraggz = "Result/minimap2/{sample}/fragments_corrected_dedup_count.tsv.gz"
+        fraggz = "Result/Mapping/{sample}/fragments_corrected_dedup_count.tsv.gz"
     output:
         specificpeak = "Result/Analysis/{sample}/{sample}_DiffPeaks.tsv",
         clusterplot = "Result/Analysis/{sample}/{sample}_cluster.png",
@@ -19,7 +19,7 @@ rule scatac_analysis:
         genescore = "{sample}_gene_score.h5",
         outpre = "{sample}",
         counts = "../../QC/{sample}/{sample}_filtered_peak_count.h5",
-        fraggz = "../../minimap2/{sample}/fragments_corrected_dedup_count.tsv.gz",
+        fraggz = "../../Mapping/{sample}/fragments_corrected_dedup_count.tsv.gz",
         giggleannotation = config["giggleannotation"],
         species = config["species"],
         signature = config["signature"],

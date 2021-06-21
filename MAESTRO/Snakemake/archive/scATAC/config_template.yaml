@@ -47,18 +47,8 @@ target_reads: {{ target_reads }}
 
 input_path: {{ input_path }}
 
-# Reference genome
-genome:
-  # Genome fasta file for minimap2. Users can just download the fasta file
-  # from http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz and decompress it.
-  # For example, 'Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa'.
-  #fasta: /liulab/mtang/references/Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa
-  fasta: {{ fasta }}
-
-# Path of the giggle annotation file required for regulator identification.
-# Please download the annotation file from http://cistrome.org/~galib/giggle.all.tar.gz and decompress it.
-giggleannotation: {{ giggleannotation }}
-
+# If the input files are gzipped
+gzip: {{gzip}}
 
 # Species to use [GRCh38, GRCm38] (GRCh38 for human and GRCm38 for mouse)
 species: {{ species }}
@@ -75,11 +65,38 @@ platform: {{ platform }}
 # If the format is 'fragments', frag needs to be set.
 format: {{ format }}
 
+## select the alignmet tool for mapping
+mapping: {{mapping}}
 
 # deduplication at cell level or bulk level. "cell level" or "bulk level"
 deduplication: {{ deduplication }}
 
+#######################################################################################
 
+############################# Reference genome parameters (3) ###########################
+
+#######################################################################################
+
+# Path of the giggle annotation file required for regulator identification.
+# Please download the annotation file from http://cistrome.org/~galib/giggle.all.tar.gz and decompress it.
+giggleannotation: {{ giggleannotation }}
+
+# Reference genome
+genome:
+  # Genome fasta file for mapping. Users can just download the fasta file
+  # from http://cistrome.org/~chenfei/MAESTRO/Refdata_scATAC_MAESTRO_GRCh38_1.1.0.tar.gz and decompress it.
+  # For example, 'Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa'.
+  #fasta: /liulab/mtang/references/Refdata_scATAC_MAESTRO_GRCh38_1.1.0/GRCh38_genome.fa
+  fasta: {{ fasta }}
+  #If using chromap, reference index is also required
+  index: {{ index }}
+
+
+#######################################################################################
+
+############################# Barcode library parameters (1) ###########################
+
+#######################################################################################
 # If the platform is 'sci-ATAC-seq' or '10x-genomics', please specify the barcode library (whitelist)
 # so that the pipeline can correct cell barcodes with 1 base mismatched.
 # Otherwise, the pipeline will automatically output the barcodes with enough read count (>1000).
@@ -87,6 +104,7 @@ deduplication: {{ deduplication }}
 # For example, in CellRanger-ATAC 1.1.0, the whitelist is 'cellranger-atac-1.1.0/cellranger-atac-cs/1.1.0/lib/python/barcodes/737K-cratac-v1.txt'.
 #whitelist: /liulab/mtang/references/cellranger-atac-1.2.0/cellranger-atac-cs/1.2.0/lib/python/barcodes/737K-cratac-v1.txt
 whitelist: {{ whitelist }}
+
 
 #######################################################################################
 
@@ -99,7 +117,7 @@ cores: {{ cores }}
 
 #######################################################################################
 
-############################# Signature files parameters ###########################
+############################# Signature files parameters (3) ###########################
 
 #######################################################################################
 
@@ -130,7 +148,7 @@ signature: {{ signature }}
 
 #######################################################################################
 
-############################# Customized peak parameters ###########################
+############################# Customized peak parameters (4) ###########################
 
 #######################################################################################
 
@@ -158,7 +176,7 @@ clusterpeaks : {{ clusterpeaks }}
 
 #######################################################################################
 
-############################# Gene score parameters ###########################
+############################# Gene score parameters (6)###########################
 
 #######################################################################################
 

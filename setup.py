@@ -2,7 +2,7 @@
 # @Author: Dongqing Sun
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-06-12 03:53:45
-# @Last Modified by:   Dongqing Sun
+# @Last Modified by:   Gali Bai
 # @Last Modified time: 2020-06-15 21:58:56
 
 
@@ -18,16 +18,16 @@ except ImportError:
 def main():
     setup(
         name = "MAESTRO",
-        version = "1.4.0",
+        version = "1.5.0",
         package_dir = {'MAESTRO':'MAESTRO'},
         packages = ['MAESTRO'],
-        package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/scATAC/*', 'Snakemake/integrate/*', 'Snakemake/multi_scATAC/*', 'Snakemake/multi_scATAC/rules/*', 'R/*', 'utils/*','annotations/*', 'html/*', '']},
+        package_data={'MAESTRO':['Snakemake/scRNA/*', 'Snakemake/integrate/*', 'Snakemake/scATAC/*', 'Snakemake/scATAC/rules/*', 'Snakemake/scRNA/rules/*', 'R/*', 'utils/*','annotations/*', 'html/*', '']},
         #data_files = [(os.path.join(sys.prefix,'bin'), ['refpkg/giggle/bin/giggle'])],
         scripts = ['MAESTRO/MAESTRO'],
         include_package_data = True,
 
         author = "Chenfei Wang, Dongqing Sun, Tao Liu, Changxin Wan, Ming (Tommy) Tang, Gali Bai",
-        author_email = "",
+        author_email = "gali.bai@hotmail.com",
         description = "MAESTRO(Model-based AnalysEs of Single-cell Transcriptome and RegulOme) is a comprehensive "
         "single-cell RNA-seq and ATAC-seq analysis suit built using snakemake.",
         license = "GPL-3.0",
