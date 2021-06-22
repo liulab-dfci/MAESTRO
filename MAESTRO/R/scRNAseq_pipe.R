@@ -4,6 +4,7 @@ library(future)
 library(future.apply)
 library(pbapply)
 library(optparse)
+library(ggplot2)
 
 
 option_list = list(
@@ -28,6 +29,8 @@ option_list = list(
   make_option(c("--signature"), type = "character", default = "",
               action = "store", help = "The cell signature file for celltype annotation. Default is built-in CIBERSORT immune cell signature."
   ),
+  make_option(c("--samplefile"), type = "character", default = NULL,
+              action="store", help = "For multi-sample, file with the sample origin of each sample"), 
   make_option(c("--thread"), type = "integer", default = 1,
               action = "store", help = "Number of cores to use."
   )
@@ -42,6 +45,7 @@ thread = argue$thread
 #method = argue$method
 sigfile = argue$signature
 species = argue$species
+samplefile = argue$samplefile
 
 
 # if(argue[3] == "10x-genomics"){
@@ -75,3 +79,11 @@ RNA.res$RNA <- RNAAnnotateCelltype(RNA = RNA.res$RNA, genes = RNA.res$genes,
 saveRDS(RNA.res, paste0(prefix, "_scRNA_Object.rds"))
 RNA.tfs <- RNAAnnotateTranscriptionFactor(RNA = RNA.res$RNA, genes = RNA.res$genes, project = prefix,
                                           organism = species, top.tf = 10)
+
+if(!is.null(samplefile)) {
+    sampleAnno <- scan(samplefile, what=list("character","character"))
+    names(sampleAnno[[1]]) <- sampleAnno[[2]]
+    RNA.res$RNA$sample <- sampleAnno[[1]][colnames(RNA.res$RNA)]
+    p = DimPlot(RNA.res$RNA, label=T, pt.size=0.2, group.by="sample", label.size=3, repel=T)
+    ggsave(paste0(RNA.res$RNA@project.name, "_samples.png"), p , width=6, height=4)
+}

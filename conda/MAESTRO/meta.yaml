@@ -1,6 +1,6 @@
 package:
   name: maestro
-  version: "1.4.0"
+  version: "1.5.0"
 source:
   path: ../../
 # build:
@@ -16,9 +16,10 @@ requirements:
     - h5py >=2.10.0
     - pytables >=3.6.1
     - setuptools
-    - snakemake >=5.14
+    - snakemake =6.0.2
     - rseqc >=3.0.0
     - star =2.7.6a
+    - chromap =0.1
     - minimap2 =2.17
     - samtools =1.10
     - bedtools =2.29.2
@@ -87,9 +88,10 @@ requirements:
     - h5py >=2.10.0
     - pytables >=3.6.1
     - setuptools
-    - snakemake >=5.14
+    - snakemake =6.0.2
     - rseqc >=3.0.0
     - star =2.7.6a
+    - chromap =0.1
     - minimap2 =2.17
     - samtools =1.10
     - bedtools =2.29.2
