@@ -73,6 +73,7 @@ We are hosting MAESTRO documentation, instruction and tutorials at [MAESTRO Webs
 * Add output path as variables in the MAESTRO R package.
 ### v1.5.0
 * Support processing multi-samples for both scRNA-seq and scATAC-seq.
+* Integrate [chromap](https://github.com/haowenz/chromap) as the default aligner for scATAC-seq.
 * Support multi-sample scATAC-seq when starting from bam file with CB tag or 10X like fragment file.
 * Fix the ratio of genes mapped to mitochondrial to percentage.
 * Move MAESTRO documentation to [workfowr](https://github.com/jdblischak/workflowr).
