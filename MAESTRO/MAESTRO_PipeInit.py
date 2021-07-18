@@ -3,8 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-23 19:40:27
 # @Last Modified by: Gali Bai
-# @Last Modified time: 2021-06-14 17:34:46
-
+# @Last Modified time: 2021-07-12 17:34:46
 
 import os
 import shutil
@@ -198,6 +197,17 @@ def scrna_parser(subparsers):
     group_input.add_argument("--species", dest = "species", default = "GRCh38",
         choices = ["GRCh38", "GRCm38"], type = str,
         help = "Specify the genome assembly (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
+
+    #STARsolo arguments
+    group_star = workflow.add_argument_group("STARsolo parameters arguments")
+    group_star.add_argument("--STARsolo_Features", dest= "STARsolo_Features", default = "Gene", type = str,
+        choices = ["Gene", "GeneFull", "Gene GeneFull", "SJ", "Velocyto"],
+        help = "Parameters passed to STARsolo --soloFeatures."
+        "specify --soloFeatures Gene for single-cell data."
+        "specify --soloFeatures GeneFull for single-nuclei data"
+        "specify --soloFeatures Gene GeneFull for getting both counts in exons level and exon + intron level (velocity)")
+    group_star.add_argument("--STARsolo_threads", dest = "STARsolo_threads", default = 12, type = int,
+        help = "Threads for running STARsolo. DEFAULT: 12.")
 
     # Output arguments
     group_output = workflow.add_argument_group("Running and output arguments")
@@ -423,6 +433,8 @@ def scrna_config(args):
             sample_file = args.sample_file,
             species = args.species,
             platform = args.platform,
+            STARsolo_Features = args.STARsolo_Features,
+            STARsolo_threads = args.STARsolo_threads,
             mergedname = args.mergedname,
             outprefix = args.outprefix,
             rseqc = args.rseqc,

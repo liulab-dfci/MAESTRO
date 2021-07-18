@@ -16,11 +16,11 @@ if config["platform"] == "10x-genomics":
         output:
             bam = "Result/STAR/{sample}/{sample}Aligned.sortedByCoord.out.bam",
             bai = "Result/STAR/{sample}/{sample}Aligned.sortedByCoord.out.bam.bai",
-            rawmtx = "Result/STAR/{sample}/{sample}Solo.out/Gene/raw/matrix.mtx",
-            feature = "Result/STAR/{sample}/{sample}Solo.out/Gene/raw/features.tsv",
-            barcode = "Result/STAR/{sample}/{sample}Solo.out/Gene/raw/barcodes.tsv"
+            rawmtx = "Result/STAR/{sample}/{sample}Solo.out/" + config["STARsolo_Features"] + "/raw/matrix.mtx",
+            feature = "Result/STAR/{sample}/{sample}Solo.out/" + config["STARsolo_Features"] + "/raw/features.tsv",
+            barcode = "Result/STAR/{sample}/{sample}Solo.out/" + config["STARsolo_Features"] + "/raw/barcodes.tsv"
         params:
-            star_custom = config.get("STARsolo_custom", ""),
+            star_custom = config["STARsolo_Features"],
             outprefix = "Result/STAR/{sample}/{sample}",
             transcript = lambda wildcards: ','.join(FILES[wildcards.sample]["R2"]),
             barcode = lambda wildcards: ','.join(FILES[wildcards.sample]["R1"]),
@@ -47,7 +47,7 @@ if config["platform"] == "10x-genomics":
                 --outSAMtype BAM SortedByCoordinate \
                 --outSAMattributes NH HI nM AS CR UR CB UB GX GN sS sQ sM \
                 --soloType CB_UMI_Simple \
-                {params.star_custom} \
+                --soloFeatures {params.star_custom} \
                 --soloCBwhitelist {input.whitelist} \
                 --soloCBstart {params.barcodestart} \
                 --soloCBlen {params.barcodelength} \
@@ -62,6 +62,7 @@ if config["platform"] == "10x-genomics":
 
             samtools index -b -@ {threads} {output.bam} >> {log} 2>&1
             """
+
 elif config["platform"] == "Dropseq":
     rule scrna_map:
         input:
@@ -111,6 +112,7 @@ elif config["platform"] == "Dropseq":
 
             samtools index -b -@ {threads} {output.bam}
             """
+
 elif config["platform"] == "Smartseq2":
     rule scrna_map:
         input:

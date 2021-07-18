@@ -77,7 +77,10 @@ We are hosting MAESTRO documentation, instruction and tutorials at [MAESTRO Webs
 * Support multi-sample scATAC-seq when starting from bam file with CB tag or 10X like fragment file.
 * Fix the ratio of genes mapped to mitochondrial to percentage.
 * Move MAESTRO documentation to [workfowr](https://github.com/jdblischak/workflowr).
-
+### v1.5.1
+* Expand STARsolo --soloFeatures and --runThreadN as MAESTRO subcommands.
+* Support single-nuclei RNA-seq pipeline.
+* Fix bug in sample initiation subcommand to read fastq with sample id greater than 9.
 
 ## System requirements
 * Linux/Unix
@@ -107,7 +110,7 @@ $ conda config --add channels bioconda
 $ conda config --add channels conda-forge
 # To make the installation faster, we recommend using mamba
 $ conda install mamba -c conda-forge
-$ mamba create -n MAESTRO maestro=1.5.0 -c liulab-dfci
+$ mamba create -n MAESTRO maestro=1.5.1 -c liulab-dfci
 # Activate the environment
 $ conda activate MAESTRO
 ```
