@@ -81,6 +81,7 @@ We are hosting MAESTRO documentation, instruction and tutorials at [MAESTRO Webs
 * Expand STARsolo --soloFeatures and --runThreadN as MAESTRO subcommands.
 * Support single-nuclei RNA-seq pipeline.
 * Fix bug in sample initiation subcommand to read fastq with sample id greater than 9.
+* Update MAESTRO documentation to v1.5.1. Add snRNA-seq tutorials. Expand scRNA-seq tutorial with lisa2 TF prediction custom analysis. Add multi-scATAC-seq genome track plot for pseudobulk peaks. Explain multi-samples peak calling parameters.
 
 ## System requirements
 * Linux/Unix
