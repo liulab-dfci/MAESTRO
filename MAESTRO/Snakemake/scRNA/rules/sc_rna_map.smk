@@ -16,9 +16,9 @@ if config["platform"] == "10x-genomics":
         output:
             bam = "Result/STAR/{sample}/{sample}Aligned.sortedByCoord.out.bam",
             bai = "Result/STAR/{sample}/{sample}Aligned.sortedByCoord.out.bam.bai",
-            rawmtx = "Result/STAR/{sample}/{sample}Solo.out/" + config["STARsolo_Features"] + "/raw/matrix.mtx",
-            feature = "Result/STAR/{sample}/{sample}Solo.out/" + config["STARsolo_Features"] + "/raw/features.tsv",
-            barcode = "Result/STAR/{sample}/{sample}Solo.out/" + config["STARsolo_Features"] + "/raw/barcodes.tsv"
+            rawmtx = "Result/STAR/{sample}/{sample}Solo.out/%s/raw/matrix.mtx" %(config["STARsolo_Features"].split(" ")[0]),
+            feature = "Result/STAR/{sample}/{sample}Solo.out/%s/raw/features.tsv" %(config["STARsolo_Features"].split(" ")[0]),
+            barcode = "Result/STAR/{sample}/{sample}Solo.out/%s/raw/barcodes.tsv" %(config["STARsolo_Features"].split(" ")[0])
         params:
             star_custom = config["STARsolo_Features"],
             outprefix = "Result/STAR/{sample}/{sample}",
