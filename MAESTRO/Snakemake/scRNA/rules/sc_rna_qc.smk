@@ -1,9 +1,9 @@
 if config["platform"] == "10x-genomics" or config["platform"] == "Dropseq":
     rule scrna_qc:
         input:
-            rawmtx = "Result/STAR/{sample}/{sample}Solo.out/Gene/raw/matrix.mtx",
-            feature = "Result/STAR/{sample}/{sample}Solo.out/Gene/raw/features.tsv",
-            barcode = "Result/STAR/{sample}/{sample}Solo.out/Gene/raw/barcodes.tsv"
+            rawmtx = "Result/STAR/{sample}/{sample}Solo.out/%s/raw/matrix.mtx" %(config["STARsolo_Features"].split(" ")[0]),
+            feature = "Result/STAR/{sample}/{sample}Solo.out/%s/raw/features.tsv" %(config["STARsolo_Features"].split(" ")[0]),
+            barcode = "Result/STAR/{sample}/{sample}Solo.out/%s/raw/barcodes.tsv" %(config["STARsolo_Features"].split(" ")[0])
         output:
             countgene = "Result/QC/{sample}/{sample}_count_gene_stat.txt",
             filtermatrix = "Result/QC/{sample}/{sample}_filtered_gene_count.h5",

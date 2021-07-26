@@ -1,8 +1,8 @@
 rule scrna_merge:
     input:
-        rawmtx = expand("Result/STAR/{sample}/{sample}Solo.out/Gene/raw/matrix.mtx", sample=ALL_SAMPLES),
-        features = expand("Result/STAR/{sample}/{sample}Solo.out/Gene/raw/features.tsv", sample=ALL_SAMPLES)[1],
-        barcodes = expand("Result/STAR/{sample}/{sample}Solo.out/Gene/raw/barcodes.tsv", sample=ALL_SAMPLES)
+        rawmtx = expand("Result/STAR/{sample}/{sample}Solo.out/%s/raw/matrix.mtx" %(config["STARsolo_Features"].split(" ")[0]), sample=ALL_SAMPLES),
+        features = expand("Result/STAR/{sample}/{sample}Solo.out/%s/raw/features.tsv" %(config["STARsolo_Features"].split(" ")[0]), sample=ALL_SAMPLES)[1],
+        barcodes = expand("Result/STAR/{sample}/{sample}Solo.out/%s/raw/barcodes.tsv" %(config["STARsolo_Features"].split(" ")[0]), sample=ALL_SAMPLES)
     output:
         mergedmtx = "Result/STAR/%s/rawmatrix/matrix.mtx" % config["mergedname"],
         mergedfeatures = "Result/STAR/%s/rawmatrix/features.tsv" % config["mergedname"],

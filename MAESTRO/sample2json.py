@@ -58,14 +58,14 @@ def sample_json(args):
                     full_path = join(root, file)
                     if args.assay_type == "scrna":
                         #R1 will be sample barcode, R2 will be reverse reads, I1 will be the index
-                        m = re.search(r"([A-Z0-9a-z_]+)_S[0-9]_(L[0-9]{3})_([IR][12])_[0-9]+.fastq.gz", file)
+                        m = re.search(r"([A-Z0-9a-z_]+)_S[0-9]+_(L[0-9]{3})_([IR][12])_[0-9]+.fastq.gz", file)
                         if m:
                             sample = m.group(1)
                             lane = m.group(2)
                             reads = m.group(3)
                             FILES[sample][reads].append(full_path)
                     elif args.assay_type == "scatac" and args.platform == "10x-genomics":
-                        m = re.search(r"([A-Z0-9a-z_]+)_S[0-9]_(L[0-9]{3})_([IR][123])_[0-9]+.fastq.gz", file)
+                        m = re.search(r"([A-Z0-9a-z_]+)_S[0-9]+_(L[0-9]{3})_([IR][123])_[0-9]+.fastq.gz", file)
                         if m:
                             sample = m.group(1)
                             lane = m.group(2)
@@ -94,14 +94,14 @@ def sample_json(args):
                     full_path = join(root, file)
                     if args.assay_type == "scrna":
                         #R1 will be sample barcode, R2 will be reverse reads, I1 will be the index
-                        m = re.search(r"([A-Z0-9a-z_]+)_S[0-9]_(L[0-9]{3})_([IR][12])_[0-9]+.fastq", file)
+                        m = re.search(r"([A-Z0-9a-z_]+)_S[0-9]+_(L[0-9]{3})_([IR][12])_[0-9]+.fastq", file)
                         if m:
                             sample = m.group(1)
                             lane = m.group(2)
                             reads = m.group(3)
                             FILES[sample][reads].append(full_path)
                     elif args.assay_type == "scatac" and args.platform == "10x-genomics":
-                        m = re.search(r"([A-Z0-9a-z_]+)_S[0-9]_(L[0-9]{3})_([IR][123])_[0-9]+.fastq", file)
+                        m = re.search(r"([A-Z0-9a-z_]+)_S[0-9]+_(L[0-9]{3})_([IR][123])_[0-9]+.fastq", file)
                         if m:
                             sample = m.group(1)
                             lane = m.group(2)

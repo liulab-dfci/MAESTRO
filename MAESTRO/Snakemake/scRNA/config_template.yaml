@@ -7,7 +7,7 @@ SAMPLES_JSON: {{ sample_file }}
 STARsolo_threads: 12
 
 # can specify "--soloFeatures FullGene" for single nuclei data
-STARsolo_custom: '--soloFeatures Gene'
+STARsolo_Features: {{STARsolo_Features}}
 
 # Species to use [GRCh38, GRCm38] (GRCh38 for human and GRCm38 for mouse)
 species: {{ species }}

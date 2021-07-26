@@ -5,7 +5,7 @@
 # @Last Modified by:   Gali Bai, Dongqing Sun
 # @Last Modified time: 2021-06-07 11:11:58
 
-version = "1.5.0"
+version = "1.5.1"
 
 import logging
 import sys, os
@@ -59,7 +59,7 @@ def main():
         exit(0)
     elif args.subcommand == "samples-init":
         sample_json(args)
-  
+
     elif args.subcommand == "scatac-init":
         scatac_validator(args)
         scatac_config(args)

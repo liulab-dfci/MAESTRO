@@ -1,7 +1,7 @@
 Package: MAESTRO
 Type: Package
 Title: Model-based Analyses of Single-cell Transcriptome and Regulome
-Version: 1.5.0
+Version: 1.5.1
 Date: 2021-03-05
 Author: Chenfei Wang, Dongqing Sun, Tao Liu, Changxin Wan, Ming (Tommy) Tang, Gali Bai
 Maintainer: Dongqing Sun<dongqingsun96@gmail.com>, Gali Bai<gali.bai@hotmail.com>
