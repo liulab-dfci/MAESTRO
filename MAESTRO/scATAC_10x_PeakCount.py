@@ -3,7 +3,7 @@
 # @E-mail: Dongqingsun96@gmail.com
 # @Date:   2020-02-24 22:26:54
 # @Last Modified by:   Dongqing Sun
-# @Last Modified time: 2020-12-13 20:46:06
+# @Last Modified time: 2021-03-15 22:30:19
 
 import os,sys
 import time
@@ -119,7 +119,7 @@ def generate_count_matrix(count_list, peak_list, binary = False):
 
     peak_count = {}
     for peak in peak_list:
-        peak_count[peak] = sp_sparse.dok_matrix((1, len(count_list)), dtype=np.int8)
+        peak_count[peak] = sp_sparse.dok_matrix((1, len(count_list)), dtype=np.int32)
     
     barcodes = []
     for i in range(0,len(count_list)):
