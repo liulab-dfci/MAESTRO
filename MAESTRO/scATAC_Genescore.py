@@ -51,7 +51,7 @@ def genescore_parser(subparsers):
         "to 10kb (enhancer-based regulation). DEFAULT: 10000.")
     group_input.add_argument("--species", dest = "species", default = "GRCh38", 
         choices = ["GRCh38", "GRCm38", "T2TCHM13"], type = str, 
-        help = "Species (GRCh38 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
+        help = "Species (GRCh38/T2TCHM13 for human and GRCm38 for mouse). DEFAULT: GRCh38.")
     group_input.add_argument("--model", dest = "model", default = "Enhanced", 
         choices = ["Simple", "Enhanced"], type = str, 
         help = "The RP model to use to calaculate gene score. "
